@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:infinity_world/routes/app_routes.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,6 +10,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(debugShowCheckedModeBanner: false, home: Scaffold(body: Center(child: Text('Hello World!'))));
+    return MaterialApp(title: 'InfinityWorld', debugShowCheckedModeBanner: false, initialRoute: AppRoutes.login, routes: AppRoutes.routes, theme: ThemeData(primarySwatch: Colors.blue));
   }
 }
