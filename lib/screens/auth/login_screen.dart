@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -17,7 +18,9 @@ class _LoginScreenState extends State<LoginScreen> {
         child: ElevatedButton(
           onPressed: () {
             // Điều hướng sang MainScreen
-            Navigator.pushReplacementNamed(context, AppRoutes.main);
+            // Navigator.pushReplacementNamed(context, AppRoutes.main);
+            // GetX
+            Get.offNamed(AppRoutes.main);
           },
           child: Text('Login'),
         ),

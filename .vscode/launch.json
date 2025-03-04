@@ -5,21 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "infinity_world",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "infinity_world (profile mode)",
+            "name": "Flutter - Dev",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "program": "lib/main.dart",
+            "args": ["--dart-define=ENV=env/.env.dev"]
         },
         {
-            "name": "infinity_world (release mode)",
+            "name": "Flutter - Prod",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "program": "lib/main.dart",
+            "args": ["--dart-define=ENV=env/.env.prod"]
         }
     ]
 }
