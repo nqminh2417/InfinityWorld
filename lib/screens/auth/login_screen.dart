@@ -12,8 +12,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
+    final appName = "Infinity World";
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      appBar: AppBar(title: Text(appName)),
       body: Center(
         child: ElevatedButton(
           onPressed: () {

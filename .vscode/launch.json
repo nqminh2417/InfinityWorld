@@ -9,14 +9,14 @@
             "request": "launch",
             "type": "dart",
             "program": "lib/main.dart",
-            "args": ["--dart-define=ENV=env/.env.dev"]
+            "args": []
         },
         {
             "name": "Flutter - Prod",
             "request": "launch",
             "type": "dart",
             "program": "lib/main.dart",
-            "args": ["--dart-define=ENV=env/.env.prod"]
+            "args": []
         }
     ]
 }

@@ -1,10 +1,10 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:infinity_world/core/config/constants.dart';
 import 'package:infinity_world/screens/summertime_saga/models/smts_progress_model.dart';
 
 class SmtsService {
-  static String _baseUrl = dotenv.env['SMTS_BASE_URL'] ?? 'https://default.api.com';
-  static String _progressUrl = dotenv.env['SMTS_PROGRESS_URL'] ?? '$_baseUrl/data/progress.json';
+  static String _baseUrl = Cfg.smtsBaseUrl;
+  static String _progressUrl = '$_baseUrl/data/progress.json';
 
   static Future<SmtsProgressModel?> getProgress() async {
     try {

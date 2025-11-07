@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:infinity_world/core/config/constants.dart';
 import 'package:infinity_world/screens/summertime_saga/models/smts_progress_model.dart';
 import 'package:infinity_world/screens/summertime_saga/services/smts_service.dart';
 import 'package:infinity_world/screens/summertime_saga/widgets/progress_bar.dart';
@@ -15,7 +15,7 @@ class SmtsHomeScreen extends StatefulWidget {
 
 class _SmtsHomeScreenState extends State<SmtsHomeScreen> {
   SmtsProgressModel? progressData;
-  final String _logoUrl = dotenv.env['SMTS_LOGO_URL'] ?? '';
+  final String _logoUrl = Cfg.smtsLogoUrl;
 
   @override
   void initState() {
