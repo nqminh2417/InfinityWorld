@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:infinity_world/core/config/constants.dart';
 
 import 'package:infinity_world/routes/app_pages.dart';
 import 'package:infinity_world/routes/app_routes.dart';
@@ -16,7 +17,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: "Infinity World",
+      title: Cfg.appName,
       debugShowCheckedModeBanner: false,
       initialRoute: AppRoutes.login, // Màn hình mặc định khi khởi động
       getPages: AppPages.pages, // Danh sách các route

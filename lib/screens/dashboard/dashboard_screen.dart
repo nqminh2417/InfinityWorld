@@ -10,6 +10,10 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  void _logout() async {
+    Get.offAllNamed(AppRoutes.login);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +31,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Get.toNamed(AppRoutes.smtsHome);
             },
           ),
-          ListTile(leading: const Icon(Icons.logout), title: const Text('Log out'), onTap: () {}),
+          ListTile(leading: const Icon(Icons.logout), title: const Text('Log out'), onTap: _logout),
         ],
       ),
     );
