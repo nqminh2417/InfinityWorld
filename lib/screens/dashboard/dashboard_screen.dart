@@ -10,6 +10,14 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  void _toFoxRandom() async {
+    Get.toNamed(AppRoutes.fox);
+  }
+
+  void _toTestScreen() async {
+    Get.toNamed(AppRoutes.test);
+  }
+
   void _logout() async {
     Get.offAllNamed(AppRoutes.login);
   }
@@ -31,6 +39,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Get.toNamed(AppRoutes.smtsHome);
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.start),
+            title: const Text('Random pictures of foxes'),
+            onTap: _toFoxRandom,
+          ),
+          ListTile(leading: const Icon(Icons.swipe_vertical), title: const Text('Test Screen'), onTap: _toTestScreen),
           ListTile(leading: const Icon(Icons.logout), title: const Text('Log out'), onTap: _logout),
         ],
       ),
