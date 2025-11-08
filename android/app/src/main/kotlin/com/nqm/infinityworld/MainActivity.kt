@@ -1,4 +1,4 @@
-package com.example.infinity_world
+package com.nqm.infinityworld
 
 import io.flutter.embedding.android.FlutterActivity
 
