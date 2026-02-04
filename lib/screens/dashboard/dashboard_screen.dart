@@ -44,6 +44,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             title: const Text('Random pictures of foxes'),
             onTap: _toFoxRandom,
           ),
+          ListTile(
+            leading: const Icon(Icons.arrow_forward_rounded),
+            title: const Text('BMI Calculator'),
+            onTap: () {
+              Get.toNamed(AppRoutes.bmi);
+            },
+          ),
           ListTile(leading: const Icon(Icons.swipe_vertical), title: const Text('Test Screen'), onTap: _toTestScreen),
           ListTile(leading: const Icon(Icons.logout), title: const Text('Log out'), onTap: _logout),
         ],
