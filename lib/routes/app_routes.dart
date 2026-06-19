@@ -8,4 +8,5 @@ class AppRoutes {
   static const String smtsHome = '/smts_home';
   static const String test = '/testscreen';
   static const String fox = '/fox';
+  static const String bmi = '/bmi';
 }

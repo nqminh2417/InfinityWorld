@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 import 'package:infinity_world/screens/auth/login_screen.dart';
+import 'package:infinity_world/screens/bmi/bmi_screen.dart';
 import 'package:infinity_world/screens/chat/chat_screen.dart';
 import 'package:infinity_world/screens/dashboard/dashboard_screen.dart';
 import 'package:infinity_world/screens/fox/fox_random_screen.dart';
@@ -19,5 +20,6 @@ class AppPages {
     GetPage(name: AppRoutes.smtsHome, page: () => SmtsHomeScreen()),
     GetPage(name: AppRoutes.test, page: () => TestScreen()),
     GetPage(name: AppRoutes.fox, page: () => FoxRandomScreen()),
+    GetPage(name: AppRoutes.bmi, page: () => BmiScreen()),
   ];
 }
