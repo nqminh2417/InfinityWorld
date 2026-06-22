@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
+import 'package:infinity_world/features/bmi/presentation/bmi_screen.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 import 'package:infinity_world/screens/auth/login_screen.dart';
-import 'package:infinity_world/screens/bmi/bmi_screen.dart';
 import 'package:infinity_world/screens/chat/chat_screen.dart';
 import 'package:infinity_world/screens/dashboard/dashboard_screen.dart';
 import 'package:infinity_world/screens/fox/fox_random_screen.dart';
