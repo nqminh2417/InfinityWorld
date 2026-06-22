@@ -915,14 +915,6 @@ For quick local checks:
 flutter analyze --no-pub
 ```
 
-If using RTK wrapper:
-
-```powershell
-rtk flutter analyze
-rtk flutter test
-rtk flutter build apk --debug
-```
-
 If a command cannot be run, report the reason.
 
 Do not claim a command passed unless it was actually executed.

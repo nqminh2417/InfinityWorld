@@ -50,3 +50,6 @@ app.*.map.json
 
 # Đừng bỏ qua tệp mẫu .env.example
 !.env.example
+
+# CodeGraph local index/cache
+.codegraph/

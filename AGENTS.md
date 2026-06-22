@@ -446,14 +446,6 @@ Use `--no-pub` when appropriate for quick checks:
 flutter analyze --no-pub
 ```
 
-If using the local RTK wrapper in this environment, equivalent commands are acceptable:
-
-```powershell
-rtk flutter analyze
-rtk flutter test
-rtk flutter build apk --debug
-```
-
 If a command cannot be run, report why.
 
 Do not claim a command passed unless it was actually run.
@@ -542,3 +534,23 @@ Useful documentation
 ```
 
 Quality and consistency are more important than feature count.
+
+## 21. Flutter UI Layout Safety
+
+Flutter UI tasks in InfinityWorld must apply the global `flutter-ui-layout-safety` skill and follow:
+
+- `docs/design/IW_LAYOUT_SAFETY.md`
+- `docs/design/IW_SYSTEM_UI_POLICY.md`
+
+Project rules:
+
+- Default screens must be SafeArea-aware, edge-to-edge-compatible, scroll-safe, and keyboard-safe when forms are involved.
+- Normal app screens must not use fullscreen or immersive mode. This includes Home, BMI, Settings, Tools, Library, AI Lab, Device Hub, Profile, Login, and Dashboard.
+- Fullscreen or immersive mode is allowed only for reader, media preview, image/video viewer, camera/scanner, game-like, or explicitly approved screens.
+- A screen that changes `SystemChrome` system UI mode must restore the default app mode when leaving.
+- Apply `SafeArea` once at the shell or screen boundary. Do not double-wrap a screen when the shell already handles insets.
+- Use existing project widgets, tokens, and components before hard-coding spacing, radius, colors, typography, or shadows.
+- Treat card, menu, and navigation collections as expandable and keep them scroll-safe.
+- Forms must remain usable while the keyboard is open.
+- Do not claim UI is visually safe only because `flutter analyze` passes.
+- For UI changes, report which layout-safety checks were considered and what was not verified.

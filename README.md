@@ -356,14 +356,6 @@ flutter test
 flutter build apk --debug
 ```
 
-If using a local RTK wrapper:
-
-```bash
-rtk flutter analyze
-rtk flutter test
-rtk flutter build apk --debug
-```
-
 Do not claim a command passed unless it was actually run.
 
 ## Project Philosophy
