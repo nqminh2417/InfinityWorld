@@ -571,3 +571,13 @@ git status --short
 ```
 
 Do not continue on another branch, work on unrelated dirty changes, push protected branches, force-push, merge branches, or make Android toolchain/build-system changes on this branch unless explicitly approved.
+
+## 23. Living Planning Docs
+
+Keep the planning docs aligned when scope, phase, architecture direction, workflow, or durable product decisions change:
+
+- `docs/ROADMAP.md`
+- `docs/TASKS.md`
+- `docs/DECISIONS.md`
+
+Treat `docs/ARCHITECTURE.md` as the target direction, not a claim that the current `lib/` structure is already migrated. Use `docs/TASKS.md` as the active backlog when deciding the next small task.
