@@ -67,6 +67,14 @@ Gradle, Android Gradle Plugin, Kotlin, signing, package identity, and other Andr
 
 Device or emulator UI review is important for polish, but it is not required for every small current task. Code-level UI safety still applies to UI changes.
 
+### 2026-06-23: User-assigned tasks can override the backlog recommendation
+
+`docs/TASKS.md` is guidance, not a hard lock. If the user assigns a different scoped task, Codex should follow the user's task and update planning docs only when the task changes priority, phase, backlog, or durable decisions.
+
+Source of truth:
+
+- `docs/qa/IW_TASK_WORKFLOW.md`
+
 ## Superseded or Revisit Later
 
 No decisions are currently superseded.

@@ -579,5 +579,8 @@ Keep the planning docs aligned when scope, phase, architecture direction, workfl
 - `docs/ROADMAP.md`
 - `docs/TASKS.md`
 - `docs/DECISIONS.md`
+- `docs/qa/IW_TASK_WORKFLOW.md`
 
 Treat `docs/ARCHITECTURE.md` as the target direction, not a claim that the current `lib/` structure is already migrated. Use `docs/TASKS.md` as the active backlog when deciding the next small task.
+
+`docs/TASKS.md` is guidance, not a hard lock. If the user assigns a different task, follow the user's task and apply `docs/qa/IW_TASK_WORKFLOW.md`: update planning docs only when the task changes priority, phase, backlog, or durable decisions, and report whether planning docs were updated.
