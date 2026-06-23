@@ -584,3 +584,11 @@ Keep the planning docs aligned when scope, phase, architecture direction, workfl
 Treat `docs/ARCHITECTURE.md` as the target direction, not a claim that the current `lib/` structure is already migrated. Use `docs/TASKS.md` as the active backlog when deciding the next small task.
 
 `docs/TASKS.md` is guidance, not a hard lock. If the user assigns a different task, follow the user's task and apply `docs/qa/IW_TASK_WORKFLOW.md`: update planning docs only when the task changes priority, phase, backlog, or durable decisions, and report whether planning docs were updated.
+
+## 24. Standard Task Result Reporting
+
+After every completed or blocked task, return the concise `Task Result` format defined in:
+
+- `docs/qa/IW_TASK_WORKFLOW.md`
+
+Always include status, summary, files changed, verification, commit/push details, planning-doc status, unverified areas, and one advisory recommended next task. If there is no clear actionable implementation task, recommend planning, audit, grooming, or review work instead of inventing feature work.

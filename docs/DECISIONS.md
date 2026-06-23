@@ -88,6 +88,14 @@ Source of truth:
 
 - `docs/qa/IW_TASK_WORKFLOW.md`
 
+### 2026-06-23: Task results use a standard concise report
+
+After every completed or blocked task, Codex should return the standard `Task Result` report with status, summary, changed files, verification, commit/push details, planning-doc status, unverified areas, and one advisory recommended next task.
+
+Source of truth:
+
+- `docs/qa/IW_TASK_WORKFLOW.md`
+
 ## Superseded or Revisit Later
 
 No decisions are currently superseded.
