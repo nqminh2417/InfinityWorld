@@ -554,3 +554,20 @@ Project rules:
 - Forms must remain usable while the keyboard is open.
 - Do not claim UI is visually safe only because `flutter analyze` passes.
 - For UI changes, report which layout-safety checks were considered and what was not verified.
+
+## 22. Git Workflow
+
+Follow the repo-specific workflow in:
+
+- `docs/qa/IW_GIT_WORKFLOW.md`
+
+Codex may auto commit and auto push completed scoped tasks only on branch `home/devbyMinh-current` after the required verification gates pass.
+
+Before starting each task, run:
+
+```powershell
+git branch --show-current
+git status --short
+```
+
+Do not continue on another branch, work on unrelated dirty changes, push protected branches, force-push, merge branches, or make Android toolchain/build-system changes on this branch unless explicitly approved.
