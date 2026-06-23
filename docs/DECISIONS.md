@@ -63,6 +63,19 @@ Normal screens must keep system bars usable and content visible. Fullscreen or i
 
 Gradle, Android Gradle Plugin, Kotlin, signing, package identity, and other Android build-system changes should use a separate branch/task unless explicitly approved.
 
+### 2026-06-23: Android toolchain upgrade pulled forward for Flutter 3.44.2
+
+The Android toolchain upgrade was explicitly approved on `home/devbyMinh-current` to reduce Flutter 3.44.2 future compatibility warnings.
+
+Selected versions:
+
+- Gradle wrapper: 8.14.5
+- Android Gradle Plugin: 8.11.1
+- Kotlin Gradle Plugin: 2.2.20
+- Java/Kotlin target: 17
+
+AGP 9.x and Built-in Kotlin migration remain deferred follow-up work unless a future build requires them.
+
 ### 2026-06-23: Emulator/device UI review is a later QA phase
 
 Device or emulator UI review is important for polish, but it is not required for every small current task. Code-level UI safety still applies to UI changes.

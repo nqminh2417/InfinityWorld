@@ -47,7 +47,8 @@ Riverpod, go_router, and Dio are target-direction technologies but are not insta
 - Some networking still uses direct `http` services under legacy feature folders.
 - `AppRoutes.settings` exists, but the current GetX page list does not register a Settings route.
 - Theme/design-system implementation is still mostly target documentation rather than app code.
-- Android Gradle, Android Gradle Plugin, and Kotlin upgrade warnings should be handled later as a separate branch/task.
+- Android toolchain versions have been pulled forward on `home/devbyMinh-current` with explicit approval: Gradle 8.14.5, Android Gradle Plugin 8.11.1, Kotlin Gradle Plugin 2.2.20, Java/Kotlin target 17.
+- Built-in Kotlin migration remains deferred until an AGP 9.x migration or a build requirement forces it.
 
 ## Target Direction
 
@@ -274,6 +275,8 @@ Notes:
 ## Separate Branch Work
 
 Android toolchain/build-system changes should be handled separately unless explicitly approved.
+
+The 2026-06-23 Android toolchain upgrade was explicitly approved on `home/devbyMinh-current`. Future Android toolchain/build-system changes should still use a separate branch/task unless explicitly approved.
 
 Examples:
 

@@ -28,6 +28,11 @@ Current phase:
 
 - Phase 1: Transitional Stabilization.
 
+Android toolchain status:
+
+- Gradle wrapper, Android Gradle Plugin, Kotlin Gradle Plugin, and Java/Kotlin target were upgraded for Flutter 3.44.2 compatibility on `home/devbyMinh-current` with explicit approval.
+- Built-in Kotlin migration remains deferred.
+
 ## Next Recommended Tasks
 
 ### T1: Fix Login build-time setState and keyboard safety
@@ -132,7 +137,8 @@ Verification:
 - go_router migration: start only as an explicit router migration phase.
 - Riverpod foundation: start only as an explicit state/dependency phase.
 - Dio networking migration: start only as an explicit networking or feature hardening phase.
-- Android Gradle/AGP/Kotlin upgrades: separate branch/task unless explicitly approved.
+- Built-in Kotlin migration: defer until an AGP 9.x migration or build requirement.
+- Future Android toolchain/build-system changes: separate branch/task unless explicitly approved.
 - Device Hub Bluetooth/audio packages: defer until Device Hub implementation starts.
 - Real authentication/backend sync: defer.
 - Full design-system rollout across all legacy screens: defer.
