@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:infinity_world/features/profile/presentation/profile_screen.dart';
 import 'package:infinity_world/screens/chat/chat_screen.dart';
 import 'package:infinity_world/screens/dashboard/dashboard_screen.dart';
-import 'package:infinity_world/screens/profile/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -13,7 +13,11 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [DashboardScreen(), ChatScreen(), ProfileScreen()];
+  final List<Widget> _screens = [
+    DashboardScreen(),
+    ChatScreen(),
+    ProfileScreen(),
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -29,7 +33,10 @@ class _MainScreenState extends State<MainScreen> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],

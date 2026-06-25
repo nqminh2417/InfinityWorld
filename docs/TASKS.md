@@ -17,6 +17,7 @@ Current architecture status:
 - GetX routing is still active under `lib/routes/`.
 - Most screens still live under `lib/screens/`.
 - BMI is the active migration pilot under `lib/features/bmi/`.
+- Profile presentation now lives under `lib/features/profile/presentation/`.
 - Settings presentation now lives under `lib/features/settings/presentation/`.
 - Riverpod, go_router, and Dio are not active yet.
 
@@ -25,6 +26,7 @@ Current tests:
 - App startup smoke test exists.
 - BMI domain unit tests exist.
 - BMI presentation widget tests exist.
+- Profile route smoke test exists.
 - Settings route smoke test exists.
 
 Current phase:
@@ -43,6 +45,7 @@ Completed stabilization tasks:
 - Settings route alignment was fixed; `AppRoutes.settings` is now registered in the legacy GetX route table and covered by a route smoke test.
 - BMI feature-quality pass was completed; BMI inputs now allow decimal numeric keyboards and the weight field's keyboard Done action calculates the result.
 - Settings feature placement was completed; the existing placeholder screen moved to `lib/features/settings/presentation/` and the legacy GetX route import was updated.
+- Profile feature placement was completed; the existing screen moved to `lib/features/profile/presentation/`, legacy imports were updated, and the route has a smoke test.
 
 ## Recommended Next Work
 
@@ -52,37 +55,36 @@ Current phase:
 
 ### Primary
 
-T6 — Move Profile screen to feature presentation
+T8 — Create Phase 2 migration map
 
 Reason:
 
-- Profile is the next simple standalone legacy screen candidate.
-- The move can continue Phase 2 without changing GetX, `lib/main.dart`, Riverpod, go_router, or Dio.
+- Settings and Profile have moved, but most legacy screen ownership is still unclear.
+- A small map prevents random screen moves and keeps later placement tasks scoped.
 
 Scope:
 
-- Move only the existing Profile screen into `lib/features/profile/presentation/`.
-- Update only the minimal legacy GetX import/reference.
-- Do not redesign the Profile UI in the move task.
-- If layout issues are found, report them or split them into a follow-up UI-safety task.
+- Inventory remaining `lib/screens/` entries.
+- Identify low-risk, blocked, and deferred candidates.
+- Keep it documentation-only unless a missing docs section is needed.
 
 Verification:
 
-- Screen move/routing gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Docs-only gate from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T6A — Add Profile route smoke test first
-
-Choose this if route coverage is missing or the Profile route behavior is uncertain.
-
 T7 — Move another simple standalone screen
 
-Choose this if Profile is blocked by unrelated UI or route issues.
+Choose this if the next ownership target is already obvious.
 
-T8 — Create Phase 2 migration map
+T9 — Add route smoke tests for remaining legacy routes
 
-Choose this if remaining `lib/screens/` ownership is unclear.
+Choose this if route coverage is more urgent than placement.
+
+T10 — Profile UI layout-safety pass
+
+Choose this if Profile visual/layout issues should be fixed before more moves.
 
 ### Do not start yet
 

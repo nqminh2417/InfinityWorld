@@ -16,7 +16,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         centerTitle: true,
         title: const Text('Profile Screen'),
       ),
-      body: Center(child: Column(children: [Ink(child: Container(height: 200, color: Colors.blueAccent))])),
+      body: Center(
+        child: Column(
+          children: [
+            Ink(child: Container(height: 200, color: Colors.blueAccent)),
+          ],
+        ),
+      ),
     );
   }
 }
