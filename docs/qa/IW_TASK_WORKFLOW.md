@@ -32,7 +32,23 @@ If the task is an independent small task that does not affect priority, phase, b
 
 ## Avoid Over-updating
 
-Do not update planning docs for trivial implementation details, narrow bug fixes, formatting-only changes, or small follow-up fixes unless they materially change project direction or task order.
+Do not update planning docs for trivial implementation details, narrow bug fixes, formatting-only changes, or small follow-up fixes unless they materially change project direction, phase, or task order.
+
+Keep detailed planning state in `docs/TASKS.md`. Do not expand final chat output with alternative task lists, deferred work, or phase rationale.
+
+## Roadmap Update Policy
+
+Do not update `docs/ROADMAP.md` for every small task.
+
+Update `docs/ROADMAP.md` only when:
+
+- a phase starts
+- a phase completes
+- phase scope changes
+- architecture direction changes
+- a checkpoint materially changes the roadmap
+
+For normal feature placement, small UI fixes, narrow tests, and local bug fixes, update `docs/TASKS.md` only when the active backlog or primary recommendation changes.
 
 Examples that usually do not need planning doc updates:
 
@@ -52,67 +68,62 @@ Examples that usually need planning doc updates:
 
 ## Standard Task Result Report
 
-At the end of every completed or blocked task, return a concise report using this format.
+At the end of every completed or blocked task, return a compact report using this format.
 
 ```markdown
 ## Task Result
 
 Status: `DONE_COMMITTED` | `DONE_NOT_COMMITTED` | `BLOCKED`
 
+Current phase:
+- Phase N — <phase name>
+
 Summary:
-- One to three bullets describing what changed or why the task is blocked.
+- <short bullet>
+- <short bullet>
+- <short bullet>
 
 Files changed:
-- List task-related files changed.
-- If no files changed, say so.
+- `<repo-relative-path>`
+- `<repo-relative-path>`
 
 Verification:
-- List commands run and result.
-- Use `passed`, `failed`, `skipped`, or `not run`.
-- If a command was skipped, explain why briefly.
+- Git branch/status gates: passed
+- `<command>`: passed | failed | skipped | not run
 
 Commit / Push:
-- Commit: `<hash>` or `none`
-- Message: `<commit message>` or `none`
-- Pushed branch: `<remote/branch>` or `none`
+- Commit: `<short-sha>` or `none`
+- Branch: `<remote/branch>` or `none`
 
-Planning docs:
-- Updated: `yes` / `no`
-- Files: list docs updated, or `none`
-- Reason: explain if docs were updated or why no update was needed.
+Unverified:
+- <item>
+- <item>
 
-Unverified areas:
-- List anything not verified, such as emulator/device visual review, release build, manual login flow, etc.
-- If none, say `none`.
+Recommended next work:
+- Primary: <Task ID> — <task title>
+- Planning details: see `docs/TASKS.md` for alternatives, deferred work, and phase guard.
 
-Recommended next task:
-- Task: one concrete next task.
-- Why: one sentence.
-- Suggested scope: one to three bullets.
-- Note: advisory; user may assign a different task.
+Skipped:
+- <optional skipped work, if any>
 ```
 
 Keep the report short. Do not paste full command logs unless a failure needs diagnosis.
 
-## Planning Docs Reporting
+## Recommended Next Work
 
-The `Planning docs` section must say whether planning docs were updated.
+Every task result must include exactly one advisory primary next task.
 
-If planning docs were not updated, briefly state why they were not needed.
+Use the `Recommended Next Work` section in `docs/TASKS.md` as the source of truth. If the user later assigns a different task, follow the user task and apply the planning impact check above.
 
-If the task changes priority, phase, backlog, or durable decisions, update the relevant docs in the same commit:
+`docs/TASKS.md` must keep this structure:
 
-- `docs/TASKS.md`
-- `docs/ROADMAP.md`
-- `docs/DECISIONS.md`
+- Current phase
+- Primary recommendation with exactly one next task
+- Alternatives with 2-3 optional tasks maximum, each with a short "choose this if..." explanation
+- Do not start yet
+- Phase guard
 
-Do not over-update planning docs for trivial changes.
-
-## Recommended Next Task
-
-Every task result must include one advisory recommended next task.
-
-Use `docs/TASKS.md` as the first source for a concrete next task. If the user later assigns a different task, follow the user task and apply the planning impact check above.
+Do not duplicate the alternatives, deferred work, or phase guard in final chat output. Link to `docs/TASKS.md` instead.
 
 If there is no clear actionable next task in `docs/TASKS.md`, do not invent implementation work. Recommend planning, audit, grooming, or review work instead.
 

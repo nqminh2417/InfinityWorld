@@ -44,9 +44,20 @@ Completed stabilization tasks:
 - BMI feature-quality pass was completed; BMI inputs now allow decimal numeric keyboards and the weight field's keyboard Done action calculates the result.
 - Settings feature placement was completed; the existing placeholder screen moved to `lib/features/settings/presentation/` and the legacy GetX route import was updated.
 
-## Next Recommended Tasks
+## Recommended Next Work
 
-### T6: Move Profile screen to feature presentation
+Current phase:
+
+- Phase 2 — Low-risk Feature Placement
+
+### Primary
+
+T6 — Move Profile screen to feature presentation
+
+Reason:
+
+- Profile is the next simple standalone legacy screen candidate.
+- The move can continue Phase 2 without changing GetX, `lib/main.dart`, Riverpod, go_router, or Dio.
 
 Scope:
 
@@ -59,18 +70,55 @@ Verification:
 
 - Screen move/routing gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
-## Blocked or Deferred Tasks
+### Alternatives
 
-- go_router migration: start only as an explicit router migration phase.
-- Riverpod foundation: start only as an explicit state/dependency phase.
-- Dio networking migration: start only as an explicit networking or feature hardening phase.
-- Built-in Kotlin migration: defer until an AGP 9.x migration or build requirement.
-- Future Android toolchain/build-system changes: separate branch/task unless explicitly approved.
-- Device Hub Bluetooth/audio packages: defer until Device Hub implementation starts.
-- Real authentication/backend sync: defer.
-- Full design-system rollout across all legacy screens: defer.
-- Emulator/device UI review: later QA phase, not a required gate for every current task.
-- Force-push, merge, or production branch pushes: never unless explicitly requested.
+T6A — Add Profile route smoke test first
+
+Choose this if route coverage is missing or the Profile route behavior is uncertain.
+
+T7 — Move another simple standalone screen
+
+Choose this if Profile is blocked by unrelated UI or route issues.
+
+T8 — Create Phase 2 migration map
+
+Choose this if remaining `lib/screens/` ownership is unclear.
+
+### Do not start yet
+
+- Riverpod activation.
+- go_router migration.
+- Dio/network layer.
+- `lib/main.dart` app composition refactor.
+- GetX routing replacement.
+- Built-in Kotlin migration.
+- Profile UI redesign during the move task.
+
+### Phase guard
+
+Current phase:
+
+- Phase 2 — Low-risk Feature Placement.
+
+Decision:
+
+- Continue Phase 2.
+
+Do not enter yet:
+
+- Phase 3 — Design System Foundation.
+
+Reason:
+
+- GetX routing is still active.
+- `lib/main.dart` still owns app composition.
+- Low-risk feature placement work remains.
+
+Exit criteria:
+
+- Simple low-risk screens selected for Phase 2 are moved or explicitly deferred.
+- Legacy route imports are updated and covered by narrow smoke tests where practical.
+- Remaining high-risk work is separated into later router, state, network, or app-composition phases.
 
 ## Verification Gates
 
@@ -85,6 +133,6 @@ Quick reference:
 
 ## Asking for the Next Task
 
-If the user asks "what is the next task?", recommend T6 unless it has already been completed or the user explicitly chooses another task.
+If the user asks "what is the next task?", use `Recommended Next Work` above. Recommend the single Primary task unless the user explicitly chooses an alternative.
 
-If the user asks to continue BMI migration, recommend a small explicit BMI follow-up unless the user chooses another BMI task.
+If the user assigns a different task, follow the user task and update planning docs only when it changes priority, phase, backlog, or durable decisions.

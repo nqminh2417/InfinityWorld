@@ -586,8 +586,8 @@ Treat `docs/ARCHITECTURE.md` as the target direction, not a claim that the curre
 
 ## 24. Standard Task Result Reporting
 
-After every completed or blocked task, return the concise `Task Result` format defined in:
+After every completed or blocked task, return the compact `Task Result` format defined in:
 
 - `docs/qa/IW_TASK_WORKFLOW.md`
 
-Always include status, summary, files changed, verification, commit/push details, planning-doc status, unverified areas, and one advisory recommended next task. If there is no clear actionable implementation task, recommend planning, audit, grooming, or review work instead of inventing feature work.
+Always include the current phase. Keep detailed planning state in `docs/TASKS.md`, not in final chat output. Final output should include one primary next task and point to `docs/TASKS.md` for alternatives, deferred work, and the phase guard.
