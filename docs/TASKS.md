@@ -1,6 +1,6 @@
 # Infinity World Active Tasks
 
-Last updated: 2026-06-23
+Last updated: 2026-06-25
 
 ## Current Status
 
@@ -33,29 +33,11 @@ Android toolchain status:
 - Gradle wrapper, Android Gradle Plugin, Kotlin Gradle Plugin, and Java/Kotlin target were upgraded for Flutter 3.44.2 compatibility on `home/devbyMinh-current` with explicit approval.
 - Built-in Kotlin migration remains deferred.
 
+Completed stabilization tasks:
+
+- Login build-time `setState()` risk was fixed in the legacy `LoginScreen`; the form is now SafeArea-aware, scroll-safe, and covered by a small keyboard-inset widget test.
+
 ## Next Recommended Tasks
-
-### T1: Fix Login build-time setState and keyboard safety
-
-Scope:
-
-- Keep `LoginScreen` in its current legacy location.
-- Remove the `setState()` call triggered from `build()`.
-- Preserve current login behavior and GetX navigation.
-- Make the form keyboard-safe without redesigning the screen.
-
-Likely files:
-
-- `lib/screens/auth/login_screen.dart`
-- `test/app_smoke_test.dart` if a narrow regression test is practical
-
-Verification:
-
-- `dart format <changed Dart files>`
-- `flutter analyze`
-- `flutter test`
-- `flutter build apk --debug` if startup behavior or route behavior is affected
-- `git diff --check`
 
 ### T2: BMI UI layout-safety pass
 
@@ -158,6 +140,6 @@ Quick reference:
 
 ## Asking for the Next Task
 
-If the user asks "what is the next task?", recommend T1 unless it has already been completed or the user explicitly chooses another task.
+If the user asks "what is the next task?", recommend T2 unless it has already been completed or the user explicitly chooses another task.
 
 If the user asks to continue BMI migration, recommend T2 or T4 depending on whether UI layout safety has been completed.

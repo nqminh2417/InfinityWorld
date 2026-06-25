@@ -1,6 +1,6 @@
 # Infinity World Roadmap
 
-Last updated: 2026-06-23
+Last updated: 2026-06-25
 
 ## Purpose
 
@@ -41,7 +41,7 @@ Riverpod, go_router, and Dio are target-direction technologies but are not insta
 
 ## Current Known Risks
 
-- Login still calls `setState()` from `build()` through keyboard-height handling.
+- Login build-time `setState()` risk has been fixed; emulator/device visual review remains a later QA activity.
 - GetX routing remains the active router.
 - `lib/screens/` and `lib/routes/` remain active legacy areas.
 - Some networking still uses direct `http` services under legacy feature folders.
@@ -113,7 +113,7 @@ Goal:
 
 Recommended tasks:
 
-1. Fix the Login screen build-time `setState()` and keyboard layout risk.
+1. Completed: fix the Login screen build-time `setState()` and keyboard layout risk.
 2. Continue the BMI pilot with a small UI layout-safety pass.
 3. Align obvious route/screen mismatches, such as Settings route registration, only as scoped tasks.
 4. Add or adjust narrow tests when a task changes behavior or startup risk.

@@ -947,13 +947,12 @@ Known risks from initial review:
 
 ```text
 High:
-- login_screen calls setState() from build()
 - Android release manifest may be missing INTERNET permission
 - Summertime Saga flow can spin forever or crash on null/error states
 
 Medium:
 - Dev/Prod config is not fully meaningful yet
-- No test/ directory exists
+- Test coverage is still minimal
 - pubspec.lock / Dart version mismatch may exist
 - Some controller/focus lifecycle leaks may exist
 - Android release signing is not production-ready
