@@ -1,0 +1,63 @@
+# Infinity World Phase 2 Migration Map
+
+Last updated: 2026-06-25
+
+## Purpose
+
+Phase 2 moves low-risk legacy screens toward `lib/features/<feature>/presentation/` while keeping the current app runnable.
+
+This map is intentionally narrow. It does not start Riverpod, go_router, Dio, `lib/main.dart` composition refactors, or UI redesign.
+
+## Current feature placements
+
+Already placed under `lib/features/`:
+
+- `bmi`
+  - `lib/features/bmi/domain/bmi_calculator.dart`
+  - `lib/features/bmi/presentation/bmi_screen.dart`
+- `profile`
+  - `lib/features/profile/presentation/profile_screen.dart`
+- `settings`
+  - `lib/features/settings/presentation/settings_screen.dart`
+
+Still transitional:
+
+- `lib/main.dart` still owns root app composition.
+- `lib/routes/` still owns legacy GetX route registration.
+- `lib/screens/main/main_screen.dart` still owns the legacy bottom-tab shell.
+- Most legacy screens still live under `lib/screens/`.
+
+## Remaining legacy screen map
+
+| Legacy path | Current role | Phase 2 action | Risk | Notes |
+|---|---|---:|---:|---|
+| `lib/screens/chat/chat_screen.dart` | Placeholder tab/route screen | Move next | Low | Simple placeholder. Update `AppPages` and `MainScreen` imports. |
+| `lib/screens/dashboard/dashboard_screen.dart` | Dashboard hub with GetX navigation links | Move after Chat or route coverage | Medium | More visible and navigation-heavy than Chat. Do not redesign during placement. |
+| `lib/screens/auth/login_screen.dart` | Startup/login screen | Move later in Phase 2 | Medium | Startup-sensitive. Keep existing login tests and route behavior intact. |
+| `lib/screens/main/main_screen.dart` | Legacy bottom-tab shell | Do not move in Phase 2 unless explicitly approved | High | Belongs closer to future `app/shell`, not a feature screen. |
+| `lib/screens/test/test_screen.dart` | Dev/test route | Audit before moving | Medium | May be debug/dead code. Also creates a `TextEditingController` in `build()`. |
+| `lib/screens/fox/` | API-backed Fox feature | Defer until explicit feature hardening/move | Medium | Uses direct `http` and live images. Move only as a scoped feature task. |
+| `lib/screens/summertime_saga/` | API-backed Summertime Saga feature | Defer | High | Known null/error/loading risks and direct `http`; stabilize before moving. |
+
+## Recommended ordering
+
+1. Move Chat screen to `lib/features/chat/presentation/`.
+2. Add route smoke tests for any route that is about to move and lacks coverage.
+3. Move Dashboard only as an import-only placement task, or split out route coverage first.
+4. Move Login only after confirming startup smoke tests still cover the flow.
+5. Defer Fox and Summertime Saga until explicit feature hardening tasks.
+
+## Placement rules
+
+- Move one screen or feature folder at a time.
+- Keep GetX route registration in `lib/routes/`.
+- Update only imports and narrow tests needed for the move.
+- Do not redesign UI during placement-only tasks.
+- Do not introduce Riverpod, go_router, Dio, or new dependencies.
+- If a screen has lifecycle, network, or layout risks, report them and split fixes into follow-up tasks.
+
+## Verification by task type
+
+- Simple screen move: `dart format`, `flutter analyze`, `flutter test`, `flutter build apk --debug`, `git diff --check`.
+- Docs-only map update: `git diff --check`.
+- API-backed feature move: use screen move gates, and add focused tests before broad refactors.

@@ -19,6 +19,7 @@ Current architecture status:
 - BMI is the active migration pilot under `lib/features/bmi/`.
 - Profile presentation now lives under `lib/features/profile/presentation/`.
 - Settings presentation now lives under `lib/features/settings/presentation/`.
+- Phase 2 migration map exists at `docs/PHASE2_MIGRATION_MAP.md`.
 - Riverpod, go_router, and Dio are not active yet.
 
 Current tests:
@@ -46,6 +47,7 @@ Completed stabilization tasks:
 - BMI feature-quality pass was completed; BMI inputs now allow decimal numeric keyboards and the weight field's keyboard Done action calculates the result.
 - Settings feature placement was completed; the existing placeholder screen moved to `lib/features/settings/presentation/` and the legacy GetX route import was updated.
 - Profile feature placement was completed; the existing screen moved to `lib/features/profile/presentation/`, legacy imports were updated, and the route has a smoke test.
+- Phase 2 migration map was created to rank remaining `lib/screens/` ownership and avoid random screen moves.
 
 ## Recommended Next Work
 
@@ -55,36 +57,37 @@ Current phase:
 
 ### Primary
 
-T7 — Create Phase 2 migration map
+T8 — Move Chat screen to feature presentation
 
 Reason:
 
-- Settings and Profile have moved, but most legacy screen ownership is still unclear.
-- A small map prevents random screen moves and keeps later placement tasks scoped.
+- Chat is the next lowest-risk legacy screen after Settings and Profile.
+- It is a placeholder used by both the legacy route table and `MainScreen`.
 
 Scope:
 
-- Inventory remaining `lib/screens/` entries.
-- Identify low-risk, blocked, and deferred candidates.
-- Keep it documentation-only unless a missing docs section is needed.
+- Move only the existing Chat screen into `lib/features/chat/presentation/`.
+- Update only the minimal legacy GetX and `MainScreen` import/reference.
+- Add or update a route smoke test if practical.
+- Do not redesign the placeholder UI.
 
 Verification:
 
-- Docs-only gate from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Screen move/routing gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T8 — Move another simple standalone screen
-
-Choose this if the next ownership target is already obvious.
-
 T9 — Add route smoke tests for remaining legacy routes
 
-Choose this if route coverage is more urgent than placement.
+Choose this if route confidence is more urgent than moving another screen.
 
 T10 — Profile UI layout-safety pass
 
-Choose this if Profile visual/layout issues should be fixed before more moves.
+Choose this if Profile visual/layout risks should be fixed before more placement.
+
+T11 — Move Dashboard screen to feature presentation
+
+Choose this if you want the next visible hub screen moved before more route tests.
 
 ### Do not start yet
 
@@ -115,6 +118,7 @@ Reason:
 - GetX routing is still active.
 - `lib/main.dart` still owns app composition.
 - Low-risk feature placement work remains.
+- The migration map exists, but its recommended low-risk moves are not complete yet.
 
 Exit criteria:
 
