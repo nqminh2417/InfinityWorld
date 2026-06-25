@@ -101,6 +101,7 @@ Unverified:
 
 Recommended next work:
 - Primary: <Task ID> — <task title>
+- Phase: Phase N — <phase name>
 - Planning details: see `docs/TASKS.md` for alternatives, deferred work, and phase guard.
 
 Skipped:
@@ -111,7 +112,7 @@ Keep the report short. Do not paste full command logs unless a failure needs dia
 
 ## Recommended Next Work
 
-Every task result must include exactly one advisory primary next task.
+Every task result must include exactly one advisory primary next task and the phase that task belongs to.
 
 Use the `Recommended Next Work` section in `docs/TASKS.md` as the source of truth. If the user later assigns a different task, follow the user task and apply the planning impact check above.
 

@@ -590,4 +590,4 @@ After every completed or blocked task, return the compact `Task Result` format d
 
 - `docs/qa/IW_TASK_WORKFLOW.md`
 
-Always include the current phase. Keep detailed planning state in `docs/TASKS.md`, not in final chat output. Final output should include one primary next task and point to `docs/TASKS.md` for alternatives, deferred work, and the phase guard.
+Always include the current phase. Keep detailed planning state in `docs/TASKS.md`, not in final chat output. Final output should include one primary next task, the phase that next task belongs to, and a pointer to `docs/TASKS.md` for alternatives, deferred work, and the phase guard.
