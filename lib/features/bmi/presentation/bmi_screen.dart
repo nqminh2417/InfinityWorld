@@ -51,7 +51,8 @@ class _BmiScreenState extends State<BmiScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Tính BMI'), centerTitle: true),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
@@ -59,6 +60,7 @@ class _BmiScreenState extends State<BmiScreen> {
               TextField(
                 controller: _heightController,
                 keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
                 decoration: const InputDecoration(
                   labelText: 'Chiều cao (cm)',
                   border: OutlineInputBorder(),
@@ -70,6 +72,7 @@ class _BmiScreenState extends State<BmiScreen> {
               TextField(
                 controller: _weightController,
                 keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.done,
                 decoration: const InputDecoration(
                   labelText: 'Cân nặng (kg)',
                   border: OutlineInputBorder(),

@@ -114,7 +114,7 @@ Goal:
 Recommended tasks:
 
 1. Completed: fix the Login screen build-time `setState()` and keyboard layout risk.
-2. Continue the BMI pilot with a small UI layout-safety pass.
+2. Completed: continue the BMI pilot with a small UI layout-safety pass.
 3. Align obvious route/screen mismatches, such as Settings route registration, only as scoped tasks.
 4. Add or adjust narrow tests when a task changes behavior or startup risk.
 

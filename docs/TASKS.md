@@ -36,29 +36,9 @@ Android toolchain status:
 Completed stabilization tasks:
 
 - Login build-time `setState()` risk was fixed in the legacy `LoginScreen`; the form is now SafeArea-aware, scroll-safe, and covered by a small keyboard-inset widget test.
+- BMI UI layout-safety pass was completed; the BMI form is now scroll-safe, keyboard-dismiss-aware, and covered by a small keyboard-inset widget test.
 
 ## Next Recommended Tasks
-
-### T2: BMI UI layout-safety pass
-
-Scope:
-
-- Keep BMI under `lib/features/bmi/`.
-- Preserve BMI calculation behavior and Vietnamese labels.
-- Make the BMI screen scroll-safe and keyboard-safe.
-- Do not move routing or introduce new state management.
-
-Likely files:
-
-- `lib/features/bmi/presentation/bmi_screen.dart`
-- Existing BMI tests only if behavior changes
-
-Verification:
-
-- `dart format <changed Dart files>`
-- `flutter analyze`
-- `flutter test`
-- `git diff --check`
 
 ### T3: Settings route alignment audit/fix
 
@@ -140,6 +120,6 @@ Quick reference:
 
 ## Asking for the Next Task
 
-If the user asks "what is the next task?", recommend T2 unless it has already been completed or the user explicitly chooses another task.
+If the user asks "what is the next task?", recommend T3 unless it has already been completed or the user explicitly chooses another task.
 
-If the user asks to continue BMI migration, recommend T2 or T4 depending on whether UI layout safety has been completed.
+If the user asks to continue BMI migration, recommend T4 unless the user explicitly chooses another BMI task.
