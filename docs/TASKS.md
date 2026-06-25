@@ -55,7 +55,7 @@ Current phase:
 
 ### Primary
 
-T8 — Create Phase 2 migration map
+T7 — Create Phase 2 migration map
 
 Reason:
 
@@ -74,7 +74,7 @@ Verification:
 
 ### Alternatives
 
-T7 — Move another simple standalone screen
+T8 — Move another simple standalone screen
 
 Choose this if the next ownership target is already obvious.
 
