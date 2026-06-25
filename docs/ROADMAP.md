@@ -30,6 +30,7 @@ Current structure:
 - Tests now exist:
   - `test/app_smoke_test.dart`
   - `test/features/bmi/domain/bmi_calculator_test.dart`
+  - `test/features/bmi/presentation/bmi_screen_test.dart`
   - `test/routes/app_pages_test.dart`
 
 Current dependencies:
@@ -117,7 +118,8 @@ Recommended tasks:
 1. Completed: fix the Login screen build-time `setState()` and keyboard layout risk.
 2. Completed: continue the BMI pilot with a small UI layout-safety pass.
 3. Completed: align the Settings route constant with the legacy GetX page registration.
-4. Add or adjust narrow tests when a task changes behavior or startup risk.
+4. Completed: continue the BMI pilot with a small feature-quality pass for decimal input and keyboard submit behavior.
+5. Add or adjust narrow tests when a task changes behavior or startup risk.
 
 Non-goals:
 

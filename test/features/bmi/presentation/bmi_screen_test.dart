@@ -27,4 +27,19 @@ void main() {
     expect(find.byType(ElevatedButton), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('BMI screen calculates from the keyboard done action', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const MaterialApp(home: BmiScreen()));
+
+    await tester.enterText(find.byType(TextField).at(0), '170');
+    await tester.enterText(find.byType(TextField).at(1), '65');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+
+    expect(find.text('BMI: 22.5'), findsOneWidget);
+    expect(find.text('Bình thường'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }

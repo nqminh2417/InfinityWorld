@@ -23,6 +23,7 @@ Current tests:
 
 - App startup smoke test exists.
 - BMI domain unit tests exist.
+- BMI presentation widget tests exist.
 - Settings route smoke test exists.
 
 Current phase:
@@ -39,26 +40,9 @@ Completed stabilization tasks:
 - Login build-time `setState()` risk was fixed in the legacy `LoginScreen`; the form is now SafeArea-aware, scroll-safe, and covered by a small keyboard-inset widget test.
 - BMI UI layout-safety pass was completed; the BMI form is now scroll-safe, keyboard-dismiss-aware, and covered by a small keyboard-inset widget test.
 - Settings route alignment was fixed; `AppRoutes.settings` is now registered in the legacy GetX route table and covered by a route smoke test.
+- BMI feature-quality pass was completed; BMI inputs now allow decimal numeric keyboards and the weight field's keyboard Done action calculates the result.
 
 ## Next Recommended Tasks
-
-### T4: Continue BMI pilot with a small feature-quality pass
-
-Scope:
-
-- Use BMI as the reference small local feature.
-- Add only narrow improvements that preserve behavior.
-- Consider a widget smoke test only if it compiles reliably without broad app setup.
-
-Non-goals:
-
-- No persistence.
-- No Riverpod.
-- No design-system rewrite.
-
-Verification:
-
-- Match the actual change type using `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### T5: Pick the next simple screen for feature placement
 
@@ -99,6 +83,6 @@ Quick reference:
 
 ## Asking for the Next Task
 
-If the user asks "what is the next task?", recommend T4 unless it has already been completed or the user explicitly chooses another task.
+If the user asks "what is the next task?", recommend T5 unless it has already been completed or the user explicitly chooses another task.
 
-If the user asks to continue BMI migration, recommend T4 unless the user explicitly chooses another BMI task.
+If the user asks to continue BMI migration, recommend a small explicit BMI follow-up unless the user chooses another BMI task.

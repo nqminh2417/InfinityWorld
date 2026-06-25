@@ -59,7 +59,9 @@ class _BmiScreenState extends State<BmiScreen> {
               // Chiều cao
               TextField(
                 controller: _heightController,
-                keyboardType: TextInputType.number,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 textInputAction: TextInputAction.next,
                 decoration: const InputDecoration(
                   labelText: 'Chiều cao (cm)',
@@ -71,8 +73,11 @@ class _BmiScreenState extends State<BmiScreen> {
               // Cân nặng
               TextField(
                 controller: _weightController,
-                keyboardType: TextInputType.number,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 textInputAction: TextInputAction.done,
+                onSubmitted: (_) => _calculateBMI(),
                 decoration: const InputDecoration(
                   labelText: 'Cân nặng (kg)',
                   border: OutlineInputBorder(),
