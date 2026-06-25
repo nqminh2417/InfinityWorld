@@ -469,7 +469,7 @@ Medium:
 
 Low:
 - Some routes/screens are dead or incomplete
-- Settings screen may be unreachable
+- Settings route registration was fixed, but broader navigation remains legacy
 - Some dependencies may be placed incorrectly
 ```
 

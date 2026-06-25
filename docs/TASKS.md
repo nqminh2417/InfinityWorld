@@ -23,6 +23,7 @@ Current tests:
 
 - App startup smoke test exists.
 - BMI domain unit tests exist.
+- Settings route smoke test exists.
 
 Current phase:
 
@@ -37,31 +38,9 @@ Completed stabilization tasks:
 
 - Login build-time `setState()` risk was fixed in the legacy `LoginScreen`; the form is now SafeArea-aware, scroll-safe, and covered by a small keyboard-inset widget test.
 - BMI UI layout-safety pass was completed; the BMI form is now scroll-safe, keyboard-dismiss-aware, and covered by a small keyboard-inset widget test.
+- Settings route alignment was fixed; `AppRoutes.settings` is now registered in the legacy GetX route table and covered by a route smoke test.
 
 ## Next Recommended Tasks
-
-### T3: Settings route alignment audit/fix
-
-Scope:
-
-- Confirm whether Settings is intended to be reachable now.
-- If approved, register the existing Settings screen in the legacy GetX route table.
-- Do not migrate the router.
-- Do not move unrelated screens.
-
-Likely files:
-
-- `lib/routes/app_pages.dart`
-- `lib/routes/app_routes.dart`
-- `lib/screens/settings/settings_screen.dart` only if a minimal startup-safe fix is required
-
-Verification:
-
-- `dart format <changed Dart files>`
-- `flutter analyze`
-- `flutter test`
-- `flutter build apk --debug`
-- `git diff --check`
 
 ### T4: Continue BMI pilot with a small feature-quality pass
 
@@ -120,6 +99,6 @@ Quick reference:
 
 ## Asking for the Next Task
 
-If the user asks "what is the next task?", recommend T3 unless it has already been completed or the user explicitly chooses another task.
+If the user asks "what is the next task?", recommend T4 unless it has already been completed or the user explicitly chooses another task.
 
 If the user asks to continue BMI migration, recommend T4 unless the user explicitly chooses another BMI task.

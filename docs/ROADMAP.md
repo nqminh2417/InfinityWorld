@@ -30,6 +30,7 @@ Current structure:
 - Tests now exist:
   - `test/app_smoke_test.dart`
   - `test/features/bmi/domain/bmi_calculator_test.dart`
+  - `test/routes/app_pages_test.dart`
 
 Current dependencies:
 
@@ -45,7 +46,7 @@ Riverpod, go_router, and Dio are target-direction technologies but are not insta
 - GetX routing remains the active router.
 - `lib/screens/` and `lib/routes/` remain active legacy areas.
 - Some networking still uses direct `http` services under legacy feature folders.
-- `AppRoutes.settings` exists, but the current GetX page list does not register a Settings route.
+- Settings now has a registered legacy GetX route, but the broader routing architecture is still transitional.
 - Theme/design-system implementation is still mostly target documentation rather than app code.
 - Android toolchain versions have been pulled forward on `home/devbyMinh-current` with explicit approval: Gradle 8.14.5, Android Gradle Plugin 8.11.1, Kotlin Gradle Plugin 2.2.20, Java/Kotlin target 17.
 - Built-in Kotlin migration remains deferred until an AGP 9.x migration or a build requirement forces it.
@@ -115,7 +116,7 @@ Recommended tasks:
 
 1. Completed: fix the Login screen build-time `setState()` and keyboard layout risk.
 2. Completed: continue the BMI pilot with a small UI layout-safety pass.
-3. Align obvious route/screen mismatches, such as Settings route registration, only as scoped tasks.
+3. Completed: align the Settings route constant with the legacy GetX page registration.
 4. Add or adjust narrow tests when a task changes behavior or startup risk.
 
 Non-goals:

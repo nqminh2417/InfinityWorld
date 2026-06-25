@@ -7,6 +7,7 @@ import 'package:infinity_world/screens/dashboard/dashboard_screen.dart';
 import 'package:infinity_world/screens/fox/fox_random_screen.dart';
 import 'package:infinity_world/screens/main/main_screen.dart';
 import 'package:infinity_world/screens/profile/profile_screen.dart';
+import 'package:infinity_world/screens/settings/settings_screen.dart';
 import 'package:infinity_world/screens/summertime_saga/smts_home_screen.dart';
 import 'package:infinity_world/screens/test/test_screen.dart';
 
@@ -17,6 +18,7 @@ class AppPages {
     GetPage(name: AppRoutes.dashboard, page: () => DashboardScreen()),
     GetPage(name: AppRoutes.chat, page: () => ChatScreen()),
     GetPage(name: AppRoutes.profile, page: () => ProfileScreen()),
+    GetPage(name: AppRoutes.settings, page: () => SettingsScreen()),
     GetPage(name: AppRoutes.smtsHome, page: () => SmtsHomeScreen()),
     GetPage(name: AppRoutes.test, page: () => TestScreen()),
     GetPage(name: AppRoutes.fox, page: () => FoxRandomScreen()),
