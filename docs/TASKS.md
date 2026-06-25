@@ -17,6 +17,7 @@ Current architecture status:
 - GetX routing is still active under `lib/routes/`.
 - Most screens still live under `lib/screens/`.
 - BMI is the active migration pilot under `lib/features/bmi/`.
+- Settings presentation now lives under `lib/features/settings/presentation/`.
 - Riverpod, go_router, and Dio are not active yet.
 
 Current tests:
@@ -28,7 +29,7 @@ Current tests:
 
 Current phase:
 
-- Phase 1: Transitional Stabilization.
+- Phase 2: Low-risk Feature Placement.
 
 Android toolchain status:
 
@@ -41,17 +42,18 @@ Completed stabilization tasks:
 - BMI UI layout-safety pass was completed; the BMI form is now scroll-safe, keyboard-dismiss-aware, and covered by a small keyboard-inset widget test.
 - Settings route alignment was fixed; `AppRoutes.settings` is now registered in the legacy GetX route table and covered by a route smoke test.
 - BMI feature-quality pass was completed; BMI inputs now allow decimal numeric keyboards and the weight field's keyboard Done action calculates the result.
+- Settings feature placement was completed; the existing placeholder screen moved to `lib/features/settings/presentation/` and the legacy GetX route import was updated.
 
 ## Next Recommended Tasks
 
-### T5: Pick the next simple screen for feature placement
+### T6: Move Profile screen to feature presentation
 
 Scope:
 
-- Choose one low-risk screen after BMI is stable.
-- Prefer Profile or Settings over API-backed features.
-- Move only the selected screen into `lib/features/<feature>/presentation/`.
+- Move only the existing Profile screen into `lib/features/profile/presentation/`.
 - Update only the minimal legacy GetX import/reference.
+- Do not redesign the Profile UI in the move task.
+- If layout issues are found, report them or split them into a follow-up UI-safety task.
 
 Verification:
 
@@ -83,6 +85,6 @@ Quick reference:
 
 ## Asking for the Next Task
 
-If the user asks "what is the next task?", recommend T5 unless it has already been completed or the user explicitly chooses another task.
+If the user asks "what is the next task?", recommend T6 unless it has already been completed or the user explicitly chooses another task.
 
 If the user asks to continue BMI migration, recommend a small explicit BMI follow-up unless the user chooses another BMI task.

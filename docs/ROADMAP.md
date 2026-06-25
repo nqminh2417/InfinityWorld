@@ -24,9 +24,10 @@ Current structure:
 - Most production screens still live under `lib/screens/`.
 - Shared legacy UI remains under `lib/widgets/`.
 - `lib/core/config/constants.dart` contains early runtime constants.
-- BMI has started the feature migration pilot:
+- Feature placement has started:
   - `lib/features/bmi/domain/bmi_calculator.dart`
   - `lib/features/bmi/presentation/bmi_screen.dart`
+  - `lib/features/settings/presentation/settings_screen.dart`
 - Tests now exist:
   - `test/app_smoke_test.dart`
   - `test/features/bmi/domain/bmi_calculator_test.dart`
@@ -47,7 +48,7 @@ Riverpod, go_router, and Dio are target-direction technologies but are not insta
 - GetX routing remains the active router.
 - `lib/screens/` and `lib/routes/` remain active legacy areas.
 - Some networking still uses direct `http` services under legacy feature folders.
-- Settings now has a registered legacy GetX route, but the broader routing architecture is still transitional.
+- Settings now has a registered legacy GetX route and feature presentation placement, but the broader routing architecture is still transitional.
 - Theme/design-system implementation is still mostly target documentation rather than app code.
 - Android toolchain versions have been pulled forward on `home/devbyMinh-current` with explicit approval: Gradle 8.14.5, Android Gradle Plugin 8.11.1, Kotlin Gradle Plugin 2.2.20, Java/Kotlin target 17.
 - Built-in Kotlin migration remains deferred until an AGP 9.x migration or a build requirement forces it.
@@ -107,7 +108,7 @@ Task boundary:
 
 ## Phase 1: Transitional Stabilization
 
-Status: current recommended implementation phase.
+Status: mostly complete for the current baseline.
 
 Goal:
 
@@ -131,7 +132,7 @@ Non-goals:
 
 ## Phase 2: Low-risk Feature Placement
 
-Status: future, after current stabilization tasks.
+Status: current / started.
 
 Goal:
 
@@ -139,8 +140,9 @@ Goal:
 
 Good candidates:
 
+- Completed: Settings screen placement under `lib/features/settings/presentation/`.
 - BMI continuation, because it is already partly migrated.
-- Profile or Settings, if the task only moves the screen and updates the existing GetX route.
+- Profile, if the task only moves the screen and updates the existing GetX route.
 
 Avoid early:
 

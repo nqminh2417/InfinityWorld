@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:infinity_world/routes/app_pages.dart';
 import 'package:infinity_world/routes/app_routes.dart';
-import 'package:infinity_world/screens/settings/settings_screen.dart';
+import 'package:infinity_world/features/settings/presentation/settings_screen.dart';
 
 void main() {
   tearDown(() {

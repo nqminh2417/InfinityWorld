@@ -7,7 +7,7 @@ import 'package:infinity_world/screens/dashboard/dashboard_screen.dart';
 import 'package:infinity_world/screens/fox/fox_random_screen.dart';
 import 'package:infinity_world/screens/main/main_screen.dart';
 import 'package:infinity_world/screens/profile/profile_screen.dart';
-import 'package:infinity_world/screens/settings/settings_screen.dart';
+import 'package:infinity_world/features/settings/presentation/settings_screen.dart';
 import 'package:infinity_world/screens/summertime_saga/smts_home_screen.dart';
 import 'package:infinity_world/screens/test/test_screen.dart';
 
