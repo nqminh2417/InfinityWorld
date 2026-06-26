@@ -50,8 +50,9 @@ Still transitional:
 4. Completed: move Login after confirming startup smoke tests cover the flow.
 5. Completed: create Fox hardening plan before moving API-backed features.
 6. Completed: harden Fox API service/model behavior with deterministic tests.
-7. Add deterministic Fox screen or route coverage before moving the files.
-8. Defer Summertime Saga until explicit feature hardening tasks.
+7. Completed: add deterministic Fox screen coverage before moving the files.
+8. Move Fox to feature structure as a placement-only task.
+9. Defer Summertime Saga until explicit feature hardening tasks.
 
 ## Route smoke coverage
 

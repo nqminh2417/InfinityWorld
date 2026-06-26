@@ -69,18 +69,19 @@ Verified with:
 - `flutter test`
 - `git diff --check`
 
-### T15 - Add deterministic Fox screen or route smoke coverage
+### Completed: T15 - Add deterministic Fox screen coverage
 
-Scope:
+Result:
 
 - Avoid real network in widget tests.
-- Add the smallest test seam needed for `FoxRandomScreen`.
-- Verify loading/success/error retry behavior where practical.
-- Keep GetX route registration unchanged.
+- Added the smallest test seam needed for `FoxRandomScreen`.
+- Verified deterministic loading, error, and retry states.
+- Kept GetX route registration unchanged.
 
-Verification:
+Verified with:
 
 - `dart format`
+- `flutter test test/screens/fox/fox_random_screen_test.dart`
 - `flutter analyze`
 - `flutter test`
 - `git diff --check`

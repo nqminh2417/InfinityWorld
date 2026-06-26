@@ -3,19 +3,23 @@ import '../../../screens/fox/services/fox_api_service.dart';
 import '../../../screens/fox/models/fox_model.dart';
 
 class FoxRandomScreen extends StatefulWidget {
-  const FoxRandomScreen({super.key});
+  const FoxRandomScreen({super.key, FoxApiService? service})
+    : _service = service;
+
+  final FoxApiService? _service;
 
   @override
   State<FoxRandomScreen> createState() => _FoxRandomScreenState();
 }
 
 class _FoxRandomScreenState extends State<FoxRandomScreen> {
-  final _service = FoxApiService();
+  late final FoxApiService _service;
   late Future<FoxModel> _foxFuture;
 
   @override
   void initState() {
     super.initState();
+    _service = widget._service ?? FoxApiService();
     _foxFuture = _service.getRandomFox();
   }
 
@@ -48,7 +52,10 @@ class _FoxRandomScreenState extends State<FoxRandomScreen> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('Lỗi: ${snapshot.error}', textAlign: TextAlign.center),
+                            Text(
+                              'Lỗi: ${snapshot.error}',
+                              textAlign: TextAlign.center,
+                            ),
                             const SizedBox(height: 12),
                             OutlinedButton.icon(
                               onPressed: _refresh,
@@ -73,9 +80,14 @@ class _FoxRandomScreenState extends State<FoxRandomScreen> {
                           width: double.infinity,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
-                            return const Center(child: CircularProgressIndicator());
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
                           },
-                          errorBuilder: (_, __, ___) => const Center(child: Text('Không thể hiển thị ảnh')),
+                          errorBuilder:
+                              (_, __, ___) => const Center(
+                                child: Text('Không thể hiển thị ảnh'),
+                              ),
                         ),
                       ),
                     );
@@ -96,7 +108,9 @@ class _FoxRandomScreenState extends State<FoxRandomScreen> {
                     icon: const Icon(Icons.refresh),
                     label: const Text('Làm mới'),
                     style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ),
