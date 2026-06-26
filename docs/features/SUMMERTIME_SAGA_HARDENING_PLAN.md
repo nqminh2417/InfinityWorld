@@ -32,18 +32,21 @@ Current files:
 - `lib/core/config/constants.dart`
 - `android/app/src/main/AndroidManifest.xml`
 
-## Findings before hardening
+## Initial findings captured by T22
 
 - The screen starts live HTTP work in `initState()`, so route rendering tests are not deterministic yet.
-- `SmtsService` uses direct static `http.get` with no timeout and no injectable test seam.
-- `SmtsService` catches failures, prints to console, and returns `null`, so the screen can show a loading spinner forever.
-- `SmtsService` builds `_progressUrl` from `Cfg.smtsBaseUrl` and does not use the existing `Cfg.smtsProgressUrl` / `Cfg.smtsProgressUri`.
 - `SmtsHomeScreen._fetchProgress()` calls `setState()` after `await` without checking `mounted`.
 - `SmtsHomeScreen` force-unwraps many nullable API fields, for example totals, issues, departments, and nested percent values.
 - `ProgressBar` force-unwraps nullable counts and percent values; missing or invalid API data can crash rendering.
 - The current body uses a fixed full-height container with a non-scrollable `Column`; small screens or large content can overflow.
-- Android debug/profile manifests declare `INTERNET`, but `android/app/src/main/AndroidManifest.xml` does not. Release networking can fail.
-- There are no focused Summertime Saga service/model/widget tests yet.
+- Route/widget rendering tests remain deferred until the screen can avoid uncontrolled live HTTP during tests.
+
+Resolved in T23:
+
+- `SmtsService` now uses the existing configured progress URI instead of rebuilding from `smtsBaseUrl`.
+- `SmtsService` has a small fake-network seam, timeout handling, non-2xx handling, malformed JSON handling, required-field validation, and deterministic exceptions.
+- Android release `INTERNET` permission exists in `android/app/src/main/AndroidManifest.xml`.
+- Focused Summertime Saga service/model tests exist for success, non-2xx, malformed JSON, missing schema, and timeout cases.
 
 ## Hardening goals before moving files
 
@@ -61,6 +64,8 @@ Current files:
 
 ### T23 - Harden Summertime Saga network foundation
 
+Status: Completed on 2026-06-26.
+
 Scope:
 
 - Keep the legacy file locations for this task.
@@ -71,6 +76,12 @@ Scope:
 - Replace silent `null` failures with a deterministic error contract.
 - Confirm or add Android release `INTERNET` permission if it is still missing.
 - Add focused service/model tests with fake responses.
+
+Result:
+
+- The service keeps `http` but no longer performs uncontrolled static-only requests in tests.
+- Network, status, parsing, and schema failures now surface through `SmtsServiceException`.
+- Screen-state and layout risks remain for T24.
 
 Verification:
 

@@ -7,7 +7,12 @@ class SmtsProgressModel {
   final Depts? depts;
   SmtsProgressModel({this.version, this.totals, this.issues, this.depts});
 
-  SmtsProgressModel copyWith({String? version, Totals? totals, Issues? issues, Depts? depts}) {
+  SmtsProgressModel copyWith({
+    String? version,
+    Totals? totals,
+    Issues? issues,
+    Depts? depts,
+  }) {
     return SmtsProgressModel(
       version: version ?? this.version,
       totals: totals ?? this.totals,
@@ -27,17 +32,24 @@ class SmtsProgressModel {
 
   factory SmtsProgressModel.fromMap(Map<String, dynamic> map) {
     return SmtsProgressModel(
-      version: map['version'] != null ? map['version'] as String : null,
-      totals: map['totals'] != null ? Totals.fromMap(map['totals'] as Map<String, dynamic>) : null,
-      issues: map['issues'] != null ? Issues.fromMap(map['issues'] as Map<String, dynamic>) : null,
-      depts: map['depts'] != null ? Depts.fromMap(map['depts'] as Map<String, dynamic>) : null,
+      version: _requiredString(map, 'version'),
+      totals: Totals.fromMap(_requiredMap(map, 'totals')),
+      issues: Issues.fromMap(_requiredMap(map, 'issues')),
+      depts: Depts.fromMap(_requiredMap(map, 'depts')),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory SmtsProgressModel.fromJson(String source) =>
-      SmtsProgressModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory SmtsProgressModel.fromJson(String source) {
+    final decoded = json.decode(source);
+
+    if (decoded is! Map<String, dynamic>) {
+      throw const FormatException('Progress response must be an object');
+    }
+
+    return SmtsProgressModel.fromMap(decoded);
+  }
 
   @override
   String toString() {
@@ -48,12 +60,18 @@ class SmtsProgressModel {
   bool operator ==(covariant SmtsProgressModel other) {
     if (identical(this, other)) return true;
 
-    return other.version == version && other.totals == totals && other.issues == issues && other.depts == depts;
+    return other.version == version &&
+        other.totals == totals &&
+        other.issues == issues &&
+        other.depts == depts;
   }
 
   @override
   int get hashCode {
-    return version.hashCode ^ totals.hashCode ^ issues.hashCode ^ depts.hashCode;
+    return version.hashCode ^
+        totals.hashCode ^
+        issues.hashCode ^
+        depts.hashCode;
   }
 }
 
@@ -65,7 +83,13 @@ class Depts {
   final Totals? audio;
   Depts({this.art, this.posing, this.dialogue, this.code, this.audio});
 
-  Depts copyWith({Totals? art, Totals? posing, Totals? dialogue, Totals? code, Totals? audio}) {
+  Depts copyWith({
+    Totals? art,
+    Totals? posing,
+    Totals? dialogue,
+    Totals? code,
+    Totals? audio,
+  }) {
     return Depts(
       art: art ?? this.art,
       posing: posing ?? this.posing,
@@ -87,17 +111,18 @@ class Depts {
 
   factory Depts.fromMap(Map<String, dynamic> map) {
     return Depts(
-      art: map['art'] != null ? Totals.fromMap(map['art'] as Map<String, dynamic>) : null,
-      posing: map['posing'] != null ? Totals.fromMap(map['posing'] as Map<String, dynamic>) : null,
-      dialogue: map['dialogue'] != null ? Totals.fromMap(map['dialogue'] as Map<String, dynamic>) : null,
-      code: map['code'] != null ? Totals.fromMap(map['code'] as Map<String, dynamic>) : null,
-      audio: map['audio'] != null ? Totals.fromMap(map['audio'] as Map<String, dynamic>) : null,
+      art: Totals.fromMap(_requiredMap(map, 'art')),
+      posing: Totals.fromMap(_requiredMap(map, 'posing')),
+      dialogue: Totals.fromMap(_requiredMap(map, 'dialogue')),
+      code: Totals.fromMap(_requiredMap(map, 'code')),
+      audio: Totals.fromMap(_requiredMap(map, 'audio')),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Depts.fromJson(String source) => Depts.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Depts.fromJson(String source) =>
+      Depts.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -117,7 +142,11 @@ class Depts {
 
   @override
   int get hashCode {
-    return art.hashCode ^ posing.hashCode ^ dialogue.hashCode ^ code.hashCode ^ audio.hashCode;
+    return art.hashCode ^
+        posing.hashCode ^
+        dialogue.hashCode ^
+        code.hashCode ^
+        audio.hashCode;
   }
 }
 
@@ -129,7 +158,13 @@ class Totals {
   final Percent? percent;
   Totals({this.totalsNew, this.closed, this.working, this.total, this.percent});
 
-  Totals copyWith({int? totalsNew, int? closed, int? working, int? total, Percent? percent}) {
+  Totals copyWith({
+    int? totalsNew,
+    int? closed,
+    int? working,
+    int? total,
+    Percent? percent,
+  }) {
     return Totals(
       totalsNew: totalsNew ?? this.totalsNew,
       closed: closed ?? this.closed,
@@ -151,17 +186,18 @@ class Totals {
 
   factory Totals.fromMap(Map<String, dynamic> map) {
     return Totals(
-      totalsNew: map['totalsNew'] != null ? map['totalsNew'] as int : null,
-      closed: map['closed'] != null ? map['closed'] as int : null,
-      working: map['working'] != null ? map['working'] as int : null,
-      total: map['total'] != null ? map['total'] as int : null,
-      percent: map['percent'] != null ? Percent.fromMap(map['percent'] as Map<String, dynamic>) : null,
+      totalsNew: _optionalInt(map, 'totalsNew'),
+      closed: _requiredInt(map, 'closed'),
+      working: _requiredInt(map, 'working'),
+      total: _requiredInt(map, 'total'),
+      percent: Percent.fromMap(_requiredMap(map, 'percent')),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Totals.fromJson(String source) => Totals.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Totals.fromJson(String source) =>
+      Totals.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -181,7 +217,11 @@ class Totals {
 
   @override
   int get hashCode {
-    return totalsNew.hashCode ^ closed.hashCode ^ working.hashCode ^ total.hashCode ^ percent.hashCode;
+    return totalsNew.hashCode ^
+        closed.hashCode ^
+        working.hashCode ^
+        total.hashCode ^
+        percent.hashCode;
   }
 }
 
@@ -191,7 +231,10 @@ class Percent {
   Percent({this.completed, this.working});
 
   Percent copyWith({String? completed, String? working}) {
-    return Percent(completed: completed ?? this.completed, working: working ?? this.working);
+    return Percent(
+      completed: completed ?? this.completed,
+      working: working ?? this.working,
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -200,14 +243,15 @@ class Percent {
 
   factory Percent.fromMap(Map<String, dynamic> map) {
     return Percent(
-      completed: map['completed'] != null ? map['completed'] as String : null,
-      working: map['working'] != null ? map['working'] as String : null,
+      completed: _requiredString(map, 'completed'),
+      working: _requiredString(map, 'working'),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Percent.fromJson(String source) => Percent.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Percent.fromJson(String source) =>
+      Percent.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() => 'Percent(completed: $completed, working: $working)';
@@ -230,7 +274,11 @@ class Issues {
   Issues({this.open, this.closed, this.total});
 
   Issues copyWith({int? open, int? closed, int? total}) {
-    return Issues(open: open ?? this.open, closed: closed ?? this.closed, total: total ?? this.total);
+    return Issues(
+      open: open ?? this.open,
+      closed: closed ?? this.closed,
+      total: total ?? this.total,
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -239,15 +287,16 @@ class Issues {
 
   factory Issues.fromMap(Map<String, dynamic> map) {
     return Issues(
-      open: map['open'] != null ? map['open'] as int : null,
-      closed: map['closed'] != null ? map['closed'] as int : null,
-      total: map['total'] != null ? map['total'] as int : null,
+      open: _requiredInt(map, 'open'),
+      closed: _requiredInt(map, 'closed'),
+      total: _requiredInt(map, 'total'),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Issues.fromJson(String source) => Issues.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Issues.fromJson(String source) =>
+      Issues.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() => 'Issues(open: $open, closed: $closed, total: $total)';
@@ -261,4 +310,52 @@ class Issues {
 
   @override
   int get hashCode => open.hashCode ^ closed.hashCode ^ total.hashCode;
+}
+
+Map<String, dynamic> _requiredMap(Map<String, dynamic> map, String key) {
+  final value = map[key];
+
+  if (value is Map<String, dynamic>) {
+    return value;
+  }
+
+  if (value is Map) {
+    return Map<String, dynamic>.from(value);
+  }
+
+  throw FormatException('Missing or invalid "$key" object');
+}
+
+int _requiredInt(Map<String, dynamic> map, String key) {
+  final value = map[key];
+
+  if (value is int) {
+    return value;
+  }
+
+  throw FormatException('Missing or invalid "$key" integer');
+}
+
+int? _optionalInt(Map<String, dynamic> map, String key) {
+  final value = map[key];
+
+  if (value == null) {
+    return null;
+  }
+
+  if (value is int) {
+    return value;
+  }
+
+  throw FormatException('Invalid "$key" integer');
+}
+
+String _requiredString(Map<String, dynamic> map, String key) {
+  final value = map[key];
+
+  if (value is String && value.isNotEmpty) {
+    return value;
+  }
+
+  throw FormatException('Missing or invalid "$key" string');
 }

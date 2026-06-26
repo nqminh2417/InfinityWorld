@@ -1,24 +1,57 @@
+import 'dart:async';
+
 import 'package:http/http.dart' as http;
 import 'package:infinity_world/core/config/constants.dart';
 import 'package:infinity_world/screens/summertime_saga/models/smts_progress_model.dart';
 
-class SmtsService {
-  static String _baseUrl = Cfg.smtsBaseUrl;
-  static String _progressUrl = '$_baseUrl/data/progress.json';
+typedef SmtsHttpGet = Future<http.Response> Function(Uri uri);
 
-  static Future<SmtsProgressModel?> getProgress() async {
+class SmtsServiceException implements Exception {
+  const SmtsServiceException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => 'SmtsServiceException: $message';
+}
+
+class SmtsService {
+  SmtsService({SmtsHttpGet? httpGet, Duration timeout = _defaultTimeout})
+    : _httpGet = httpGet ?? http.get,
+      _timeout = timeout;
+
+  static const Duration _defaultTimeout = Duration(seconds: 15);
+
+  final SmtsHttpGet _httpGet;
+  final Duration _timeout;
+
+  static Future<SmtsProgressModel> getProgress() {
+    return SmtsService().fetchProgress();
+  }
+
+  Future<SmtsProgressModel> fetchProgress() async {
+    final http.Response response;
+
     try {
-      final response = await http.get(Uri.parse(_progressUrl));
-      if (response.statusCode == 200) {
-        SmtsProgressModel data = SmtsProgressModel.fromJson(response.body);
-        return data;
-      } else {
-        print('Failed to load progress: ${response.statusCode}');
-        return null;
-      }
-    } catch (e) {
-      print('Error fetching progress: $e');
-      return null;
+      response = await _httpGet(Cfg.smtsProgressUri).timeout(_timeout);
+    } on TimeoutException {
+      throw const SmtsServiceException('Progress request timed out');
+    } catch (error) {
+      throw SmtsServiceException('Failed to load progress: $error');
+    }
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw SmtsServiceException(
+        'Failed to load progress: ${response.statusCode}',
+      );
+    }
+
+    try {
+      return SmtsProgressModel.fromJson(response.body);
+    } on FormatException catch (error) {
+      throw SmtsServiceException('Invalid progress response: ${error.message}');
+    } on TypeError {
+      throw const SmtsServiceException('Invalid progress response shape');
     }
   }
 }

@@ -40,6 +40,7 @@ Current tests:
 - Test screen widget coverage exists for small-screen keyboard/scroll safety.
 - Fox API service and model parsing tests exist.
 - Fox screen loading/error/retry widget tests exist, avoid real network, and include small-screen scroll-safety coverage.
+- Summertime Saga service/model tests exist with fake-network coverage for success, non-2xx, malformed JSON, missing schema, and timeout handling.
 - Profile presentation widget test exists.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
@@ -78,6 +79,7 @@ Completed stabilization tasks:
 - Test feature placement was completed; the screen moved to `lib/features/test/presentation/`, route/test imports were updated, and GetX route behavior stayed unchanged.
 - Dashboard UI layout-safety pass was completed; navigation content is SafeArea-aware and scroll-safe without changing GetX route behavior.
 - Summertime Saga hardening plan was completed; network, model, screen-state, release-permission, and feature-placement risks are documented before implementation.
+- Summertime Saga network foundation was hardened; the service now uses configured progress URL, timeout/status/schema validation, deterministic exceptions, fake-network tests, and release `INTERNET` permission.
 
 ## Recommended Next Work
 
@@ -94,38 +96,40 @@ Task sizing note:
 
 ### Primary
 
-T23 — Harden Summertime Saga network foundation
+T24 — Stabilize Summertime Saga screen states and layout
 
 Reason:
 
-- Summertime Saga is the remaining high-risk API-backed legacy feature under `lib/screens/`.
-- The plan identifies direct `http`, missing timeout/test seam, silent `null` failures, unsafe parsing, and release `INTERNET` permission risk.
-- The network foundation should be deterministic before screen tests or feature placement.
+- Summertime Saga network behavior is now deterministic, but the screen still starts live loading work from `initState()`.
+- The screen path still needs deterministic loading, error, retry, and success states before route/widget smoke coverage or feature placement.
+- The layout has known small-screen and scroll-safety risk documented in the hardening plan.
 
 Scope:
 
 - Keep legacy file locations for this task.
 - Keep `http`; do not introduce Dio.
-- Use existing SMTS config consistently, add timeout/status/schema validation, and add fake-network service/model tests.
-- Confirm or add Android release `INTERNET` permission if it is still missing.
+- Add a small screen test seam so widget tests avoid live HTTP.
+- Add deterministic loading, error, retry, and success rendering.
+- Add `mounted` safety after async work and make the screen SafeArea-aware and scroll-safe.
+- Do not redesign the visual style.
 
 Verification:
 
-- Dart/network/build gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Dart/UI gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T24 — Phase 2 checkpoint audit
+T24A — Summertime Saga screen test seam only
+
+Choose this if T24 should be split into a narrower testability-only step first.
+
+T25 — Phase 2 checkpoint audit
 
 Choose this if remaining `lib/screens/` ownership should be reviewed before more implementation.
 
-T25 — Main shell audit
+T26 — Main shell audit
 
 Choose this if `lib/screens/main/main_screen.dart` ownership needs to be clarified before Phase 2 exit.
-
-T26 — Decide whether to remove the Test route
-
-Choose this if the Dashboard-linked Test route is no longer useful and should be explicitly removed.
 
 ### Do not start yet
 
@@ -163,7 +167,7 @@ Reason:
 - The migration map exists, but its recommended low-risk moves are not complete yet.
 - Fox is complete for Phase 2 unless a new concrete risk, failed verification, blocker, or user-approved remaining scope appears.
 - Test is placed under `lib/features/test/presentation/`; remaining legacy ownership is now mostly shell and higher-risk API-backed work.
-- Summertime Saga requires network and screen-state hardening before a safe feature move.
+- Summertime Saga network foundation is hardened, but screen-state and layout hardening are still needed before a safe feature move.
 
 Exit criteria:
 
