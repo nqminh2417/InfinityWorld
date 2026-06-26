@@ -35,7 +35,7 @@ Current tests:
 - Chat route smoke test exists.
 - Deterministic route smoke tests exist for Login, Main, Dashboard, BMI, and Test.
 - Fox API service and model parsing tests exist.
-- Fox screen loading/error/retry widget tests exist and avoid real network.
+- Fox screen loading/error/retry widget tests exist, avoid real network, and include small-screen scroll-safety coverage.
 - Profile presentation widget test exists.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
@@ -68,6 +68,7 @@ Completed stabilization tasks:
 - Fox API service and model parsing were hardened with timeout handling, fake-network test seams, response validation, and focused tests.
 - Fox screen coverage was added for deterministic loading, error, and retry states without live network calls.
 - Fox feature placement was completed; files moved to `lib/features/fox/`, while GetX routing, `http`, behavior, and UI stayed unchanged.
+- Fox UI layout-safety pass was completed; the screen is SafeArea-aware, scroll-safe on small screens, and keeps the normal app system UI.
 
 ## Recommended Next Work
 
@@ -84,31 +85,26 @@ Task sizing note:
 
 ### Primary
 
-T17 — Fox UI layout-safety pass
+T18 — Test screen audit
 
 Reason:
 
-- Fox is the currently open feature sequence and should be closed cleanly before switching back to the broader Phase 2 map.
-- Fox is now placed under `lib/features/fox/`.
-- The current Fox screen has concrete layout-safety risk from fixed `Column`/`Expanded` composition around live image, loading, error, and retry states.
+- Fox is complete for Phase 2 unless a new concrete risk is found.
+- The Phase 2 map identifies the Test screen as the next unclear legacy screen.
+- The Test route may be debug/dead code and currently has lifecycle risk from creating a `TextEditingController` in `build()`.
 
 Scope:
 
-- Apply Flutter UI layout-safety rules to the current Fox screen.
-- Keep behavior, route, `http`, and visual direction unchanged.
-- Do not redesign Fox.
-- Do not add fullscreen image viewer behavior.
-- Do not migrate Fox to Dio, Riverpod, or go_router.
+- Audit `lib/screens/test/test_screen.dart` and its route ownership.
+- Decide whether the screen should remain, move later, or be deferred.
+- Do not move or refactor the screen unless the assigned task explicitly expands scope.
 
 Verification:
 
-- UI/Dart gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Docs/audit gate if no code changes: `git diff --check`.
+- If the audit includes a low-risk code fix, use Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
-
-T18 — Test screen audit
-
-Choose this if the dev/test route should be classified before deciding whether to move or remove it later.
 
 T19 — Dashboard UI layout-safety pass
 
@@ -126,8 +122,8 @@ Choose this if the known higher-risk API-backed flow should be planned before mo
 - `lib/main.dart` app composition refactor.
 - GetX routing replacement.
 - Built-in Kotlin migration.
-- Fox UI redesign during the layout-safety pass.
-- Dio/Riverpod migration inside Fox hardening tasks.
+- UI redesign during placement or layout-safety tasks unless explicitly approved.
+- Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 
 ### Phase guard
 
@@ -149,8 +145,8 @@ Reason:
 - `lib/main.dart` still owns app composition.
 - Low-risk feature placement work remains.
 - The migration map exists, but its recommended low-risk moves are not complete yet.
-- After T17, if no concrete Fox risk remains, consider Fox complete for Phase 2 and return the Primary recommendation to the migration map/backlog.
-- Do not create `T17A`, `T17B`, or additional Fox follow-up tasks unless T17 finds a concrete issue, failed verification, blocker, or user-approved remaining scope.
+- Fox is complete for Phase 2 unless a new concrete risk, failed verification, blocker, or user-approved remaining scope appears.
+- The Primary recommendation has returned to the migration map/backlog.
 
 Exit criteria:
 

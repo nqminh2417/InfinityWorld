@@ -103,20 +103,25 @@ Verified with:
 - `flutter build apk --debug`
 - `git diff --check`
 
-### T17 - Fox UI layout-safety pass
+### Completed: T17 - Fox UI layout-safety pass
 
-Scope:
+Result:
 
-- Apply Flutter UI layout-safety rules after service behavior is stable.
-- Keep the current visual direction unless a redesign task is explicitly assigned.
-- Check small screens, image loading/error states, retry button reachability, and system navigation safety.
+- Replaced the fixed `Column`/`Expanded` body with a SafeArea-aware, scroll-safe layout.
+- Kept the current route, service behavior, retry behavior, and visual direction unchanged.
+- Did not add fullscreen image viewer behavior or migrate Fox to Dio, Riverpod, or go_router.
+- Added small-screen widget coverage for loading, error, and retry states.
 
-Verification:
+Verified with:
 
 - `dart format`
 - `flutter analyze`
 - `flutter test`
 - `git diff --check`
+
+Phase 2 status:
+
+- Fox is complete for Phase 2 unless a new concrete risk, failed verification, blocker, or user-approved remaining scope appears.
 
 ## Deferred
 

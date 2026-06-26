@@ -55,8 +55,9 @@ Still transitional:
 6. Completed: harden Fox API service/model behavior with deterministic tests.
 7. Completed: add deterministic Fox screen coverage before moving the files.
 8. Completed: move Fox to feature structure as a placement-only task.
-9. Run a Fox UI layout-safety pass.
-10. Defer Summertime Saga until explicit feature hardening tasks.
+9. Completed: run a Fox UI layout-safety pass.
+10. Audit the Test screen before deciding whether to keep, move, or remove it later.
+11. Defer Summertime Saga until explicit feature hardening tasks.
 
 ## Route smoke coverage
 
