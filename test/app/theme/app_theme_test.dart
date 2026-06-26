@@ -9,5 +9,8 @@ void main() {
     expect(AppTheme.dark.brightness, Brightness.dark);
     expect(AppTheme.light.colorScheme.primary, IwColors.primary);
     expect(AppTheme.dark.scaffoldBackgroundColor, IwColors.darkBackground);
+    expect(AppTheme.light.textTheme.bodyMedium?.fontFamily, 'Inter');
+    expect(AppTheme.light.textTheme.labelLarge?.fontFamily, 'Inter');
+    expect(AppTheme.light.textTheme.headlineMedium?.fontFamily, 'Sora');
   });
 }

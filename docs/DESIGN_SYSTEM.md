@@ -225,6 +225,13 @@ Sora: 600, 700
 
 Avoid loading unnecessary font weights.
 
+Implementation note:
+
+* Local static font assets are registered for Inter 18pt and Sora at weights 400, 500, 600, and 700.
+* Inter is the default app font for body/UI text.
+* Sora is applied through the app theme for display, headline, and title emphasis.
+* The app does not use the `google_fonts` package.
+
 ## 8. Typography Scale
 
 Recommended mobile typography scale:

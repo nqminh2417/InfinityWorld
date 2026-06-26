@@ -27,6 +27,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: brightness,
       colorScheme: colorScheme,
+      fontFamily: 'Inter',
       scaffoldBackgroundColor: IwColors.background(brightness),
     );
 
@@ -59,15 +60,26 @@ class AppTheme {
 
   static TextTheme _textTheme(TextTheme base, Brightness brightness) {
     final textColor = IwColors.textPrimary(brightness);
-    final themed = base.apply(bodyColor: textColor, displayColor: textColor);
+    final themed = base.apply(
+      fontFamily: 'Inter',
+      bodyColor: textColor,
+      displayColor: textColor,
+    );
 
     return themed.copyWith(
-      displayLarge: themed.displayLarge?.copyWith(fontWeight: FontWeight.w700),
-      headlineMedium: themed.headlineMedium?.copyWith(
-        fontWeight: FontWeight.w700,
-      ),
-      titleLarge: themed.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-      titleMedium: themed.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+      displayLarge: _sora(themed.displayLarge, FontWeight.w700),
+      displayMedium: _sora(themed.displayMedium, FontWeight.w700),
+      displaySmall: _sora(themed.displaySmall, FontWeight.w700),
+      headlineLarge: _sora(themed.headlineLarge, FontWeight.w700),
+      headlineMedium: _sora(themed.headlineMedium, FontWeight.w700),
+      headlineSmall: _sora(themed.headlineSmall, FontWeight.w600),
+      titleLarge: _sora(themed.titleLarge, FontWeight.w600),
+      titleMedium: _sora(themed.titleMedium, FontWeight.w600),
+      titleSmall: _sora(themed.titleSmall, FontWeight.w600),
     );
+  }
+
+  static TextStyle? _sora(TextStyle? style, FontWeight weight) {
+    return style?.copyWith(fontFamily: 'Sora', fontWeight: weight);
   }
 }
