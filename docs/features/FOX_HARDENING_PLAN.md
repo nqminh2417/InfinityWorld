@@ -29,12 +29,12 @@ Current files:
 - `lib/routes/app_pages.dart`
 - `lib/routes/app_routes.dart`
 
-## Findings
+## Findings before T14
 
 - The screen starts live HTTP work in `initState()`, so route smoke tests are not deterministic yet.
-- `FoxApiService` uses direct `http.get` with no timeout and no injectable client.
-- JSON parsing accepts missing fields as empty strings, which can later produce invalid image URLs.
-- Errors are thrown as generic `Exception` values and surfaced directly in the UI.
+- Resolved in T14: `FoxApiService` used direct `http.get` with no timeout and no injectable test seam.
+- Resolved in T14: JSON parsing accepted missing fields as empty strings, which could later produce invalid image URLs.
+- Resolved in T14: Service failures used generic `Exception` values.
 - `FoxRandomScreen` assumes non-null `snapshot.data`.
 - Android release `main` manifest does not declare `INTERNET`; debug/profile manifests do.
 - The current UI uses a fixed `Column` with `Expanded` sections. Layout safety should be reviewed separately before visual polish.
@@ -51,19 +51,20 @@ Current files:
 
 ## Suggested task sequence
 
-### T14 - Harden Fox API service and model parsing
+### Completed: T14 - Harden Fox API service and model parsing
 
-Scope:
+Result:
 
-- Keep `http`; do not introduce Dio yet.
-- Add a small injectable client or request seam for tests.
-- Add timeout behavior.
-- Validate HTTP status, JSON shape, and non-empty image URL.
-- Add focused service/model tests with fake responses.
+- Kept `http`; Dio remains deferred.
+- Added a small fake-network seam for tests.
+- Added timeout behavior.
+- Validated HTTP status, JSON shape, and non-empty `image` URL.
+- Added focused service/model tests with fake responses.
 
-Verification:
+Verified with:
 
 - `dart format`
+- `flutter test test/screens/fox/services/fox_api_service_test.dart`
 - `flutter analyze`
 - `flutter test`
 - `git diff --check`

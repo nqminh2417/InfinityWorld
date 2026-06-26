@@ -33,6 +33,7 @@ Current tests:
 - BMI presentation widget tests exist.
 - Chat route smoke test exists.
 - Deterministic route smoke tests exist for Login, Main, Dashboard, BMI, and Test.
+- Fox API service and model parsing tests exist.
 - Profile presentation widget test exists.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
@@ -62,6 +63,7 @@ Completed stabilization tasks:
 - Dashboard feature placement was completed; the existing screen moved to `lib/features/dashboard/presentation/`, while GetX routes and main shell behavior stayed unchanged.
 - Login feature placement was completed; the existing screen moved to `lib/features/auth/presentation/`, while startup, route, and UI behavior stayed unchanged.
 - Fox feature hardening plan was completed; API/service risks, deterministic testing needs, and the safe pre-move task sequence are documented.
+- Fox API service and model parsing were hardened with timeout handling, fake-network test seams, response validation, and focused tests.
 
 ## Recommended Next Work
 
@@ -71,28 +73,24 @@ Current phase:
 
 ### Primary
 
-T14 — Harden Fox API service and model parsing
+T15 — Add deterministic Fox screen or route smoke coverage
 
 Reason:
 
-- Fox route coverage is blocked by live HTTP work in `initState()`.
-- The service currently lacks timeout, injectable client/test seam, and strict response validation.
+- Fox service/model behavior now has deterministic tests.
+- The screen still starts live HTTP work in `initState()`, so Fox route/widget coverage remains deferred.
 
 Scope:
 
-- Keep `http`; do not introduce Dio yet.
-- Harden `FoxApiService` and `FoxModel` parsing with focused tests.
-- Preserve current Fox screen behavior and route.
+- Avoid real network in widget tests.
+- Add the smallest test seam needed for `FoxRandomScreen`.
+- Verify the screen can render deterministic loading/success/error or route smoke states.
 
 Verification:
 
 - Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
-
-T15 — Add deterministic Fox screen or route smoke coverage
-
-Choose this after T14 if Fox UI/route coverage should be unblocked before moving files.
 
 T16 — Move Fox to feature structure
 
@@ -110,7 +108,7 @@ Choose this if the dev/test route should be classified before deciding whether t
 - `lib/main.dart` app composition refactor.
 - GetX routing replacement.
 - Built-in Kotlin migration.
-- Moving Fox before API/service hardening and deterministic tests.
+- Moving Fox before deterministic screen or route coverage is added.
 - Dio/Riverpod migration inside Fox hardening tasks.
 
 ### Phase guard
