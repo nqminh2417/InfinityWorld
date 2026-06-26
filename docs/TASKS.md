@@ -69,6 +69,7 @@ Completed stabilization tasks:
 - Fox screen coverage was added for deterministic loading, error, and retry states without live network calls.
 - Fox feature placement was completed; files moved to `lib/features/fox/`, while GetX routing, `http`, behavior, and UI stayed unchanged.
 - Fox UI layout-safety pass was completed; the screen is SafeArea-aware, scroll-safe on small screens, and keeps the normal app system UI.
+- Test screen audit was completed; the route is still reachable from Dashboard, route coverage exists, and lifecycle/keyboard-safety issues should be fixed before any move or removal decision.
 
 ## Recommended Next Work
 
@@ -85,32 +86,36 @@ Task sizing note:
 
 ### Primary
 
-T18 — Test screen audit
+T19 — Fix Test screen lifecycle and keyboard safety
 
 Reason:
 
-- Fox is complete for Phase 2 unless a new concrete risk is found.
-- The Phase 2 map identifies the Test screen as the next unclear legacy screen.
-- The Test route may be debug/dead code and currently has lifecycle risk from creating a `TextEditingController` in `build()`.
+- T18 confirmed the Test screen is not dead because Dashboard links to `AppRoutes.test`.
+- The screen creates a `TextEditingController` inside `build()`, which is a concrete lifecycle/resource risk.
+- The screen is form-like but not SafeArea-aware, scroll-safe, or keyboard-safe yet.
 
 Scope:
 
-- Audit `lib/screens/test/test_screen.dart` and its route ownership.
-- Decide whether the screen should remain, move later, or be deferred.
-- Do not move or refactor the screen unless the assigned task explicitly expands scope.
+- Keep the screen in `lib/screens/test/` for now.
+- Move owned controller state into `_TestScreenState` and dispose it.
+- Make the screen SafeArea-aware, scroll-safe, and keyboard-safe without redesigning it.
+- Keep GetX route behavior unchanged.
 
 Verification:
 
-- Docs/audit gate if no code changes: `git diff --check`.
-- If the audit includes a low-risk code fix, use Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T19 — Dashboard UI layout-safety pass
+T20 — Move Test screen to feature presentation
+
+Choose this after T19 if the user wants to keep the Dashboard-linked Test screen.
+
+T21 — Dashboard UI layout-safety pass
 
 Choose this if visible hub layout safety should be checked before more placement work.
 
-T20 — Summertime Saga hardening plan
+T22 — Summertime Saga hardening plan
 
 Choose this if the known higher-risk API-backed flow should be planned before more placement.
 
@@ -124,6 +129,7 @@ Choose this if the known higher-risk API-backed flow should be planned before mo
 - Built-in Kotlin migration.
 - UI redesign during placement or layout-safety tasks unless explicitly approved.
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
+- Test screen deletion or route removal unless explicitly approved.
 
 ### Phase guard
 

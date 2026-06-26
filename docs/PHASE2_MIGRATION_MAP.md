@@ -42,7 +42,7 @@ Still transitional:
 | Legacy path | Current role | Phase 2 action | Risk | Notes |
 |---|---|---:|---:|---|
 | `lib/screens/main/main_screen.dart` | Legacy bottom-tab shell | Do not move in Phase 2 unless explicitly approved | High | Belongs closer to future `app/shell`, not a feature screen. |
-| `lib/screens/test/test_screen.dart` | Dev/test route | Audit before moving | Medium | May be debug/dead code. Also creates a `TextEditingController` in `build()`. |
+| `lib/screens/test/test_screen.dart` | Dashboard-linked dev/test route | Stabilize before deciding move or removal | Medium | T18 confirmed Dashboard links to it. Fix `TextEditingController` ownership and form layout safety before placement. |
 | `lib/screens/summertime_saga/` | API-backed Summertime Saga feature | Defer | High | Known null/error/loading risks and direct `http`; stabilize before moving. |
 
 ## Recommended ordering
@@ -56,8 +56,10 @@ Still transitional:
 7. Completed: add deterministic Fox screen coverage before moving the files.
 8. Completed: move Fox to feature structure as a placement-only task.
 9. Completed: run a Fox UI layout-safety pass.
-10. Audit the Test screen before deciding whether to keep, move, or remove it later.
-11. Defer Summertime Saga until explicit feature hardening tasks.
+10. Completed: audit the Test screen before deciding whether to keep, move, or remove it later.
+11. Fix Test screen lifecycle and keyboard-safety risks before any move or removal decision.
+12. Move Test screen only if it remains useful after stabilization.
+13. Defer Summertime Saga until explicit feature hardening tasks.
 
 ## Route smoke coverage
 
