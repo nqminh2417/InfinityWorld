@@ -66,6 +66,48 @@ Examples that usually need planning doc updates:
 - approving a new dependency or architecture direction
 - changing Git, QA, UI safety, or release workflow rules
 
+## Task Granularity Policy
+
+Apply project safety skills and checklists by default, but do not split every checklist item into a separate task.
+
+Bundle related changes into one task when they share:
+
+- one goal
+- one feature or screen
+- one risk profile
+- one verification path
+
+Split work into separate tasks only when the work has meaningfully different risk, such as:
+
+- API or network behavior
+- model parsing or data validation
+- route ownership
+- UI layout safety
+- dependency or toolchain changes
+- architecture migration
+- state management migration
+
+Default sizing:
+
+- Simple/static screen: one placement task is usually enough.
+- Medium screen: one task is preferred; split only if layout, state, or routing risk is concrete.
+- API/live-network screen: two to three tasks may be justified.
+- Four or more tasks for one screen require an explicit reason in `docs/TASKS.md`.
+
+UI layout-safety:
+
+- Treat UI layout-safety as a checklist inside the current task unless there is concrete layout risk.
+- Make a UI layout-safety pass the Primary next task only when concrete risk is observed or the user explicitly asks for it.
+- Concrete layout risks include overflow risk, unsafe keyboard/inset handling, fixed-height layout, unsafe `Column`/`Expanded` composition, or user-facing visual risk.
+- Do not redesign UI during a layout-safety task unless the user explicitly approves redesign scope.
+
+Follow-up tasks:
+
+- Do not create follow-up tasks automatically after every move.
+- Create follow-up tasks only when there is a concrete risk, failed gate, blocker, missing test seam, or user-approved remaining scope.
+- Safety skills/checklists still apply; they just do not automatically become separate tasks.
+- Do not use one multi-step feature sequence as the default template for every screen.
+
 ## Standard Task Result Report
 
 At the end of every completed or blocked task, return a compact report using this format.

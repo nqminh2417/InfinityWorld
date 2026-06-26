@@ -75,20 +75,30 @@ Current phase:
 
 - Phase 2 — Low-risk Feature Placement
 
+Task sizing note:
+
+- Continue applying safety skills, but bundle work by scope when possible.
+- Do not use the Fox multi-step sequence as the default template for every screen.
+- Simple screens should usually be handled in one task.
+- API/live-network screens may justify extra hardening tasks.
+
 ### Primary
 
 T17 — Fox UI layout-safety pass
 
 Reason:
 
+- Fox is the currently open feature sequence and should be closed cleanly before switching back to the broader Phase 2 map.
 - Fox is now placed under `lib/features/fox/`.
-- The current Fox screen still has a fixed `Column` with `Expanded` sections and should get a safety-only layout review.
+- The current Fox screen has concrete layout-safety risk from fixed `Column`/`Expanded` composition around live image, loading, error, and retry states.
 
 Scope:
 
 - Apply Flutter UI layout-safety rules to the current Fox screen.
 - Keep behavior, route, `http`, and visual direction unchanged.
-- Do not redesign Fox or add fullscreen image viewer behavior.
+- Do not redesign Fox.
+- Do not add fullscreen image viewer behavior.
+- Do not migrate Fox to Dio, Riverpod, or go_router.
 
 Verification:
 
@@ -139,6 +149,8 @@ Reason:
 - `lib/main.dart` still owns app composition.
 - Low-risk feature placement work remains.
 - The migration map exists, but its recommended low-risk moves are not complete yet.
+- After T17, if no concrete Fox risk remains, consider Fox complete for Phase 2 and return the Primary recommendation to the migration map/backlog.
+- Do not create `T17A`, `T17B`, or additional Fox follow-up tasks unless T17 finds a concrete issue, failed verification, blocker, or user-approved remaining scope.
 
 Exit criteria:
 
