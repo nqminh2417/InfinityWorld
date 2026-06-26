@@ -166,7 +166,7 @@ Verification:
 
 ## Phase 3: Design System Foundation
 
-Status: current / ready for kickoff audit.
+Status: current / kickoff audit complete.
 
 Goal:
 
@@ -174,10 +174,10 @@ Goal:
 
 Likely tasks:
 
-- Audit `docs/DESIGN_SYSTEM.md`, current theme/widgets, and recently stabilized screens.
-- Add minimal color/spacing/radius tokens.
-- Add one or two reusable `Iw` components.
-- Apply them to one pilot screen after the tokens exist.
+- Add minimal `app/theme/` and `design_system/tokens/` files for Midnight Violet light/dark.
+- Add one shared `Iw` component, starting with `IwCard`.
+- Apply the first slice to one stable pilot screen, likely Profile.
+- Expand to buttons, fields, and layout wrappers only after the base slice proves useful.
 
 Non-goals:
 

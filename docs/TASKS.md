@@ -85,6 +85,7 @@ Completed stabilization tasks:
 - Summertime Saga screen states and layout were stabilized; the screen now has a test seam, deterministic loading/error/retry/success states, mounted/stale-request guards, SafeArea-aware scrollable content, and focused widget tests.
 - Summertime Saga feature placement was completed; the files moved to `lib/features/summertime_saga/`, while GetX route names, `http`, behavior, and UI stayed unchanged.
 - Phase 2 checkpoint audit was completed; selected feature placement work is complete, and remaining legacy ownership is shell/routing rather than simple feature-screen placement.
+- Phase 3 kickoff audit was completed; no shared `lib/app/theme/` or `lib/design_system/` layer exists yet, so the first implementation slice should start with Midnight Violet tokens plus a single reusable `IwCard` on a stable pilot screen.
 
 ## Recommended Next Work
 
@@ -101,19 +102,19 @@ Task sizing note:
 
 ### Primary
 
-T27 — Phase 3 design-system kickoff audit
+T31 — Phase 3 token/card implementation slice
 
 Reason:
 
-- Phase 2 feature placement is complete enough to stop moving screens by default.
-- Phase 3 should start with a small audit so design tokens/components are scoped before any UI implementation.
-- The audit should choose one narrow design-system slice without starting a full redesign.
+- The kickoff audit is complete and Phase 3 can move from planning into the first small implementation slice.
+- The app still has no shared theme layer, so tokens should land before broader UI cleanup.
+- A single shared card component is the smallest visible reuse point before expanding to buttons, fields, or scaffold wrappers.
 
 Scope:
 
-- Inspect `docs/DESIGN_SYSTEM.md`, existing themes/widgets, and recently stabilized screens.
-- Define the smallest useful Midnight Violet token/component slice.
-- Update planning docs only; do not implement tokens/components unless assigned separately.
+- Add `app/theme/` and `design_system/tokens/` per `docs/ARCHITECTURE.md`.
+- Implement Midnight Violet light/dark tokens and one shared `IwCard`.
+- Apply the new slice to the Profile screen only.
 
 Verification:
 
@@ -154,7 +155,7 @@ Current phase:
 
 Decision:
 
-- Start Phase 3 with a planning/audit task before implementation.
+- Phase 3 kickoff audit is complete; continue with the first narrow token/component implementation slice.
 
 Do not enter yet:
 
