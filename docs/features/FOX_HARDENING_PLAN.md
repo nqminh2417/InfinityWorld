@@ -23,9 +23,9 @@ DashboardScreen
 
 Current files:
 
-- `lib/screens/fox/fox_random_screen.dart`
-- `lib/screens/fox/services/fox_api_service.dart`
-- `lib/screens/fox/models/fox_model.dart`
+- `lib/features/fox/presentation/fox_random_screen.dart`
+- `lib/features/fox/data/fox_api_service.dart`
+- `lib/features/fox/domain/fox_model.dart`
 - `lib/routes/app_pages.dart`
 - `lib/routes/app_routes.dart`
 
@@ -64,7 +64,7 @@ Result:
 Verified with:
 
 - `dart format`
-- `flutter test test/screens/fox/services/fox_api_service_test.dart`
+- `flutter test test/features/fox/data/fox_api_service_test.dart`
 - `flutter analyze`
 - `flutter test`
 - `git diff --check`
@@ -81,21 +81,21 @@ Result:
 Verified with:
 
 - `dart format`
-- `flutter test test/screens/fox/fox_random_screen_test.dart`
+- `flutter test test/features/fox/presentation/fox_random_screen_test.dart`
 - `flutter analyze`
 - `flutter test`
 - `git diff --check`
 
-### T16 - Move Fox to feature structure
+### Completed: T16 - Move Fox to feature structure
 
-Scope:
+Result:
 
-- Move legacy Fox files to `lib/features/fox/`.
-- Use a small structure only as needed, likely `data/`, `domain/`, and `presentation/`.
-- Update legacy GetX route imports only.
-- Do not introduce Riverpod, go_router, or Dio in the move task.
+- Moved legacy Fox files to `lib/features/fox/`.
+- Used a small `data/`, `domain/`, and `presentation/` structure.
+- Updated legacy GetX route imports only.
+- Did not introduce Riverpod, go_router, or Dio.
 
-Verification:
+Verified with:
 
 - `dart format`
 - `flutter analyze`

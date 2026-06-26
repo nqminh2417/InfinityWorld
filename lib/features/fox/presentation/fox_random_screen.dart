@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../screens/fox/services/fox_api_service.dart';
-import '../../../screens/fox/models/fox_model.dart';
+
+import '../data/fox_api_service.dart';
+import '../domain/fox_model.dart';
 
 class FoxRandomScreen extends StatefulWidget {
   const FoxRandomScreen({super.key, FoxApiService? service})
@@ -36,7 +37,6 @@ class _FoxRandomScreenState extends State<FoxRandomScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Nửa trên: ảnh cáo
             Expanded(
               flex: 6,
               child: Padding(
@@ -96,7 +96,6 @@ class _FoxRandomScreenState extends State<FoxRandomScreen> {
               ),
             ),
 
-            // Nửa dưới: nút Làm mới
             Expanded(
               flex: 4,
               child: Center(

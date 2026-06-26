@@ -20,6 +20,7 @@ Current architecture status:
 - BMI is the active migration pilot under `lib/features/bmi/`.
 - Chat presentation now lives under `lib/features/chat/presentation/`.
 - Dashboard presentation now lives under `lib/features/dashboard/presentation/`.
+- Fox now lives under `lib/features/fox/`.
 - Profile presentation now lives under `lib/features/profile/presentation/`.
 - Settings presentation now lives under `lib/features/settings/presentation/`.
 - Fox hardening plan exists at `docs/features/FOX_HARDENING_PLAN.md`.
@@ -66,6 +67,7 @@ Completed stabilization tasks:
 - Fox feature hardening plan was completed; API/service risks, deterministic testing needs, and the safe pre-move task sequence are documented.
 - Fox API service and model parsing were hardened with timeout handling, fake-network test seams, response validation, and focused tests.
 - Fox screen coverage was added for deterministic loading, error, and retry states without live network calls.
+- Fox feature placement was completed; files moved to `lib/features/fox/`, while GetX routing, `http`, behavior, and UI stayed unchanged.
 
 ## Recommended Next Work
 
@@ -75,34 +77,34 @@ Current phase:
 
 ### Primary
 
-T16 — Move Fox to feature structure
+T17 — Fox UI layout-safety pass
 
 Reason:
 
-- Fox service/model behavior and basic screen states now have deterministic tests.
-- The Fox files can now move as a scoped feature-placement task without mixing in network hardening.
+- Fox is now placed under `lib/features/fox/`.
+- The current Fox screen still has a fixed `Column` with `Expanded` sections and should get a safety-only layout review.
 
 Scope:
 
-- Move legacy Fox files to `lib/features/fox/`.
-- Update only imports and legacy GetX route references.
-- Keep GetX routing, `http`, behavior, and UI unchanged.
+- Apply Flutter UI layout-safety rules to the current Fox screen.
+- Keep behavior, route, `http`, and visual direction unchanged.
+- Do not redesign Fox or add fullscreen image viewer behavior.
 
 Verification:
 
-- Screen move/routing/startup gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- UI/Dart gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T17 — Test screen audit
+T18 — Test screen audit
 
 Choose this if the dev/test route should be classified before deciding whether to move or remove it later.
 
-T18 — Dashboard UI layout-safety pass
+T19 — Dashboard UI layout-safety pass
 
 Choose this if visible hub layout safety should be checked before more placement work.
 
-T19 — Summertime Saga hardening plan
+T20 — Summertime Saga hardening plan
 
 Choose this if the known higher-risk API-backed flow should be planned before more placement.
 
@@ -114,7 +116,7 @@ Choose this if the known higher-risk API-backed flow should be planned before mo
 - `lib/main.dart` app composition refactor.
 - GetX routing replacement.
 - Built-in Kotlin migration.
-- Fox UI redesign during the move task.
+- Fox UI redesign during the layout-safety pass.
 - Dio/Riverpod migration inside Fox hardening tasks.
 
 ### Phase guard

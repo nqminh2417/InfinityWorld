@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:infinity_world/screens/fox/models/fox_model.dart';
-import 'package:infinity_world/screens/fox/services/fox_api_service.dart';
+import 'package:infinity_world/features/fox/data/fox_api_service.dart';
+import 'package:infinity_world/features/fox/domain/fox_model.dart';
 
 void main() {
   group('FoxModel', () {

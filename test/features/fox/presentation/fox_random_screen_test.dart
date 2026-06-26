@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:infinity_world/screens/fox/fox_random_screen.dart';
-import 'package:infinity_world/screens/fox/services/fox_api_service.dart';
+import 'package:infinity_world/features/fox/data/fox_api_service.dart';
+import 'package:infinity_world/features/fox/presentation/fox_random_screen.dart';
 
 void main() {
   testWidgets('Fox screen shows a deterministic loading state', (tester) async {

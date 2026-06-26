@@ -21,6 +21,10 @@ Already placed under `lib/features/`:
   - `lib/features/chat/presentation/chat_screen.dart`
 - `dashboard`
   - `lib/features/dashboard/presentation/dashboard_screen.dart`
+- `fox`
+  - `lib/features/fox/data/fox_api_service.dart`
+  - `lib/features/fox/domain/fox_model.dart`
+  - `lib/features/fox/presentation/fox_random_screen.dart`
 - `profile`
   - `lib/features/profile/presentation/profile_screen.dart`
 - `settings`
@@ -39,7 +43,6 @@ Still transitional:
 |---|---|---:|---:|---|
 | `lib/screens/main/main_screen.dart` | Legacy bottom-tab shell | Do not move in Phase 2 unless explicitly approved | High | Belongs closer to future `app/shell`, not a feature screen. |
 | `lib/screens/test/test_screen.dart` | Dev/test route | Audit before moving | Medium | May be debug/dead code. Also creates a `TextEditingController` in `build()`. |
-| `lib/screens/fox/` | API-backed Fox feature | Harden before moving | Medium | Plan exists at `docs/features/FOX_HARDENING_PLAN.md`. Uses direct `http` and live images today. |
 | `lib/screens/summertime_saga/` | API-backed Summertime Saga feature | Defer | High | Known null/error/loading risks and direct `http`; stabilize before moving. |
 
 ## Recommended ordering
@@ -51,8 +54,9 @@ Still transitional:
 5. Completed: create Fox hardening plan before moving API-backed features.
 6. Completed: harden Fox API service/model behavior with deterministic tests.
 7. Completed: add deterministic Fox screen coverage before moving the files.
-8. Move Fox to feature structure as a placement-only task.
-9. Defer Summertime Saga until explicit feature hardening tasks.
+8. Completed: move Fox to feature structure as a placement-only task.
+9. Run a Fox UI layout-safety pass.
+10. Defer Summertime Saga until explicit feature hardening tasks.
 
 ## Route smoke coverage
 

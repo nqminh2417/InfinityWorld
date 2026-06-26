@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../models/fox_model.dart';
+import '../domain/fox_model.dart';
 
 typedef FoxHttpGet = Future<http.Response> Function(Uri uri);
 
