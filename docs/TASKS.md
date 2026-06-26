@@ -1,6 +1,6 @@
 # Infinity World Active Tasks
 
-Last updated: 2026-06-25
+Last updated: 2026-06-26
 
 ## Current Status
 
@@ -17,6 +17,7 @@ Current architecture status:
 - GetX routing is still active under `lib/routes/`.
 - Most screens still live under `lib/screens/`.
 - BMI is the active migration pilot under `lib/features/bmi/`.
+- Chat presentation now lives under `lib/features/chat/presentation/`.
 - Profile presentation now lives under `lib/features/profile/presentation/`.
 - Settings presentation now lives under `lib/features/settings/presentation/`.
 - Phase 2 migration map exists at `docs/PHASE2_MIGRATION_MAP.md`.
@@ -27,6 +28,7 @@ Current tests:
 - App startup smoke test exists.
 - BMI domain unit tests exist.
 - BMI presentation widget tests exist.
+- Chat route smoke test exists.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
 
@@ -48,6 +50,7 @@ Completed stabilization tasks:
 - Settings feature placement was completed; the existing placeholder screen moved to `lib/features/settings/presentation/` and the legacy GetX route import was updated.
 - Profile feature placement was completed; the existing screen moved to `lib/features/profile/presentation/`, legacy imports were updated, and the route has a smoke test.
 - Phase 2 migration map was created to rank remaining `lib/screens/` ownership and avoid random screen moves.
+- Chat feature placement was completed; the existing placeholder screen moved to `lib/features/chat/presentation/`, legacy imports were updated, and the route has a smoke test.
 
 ## Recommended Next Work
 
@@ -57,29 +60,24 @@ Current phase:
 
 ### Primary
 
-T8 — Move Chat screen to feature presentation
+T9 — Add route smoke tests for remaining legacy routes
 
 Reason:
 
-- Chat is the next lowest-risk legacy screen after Settings and Profile.
-- It is a placeholder used by both the legacy route table and `MainScreen`.
+- Settings, Profile, and Chat route coverage now exists.
+- The remaining legacy routes should be checked before moving more visible or risky screens.
 
 Scope:
 
-- Move only the existing Chat screen into `lib/features/chat/presentation/`.
-- Update only the minimal legacy GetX and `MainScreen` import/reference.
-- Add or update a route smoke test if practical.
-- Do not redesign the placeholder UI.
+- Add focused route smoke tests for simple remaining legacy routes where practical.
+- Keep tests deterministic and avoid live network.
+- Do not move screens in this task.
 
 Verification:
 
-- Screen move/routing gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Dart test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
-
-T9 — Add route smoke tests for remaining legacy routes
-
-Choose this if route confidence is more urgent than moving another screen.
 
 T10 — Profile UI layout-safety pass
 

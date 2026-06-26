@@ -1,6 +1,6 @@
 # Infinity World Phase 2 Migration Map
 
-Last updated: 2026-06-25
+Last updated: 2026-06-26
 
 ## Purpose
 
@@ -15,6 +15,8 @@ Already placed under `lib/features/`:
 - `bmi`
   - `lib/features/bmi/domain/bmi_calculator.dart`
   - `lib/features/bmi/presentation/bmi_screen.dart`
+- `chat`
+  - `lib/features/chat/presentation/chat_screen.dart`
 - `profile`
   - `lib/features/profile/presentation/profile_screen.dart`
 - `settings`
@@ -31,7 +33,6 @@ Still transitional:
 
 | Legacy path | Current role | Phase 2 action | Risk | Notes |
 |---|---|---:|---:|---|
-| `lib/screens/chat/chat_screen.dart` | Placeholder tab/route screen | Move next | Low | Simple placeholder. Update `AppPages` and `MainScreen` imports. |
 | `lib/screens/dashboard/dashboard_screen.dart` | Dashboard hub with GetX navigation links | Move after Chat or route coverage | Medium | More visible and navigation-heavy than Chat. Do not redesign during placement. |
 | `lib/screens/auth/login_screen.dart` | Startup/login screen | Move later in Phase 2 | Medium | Startup-sensitive. Keep existing login tests and route behavior intact. |
 | `lib/screens/main/main_screen.dart` | Legacy bottom-tab shell | Do not move in Phase 2 unless explicitly approved | High | Belongs closer to future `app/shell`, not a feature screen. |
@@ -41,7 +42,7 @@ Still transitional:
 
 ## Recommended ordering
 
-1. Move Chat screen to `lib/features/chat/presentation/`.
+1. Completed: move Chat screen to `lib/features/chat/presentation/`.
 2. Add route smoke tests for any route that is about to move and lacks coverage.
 3. Move Dashboard only as an import-only placement task, or split out route coverage first.
 4. Move Login only after confirming startup smoke tests still cover the flow.

@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:infinity_world/features/chat/presentation/chat_screen.dart';
 import 'package:infinity_world/features/profile/presentation/profile_screen.dart';
 import 'package:infinity_world/routes/app_pages.dart';
 import 'package:infinity_world/routes/app_routes.dart';
@@ -32,6 +33,15 @@ void main() {
     );
 
     expect(find.byType(ProfileScreen), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('chat route opens the existing chat screen', (tester) async {
+    await tester.pumpWidget(
+      GetMaterialApp(initialRoute: AppRoutes.chat, getPages: AppPages.pages),
+    );
+
+    expect(find.byType(ChatScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }
