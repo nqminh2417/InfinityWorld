@@ -25,6 +25,7 @@ Current architecture status:
 - Settings presentation now lives under `lib/features/settings/presentation/`.
 - Test presentation now lives under `lib/features/test/presentation/`.
 - Fox hardening plan exists at `docs/features/FOX_HARDENING_PLAN.md`.
+- Summertime Saga hardening plan exists at `docs/features/SUMMERTIME_SAGA_HARDENING_PLAN.md`.
 - Phase 2 migration map exists at `docs/PHASE2_MIGRATION_MAP.md`.
 - Riverpod, go_router, and Dio are not active yet.
 
@@ -76,6 +77,7 @@ Completed stabilization tasks:
 - Test screen lifecycle and keyboard-safety pass was completed; owned controller state is disposed and the form body is SafeArea-aware and scroll-safe.
 - Test feature placement was completed; the screen moved to `lib/features/test/presentation/`, route/test imports were updated, and GetX route behavior stayed unchanged.
 - Dashboard UI layout-safety pass was completed; navigation content is SafeArea-aware and scroll-safe without changing GetX route behavior.
+- Summertime Saga hardening plan was completed; network, model, screen-state, release-permission, and feature-placement risks are documented before implementation.
 
 ## Recommended Next Work
 
@@ -92,37 +94,38 @@ Task sizing note:
 
 ### Primary
 
-T22 — Summertime Saga hardening plan
+T23 — Harden Summertime Saga network foundation
 
 Reason:
 
 - Summertime Saga is the remaining high-risk API-backed legacy feature under `lib/screens/`.
-- It has known null/error/loading risks and direct `http` usage.
-- A hardening plan keeps the next work scoped before any move or implementation.
+- The plan identifies direct `http`, missing timeout/test seam, silent `null` failures, unsafe parsing, and release `INTERNET` permission risk.
+- The network foundation should be deterministic before screen tests or feature placement.
 
 Scope:
 
-- Audit the current Summertime Saga flow and files.
-- Document the smallest safe hardening sequence.
-- Do not move files, migrate networking, or refactor UI in the planning task.
+- Keep legacy file locations for this task.
+- Keep `http`; do not introduce Dio.
+- Use existing SMTS config consistently, add timeout/status/schema validation, and add fake-network service/model tests.
+- Confirm or add Android release `INTERNET` permission if it is still missing.
 
 Verification:
 
-- Docs/audit gate from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Dart/network/build gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T23 — Phase 2 checkpoint audit
+T24 — Phase 2 checkpoint audit
 
 Choose this if remaining `lib/screens/` ownership should be reviewed before more implementation.
-
-T24 — Decide whether to remove the Test route
-
-Choose this if the Dashboard-linked Test route is no longer useful and should be explicitly removed.
 
 T25 — Main shell audit
 
 Choose this if `lib/screens/main/main_screen.dart` ownership needs to be clarified before Phase 2 exit.
+
+T26 — Decide whether to remove the Test route
+
+Choose this if the Dashboard-linked Test route is no longer useful and should be explicitly removed.
 
 ### Do not start yet
 
@@ -135,6 +138,8 @@ Choose this if `lib/screens/main/main_screen.dart` ownership needs to be clarifi
 - UI redesign during placement or layout-safety tasks unless explicitly approved.
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
+- Summertime Saga feature move before network and screen-state hardening.
+- Dio/Riverpod/go_router migration inside Summertime Saga hardening tasks.
 
 ### Phase guard
 
@@ -158,6 +163,7 @@ Reason:
 - The migration map exists, but its recommended low-risk moves are not complete yet.
 - Fox is complete for Phase 2 unless a new concrete risk, failed verification, blocker, or user-approved remaining scope appears.
 - Test is placed under `lib/features/test/presentation/`; remaining legacy ownership is now mostly shell and higher-risk API-backed work.
+- Summertime Saga requires network and screen-state hardening before a safe feature move.
 
 Exit criteria:
 

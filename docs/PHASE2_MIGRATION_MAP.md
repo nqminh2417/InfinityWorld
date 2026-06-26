@@ -44,7 +44,7 @@ Still transitional:
 | Legacy path | Current role | Phase 2 action | Risk | Notes |
 |---|---|---:|---:|---|
 | `lib/screens/main/main_screen.dart` | Legacy bottom-tab shell | Do not move in Phase 2 unless explicitly approved | High | Belongs closer to future `app/shell`, not a feature screen. |
-| `lib/screens/summertime_saga/` | API-backed Summertime Saga feature | Defer | High | Known null/error/loading risks and direct `http`; stabilize before moving. |
+| `lib/screens/summertime_saga/` | API-backed Summertime Saga feature | Harden before moving | High | T22 plan exists. Start with network foundation, then screen states/layout, then feature placement. |
 
 ## Recommended ordering
 
@@ -61,8 +61,10 @@ Still transitional:
 11. Completed: fix Test screen lifecycle and keyboard-safety risks before any move or removal decision.
 12. Completed: move Test screen only if it remains useful after stabilization.
 13. Completed: run a Dashboard UI layout-safety pass.
-14. Create a Summertime Saga hardening plan before implementation or feature move.
-15. Defer Summertime Saga implementation until explicit feature hardening tasks.
+14. Completed: create a Summertime Saga hardening plan before implementation or feature move.
+15. Harden Summertime Saga network foundation.
+16. Stabilize Summertime Saga screen states and layout.
+17. Move Summertime Saga only after deterministic tests exist.
 
 ## Route smoke coverage
 
