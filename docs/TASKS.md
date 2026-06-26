@@ -34,6 +34,7 @@ Current tests:
 - BMI presentation widget tests exist.
 - Chat route smoke test exists.
 - Deterministic route smoke tests exist for Login, Main, Dashboard, BMI, and Test.
+- Test screen widget coverage exists for small-screen keyboard/scroll safety.
 - Fox API service and model parsing tests exist.
 - Fox screen loading/error/retry widget tests exist, avoid real network, and include small-screen scroll-safety coverage.
 - Profile presentation widget test exists.
@@ -70,6 +71,7 @@ Completed stabilization tasks:
 - Fox feature placement was completed; files moved to `lib/features/fox/`, while GetX routing, `http`, behavior, and UI stayed unchanged.
 - Fox UI layout-safety pass was completed; the screen is SafeArea-aware, scroll-safe on small screens, and keeps the normal app system UI.
 - Test screen audit was completed; the route is still reachable from Dashboard, route coverage exists, and lifecycle/keyboard-safety issues should be fixed before any move or removal decision.
+- Test screen lifecycle and keyboard-safety pass was completed; owned controller state is disposed and the form body is SafeArea-aware and scroll-safe.
 
 ## Recommended Next Work
 
@@ -86,36 +88,36 @@ Task sizing note:
 
 ### Primary
 
-T19 — Fix Test screen lifecycle and keyboard safety
+T20 — Move Test screen to feature presentation
 
 Reason:
 
-- T18 confirmed the Test screen is not dead because Dashboard links to `AppRoutes.test`.
-- The screen creates a `TextEditingController` inside `build()`, which is a concrete lifecycle/resource risk.
-- The screen is form-like but not SafeArea-aware, scroll-safe, or keyboard-safe yet.
+- T18 confirmed Dashboard still links to `AppRoutes.test`.
+- T19 stabilized lifecycle and form layout risks.
+- The screen can now be moved as a simple placement task if the route should remain.
 
 Scope:
 
-- Keep the screen in `lib/screens/test/` for now.
-- Move owned controller state into `_TestScreenState` and dispose it.
-- Make the screen SafeArea-aware, scroll-safe, and keyboard-safe without redesigning it.
+- Move only the Test screen into the feature presentation area.
+- Update the legacy GetX route import/reference.
 - Keep GetX route behavior unchanged.
+- Do not redesign the Test screen or remove the route.
 
 Verification:
 
-- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Screen move/routing/startup gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T20 — Move Test screen to feature presentation
+T21 — Decide whether to remove the Test route
 
-Choose this after T19 if the user wants to keep the Dashboard-linked Test screen.
+Choose this if the Test route is no longer useful and should be explicitly removed instead of moved.
 
-T21 — Dashboard UI layout-safety pass
+T22 — Dashboard UI layout-safety pass
 
 Choose this if visible hub layout safety should be checked before more placement work.
 
-T22 — Summertime Saga hardening plan
+T23 — Summertime Saga hardening plan
 
 Choose this if the known higher-risk API-backed flow should be planned before more placement.
 
