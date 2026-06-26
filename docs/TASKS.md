@@ -15,9 +15,9 @@ Current architecture status:
 - Transitional architecture.
 - `lib/main.dart` still owns app composition.
 - GetX routing is still active under `lib/routes/`.
-- Some legacy screens and shell code still live under `lib/screens/`.
+- The legacy main shell still lives under `lib/screens/main/main_screen.dart`.
 - Auth/Login presentation now lives under `lib/features/auth/presentation/`.
-- BMI is the active migration pilot under `lib/features/bmi/`.
+- BMI was the initial migration pilot and now lives under `lib/features/bmi/`.
 - Chat presentation now lives under `lib/features/chat/presentation/`.
 - Dashboard presentation now lives under `lib/features/dashboard/presentation/`.
 - Fox now lives under `lib/features/fox/`.
@@ -50,7 +50,7 @@ Current tests:
 
 Current phase:
 
-- Phase 2: Low-risk Feature Placement.
+- Phase 3: Design System Foundation.
 
 Android toolchain status:
 
@@ -84,12 +84,13 @@ Completed stabilization tasks:
 - Summertime Saga network foundation was hardened; the service now uses configured progress URL, timeout/status/schema validation, deterministic exceptions, fake-network tests, and release `INTERNET` permission.
 - Summertime Saga screen states and layout were stabilized; the screen now has a test seam, deterministic loading/error/retry/success states, mounted/stale-request guards, SafeArea-aware scrollable content, and focused widget tests.
 - Summertime Saga feature placement was completed; the files moved to `lib/features/summertime_saga/`, while GetX route names, `http`, behavior, and UI stayed unchanged.
+- Phase 2 checkpoint audit was completed; selected feature placement work is complete, and remaining legacy ownership is shell/routing rather than simple feature-screen placement.
 
 ## Recommended Next Work
 
 Current phase:
 
-- Phase 2 — Low-risk Feature Placement
+- Phase 3 — Design System Foundation
 
 Task sizing note:
 
@@ -100,19 +101,19 @@ Task sizing note:
 
 ### Primary
 
-T26 — Phase 2 checkpoint audit
+T27 — Phase 3 design-system kickoff audit
 
 Reason:
 
-- The planned Summertime Saga hardening and placement sequence is complete.
-- Phase 2 should be checked before starting more placement work or entering a new phase.
-- The audit should clarify remaining `lib/screens/`, route-smoke deferrals, and whether Phase 2 exit criteria are close.
+- Phase 2 feature placement is complete enough to stop moving screens by default.
+- Phase 3 should start with a small audit so design tokens/components are scoped before any UI implementation.
+- The audit should choose one narrow design-system slice without starting a full redesign.
 
 Scope:
 
-- Inspect current `lib/screens/`, `lib/features/`, `lib/routes/`, and tests.
-- Update `docs/PHASE2_MIGRATION_MAP.md` and `docs/TASKS.md` only if the checkpoint changes backlog status.
-- Do not move files or refactor production code.
+- Inspect `docs/DESIGN_SYSTEM.md`, existing themes/widgets, and recently stabilized screens.
+- Define the smallest useful Midnight Violet token/component slice.
+- Update planning docs only; do not implement tokens/components unless assigned separately.
 
 Verification:
 
@@ -120,17 +121,17 @@ Verification:
 
 ### Alternatives
 
-T27 — Main shell audit
+T28 — Main shell audit
 
-Choose this if `lib/screens/main/main_screen.dart` ownership needs focused review before the broader checkpoint.
+Choose this if shell ownership should be clarified before starting design-system work.
 
-T28 — Summertime Saga route smoke strategy
+T29 — Live-network route smoke strategy
 
-Choose this if route smoke coverage should be planned separately because the legacy route still uses the default live loader.
+Choose this if Fox and Summertime Saga route smoke coverage should be solved before design work.
 
-T29 — Remaining legacy route audit
+T30 — Dependency/toolchain audit
 
-Choose this if GetX route coverage and deferred live-network routes should be reviewed before Phase 2 exit.
+Choose this if current package/build risk should be reviewed before the next phase.
 
 ### Do not start yet
 
@@ -140,7 +141,7 @@ Choose this if GetX route coverage and deferred live-network routes should be re
 - `lib/main.dart` app composition refactor.
 - GetX routing replacement.
 - Built-in Kotlin migration.
-- UI redesign during placement or layout-safety tasks unless explicitly approved.
+- Full UI redesign during design-system foundation unless explicitly approved.
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Dio/Riverpod/go_router migration inside Summertime Saga follow-up tasks.
@@ -149,32 +150,28 @@ Choose this if GetX route coverage and deferred live-network routes should be re
 
 Current phase:
 
-- Phase 2 — Low-risk Feature Placement.
+- Phase 3 — Design System Foundation.
 
 Decision:
 
-- Continue Phase 2.
+- Start Phase 3 with a planning/audit task before implementation.
 
 Do not enter yet:
 
-- Phase 3 — Design System Foundation.
+- Phase 4 — App Bootstrap and Local Session.
 
 Reason:
 
-- GetX routing is still active.
-- `lib/main.dart` still owns app composition.
-- Low-risk feature placement work remains.
-- The migration map exists, but its recommended low-risk moves are not complete yet.
-- Fox is complete for Phase 2 unless a new concrete risk, failed verification, blocker, or user-approved remaining scope appears.
-- Test is placed under `lib/features/test/presentation/`; remaining legacy ownership is now mostly shell and routing.
-- Summertime Saga network, screen-state, layout hardening, and feature placement are complete.
-- A Phase 2 checkpoint is needed before deciding whether to continue placement work or prepare the next phase.
+- Phase 2 selected feature placement work is complete.
+- Remaining `lib/screens/main/main_screen.dart` is shell ownership, not a simple feature placement task.
+- GetX routing and `lib/main.dart` app composition remain transitional and should be handled in later explicit phases.
+- Phase 3 can begin without introducing Riverpod, go_router, Dio, or startup refactors.
 
 Exit criteria:
 
-- Simple low-risk screens selected for Phase 2 are moved or explicitly deferred.
-- Legacy route imports are updated and covered by narrow smoke tests where practical.
-- Remaining high-risk work is separated into later router, state, network, or app-composition phases.
+- Minimal Midnight Violet token slice is planned and implemented.
+- One or two reusable `Iw` components are planned and implemented.
+- One pilot screen applies the new tokens/components without a broad redesign.
 
 ## Verification Gates
 

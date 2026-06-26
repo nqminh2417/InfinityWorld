@@ -8,6 +8,12 @@ Phase 2 moves low-risk legacy screens toward `lib/features/<feature>/presentatio
 
 This map is intentionally narrow. It does not start Riverpod, go_router, Dio, `lib/main.dart` composition refactors, or UI redesign.
 
+Checkpoint outcome on 2026-06-26:
+
+- Phase 2 selected feature placement work is complete.
+- Remaining tracked legacy screen ownership is the main shell, not a simple feature-screen move.
+- GetX routes remain active and should be handled in a later explicit routing phase.
+
 ## Current feature placements
 
 Already placed under `lib/features/`:
@@ -36,12 +42,12 @@ Already placed under `lib/features/`:
 - `test`
   - `lib/features/test/presentation/test_screen.dart`
 
-Still transitional:
+Still transitional after Phase 2:
 
 - `lib/main.dart` still owns root app composition.
 - `lib/routes/` still owns legacy GetX route registration.
 - `lib/screens/main/main_screen.dart` still owns the legacy bottom-tab shell.
-- Some legacy screens and shell code still live under `lib/screens/`.
+- No selected feature-screen Dart files remain under tracked `lib/screens/` paths.
 
 ## Remaining legacy screen map
 
@@ -68,7 +74,13 @@ Still transitional:
 15. Completed: harden Summertime Saga network foundation.
 16. Completed: stabilize Summertime Saga screen states and layout.
 17. Completed: move Summertime Saga only after deterministic tests exist.
-18. Run a Phase 2 checkpoint audit before deciding the next placement or phase transition.
+18. Completed: run a Phase 2 checkpoint audit before deciding the next placement or phase transition.
+
+Conclusion:
+
+- Do not continue moving random screens in Phase 2.
+- Move to Phase 3 planning for the design-system foundation.
+- Keep shell, router, state, networking, and startup migrations separate.
 
 ## Route smoke coverage
 

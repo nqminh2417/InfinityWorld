@@ -1,6 +1,6 @@
 # Infinity World Roadmap
 
-Last updated: 2026-06-25
+Last updated: 2026-06-26
 
 ## Purpose
 
@@ -21,17 +21,26 @@ Current structure:
 
 - `lib/main.dart` still owns root app composition and uses `GetMaterialApp`.
 - `lib/routes/app_pages.dart` and `lib/routes/app_routes.dart` still define legacy GetX routing.
-- Most production screens still live under `lib/screens/`.
+- Selected feature screens have been moved under `lib/features/`.
+- `lib/screens/main/main_screen.dart` still owns the legacy bottom-tab shell.
 - Shared legacy UI remains under `lib/widgets/`.
 - `lib/core/config/constants.dart` contains early runtime constants.
-- Feature placement has started:
+- Feature placement completed for the Phase 2 selected screens/features:
   - `lib/features/bmi/domain/bmi_calculator.dart`
   - `lib/features/bmi/presentation/bmi_screen.dart`
+  - `lib/features/auth/presentation/login_screen.dart`
+  - `lib/features/chat/presentation/chat_screen.dart`
+  - `lib/features/dashboard/presentation/dashboard_screen.dart`
+  - `lib/features/fox/`
+  - `lib/features/profile/presentation/profile_screen.dart`
   - `lib/features/settings/presentation/settings_screen.dart`
+  - `lib/features/summertime_saga/`
+  - `lib/features/test/presentation/test_screen.dart`
 - Tests now exist:
   - `test/app_smoke_test.dart`
   - `test/features/bmi/domain/bmi_calculator_test.dart`
   - `test/features/bmi/presentation/bmi_screen_test.dart`
+  - focused feature tests under `test/features/`
   - `test/routes/app_pages_test.dart`
 
 Current dependencies:
@@ -47,8 +56,8 @@ Riverpod, go_router, and Dio are target-direction technologies but are not insta
 - Login build-time `setState()` risk has been fixed; emulator/device visual review remains a later QA activity.
 - GetX routing remains the active router.
 - `lib/screens/` and `lib/routes/` remain active legacy areas.
-- Some networking still uses direct `http` services under legacy feature folders.
-- Settings now has a registered legacy GetX route and feature presentation placement, but the broader routing architecture is still transitional.
+- Some networking still uses direct `http` services under feature folders.
+- Feature placement does not mean routing architecture has migrated; the legacy GetX route table still owns screen registration.
 - Theme/design-system implementation is still mostly target documentation rather than app code.
 - Android toolchain versions have been pulled forward on `home/devbyMinh-current` with explicit approval: Gradle 8.14.5, Android Gradle Plugin 8.11.1, Kotlin Gradle Plugin 2.2.20, Java/Kotlin target 17.
 - Built-in Kotlin migration remains deferred until an AGP 9.x migration or a build requirement forces it.
@@ -132,23 +141,24 @@ Non-goals:
 
 ## Phase 2: Low-risk Feature Placement
 
-Status: current / started.
+Status: complete for the selected Phase 2 scope as of 2026-06-26.
 
 Goal:
 
 - Move one simple screen or feature at a time toward `lib/features/<feature>/` while keeping GetX routing active.
 
-Good candidates:
+Completed scope:
 
-- Completed: Settings screen placement under `lib/features/settings/presentation/`.
-- BMI continuation, because it is already partly migrated.
-- Profile, if the task only moves the screen and updates the existing GetX route.
+- Settings, BMI, Profile, Chat, Dashboard, Login, Fox, Test, and Summertime Saga are placed under `lib/features/`.
+- API-backed Fox and Summertime Saga were hardened before placement.
+- Legacy GetX route registration remains active but imports placed feature screens.
 
-Avoid early:
+Not part of Phase 2:
 
-- Summertime Saga, because it includes network/error/loading risk.
-- Router-wide changes.
-- Startup/session rewrites.
+- Moving `lib/screens/main/main_screen.dart`.
+- Replacing GetX routing.
+- Refactoring `lib/main.dart` app composition.
+- Introducing Riverpod, go_router, or Dio.
 
 Verification:
 
@@ -156,7 +166,7 @@ Verification:
 
 ## Phase 3: Design System Foundation
 
-Status: future.
+Status: current / ready for kickoff audit.
 
 Goal:
 
@@ -164,6 +174,7 @@ Goal:
 
 Likely tasks:
 
+- Audit `docs/DESIGN_SYSTEM.md`, current theme/widgets, and recently stabilized screens.
 - Add minimal color/spacing/radius tokens.
 - Add one or two reusable `Iw` components.
 - Apply them to one pilot screen after the tokens exist.
