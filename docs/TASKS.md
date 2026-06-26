@@ -16,6 +16,7 @@ Current architecture status:
 - `lib/main.dart` still owns app composition.
 - GetX routing is still active under `lib/routes/`.
 - Most screens still live under `lib/screens/`.
+- Auth/Login presentation now lives under `lib/features/auth/presentation/`.
 - BMI is the active migration pilot under `lib/features/bmi/`.
 - Chat presentation now lives under `lib/features/chat/presentation/`.
 - Dashboard presentation now lives under `lib/features/dashboard/presentation/`.
@@ -47,7 +48,7 @@ Android toolchain status:
 
 Completed stabilization tasks:
 
-- Login build-time `setState()` risk was fixed in the legacy `LoginScreen`; the form is now SafeArea-aware, scroll-safe, and covered by a small keyboard-inset widget test.
+- Login build-time `setState()` risk was fixed; the form is now SafeArea-aware, scroll-safe, and covered by a small keyboard-inset widget test.
 - BMI UI layout-safety pass was completed; the BMI form is now scroll-safe, keyboard-dismiss-aware, and covered by a small keyboard-inset widget test.
 - Settings route alignment was fixed; `AppRoutes.settings` is now registered in the legacy GetX route table and covered by a route smoke test.
 - BMI feature-quality pass was completed; BMI inputs now allow decimal numeric keyboards and the weight field's keyboard Done action calculates the result.
@@ -58,6 +59,7 @@ Completed stabilization tasks:
 - Chat feature placement was completed; the existing placeholder screen moved to `lib/features/chat/presentation/`, legacy imports were updated, and the route has a smoke test.
 - Deterministic legacy route smoke tests were added for Login, Main, Dashboard, BMI, and Test; live-network routes remain deferred.
 - Dashboard feature placement was completed; the existing screen moved to `lib/features/dashboard/presentation/`, while GetX routes and main shell behavior stayed unchanged.
+- Login feature placement was completed; the existing screen moved to `lib/features/auth/presentation/`, while startup, route, and UI behavior stayed unchanged.
 
 ## Recommended Next Work
 
@@ -67,28 +69,24 @@ Current phase:
 
 ### Primary
 
-T12 — Move Login screen to feature presentation
+T13 — Fox feature hardening plan
 
 Reason:
 
-- Login is the next simple visible screen still in the legacy `lib/screens/` tree.
-- Existing startup and route smoke tests give a narrow safety net for an import-only placement task.
+- Fox is still a legacy API-backed feature with live HTTP work.
+- A hardening plan keeps the eventual move scoped instead of mixing network fixes with placement.
 
 Scope:
 
-- Move the existing Login screen to `lib/features/auth/presentation/`.
-- Update only the legacy imports/references needed for startup and route tests.
-- Keep GetX routing, login behavior, and UI unchanged.
+- Inspect the current Fox screen and data flow.
+- Identify the smallest hardening steps needed before a feature move.
+- Update planning docs only; do not move or refactor Fox code in the planning task.
 
 Verification:
 
-- Screen move/routing/startup gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Documentation/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
-
-T13 — Fox feature hardening plan
-
-Choose this if API-backed features should be prepared before moving.
 
 T14 — Dashboard UI layout-safety pass
 
@@ -98,6 +96,10 @@ T15 — Test screen audit
 
 Choose this if the dev/test route should be classified before deciding whether to move or remove it later.
 
+T16 — Summertime Saga hardening plan
+
+Choose this if the known higher-risk API-backed flow should be planned before Fox.
+
 ### Do not start yet
 
 - Riverpod activation.
@@ -106,7 +108,7 @@ Choose this if the dev/test route should be classified before deciding whether t
 - `lib/main.dart` app composition refactor.
 - GetX routing replacement.
 - Built-in Kotlin migration.
-- Login UI redesign during the move task.
+- Moving Fox before its hardening plan is agreed.
 
 ### Phase guard
 

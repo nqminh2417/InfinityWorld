@@ -12,6 +12,8 @@ This map is intentionally narrow. It does not start Riverpod, go_router, Dio, `l
 
 Already placed under `lib/features/`:
 
+- `auth`
+  - `lib/features/auth/presentation/login_screen.dart`
 - `bmi`
   - `lib/features/bmi/domain/bmi_calculator.dart`
   - `lib/features/bmi/presentation/bmi_screen.dart`
@@ -35,7 +37,6 @@ Still transitional:
 
 | Legacy path | Current role | Phase 2 action | Risk | Notes |
 |---|---|---:|---:|---|
-| `lib/screens/auth/login_screen.dart` | Startup/login screen | Move later in Phase 2 | Medium | Startup-sensitive. Keep existing login tests and route behavior intact. |
 | `lib/screens/main/main_screen.dart` | Legacy bottom-tab shell | Do not move in Phase 2 unless explicitly approved | High | Belongs closer to future `app/shell`, not a feature screen. |
 | `lib/screens/test/test_screen.dart` | Dev/test route | Audit before moving | Medium | May be debug/dead code. Also creates a `TextEditingController` in `build()`. |
 | `lib/screens/fox/` | API-backed Fox feature | Defer until explicit feature hardening/move | Medium | Uses direct `http` and live images. Move only as a scoped feature task. |
@@ -46,8 +47,9 @@ Still transitional:
 1. Completed: move Chat screen to `lib/features/chat/presentation/`.
 2. Completed: add deterministic route smoke tests for simple routes.
 3. Completed: move Dashboard as an import-only placement task.
-4. Move Login only after confirming startup smoke tests still cover the flow.
-5. Defer Fox and Summertime Saga until explicit feature hardening tasks.
+4. Completed: move Login after confirming startup smoke tests cover the flow.
+5. Plan or harden Fox before moving API-backed features.
+6. Defer Summertime Saga until explicit feature hardening tasks.
 
 ## Route smoke coverage
 
