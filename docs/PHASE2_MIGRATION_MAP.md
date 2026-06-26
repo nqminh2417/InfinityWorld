@@ -43,10 +43,28 @@ Still transitional:
 ## Recommended ordering
 
 1. Completed: move Chat screen to `lib/features/chat/presentation/`.
-2. Add route smoke tests for any route that is about to move and lacks coverage.
+2. Completed: add deterministic route smoke tests for simple routes.
 3. Move Dashboard only as an import-only placement task, or split out route coverage first.
 4. Move Login only after confirming startup smoke tests still cover the flow.
 5. Defer Fox and Summertime Saga until explicit feature hardening tasks.
+
+## Route smoke coverage
+
+Covered by deterministic route smoke tests:
+
+- Login
+- Main
+- Dashboard
+- Chat
+- Profile
+- Settings
+- BMI
+- Test
+
+Deferred route rendering tests:
+
+- Fox, because the screen starts live HTTP work in `initState()`.
+- Summertime Saga, because the screen starts live HTTP work in `initState()` and has known null/error risks.
 
 ## Placement rules
 

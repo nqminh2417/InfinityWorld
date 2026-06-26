@@ -29,8 +29,10 @@ Current tests:
 - BMI domain unit tests exist.
 - BMI presentation widget tests exist.
 - Chat route smoke test exists.
+- Deterministic route smoke tests exist for Login, Main, Dashboard, BMI, and Test.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
+- Fox and Summertime Saga route rendering tests are deferred because those screens start live HTTP work in `initState()`.
 
 Current phase:
 
@@ -51,6 +53,7 @@ Completed stabilization tasks:
 - Profile feature placement was completed; the existing screen moved to `lib/features/profile/presentation/`, legacy imports were updated, and the route has a smoke test.
 - Phase 2 migration map was created to rank remaining `lib/screens/` ownership and avoid random screen moves.
 - Chat feature placement was completed; the existing placeholder screen moved to `lib/features/chat/presentation/`, legacy imports were updated, and the route has a smoke test.
+- Deterministic legacy route smoke tests were added for Login, Main, Dashboard, BMI, and Test; live-network routes remain deferred.
 
 ## Recommended Next Work
 
@@ -60,32 +63,36 @@ Current phase:
 
 ### Primary
 
-T9 — Add route smoke tests for remaining legacy routes
+T10 — Profile UI layout-safety pass
 
 Reason:
 
-- Settings, Profile, and Chat route coverage now exists.
-- The remaining legacy routes should be checked before moving more visible or risky screens.
+- Profile has been moved to feature placement but still has legacy placeholder-like layout.
+- A safety-only pass can address obvious layout risk without redesigning the screen.
 
 Scope:
 
-- Add focused route smoke tests for simple remaining legacy routes where practical.
-- Keep tests deterministic and avoid live network.
-- Do not move screens in this task.
+- Apply Flutter UI layout-safety rules to the current Profile screen.
+- Keep behavior and route unchanged.
+- Avoid broad visual redesign.
 
 Verification:
 
-- Dart test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- UI/Dart gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T10 — Profile UI layout-safety pass
-
-Choose this if Profile visual/layout risks should be fixed before more placement.
-
 T11 — Move Dashboard screen to feature presentation
 
-Choose this if you want the next visible hub screen moved before more route tests.
+Choose this if you want the next visible hub screen moved before Profile cleanup.
+
+T12 — Move Login screen to feature presentation
+
+Choose this if startup-sensitive placement is more important than Profile cleanup.
+
+T13 — Fox feature hardening plan
+
+Choose this if API-backed features should be prepared before moving.
 
 ### Do not start yet
 
@@ -95,7 +102,7 @@ Choose this if you want the next visible hub screen moved before more route test
 - `lib/main.dart` app composition refactor.
 - GetX routing replacement.
 - Built-in Kotlin migration.
-- Profile UI redesign during the move task.
+- Broad Profile UI redesign; keep T10 safety-only if selected.
 
 ### Phase guard
 
