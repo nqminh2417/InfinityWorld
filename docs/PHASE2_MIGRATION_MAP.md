@@ -44,7 +44,7 @@ Still transitional:
 | Legacy path | Current role | Phase 2 action | Risk | Notes |
 |---|---|---:|---:|---|
 | `lib/screens/main/main_screen.dart` | Legacy bottom-tab shell | Do not move in Phase 2 unless explicitly approved | High | Belongs closer to future `app/shell`, not a feature screen. |
-| `lib/screens/summertime_saga/` | API-backed Summertime Saga feature | Harden before moving | High | Network foundation is complete. Continue with screen states/layout, then feature placement. |
+| `lib/screens/summertime_saga/` | API-backed Summertime Saga feature | Move after hardening | High | Network and screen-state/layout hardening are complete. Continue with feature placement. |
 
 ## Recommended ordering
 
@@ -63,7 +63,7 @@ Still transitional:
 13. Completed: run a Dashboard UI layout-safety pass.
 14. Completed: create a Summertime Saga hardening plan before implementation or feature move.
 15. Completed: harden Summertime Saga network foundation.
-16. Stabilize Summertime Saga screen states and layout.
+16. Completed: stabilize Summertime Saga screen states and layout.
 17. Move Summertime Saga only after deterministic tests exist.
 
 ## Route smoke coverage
@@ -82,7 +82,7 @@ Covered by deterministic route smoke tests:
 Deferred route rendering tests:
 
 - Fox, because the screen starts live HTTP work in `initState()`.
-- Summertime Saga, because the screen starts live HTTP work in `initState()` and has known null/error risks.
+- Summertime Saga, because the legacy route still uses the default live loader.
 
 ## Placement rules
 

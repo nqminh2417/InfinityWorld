@@ -39,7 +39,7 @@ Current files:
 - `SmtsHomeScreen` force-unwraps many nullable API fields, for example totals, issues, departments, and nested percent values.
 - `ProgressBar` force-unwraps nullable counts and percent values; missing or invalid API data can crash rendering.
 - The current body uses a fixed full-height container with a non-scrollable `Column`; small screens or large content can overflow.
-- Route/widget rendering tests remain deferred until the screen can avoid uncontrolled live HTTP during tests.
+- Legacy route rendering tests remain deferred because the GetX route still uses the default live loader.
 
 Resolved in T23:
 
@@ -47,6 +47,15 @@ Resolved in T23:
 - `SmtsService` has a small fake-network seam, timeout handling, non-2xx handling, malformed JSON handling, required-field validation, and deterministic exceptions.
 - Android release `INTERNET` permission exists in `android/app/src/main/AndroidManifest.xml`.
 - Focused Summertime Saga service/model tests exist for success, non-2xx, malformed JSON, missing schema, and timeout cases.
+
+Resolved in T24:
+
+- `SmtsHomeScreen` has an injected progress loader and optional logo URL so widget tests avoid live network.
+- Loading, error, retry, success, and incomplete-data states are deterministic.
+- Async state updates are guarded by `mounted` and a stale-request id.
+- The screen body is SafeArea-aware and scrollable on small screens.
+- `ProgressBar` no longer force-unwraps nullable counts or percent data.
+- Focused widget tests cover loading, success, error/retry, incomplete data, dispose safety, and small-screen scroll safety.
 
 ## Hardening goals before moving files
 
@@ -94,6 +103,8 @@ Verification:
 
 ### T24 - Stabilize Summertime Saga screen states and layout
 
+Status: Completed on 2026-06-26.
+
 Scope:
 
 - Keep GetX routing and legacy file locations.
@@ -103,6 +114,13 @@ Scope:
 - Replace force unwraps in the screen path with safe rendering or validated data assumptions from the service layer.
 - Make the screen SafeArea-aware and scroll-safe.
 - Do not redesign the visual style.
+
+Result:
+
+- Screen widget tests now use fake progress loaders instead of live HTTP.
+- The screen renders explicit loading, error/retry, success, and incomplete-data states.
+- Small-screen scroll safety is covered at 360x640.
+- Legacy route wiring and file locations were intentionally left unchanged for T25.
 
 Verification:
 

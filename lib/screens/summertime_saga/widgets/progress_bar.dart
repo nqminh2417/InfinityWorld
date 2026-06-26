@@ -30,29 +30,53 @@ class ProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        double parentwidth = constraints.maxWidth;
+        final parentWidth = constraints.maxWidth;
+        final completedValue = completed ?? 0;
+        final inProgressValue = inProgress ?? 0;
+        final totalValue = total ?? 0;
+        final inProgressWidth = _barWidth(
+          parentWidth,
+          completedValue + inProgressValue,
+          totalValue,
+        );
+        final completedWidth = _barWidth(
+          parentWidth,
+          completedValue,
+          totalValue,
+        );
+
         return Container(
-          width: parentwidth,
+          width: parentWidth,
           height: height,
           decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xB0B2B500), width: 0.5, style: BorderStyle.solid),
+            border: Border.all(
+              color: const Color(0xB0B2B500),
+              width: 0.5,
+              style: BorderStyle.solid,
+            ),
           ),
           child: Stack(
             children: [
-              Container(width: parentwidth, decoration: BoxDecoration(color: totalColor)),
               Container(
-                width: total == 0 ? parentwidth : (((completed! + inProgress!) / total!) * parentwidth),
+                width: parentWidth,
+                decoration: BoxDecoration(color: totalColor),
+              ),
+              Container(
+                width: inProgressWidth,
                 decoration: BoxDecoration(color: inProgressColor),
               ),
               Container(
-                width: total == 0 ? parentwidth : ((completed! / total!) * parentwidth),
+                width: completedWidth,
                 decoration: BoxDecoration(color: completedColor),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(title!, style: const TextStyle(color: Colors.white, fontSize: 15)),
+                  child: Text(
+                    title ?? '',
+                    style: const TextStyle(color: Colors.white, fontSize: 15),
+                  ),
                 ),
               ),
               Padding(
@@ -60,7 +84,7 @@ class ProgressBar extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    '[$completed/$total] ${percent!.completed}%',
+                    '[$completedValue/$totalValue] ${percent?.completed ?? '0'}%',
                     style: const TextStyle(color: Colors.white, fontSize: 15),
                   ),
                 ),
@@ -70,5 +94,13 @@ class ProgressBar extends StatelessWidget {
         );
       },
     );
+  }
+
+  double _barWidth(double parentWidth, int value, int totalValue) {
+    if (totalValue <= 0) {
+      return 0;
+    }
+
+    return (value.clamp(0, totalValue) / totalValue) * parentWidth;
   }
 }

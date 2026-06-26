@@ -6,41 +6,78 @@ import 'package:infinity_world/screens/summertime_saga/models/smts_progress_mode
 import 'package:infinity_world/screens/summertime_saga/services/smts_service.dart';
 import 'package:infinity_world/screens/summertime_saga/widgets/progress_bar.dart';
 
+typedef SmtsProgressLoader = Future<SmtsProgressModel> Function();
+
 class SmtsHomeScreen extends StatefulWidget {
-  const SmtsHomeScreen({super.key});
+  SmtsHomeScreen({super.key, SmtsProgressLoader? loadProgress, String? logoUrl})
+    : loadProgress = loadProgress ?? SmtsService.getProgress,
+      logoUrl = logoUrl ?? Cfg.smtsLogoUrl;
+
+  final SmtsProgressLoader loadProgress;
+  final String logoUrl;
 
   @override
   State<SmtsHomeScreen> createState() => _SmtsHomeScreenState();
 }
 
 class _SmtsHomeScreenState extends State<SmtsHomeScreen> {
-  SmtsProgressModel? progressData;
-  final String _logoUrl = Cfg.smtsLogoUrl;
+  SmtsProgressModel? _progressData;
+  String? _errorMessage;
+  bool _isLoading = true;
+  int _requestId = 0;
 
   @override
   void initState() {
     super.initState();
-    _fetchProgress();
+    _fetchProgress(showLoading: false);
   }
 
-  Future<void> _fetchProgress() async {
-    try {
-      final data = await SmtsService.getProgress();
+  Future<void> _fetchProgress({bool showLoading = true}) async {
+    final requestId = ++_requestId;
+
+    if (showLoading) {
       setState(() {
-        progressData = data;
+        _isLoading = true;
+        _errorMessage = null;
+        _progressData = null;
+      });
+    }
+
+    try {
+      final data = await widget.loadProgress();
+
+      if (!mounted || requestId != _requestId) return;
+
+      setState(() {
+        _progressData = data;
+        _errorMessage = null;
+        _isLoading = false;
       });
     } catch (error) {
-      // Handle the error
+      if (!mounted || requestId != _requestId) return;
+
+      setState(() {
+        _progressData = null;
+        _errorMessage = _messageFor(error);
+        _isLoading = false;
+      });
     }
+  }
+
+  String _messageFor(Object error) {
+    if (error is SmtsServiceException) {
+      return error.message;
+    }
+
+    return 'Failed to load progress.';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Summertime Saga')),
+      appBar: AppBar(title: const Text('Summertime Saga')),
       body: Container(
-        width: double.infinity, //MediaQuery.of(context).size.width
-        height: double.infinity,
+        width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -50,138 +87,216 @@ class _SmtsHomeScreenState extends State<SmtsHomeScreen> {
             transform: GradientRotation(135 * pi / 180),
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+        child: SafeArea(
+          top: false,
+          child: ListView(
+            padding: const EdgeInsets.all(16),
             children: [
-              if (_logoUrl.isNotEmpty) // Kiểm tra nếu có URL logo
+              if (widget.logoUrl.isNotEmpty)
                 Image.network(
-                  _logoUrl,
-                  // height: 100,
-                  errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image, size: 100),
+                  widget.logoUrl,
+                  errorBuilder:
+                      (context, error, stackTrace) => const Icon(
+                        Icons.broken_image,
+                        color: Colors.white70,
+                        size: 100,
+                      ),
                 ),
-              SizedBox(height: 20),
-              progressData != null
-                  ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 0, right: 0, bottom: 3.0, left: 0),
-                        padding: const EdgeInsets.only(top: 0.0, right: 1.0, bottom: 0.0, left: 1.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              '${progressData!.version} - ${progressData!.totals!.percent!.completed}%',
-                              style: const TextStyle(color: Colors.white, fontSize: 16),
-                            ),
-                            const Spacer(),
-                            Text(
-                              '${progressData!.totals!.total} Tasks',
-                              style: const TextStyle(color: Colors.white, fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 10), // Add some spacing between rows
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        decoration: BoxDecoration(border: Border.all(color: const Color(0xFF505673))),
-                        child: Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 3),
-                                child: ProgressBar(
-                                  height: 21,
-                                  title: 'Art',
-                                  completed: progressData!.depts!.art!.closed,
-                                  inProgress: progressData!.depts!.art!.working,
-                                  total: progressData!.depts!.art!.total,
-                                  percent: progressData!.depts!.art!.percent,
-                                  completedColor: const Color(0xff7e8534),
-                                  inProgressColor: const Color(0xff7e8534),
-                                  totalColor: const Color(0xff7e8534),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 3),
-                                child: ProgressBar(
-                                  height: 21,
-                                  title: 'Posing',
-                                  completed: progressData!.depts!.posing!.closed,
-                                  inProgress: progressData!.depts!.posing!.working,
-                                  total: progressData!.depts!.posing!.total,
-                                  percent: progressData!.depts!.posing!.percent,
-                                  completedColor: const Color(0xfff1562e),
-                                  inProgressColor: const Color(0xffbd492f),
-                                  totalColor: const Color(0xff893c30),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 3),
-                                child: ProgressBar(
-                                  height: 21,
-                                  title: 'Dialogue',
-                                  completed: progressData!.depts!.dialogue!.closed,
-                                  inProgress: progressData!.depts!.dialogue!.working,
-                                  total: progressData!.depts!.dialogue!.total,
-                                  percent: progressData!.depts!.dialogue!.percent,
-                                  completedColor: const Color(0xfff1e12e),
-                                  inProgressColor: const Color(0xff7e8534),
-                                  totalColor: const Color(0xff7e8534),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 3),
-                                child: ProgressBar(
-                                  height: 21,
-                                  title: 'Code',
-                                  completed: progressData!.depts!.code!.closed,
-                                  inProgress: progressData!.depts!.code!.working,
-                                  total: progressData!.depts!.code!.total,
-                                  percent: progressData!.depts!.code!.percent,
-                                  completedColor: const Color(0xff5ca1bb),
-                                  inProgressColor: const Color(0xff4c8299),
-                                  totalColor: const Color(0xff3e6277),
-                                ),
-                              ),
-                              ProgressBar(
-                                height: 21,
-                                title: 'Audio',
-                                completed: progressData!.depts!.audio!.closed,
-                                inProgress: progressData!.depts!.audio!.working,
-                                total: progressData!.depts!.audio!.total,
-                                percent: progressData!.depts!.audio!.percent,
-                                completedColor: const Color(0xff48506d),
-                                inProgressColor: const Color(0xff48506d),
-                                totalColor: const Color(0xff48506d),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 0, right: 0, bottom: 30.0, left: 0),
-                        padding: const EdgeInsets.only(top: 0.0, right: 1.0, bottom: 0.0, left: 1.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              '${progressData!.issues!.total} Changes in last 24hrs',
-                              style: const TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                  : const Center(child: CircularProgressIndicator()),
+              if (widget.logoUrl.isNotEmpty) const SizedBox(height: 20),
+              _buildBody(),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildBody() {
+    if (_isLoading) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 48),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final errorMessage = _errorMessage;
+    if (errorMessage != null) {
+      return _buildErrorState(errorMessage);
+    }
+
+    final progressData = _progressData;
+    if (progressData == null) {
+      return _buildErrorState('Progress data is unavailable.');
+    }
+
+    return _buildProgressContent(progressData);
+  }
+
+  Widget _buildProgressContent(SmtsProgressModel progressData) {
+    final totals = progressData.totals;
+    final issues = progressData.issues;
+    final depts = progressData.depts;
+    final art = depts?.art;
+    final posing = depts?.posing;
+    final dialogue = depts?.dialogue;
+    final code = depts?.code;
+    final audio = depts?.audio;
+
+    if (progressData.version == null ||
+        !_hasTotals(totals) ||
+        issues?.total == null ||
+        !_hasTotals(art) ||
+        !_hasTotals(posing) ||
+        !_hasTotals(dialogue) ||
+        !_hasTotals(code) ||
+        !_hasTotals(audio)) {
+      return _buildErrorState('Progress data is incomplete.');
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(bottom: 3),
+          padding: const EdgeInsets.symmetric(horizontal: 1),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  '${progressData.version} - ${totals?.percent?.completed}%',
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '${totals?.total} Tasks',
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color(0xFF505673)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(3),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 3),
+                  child: ProgressBar(
+                    title: 'Art',
+                    completed: art?.closed,
+                    inProgress: art?.working,
+                    total: art?.total,
+                    percent: art?.percent,
+                    completedColor: const Color(0xff7e8534),
+                    inProgressColor: const Color(0xff7e8534),
+                    totalColor: const Color(0xff7e8534),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 3),
+                  child: ProgressBar(
+                    title: 'Posing',
+                    completed: posing?.closed,
+                    inProgress: posing?.working,
+                    total: posing?.total,
+                    percent: posing?.percent,
+                    completedColor: const Color(0xfff1562e),
+                    inProgressColor: const Color(0xffbd492f),
+                    totalColor: const Color(0xff893c30),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 3),
+                  child: ProgressBar(
+                    title: 'Dialogue',
+                    completed: dialogue?.closed,
+                    inProgress: dialogue?.working,
+                    total: dialogue?.total,
+                    percent: dialogue?.percent,
+                    completedColor: const Color(0xfff1e12e),
+                    inProgressColor: const Color(0xff7e8534),
+                    totalColor: const Color(0xff7e8534),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 3),
+                  child: ProgressBar(
+                    title: 'Code',
+                    completed: code?.closed,
+                    inProgress: code?.working,
+                    total: code?.total,
+                    percent: code?.percent,
+                    completedColor: const Color(0xff5ca1bb),
+                    inProgressColor: const Color(0xff4c8299),
+                    totalColor: const Color(0xff3e6277),
+                  ),
+                ),
+                ProgressBar(
+                  title: 'Audio',
+                  completed: audio?.closed,
+                  inProgress: audio?.working,
+                  total: audio?.total,
+                  percent: audio?.percent,
+                  completedColor: const Color(0xff48506d),
+                  inProgressColor: const Color(0xff48506d),
+                  totalColor: const Color(0xff48506d),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(bottom: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 1),
+          child: Text(
+            '${issues?.total} Changes in last 24hrs',
+            style: const TextStyle(color: Colors.white, fontSize: 12),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildErrorState(String message) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 48),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.error_outline, color: Colors.white70, size: 40),
+          const SizedBox(height: 12),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white, fontSize: 14),
+          ),
+          const SizedBox(height: 16),
+          OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.white,
+              side: const BorderSide(color: Colors.white70),
+            ),
+            onPressed: () => _fetchProgress(),
+            icon: const Icon(Icons.refresh),
+            label: const Text('Retry'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  bool _hasTotals(Totals? totals) {
+    return totals?.closed != null &&
+        totals?.working != null &&
+        totals?.total != null &&
+        totals?.percent?.completed != null;
   }
 }
