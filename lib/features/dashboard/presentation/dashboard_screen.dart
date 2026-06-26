@@ -29,41 +29,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
         actions: [
           IconButton(icon: const Icon(Icons.filter_list), onPressed: () {}),
         ],
-        title: Text('Dashboard'),
+        title: const Text('Dashboard'),
       ),
-      body: Column(
-        children: [
-          ListTile(
-            leading: Icon(Icons.beach_access),
-            title: Text('Summertime Saga'),
-            onTap: () {
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => SmtsHomeScreen()));
-              Get.toNamed(AppRoutes.smtsHome);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.start),
-            title: const Text('Random pictures of foxes'),
-            onTap: _toFoxRandom,
-          ),
-          ListTile(
-            leading: const Icon(Icons.arrow_forward_rounded),
-            title: const Text('BMI Calculator'),
-            onTap: () {
-              Get.toNamed(AppRoutes.bmi);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.swipe_vertical),
-            title: const Text('Test Screen'),
-            onTap: _toTestScreen,
-          ),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Log out'),
-            onTap: _logout,
-          ),
-        ],
+      body: SafeArea(
+        top: false,
+        child: ListView(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.beach_access),
+              title: const Text('Summertime Saga'),
+              onTap: () {
+                // Navigator.push(context, MaterialPageRoute(builder: (context) => SmtsHomeScreen()));
+                Get.toNamed(AppRoutes.smtsHome);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.start),
+              title: const Text('Random pictures of foxes'),
+              onTap: _toFoxRandom,
+            ),
+            ListTile(
+              leading: const Icon(Icons.arrow_forward_rounded),
+              title: const Text('BMI Calculator'),
+              onTap: () {
+                Get.toNamed(AppRoutes.bmi);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.swipe_vertical),
+              title: const Text('Test Screen'),
+              onTap: _toTestScreen,
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Log out'),
+              onTap: _logout,
+            ),
+          ],
+        ),
       ),
     );
   }

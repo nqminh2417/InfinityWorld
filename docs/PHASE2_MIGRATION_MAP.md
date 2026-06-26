@@ -60,8 +60,9 @@ Still transitional:
 10. Completed: audit the Test screen before deciding whether to keep, move, or remove it later.
 11. Completed: fix Test screen lifecycle and keyboard-safety risks before any move or removal decision.
 12. Completed: move Test screen only if it remains useful after stabilization.
-13. Run a Dashboard UI layout-safety pass.
-14. Defer Summertime Saga until explicit feature hardening tasks.
+13. Completed: run a Dashboard UI layout-safety pass.
+14. Create a Summertime Saga hardening plan before implementation or feature move.
+15. Defer Summertime Saga implementation until explicit feature hardening tasks.
 
 ## Route smoke coverage
 

@@ -34,6 +34,7 @@ Current tests:
 - BMI domain unit tests exist.
 - BMI presentation widget tests exist.
 - Chat route smoke test exists.
+- Dashboard presentation widget test exists for small-screen scroll safety.
 - Deterministic route smoke tests exist for Login, Main, Dashboard, BMI, and Test.
 - Test screen widget coverage exists for small-screen keyboard/scroll safety.
 - Fox API service and model parsing tests exist.
@@ -74,6 +75,7 @@ Completed stabilization tasks:
 - Test screen audit was completed; the route is still reachable from Dashboard, route coverage exists, and lifecycle/keyboard-safety issues should be fixed before any move or removal decision.
 - Test screen lifecycle and keyboard-safety pass was completed; owned controller state is disposed and the form body is SafeArea-aware and scroll-safe.
 - Test feature placement was completed; the screen moved to `lib/features/test/presentation/`, route/test imports were updated, and GetX route behavior stayed unchanged.
+- Dashboard UI layout-safety pass was completed; navigation content is SafeArea-aware and scroll-safe without changing GetX route behavior.
 
 ## Recommended Next Work
 
@@ -90,30 +92,25 @@ Task sizing note:
 
 ### Primary
 
-T21 — Dashboard UI layout-safety pass
+T22 — Summertime Saga hardening plan
 
 Reason:
 
-- Dashboard is a visible hub screen that links to migrated and legacy routes.
-- It still uses a simple non-scrollable `Column` of navigation rows.
-- A small layout-safety pass can keep the hub scroll-safe without changing route architecture.
+- Summertime Saga is the remaining high-risk API-backed legacy feature under `lib/screens/`.
+- It has known null/error/loading risks and direct `http` usage.
+- A hardening plan keeps the next work scoped before any move or implementation.
 
 Scope:
 
-- Keep Dashboard in `lib/features/dashboard/presentation/`.
-- Keep GetX route behavior unchanged.
-- Make navigation content SafeArea-aware and scroll-safe if needed.
-- Do not redesign Dashboard or replace navigation.
+- Audit the current Summertime Saga flow and files.
+- Document the smallest safe hardening sequence.
+- Do not move files, migrate networking, or refactor UI in the planning task.
 
 Verification:
 
-- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Docs/audit gate from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
-
-T22 — Summertime Saga hardening plan
-
-Choose this if the known higher-risk API-backed flow should be planned before more placement.
 
 T23 — Phase 2 checkpoint audit
 
@@ -122,6 +119,10 @@ Choose this if remaining `lib/screens/` ownership should be reviewed before more
 T24 — Decide whether to remove the Test route
 
 Choose this if the Dashboard-linked Test route is no longer useful and should be explicitly removed.
+
+T25 — Main shell audit
+
+Choose this if `lib/screens/main/main_screen.dart` ownership needs to be clarified before Phase 2 exit.
 
 ### Do not start yet
 
