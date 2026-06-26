@@ -22,6 +22,7 @@ Current architecture status:
 - Dashboard presentation now lives under `lib/features/dashboard/presentation/`.
 - Profile presentation now lives under `lib/features/profile/presentation/`.
 - Settings presentation now lives under `lib/features/settings/presentation/`.
+- Fox hardening plan exists at `docs/features/FOX_HARDENING_PLAN.md`.
 - Phase 2 migration map exists at `docs/PHASE2_MIGRATION_MAP.md`.
 - Riverpod, go_router, and Dio are not active yet.
 
@@ -60,6 +61,7 @@ Completed stabilization tasks:
 - Deterministic legacy route smoke tests were added for Login, Main, Dashboard, BMI, and Test; live-network routes remain deferred.
 - Dashboard feature placement was completed; the existing screen moved to `lib/features/dashboard/presentation/`, while GetX routes and main shell behavior stayed unchanged.
 - Login feature placement was completed; the existing screen moved to `lib/features/auth/presentation/`, while startup, route, and UI behavior stayed unchanged.
+- Fox feature hardening plan was completed; API/service risks, deterministic testing needs, and the safe pre-move task sequence are documented.
 
 ## Recommended Next Work
 
@@ -69,36 +71,36 @@ Current phase:
 
 ### Primary
 
-T13 — Fox feature hardening plan
+T14 — Harden Fox API service and model parsing
 
 Reason:
 
-- Fox is still a legacy API-backed feature with live HTTP work.
-- A hardening plan keeps the eventual move scoped instead of mixing network fixes with placement.
+- Fox route coverage is blocked by live HTTP work in `initState()`.
+- The service currently lacks timeout, injectable client/test seam, and strict response validation.
 
 Scope:
 
-- Inspect the current Fox screen and data flow.
-- Identify the smallest hardening steps needed before a feature move.
-- Update planning docs only; do not move or refactor Fox code in the planning task.
+- Keep `http`; do not introduce Dio yet.
+- Harden `FoxApiService` and `FoxModel` parsing with focused tests.
+- Preserve current Fox screen behavior and route.
 
 Verification:
 
-- Documentation/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T14 — Dashboard UI layout-safety pass
+T15 — Add deterministic Fox screen or route smoke coverage
 
-Choose this if Dashboard layout risk should be reviewed before more feature moves.
+Choose this after T14 if Fox UI/route coverage should be unblocked before moving files.
 
-T15 — Test screen audit
+T16 — Move Fox to feature structure
+
+Choose this after Fox API/service behavior has deterministic tests.
+
+T17 — Test screen audit
 
 Choose this if the dev/test route should be classified before deciding whether to move or remove it later.
-
-T16 — Summertime Saga hardening plan
-
-Choose this if the known higher-risk API-backed flow should be planned before Fox.
 
 ### Do not start yet
 
@@ -108,7 +110,8 @@ Choose this if the known higher-risk API-backed flow should be planned before Fo
 - `lib/main.dart` app composition refactor.
 - GetX routing replacement.
 - Built-in Kotlin migration.
-- Moving Fox before its hardening plan is agreed.
+- Moving Fox before API/service hardening and deterministic tests.
+- Dio/Riverpod migration inside Fox hardening tasks.
 
 ### Phase guard
 
