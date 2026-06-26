@@ -16,11 +16,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
         centerTitle: true,
         title: const Text('Profile Screen'),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Ink(child: Container(height: 200, color: Colors.blueAccent)),
-          ],
+      body: SafeArea(
+        top: false,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Ink(
+                        child: Container(
+                          width: double.infinity,
+                          height: 200,
+                          color: Colors.blueAccent,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

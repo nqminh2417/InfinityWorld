@@ -30,6 +30,7 @@ Current tests:
 - BMI presentation widget tests exist.
 - Chat route smoke test exists.
 - Deterministic route smoke tests exist for Login, Main, Dashboard, BMI, and Test.
+- Profile presentation widget test exists.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
 - Fox and Summertime Saga route rendering tests are deferred because those screens start live HTTP work in `initState()`.
@@ -51,6 +52,7 @@ Completed stabilization tasks:
 - BMI feature-quality pass was completed; BMI inputs now allow decimal numeric keyboards and the weight field's keyboard Done action calculates the result.
 - Settings feature placement was completed; the existing placeholder screen moved to `lib/features/settings/presentation/` and the legacy GetX route import was updated.
 - Profile feature placement was completed; the existing screen moved to `lib/features/profile/presentation/`, legacy imports were updated, and the route has a smoke test.
+- Profile UI layout-safety pass was completed; the screen is now SafeArea-aware, scroll-safe on small screens, and covered by a focused widget test.
 - Phase 2 migration map was created to rank remaining `lib/screens/` ownership and avoid random screen moves.
 - Chat feature placement was completed; the existing placeholder screen moved to `lib/features/chat/presentation/`, legacy imports were updated, and the route has a smoke test.
 - Deterministic legacy route smoke tests were added for Login, Main, Dashboard, BMI, and Test; live-network routes remain deferred.
@@ -63,36 +65,36 @@ Current phase:
 
 ### Primary
 
-T10 — Profile UI layout-safety pass
+T11 — Move Dashboard screen to feature presentation
 
 Reason:
 
-- Profile has been moved to feature placement but still has legacy placeholder-like layout.
-- A safety-only pass can address obvious layout risk without redesigning the screen.
+- Dashboard is still in the legacy `lib/screens/` tree.
+- Its route already has deterministic smoke coverage, making it a reasonable next Phase 2 placement task.
 
 Scope:
 
-- Apply Flutter UI layout-safety rules to the current Profile screen.
-- Keep behavior and route unchanged.
-- Avoid broad visual redesign.
+- Move the existing Dashboard screen to `lib/features/dashboard/presentation/`.
+- Update only the legacy imports/references needed for the existing route and shell.
+- Keep GetX routing, behavior, and UI unchanged.
 
 Verification:
 
-- UI/Dart gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Screen move/routing/startup gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T11 — Move Dashboard screen to feature presentation
-
-Choose this if you want the next visible hub screen moved before Profile cleanup.
-
 T12 — Move Login screen to feature presentation
 
-Choose this if startup-sensitive placement is more important than Profile cleanup.
+Choose this if startup/auth placement should be handled next, accepting higher risk than Dashboard.
 
 T13 — Fox feature hardening plan
 
 Choose this if API-backed features should be prepared before moving.
+
+T14 — Dashboard UI layout-safety pass
+
+Choose this if Dashboard layout risk should be reviewed before or immediately after placement.
 
 ### Do not start yet
 
@@ -102,7 +104,7 @@ Choose this if API-backed features should be prepared before moving.
 - `lib/main.dart` app composition refactor.
 - GetX routing replacement.
 - Built-in Kotlin migration.
-- Broad Profile UI redesign; keep T10 safety-only if selected.
+- Dashboard UI redesign during the move task.
 
 ### Phase guard
 
