@@ -26,7 +26,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [IconButton(icon: const Icon(Icons.filter_list), onPressed: () {})],
+        actions: [
+          IconButton(icon: const Icon(Icons.filter_list), onPressed: () {}),
+        ],
         title: Text('Dashboard'),
       ),
       body: Column(
@@ -51,8 +53,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Get.toNamed(AppRoutes.bmi);
             },
           ),
-          ListTile(leading: const Icon(Icons.swipe_vertical), title: const Text('Test Screen'), onTap: _toTestScreen),
-          ListTile(leading: const Icon(Icons.logout), title: const Text('Log out'), onTap: _logout),
+          ListTile(
+            leading: const Icon(Icons.swipe_vertical),
+            title: const Text('Test Screen'),
+            onTap: _toTestScreen,
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Log out'),
+            onTap: _logout,
+          ),
         ],
       ),
     );

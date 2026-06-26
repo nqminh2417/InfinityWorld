@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:infinity_world/features/chat/presentation/chat_screen.dart';
+import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:infinity_world/features/profile/presentation/profile_screen.dart';
-import 'package:infinity_world/screens/dashboard/dashboard_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

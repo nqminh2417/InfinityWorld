@@ -18,6 +18,7 @@ Current architecture status:
 - Most screens still live under `lib/screens/`.
 - BMI is the active migration pilot under `lib/features/bmi/`.
 - Chat presentation now lives under `lib/features/chat/presentation/`.
+- Dashboard presentation now lives under `lib/features/dashboard/presentation/`.
 - Profile presentation now lives under `lib/features/profile/presentation/`.
 - Settings presentation now lives under `lib/features/settings/presentation/`.
 - Phase 2 migration map exists at `docs/PHASE2_MIGRATION_MAP.md`.
@@ -56,6 +57,7 @@ Completed stabilization tasks:
 - Phase 2 migration map was created to rank remaining `lib/screens/` ownership and avoid random screen moves.
 - Chat feature placement was completed; the existing placeholder screen moved to `lib/features/chat/presentation/`, legacy imports were updated, and the route has a smoke test.
 - Deterministic legacy route smoke tests were added for Login, Main, Dashboard, BMI, and Test; live-network routes remain deferred.
+- Dashboard feature placement was completed; the existing screen moved to `lib/features/dashboard/presentation/`, while GetX routes and main shell behavior stayed unchanged.
 
 ## Recommended Next Work
 
@@ -65,18 +67,18 @@ Current phase:
 
 ### Primary
 
-T11 — Move Dashboard screen to feature presentation
+T12 — Move Login screen to feature presentation
 
 Reason:
 
-- Dashboard is still in the legacy `lib/screens/` tree.
-- Its route already has deterministic smoke coverage, making it a reasonable next Phase 2 placement task.
+- Login is the next simple visible screen still in the legacy `lib/screens/` tree.
+- Existing startup and route smoke tests give a narrow safety net for an import-only placement task.
 
 Scope:
 
-- Move the existing Dashboard screen to `lib/features/dashboard/presentation/`.
-- Update only the legacy imports/references needed for the existing route and shell.
-- Keep GetX routing, behavior, and UI unchanged.
+- Move the existing Login screen to `lib/features/auth/presentation/`.
+- Update only the legacy imports/references needed for startup and route tests.
+- Keep GetX routing, login behavior, and UI unchanged.
 
 Verification:
 
@@ -84,17 +86,17 @@ Verification:
 
 ### Alternatives
 
-T12 — Move Login screen to feature presentation
-
-Choose this if startup/auth placement should be handled next, accepting higher risk than Dashboard.
-
 T13 — Fox feature hardening plan
 
 Choose this if API-backed features should be prepared before moving.
 
 T14 — Dashboard UI layout-safety pass
 
-Choose this if Dashboard layout risk should be reviewed before or immediately after placement.
+Choose this if Dashboard layout risk should be reviewed before more feature moves.
+
+T15 — Test screen audit
+
+Choose this if the dev/test route should be classified before deciding whether to move or remove it later.
 
 ### Do not start yet
 
@@ -104,7 +106,7 @@ Choose this if Dashboard layout risk should be reviewed before or immediately af
 - `lib/main.dart` app composition refactor.
 - GetX routing replacement.
 - Built-in Kotlin migration.
-- Dashboard UI redesign during the move task.
+- Login UI redesign during the move task.
 
 ### Phase guard
 
