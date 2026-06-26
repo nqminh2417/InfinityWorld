@@ -6,10 +6,10 @@ import 'package:infinity_world/features/chat/presentation/chat_screen.dart';
 import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:infinity_world/features/profile/presentation/profile_screen.dart';
 import 'package:infinity_world/features/settings/presentation/settings_screen.dart';
+import 'package:infinity_world/features/test/presentation/test_screen.dart';
 import 'package:infinity_world/routes/app_pages.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 import 'package:infinity_world/screens/main/main_screen.dart';
-import 'package:infinity_world/screens/test/test_screen.dart';
 
 void main() {
   tearDown(() {

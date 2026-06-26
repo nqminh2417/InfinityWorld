@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:infinity_world/screens/test/test_screen.dart';
+import 'package:infinity_world/features/test/presentation/test_screen.dart';
 
 void main() {
   testWidgets('Test screen remains scroll-safe with keyboard inset', (

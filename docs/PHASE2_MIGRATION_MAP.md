@@ -29,20 +29,21 @@ Already placed under `lib/features/`:
   - `lib/features/profile/presentation/profile_screen.dart`
 - `settings`
   - `lib/features/settings/presentation/settings_screen.dart`
+- `test`
+  - `lib/features/test/presentation/test_screen.dart`
 
 Still transitional:
 
 - `lib/main.dart` still owns root app composition.
 - `lib/routes/` still owns legacy GetX route registration.
 - `lib/screens/main/main_screen.dart` still owns the legacy bottom-tab shell.
-- Most legacy screens still live under `lib/screens/`.
+- Some legacy screens and shell code still live under `lib/screens/`.
 
 ## Remaining legacy screen map
 
 | Legacy path | Current role | Phase 2 action | Risk | Notes |
 |---|---|---:|---:|---|
 | `lib/screens/main/main_screen.dart` | Legacy bottom-tab shell | Do not move in Phase 2 unless explicitly approved | High | Belongs closer to future `app/shell`, not a feature screen. |
-| `lib/screens/test/test_screen.dart` | Dashboard-linked dev/test route | Move only if the route remains useful | Low | T18 confirmed Dashboard links to it. T19 fixed controller ownership and form layout safety. |
 | `lib/screens/summertime_saga/` | API-backed Summertime Saga feature | Defer | High | Known null/error/loading risks and direct `http`; stabilize before moving. |
 
 ## Recommended ordering
@@ -58,8 +59,9 @@ Still transitional:
 9. Completed: run a Fox UI layout-safety pass.
 10. Completed: audit the Test screen before deciding whether to keep, move, or remove it later.
 11. Completed: fix Test screen lifecycle and keyboard-safety risks before any move or removal decision.
-12. Move Test screen only if it remains useful after stabilization.
-13. Defer Summertime Saga until explicit feature hardening tasks.
+12. Completed: move Test screen only if it remains useful after stabilization.
+13. Run a Dashboard UI layout-safety pass.
+14. Defer Summertime Saga until explicit feature hardening tasks.
 
 ## Route smoke coverage
 

@@ -15,7 +15,7 @@ Current architecture status:
 - Transitional architecture.
 - `lib/main.dart` still owns app composition.
 - GetX routing is still active under `lib/routes/`.
-- Most screens still live under `lib/screens/`.
+- Some legacy screens and shell code still live under `lib/screens/`.
 - Auth/Login presentation now lives under `lib/features/auth/presentation/`.
 - BMI is the active migration pilot under `lib/features/bmi/`.
 - Chat presentation now lives under `lib/features/chat/presentation/`.
@@ -23,6 +23,7 @@ Current architecture status:
 - Fox now lives under `lib/features/fox/`.
 - Profile presentation now lives under `lib/features/profile/presentation/`.
 - Settings presentation now lives under `lib/features/settings/presentation/`.
+- Test presentation now lives under `lib/features/test/presentation/`.
 - Fox hardening plan exists at `docs/features/FOX_HARDENING_PLAN.md`.
 - Phase 2 migration map exists at `docs/PHASE2_MIGRATION_MAP.md`.
 - Riverpod, go_router, and Dio are not active yet.
@@ -72,6 +73,7 @@ Completed stabilization tasks:
 - Fox UI layout-safety pass was completed; the screen is SafeArea-aware, scroll-safe on small screens, and keeps the normal app system UI.
 - Test screen audit was completed; the route is still reachable from Dashboard, route coverage exists, and lifecycle/keyboard-safety issues should be fixed before any move or removal decision.
 - Test screen lifecycle and keyboard-safety pass was completed; owned controller state is disposed and the form body is SafeArea-aware and scroll-safe.
+- Test feature placement was completed; the screen moved to `lib/features/test/presentation/`, route/test imports were updated, and GetX route behavior stayed unchanged.
 
 ## Recommended Next Work
 
@@ -88,38 +90,38 @@ Task sizing note:
 
 ### Primary
 
-T20 — Move Test screen to feature presentation
+T21 — Dashboard UI layout-safety pass
 
 Reason:
 
-- T18 confirmed Dashboard still links to `AppRoutes.test`.
-- T19 stabilized lifecycle and form layout risks.
-- The screen can now be moved as a simple placement task if the route should remain.
+- Dashboard is a visible hub screen that links to migrated and legacy routes.
+- It still uses a simple non-scrollable `Column` of navigation rows.
+- A small layout-safety pass can keep the hub scroll-safe without changing route architecture.
 
 Scope:
 
-- Move only the Test screen into the feature presentation area.
-- Update the legacy GetX route import/reference.
+- Keep Dashboard in `lib/features/dashboard/presentation/`.
 - Keep GetX route behavior unchanged.
-- Do not redesign the Test screen or remove the route.
+- Make navigation content SafeArea-aware and scroll-safe if needed.
+- Do not redesign Dashboard or replace navigation.
 
 Verification:
 
-- Screen move/routing/startup gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T21 — Decide whether to remove the Test route
-
-Choose this if the Test route is no longer useful and should be explicitly removed instead of moved.
-
-T22 — Dashboard UI layout-safety pass
-
-Choose this if visible hub layout safety should be checked before more placement work.
-
-T23 — Summertime Saga hardening plan
+T22 — Summertime Saga hardening plan
 
 Choose this if the known higher-risk API-backed flow should be planned before more placement.
+
+T23 — Phase 2 checkpoint audit
+
+Choose this if remaining `lib/screens/` ownership should be reviewed before more implementation.
+
+T24 — Decide whether to remove the Test route
+
+Choose this if the Dashboard-linked Test route is no longer useful and should be explicitly removed.
 
 ### Do not start yet
 
@@ -154,7 +156,7 @@ Reason:
 - Low-risk feature placement work remains.
 - The migration map exists, but its recommended low-risk moves are not complete yet.
 - Fox is complete for Phase 2 unless a new concrete risk, failed verification, blocker, or user-approved remaining scope appears.
-- The Primary recommendation has returned to the migration map/backlog.
+- Test is placed under `lib/features/test/presentation/`; remaining legacy ownership is now mostly shell and higher-risk API-backed work.
 
 Exit criteria:
 
