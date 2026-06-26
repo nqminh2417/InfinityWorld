@@ -16,6 +16,8 @@ Current architecture status:
 - `lib/main.dart` still owns app composition.
 - GetX routing is still active under `lib/routes/`.
 - The legacy main shell still lives under `lib/screens/main/main_screen.dart`.
+- `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
+- `lib/design_system/tokens/` and `lib/design_system/components/iw_card.dart` now provide the first design-system token/card slice.
 - Auth/Login presentation now lives under `lib/features/auth/presentation/`.
 - BMI was the initial migration pilot and now lives under `lib/features/bmi/`.
 - Chat presentation now lives under `lib/features/chat/presentation/`.
@@ -33,6 +35,8 @@ Current architecture status:
 Current tests:
 
 - App startup smoke test exists.
+- App theme unit coverage exists.
+- `IwCard` widget coverage exists.
 - BMI domain unit tests exist.
 - BMI presentation widget tests exist.
 - Chat route smoke test exists.
@@ -50,7 +54,7 @@ Current tests:
 
 Current phase:
 
-- Phase 3: Design System Foundation.
+- Phase 4: App Bootstrap and Local Session.
 
 Android toolchain status:
 
@@ -85,13 +89,14 @@ Completed stabilization tasks:
 - Summertime Saga screen states and layout were stabilized; the screen now has a test seam, deterministic loading/error/retry/success states, mounted/stale-request guards, SafeArea-aware scrollable content, and focused widget tests.
 - Summertime Saga feature placement was completed; the files moved to `lib/features/summertime_saga/`, while GetX route names, `http`, behavior, and UI stayed unchanged.
 - Phase 2 checkpoint audit was completed; selected feature placement work is complete, and remaining legacy ownership is shell/routing rather than simple feature-screen placement.
-- Phase 3 kickoff audit was completed; no shared `lib/app/theme/` or `lib/design_system/` layer exists yet, so the first implementation slice should start with Midnight Violet tokens plus a single reusable `IwCard` on a stable pilot screen.
+- Phase 3 kickoff audit was completed; it found no shared `lib/app/theme/` or `lib/design_system/` layer at the time and selected Midnight Violet tokens plus a single reusable `IwCard` as the first implementation slice.
+- Phase 3 token/card implementation slice was completed; the app now has Midnight Violet light/dark theme data, core color/spacing/radius tokens, `IwCard`, focused tests, and Profile as the first pilot screen.
 
 ## Recommended Next Work
 
 Current phase:
 
-- Phase 3 — Design System Foundation
+- Phase 4 — App Bootstrap and Local Session
 
 Task sizing note:
 
@@ -102,19 +107,19 @@ Task sizing note:
 
 ### Primary
 
-T31 — Phase 3 token/card implementation slice
+T32 — Phase 4 bootstrap/session kickoff audit
 
 Reason:
 
-- The kickoff audit is complete and Phase 3 can move from planning into the first small implementation slice.
-- The app still has no shared theme layer, so tokens should land before broader UI cleanup.
-- A single shared card component is the smallest visible reuse point before expanding to buttons, fields, or scaffold wrappers.
+- The Phase 3 token/card slice is complete enough to stop expanding the design system by default.
+- Startup still opens Login directly without a local session/bootstrap check.
+- Phase 4 should start with a small audit so session work is scoped without starting a router migration.
 
 Scope:
 
-- Add `app/theme/` and `design_system/tokens/` per `docs/ARCHITECTURE.md`.
-- Implement Midnight Violet light/dark tokens and one shared `IwCard`.
-- Apply the new slice to the Profile screen only.
+- Inspect `lib/main.dart`, `lib/features/auth/presentation/login_screen.dart`, legacy GetX routes, and startup/session docs.
+- Define the smallest local session/bootstrap implementation slice using the current GetX app.
+- Update planning docs only; do not implement session persistence until assigned separately.
 
 Verification:
 
@@ -139,10 +144,12 @@ Choose this if current package/build risk should be reviewed before the next pha
 - Riverpod activation.
 - go_router migration.
 - Dio/network layer.
-- `lib/main.dart` app composition refactor.
+- Broad `lib/main.dart` app composition refactor.
 - GetX routing replacement.
 - Built-in Kotlin migration.
-- Full UI redesign during design-system foundation unless explicitly approved.
+- Real backend authentication.
+- More design-system components unless explicitly assigned.
+- Full UI redesign unless explicitly approved.
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Dio/Riverpod/go_router migration inside Summertime Saga follow-up tasks.
@@ -151,28 +158,28 @@ Choose this if current package/build risk should be reviewed before the next pha
 
 Current phase:
 
-- Phase 3 — Design System Foundation.
+- Phase 4 — App Bootstrap and Local Session.
 
 Decision:
 
-- Phase 3 kickoff audit is complete; continue with the first narrow token/component implementation slice.
+- Phase 3 token/card foundation is complete; begin Phase 4 with a bootstrap/session audit before implementation.
 
 Do not enter yet:
 
-- Phase 4 — App Bootstrap and Local Session.
+- Phase 5 — Router Migration.
 
 Reason:
 
-- Phase 2 selected feature placement work is complete.
-- Remaining `lib/screens/main/main_screen.dart` is shell ownership, not a simple feature placement task.
-- GetX routing and `lib/main.dart` app composition remain transitional and should be handled in later explicit phases.
-- Phase 3 can begin without introducing Riverpod, go_router, Dio, or startup refactors.
+- The app has enough design-system foundation to start startup/session work.
+- GetX routing remains active and should be preserved during the first bootstrap/session slice.
+- Phase 4 can begin without introducing Riverpod, go_router, Dio, or real backend authentication.
 
 Exit criteria:
 
-- Minimal Midnight Violet token slice is planned and implemented.
-- One or two reusable `Iw` components are planned and implemented.
-- One pilot screen applies the new tokens/components without a broad redesign.
+- Bootstrap/session scope is audited and planned.
+- Local fake session/profile persistence is implemented.
+- App startup redirects to Home when a previous local session exists and Login when it does not.
+- Logout clears the local session and returns to Login.
 
 ## Verification Gates
 

@@ -21,6 +21,8 @@ Current structure:
 
 - `lib/main.dart` still owns root app composition and uses `GetMaterialApp`.
 - `lib/routes/app_pages.dart` and `lib/routes/app_routes.dart` still define legacy GetX routing.
+- `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
+- `lib/design_system/` now contains the first tokens and `IwCard` component slice.
 - Selected feature screens have been moved under `lib/features/`.
 - `lib/screens/main/main_screen.dart` still owns the legacy bottom-tab shell.
 - Shared legacy UI remains under `lib/widgets/`.
@@ -38,6 +40,8 @@ Current structure:
   - `lib/features/test/presentation/test_screen.dart`
 - Tests now exist:
   - `test/app_smoke_test.dart`
+  - `test/app/theme/app_theme_test.dart`
+  - `test/design_system/components/iw_card_test.dart`
   - `test/features/bmi/domain/bmi_calculator_test.dart`
   - `test/features/bmi/presentation/bmi_screen_test.dart`
   - focused feature tests under `test/features/`
@@ -58,7 +62,7 @@ Riverpod, go_router, and Dio are target-direction technologies but are not insta
 - `lib/screens/` and `lib/routes/` remain active legacy areas.
 - Some networking still uses direct `http` services under feature folders.
 - Feature placement does not mean routing architecture has migrated; the legacy GetX route table still owns screen registration.
-- Theme/design-system implementation is still mostly target documentation rather than app code.
+- Theme/design-system implementation now has a first token/card slice; broader components and visual adoption remain incomplete.
 - Android toolchain versions have been pulled forward on `home/devbyMinh-current` with explicit approval: Gradle 8.14.5, Android Gradle Plugin 8.11.1, Kotlin Gradle Plugin 2.2.20, Java/Kotlin target 17.
 - Built-in Kotlin migration remains deferred until an AGP 9.x migration or a build requirement forces it.
 
@@ -166,7 +170,7 @@ Verification:
 
 ## Phase 3: Design System Foundation
 
-Status: current / kickoff audit complete.
+Status: complete for the first foundation slice as of 2026-06-26.
 
 Goal:
 
@@ -174,10 +178,10 @@ Goal:
 
 Likely tasks:
 
-- Add minimal `app/theme/` and `design_system/tokens/` files for Midnight Violet light/dark.
-- Add one shared `Iw` component, starting with `IwCard`.
-- Apply the first slice to one stable pilot screen, likely Profile.
-- Expand to buttons, fields, and layout wrappers only after the base slice proves useful.
+- Completed: added minimal `app/theme/` and `design_system/tokens/` files for Midnight Violet light/dark.
+- Completed: added one shared `Iw` component, starting with `IwCard`.
+- Completed: applied the first slice to Profile as the pilot screen.
+- Deferred: expand to buttons, fields, and layout wrappers only after a concrete task asks for them.
 
 Non-goals:
 
@@ -187,7 +191,7 @@ Non-goals:
 
 ## Phase 4: App Bootstrap and Local Session
 
-Status: future.
+Status: current / ready for kickoff audit.
 
 Goal:
 

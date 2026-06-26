@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/features/profile/presentation/profile_screen.dart';
 
 void main() {
@@ -19,6 +20,7 @@ void main() {
         findsOneWidget,
       );
       expect(find.byType(SingleChildScrollView), findsOneWidget);
+      expect(find.byType(IwCard), findsOneWidget);
       expect(find.byType(ProfileScreen), findsOneWidget);
       expect(tester.takeException(), isNull);
     },

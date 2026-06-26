@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:infinity_world/app/theme/app_theme.dart';
 import 'package:infinity_world/core/config/constants.dart';
 
 import 'package:infinity_world/routes/app_pages.dart';
@@ -21,7 +22,9 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: AppRoutes.login, // Màn hình mặc định khi khởi động
       getPages: AppPages.pages, // Danh sách các route
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: ThemeMode.system,
     );
   }
 }
