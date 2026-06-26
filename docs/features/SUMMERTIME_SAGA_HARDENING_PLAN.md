@@ -4,7 +4,7 @@ Last updated: 2026-06-26
 
 ## Scope
 
-This plan prepares the legacy Summertime Saga tracker for safe hardening and later feature placement.
+This plan records the Summertime Saga hardening and feature placement sequence.
 
 Do not use this plan to start Dio, Riverpod, go_router, or a UI redesign. Those remain later phases.
 
@@ -23,10 +23,10 @@ DashboardScreen
 
 Current files:
 
-- `lib/screens/summertime_saga/smts_home_screen.dart`
-- `lib/screens/summertime_saga/services/smts_service.dart`
-- `lib/screens/summertime_saga/models/smts_progress_model.dart`
-- `lib/screens/summertime_saga/widgets/progress_bar.dart`
+- `lib/features/summertime_saga/presentation/smts_home_screen.dart`
+- `lib/features/summertime_saga/data/smts_service.dart`
+- `lib/features/summertime_saga/domain/smts_progress_model.dart`
+- `lib/features/summertime_saga/presentation/widgets/progress_bar.dart`
 - `lib/routes/app_pages.dart`
 - `lib/routes/app_routes.dart`
 - `lib/core/config/constants.dart`
@@ -56,6 +56,13 @@ Resolved in T24:
 - The screen body is SafeArea-aware and scrollable on small screens.
 - `ProgressBar` no longer force-unwraps nullable counts or percent data.
 - Focused widget tests cover loading, success, error/retry, incomplete data, dispose safety, and small-screen scroll safety.
+
+Resolved in T25:
+
+- Summertime Saga files moved from `lib/screens/summertime_saga/` to `lib/features/summertime_saga/`.
+- The legacy GetX route now imports the feature presentation screen.
+- Service and widget tests moved under `test/features/summertime_saga/`.
+- Route names, `http`, behavior, and UI were kept unchanged.
 
 ## Hardening goals before moving files
 
@@ -132,6 +139,8 @@ Verification:
 
 ### T25 - Move Summertime Saga to feature structure
 
+Status: Completed on 2026-06-26.
+
 Scope:
 
 - Move only Summertime Saga files after network and screen behavior are deterministic.
@@ -147,6 +156,12 @@ lib/features/summertime_saga/
 - Update legacy GetX route imports only.
 - Keep behavior, route names, `http`, and UI unchanged.
 - Add or update route smoke coverage only if the screen no longer starts uncontrolled live HTTP work.
+
+Result:
+
+- Files were placed under `data/`, `domain/`, and `presentation/`.
+- Tests were moved to matching feature test folders.
+- Legacy route smoke coverage remains deferred because the default route still uses the live loader.
 
 Verification:
 

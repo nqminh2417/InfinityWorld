@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:infinity_world/screens/summertime_saga/models/smts_progress_model.dart';
-import 'package:infinity_world/screens/summertime_saga/services/smts_service.dart';
-import 'package:infinity_world/screens/summertime_saga/smts_home_screen.dart';
+import 'package:infinity_world/features/summertime_saga/data/smts_service.dart';
+import 'package:infinity_world/features/summertime_saga/domain/smts_progress_model.dart';
+import 'package:infinity_world/features/summertime_saga/presentation/smts_home_screen.dart';
 
 void main() {
   void setSmallScreen(WidgetTester tester) {

@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:infinity_world/core/config/constants.dart';
-import 'package:infinity_world/screens/summertime_saga/models/smts_progress_model.dart';
-import 'package:infinity_world/screens/summertime_saga/services/smts_service.dart';
+import 'package:infinity_world/features/summertime_saga/data/smts_service.dart';
+import 'package:infinity_world/features/summertime_saga/domain/smts_progress_model.dart';
 
 void main() {
   group('SmtsService', () {

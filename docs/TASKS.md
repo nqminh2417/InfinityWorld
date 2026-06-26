@@ -23,6 +23,7 @@ Current architecture status:
 - Fox now lives under `lib/features/fox/`.
 - Profile presentation now lives under `lib/features/profile/presentation/`.
 - Settings presentation now lives under `lib/features/settings/presentation/`.
+- Summertime Saga now lives under `lib/features/summertime_saga/`.
 - Test presentation now lives under `lib/features/test/presentation/`.
 - Fox hardening plan exists at `docs/features/FOX_HARDENING_PLAN.md`.
 - Summertime Saga hardening plan exists at `docs/features/SUMMERTIME_SAGA_HARDENING_PLAN.md`.
@@ -45,7 +46,7 @@ Current tests:
 - Profile presentation widget test exists.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
-- Fox and Summertime Saga route rendering tests are deferred because those screens start live HTTP work in `initState()`.
+- Fox and Summertime Saga route rendering tests are deferred because their default route constructors still start live HTTP work in `initState()`.
 
 Current phase:
 
@@ -82,6 +83,7 @@ Completed stabilization tasks:
 - Summertime Saga hardening plan was completed; network, model, screen-state, release-permission, and feature-placement risks are documented before implementation.
 - Summertime Saga network foundation was hardened; the service now uses configured progress URL, timeout/status/schema validation, deterministic exceptions, fake-network tests, and release `INTERNET` permission.
 - Summertime Saga screen states and layout were stabilized; the screen now has a test seam, deterministic loading/error/retry/success states, mounted/stale-request guards, SafeArea-aware scrollable content, and focused widget tests.
+- Summertime Saga feature placement was completed; the files moved to `lib/features/summertime_saga/`, while GetX route names, `http`, behavior, and UI stayed unchanged.
 
 ## Recommended Next Work
 
@@ -98,39 +100,37 @@ Task sizing note:
 
 ### Primary
 
-T25 — Move Summertime Saga to feature structure
+T26 — Phase 2 checkpoint audit
 
 Reason:
 
-- Summertime Saga network foundation and screen behavior are now deterministic enough for a narrow placement task.
-- Moving the feature will reduce remaining `lib/screens/` ownership without changing GetX routing or app behavior.
-- This is the final planned Summertime Saga Phase 2 placement step before returning to the broader migration map.
+- The planned Summertime Saga hardening and placement sequence is complete.
+- Phase 2 should be checked before starting more placement work or entering a new phase.
+- The audit should clarify remaining `lib/screens/`, route-smoke deferrals, and whether Phase 2 exit criteria are close.
 
 Scope:
 
-- Move only Summertime Saga files to `lib/features/summertime_saga/`.
-- Keep `http`; do not introduce Dio.
-- Keep GetX route names and route behavior unchanged.
-- Update route/import references and tests only as needed.
-- Do not redesign the UI or migrate state/router/network architecture.
+- Inspect current `lib/screens/`, `lib/features/`, `lib/routes/`, and tests.
+- Update `docs/PHASE2_MIGRATION_MAP.md` and `docs/TASKS.md` only if the checkpoint changes backlog status.
+- Do not move files or refactor production code.
 
 Verification:
 
-- Screen move/routing/startup gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T25A — Phase 2 checkpoint audit
+T27 — Main shell audit
 
-Choose this if remaining `lib/screens/` ownership should be reviewed before moving another API-backed feature folder.
+Choose this if `lib/screens/main/main_screen.dart` ownership needs focused review before the broader checkpoint.
 
-T26 — Main shell audit
-
-Choose this if `lib/screens/main/main_screen.dart` ownership needs to be clarified before Phase 2 exit.
-
-T27 — Summertime Saga route smoke strategy
+T28 — Summertime Saga route smoke strategy
 
 Choose this if route smoke coverage should be planned separately because the legacy route still uses the default live loader.
+
+T29 — Remaining legacy route audit
+
+Choose this if GetX route coverage and deferred live-network routes should be reviewed before Phase 2 exit.
 
 ### Do not start yet
 
@@ -143,7 +143,7 @@ Choose this if route smoke coverage should be planned separately because the leg
 - UI redesign during placement or layout-safety tasks unless explicitly approved.
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
-- Dio/Riverpod/go_router migration inside Summertime Saga placement tasks.
+- Dio/Riverpod/go_router migration inside Summertime Saga follow-up tasks.
 
 ### Phase guard
 
@@ -166,8 +166,9 @@ Reason:
 - Low-risk feature placement work remains.
 - The migration map exists, but its recommended low-risk moves are not complete yet.
 - Fox is complete for Phase 2 unless a new concrete risk, failed verification, blocker, or user-approved remaining scope appears.
-- Test is placed under `lib/features/test/presentation/`; remaining legacy ownership is now mostly shell and higher-risk API-backed work.
-- Summertime Saga network, screen-state, and layout hardening are complete; the feature folder move remains before this sequence can close.
+- Test is placed under `lib/features/test/presentation/`; remaining legacy ownership is now mostly shell and routing.
+- Summertime Saga network, screen-state, layout hardening, and feature placement are complete.
+- A Phase 2 checkpoint is needed before deciding whether to continue placement work or prepare the next phase.
 
 Exit criteria:
 

@@ -29,6 +29,10 @@ Already placed under `lib/features/`:
   - `lib/features/profile/presentation/profile_screen.dart`
 - `settings`
   - `lib/features/settings/presentation/settings_screen.dart`
+- `summertime_saga`
+  - `lib/features/summertime_saga/data/smts_service.dart`
+  - `lib/features/summertime_saga/domain/smts_progress_model.dart`
+  - `lib/features/summertime_saga/presentation/smts_home_screen.dart`
 - `test`
   - `lib/features/test/presentation/test_screen.dart`
 
@@ -44,7 +48,6 @@ Still transitional:
 | Legacy path | Current role | Phase 2 action | Risk | Notes |
 |---|---|---:|---:|---|
 | `lib/screens/main/main_screen.dart` | Legacy bottom-tab shell | Do not move in Phase 2 unless explicitly approved | High | Belongs closer to future `app/shell`, not a feature screen. |
-| `lib/screens/summertime_saga/` | API-backed Summertime Saga feature | Move after hardening | High | Network and screen-state/layout hardening are complete. Continue with feature placement. |
 
 ## Recommended ordering
 
@@ -64,7 +67,8 @@ Still transitional:
 14. Completed: create a Summertime Saga hardening plan before implementation or feature move.
 15. Completed: harden Summertime Saga network foundation.
 16. Completed: stabilize Summertime Saga screen states and layout.
-17. Move Summertime Saga only after deterministic tests exist.
+17. Completed: move Summertime Saga only after deterministic tests exist.
+18. Run a Phase 2 checkpoint audit before deciding the next placement or phase transition.
 
 ## Route smoke coverage
 

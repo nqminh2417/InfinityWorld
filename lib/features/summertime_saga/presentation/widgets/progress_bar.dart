@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/smts_progress_model.dart';
+import 'package:infinity_world/features/summertime_saga/domain/smts_progress_model.dart';
 
 class ProgressBar extends StatelessWidget {
   final String? title;

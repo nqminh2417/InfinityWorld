@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:infinity_world/core/config/constants.dart';
-import 'package:infinity_world/screens/summertime_saga/models/smts_progress_model.dart';
-import 'package:infinity_world/screens/summertime_saga/services/smts_service.dart';
-import 'package:infinity_world/screens/summertime_saga/widgets/progress_bar.dart';
+import 'package:infinity_world/features/summertime_saga/data/smts_service.dart';
+import 'package:infinity_world/features/summertime_saga/domain/smts_progress_model.dart';
+import 'package:infinity_world/features/summertime_saga/presentation/widgets/progress_bar.dart';
 
 typedef SmtsProgressLoader = Future<SmtsProgressModel> Function();
 

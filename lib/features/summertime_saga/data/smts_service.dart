@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:http/http.dart' as http;
 import 'package:infinity_world/core/config/constants.dart';
-import 'package:infinity_world/screens/summertime_saga/models/smts_progress_model.dart';
+import 'package:infinity_world/features/summertime_saga/domain/smts_progress_model.dart';
 
 typedef SmtsHttpGet = Future<http.Response> Function(Uri uri);
 
