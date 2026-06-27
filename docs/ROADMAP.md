@@ -1,6 +1,6 @@
 # Infinity World Roadmap
 
-Last updated: 2026-06-26
+Last updated: 2026-06-27
 
 ## Purpose
 
@@ -191,7 +191,7 @@ Non-goals:
 
 ## Phase 4: App Bootstrap and Local Session
 
-Status: current / ready for kickoff audit.
+Status: current / kickoff audited; first implementation slice is ready.
 
 Goal:
 
@@ -205,6 +205,22 @@ Native Splash
 ```
 
 This phase may still use existing routing until the router migration starts.
+
+Kickoff audit findings:
+
+- `lib/main.dart` currently starts `GetMaterialApp` at `AppRoutes.login`.
+- `lib/features/auth/presentation/login_screen.dart` navigates to `AppRoutes.main` without saving a local session.
+- `lib/features/dashboard/presentation/dashboard_screen.dart` navigates to `AppRoutes.login` on logout without clearing a local session.
+- `lib/routes/app_pages.dart` and `lib/routes/app_routes.dart` already expose the legacy Login and Main routes needed for the first slice.
+- `shared_preferences` is not installed yet.
+
+First implementation slice:
+
+- Keep GetX routing and `GetMaterialApp`.
+- Add `shared_preferences` only for the local session flag.
+- Add a small bootstrap resolver under `lib/app/bootstrap/` to choose Login or Main before `runApp`.
+- Save session on the existing local login action and clear session on the existing dashboard logout action.
+- Cover logged-out and logged-in startup paths with focused tests.
 
 Non-goals:
 

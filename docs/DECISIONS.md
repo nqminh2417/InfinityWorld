@@ -1,6 +1,6 @@
 # Infinity World Decisions
 
-Last updated: 2026-06-23
+Last updated: 2026-06-27
 
 This file records durable product, architecture, workflow, and safety decisions for Infinity World. Keep entries concise and update them when a decision changes.
 
@@ -39,6 +39,14 @@ GetX routing remains active for now. Do not convert routing to go_router until a
 ### 2026-06-23: Do not introduce target libraries before their phase
 
 Riverpod, go_router, Dio, Drift, Bluetooth/audio packages, and backend SDKs should be introduced only by scoped tasks that require them.
+
+### 2026-06-27: First local session bootstrap slice keeps GetX
+
+The first Phase 4 implementation should preserve the current GetX router and `GetMaterialApp`.
+
+Use `shared_preferences` for the initial local session flag, add a small bootstrap resolver before `runApp`, and update the existing login/logout actions to save and clear that flag.
+
+Do not introduce Riverpod, go_router, Dio, real backend auth, or a broad auth redesign in this slice.
 
 ### 2026-06-23: BMI is the current migration pilot
 

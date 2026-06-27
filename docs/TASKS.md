@@ -1,6 +1,6 @@
 # Infinity World Active Tasks
 
-Last updated: 2026-06-26
+Last updated: 2026-06-27
 
 ## Current Status
 
@@ -55,6 +55,7 @@ Current tests:
 Current phase:
 
 - Phase 4: App Bootstrap and Local Session.
+- Phase 4 kickoff audit is complete. Current startup still hardcodes Login, and the next slice should add local session bootstrap without starting a router migration.
 
 Android toolchain status:
 
@@ -91,6 +92,7 @@ Completed stabilization tasks:
 - Phase 2 checkpoint audit was completed; selected feature placement work is complete, and remaining legacy ownership is shell/routing rather than simple feature-screen placement.
 - Phase 3 kickoff audit was completed; it found no shared `lib/app/theme/` or `lib/design_system/` layer at the time and selected Midnight Violet tokens plus a single reusable `IwCard` as the first implementation slice.
 - Phase 3 token/card implementation slice was completed; the app now has Midnight Violet light/dark theme data, core color/spacing/radius tokens, `IwCard`, focused tests, and Profile as the first pilot screen.
+- Phase 4 bootstrap/session kickoff audit was completed; current startup and logout/login paths were inspected, and the first implementation slice was scoped to local session bootstrap on top of the existing GetX app.
 
 ## Recommended Next Work
 
@@ -107,23 +109,25 @@ Task sizing note:
 
 ### Primary
 
-T32 — Phase 4 bootstrap/session kickoff audit
+T33 — Local session bootstrap implementation
 
 Reason:
 
-- The Phase 3 token/card slice is complete enough to stop expanding the design system by default.
-- Startup still opens Login directly without a local session/bootstrap check.
-- Phase 4 should start with a small audit so session work is scoped without starting a router migration.
+- T32 confirmed `lib/main.dart` still hardcodes `AppRoutes.login`.
+- Login currently only navigates to `AppRoutes.main`, and dashboard logout only navigates back to `AppRoutes.login`.
+- `shared_preferences` is not installed yet, so no persisted local session exists.
 
 Scope:
 
-- Inspect `lib/main.dart`, `lib/features/auth/presentation/login_screen.dart`, legacy GetX routes, and startup/session docs.
-- Define the smallest local session/bootstrap implementation slice using the current GetX app.
-- Update planning docs only; do not implement session persistence until assigned separately.
+- Preserve GetX routing and `GetMaterialApp`.
+- Add the smallest local session persistence path using `shared_preferences`.
+- Add a tiny bootstrap resolver under `lib/app/bootstrap/` that chooses `AppRoutes.main` when a local session exists and `AppRoutes.login` otherwise.
+- Save the local session from the existing login action and clear it from the existing dashboard logout action.
+- Add focused repository/bootstrap tests and update app smoke coverage for the logged-out and logged-in startup paths.
 
 Verification:
 
-- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Startup/routing gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
@@ -162,7 +166,7 @@ Current phase:
 
 Decision:
 
-- Phase 3 token/card foundation is complete; begin Phase 4 with a bootstrap/session audit before implementation.
+- T32 audit is complete; begin Phase 4 implementation with a small local session bootstrap slice on the current GetX app.
 
 Do not enter yet:
 
