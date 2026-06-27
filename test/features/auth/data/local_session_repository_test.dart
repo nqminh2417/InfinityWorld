@@ -17,22 +17,48 @@ void main() {
     final repository = LocalSessionRepository();
 
     expect(await repository.hasSession(), isFalse);
+    expect(await repository.getDisplayName(), isNull);
   });
 
-  test('saveSession stores a local session flag', () async {
+  test('hasSession is false when the display name is missing', () async {
+    SharedPreferencesAsyncPlatform
+        .instance = InMemorySharedPreferencesAsync.withData({
+      LocalSessionRepository.isLoggedInKey: true,
+    });
     final repository = LocalSessionRepository();
-
-    await repository.saveSession();
-
-    expect(await repository.hasSession(), isTrue);
-  });
-
-  test('clearSession removes the local session flag', () async {
-    final repository = LocalSessionRepository();
-
-    await repository.saveSession();
-    await repository.clearSession();
 
     expect(await repository.hasSession(), isFalse);
   });
+
+  test('saveSession stores a local session flag and display name', () async {
+    final repository = LocalSessionRepository();
+
+    await repository.saveSession(displayName: '  Minh  ');
+
+    expect(await repository.hasSession(), isTrue);
+    expect(await repository.getDisplayName(), 'Minh');
+  });
+
+  test('saveSession rejects blank display names', () async {
+    final repository = LocalSessionRepository();
+
+    expect(
+      () => repository.saveSession(displayName: '   '),
+      throwsArgumentError,
+    );
+    expect(await repository.hasSession(), isFalse);
+  });
+
+  test(
+    'clearSession removes the local session flag and display name',
+    () async {
+      final repository = LocalSessionRepository();
+
+      await repository.saveSession(displayName: 'Minh');
+      await repository.clearSession();
+
+      expect(await repository.hasSession(), isFalse);
+      expect(await repository.getDisplayName(), isNull);
+    },
+  );
 }

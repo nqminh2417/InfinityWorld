@@ -28,7 +28,7 @@ Current structure:
 - `lib/screens/main/main_screen.dart` still owns the legacy bottom-tab shell.
 - Shared legacy UI remains under `lib/widgets/`.
 - `lib/core/config/constants.dart` contains early runtime constants.
-- `lib/features/auth/data/local_session_repository.dart` stores the first local session flag with `shared_preferences`.
+- `lib/features/auth/data/local_session_repository.dart` stores the first local session flag and display name with `shared_preferences`.
 - Feature placement completed for the Phase 2 selected screens/features:
   - `lib/features/bmi/domain/bmi_calculator.dart`
   - `lib/features/bmi/presentation/bmi_screen.dart`
@@ -193,7 +193,7 @@ Non-goals:
 
 ## Phase 4: App Bootstrap and Local Session
 
-Status: current / local session flag implemented; local profile entry remains.
+Status: current / local session and profile entry implemented; checkpoint pending.
 
 Goal:
 
@@ -224,11 +224,17 @@ Completed first implementation slice:
 - Saved session on the existing local login action and cleared session on the existing dashboard logout action.
 - Covered logged-out and logged-in startup paths with focused tests.
 
-Remaining Phase 4 slice:
+Completed local profile slice:
 
-- Replace the credential-looking Login form with a local display-name entry flow.
-- Persist and clear the local display name through the existing auth data path.
-- Keep the GetX router and T33 startup/session behavior unchanged.
+- Replaced the credential-looking Login form with a local display-name entry flow.
+- Persisted and cleared the local display name through the existing auth data path.
+- Kept the GetX router and T33 startup/session behavior unchanged.
+- Covered blank-name validation and local profile persistence with focused tests.
+
+Remaining Phase 4 checkpoint:
+
+- Confirm Phase 4 closure before starting Phase 5.
+- Scope router migration gates without implementing go_router during the checkpoint.
 
 Non-goals:
 

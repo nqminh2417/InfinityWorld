@@ -20,7 +20,7 @@ void main() {
   });
 
   test('resolves Main when a local session exists', () async {
-    await LocalSessionRepository().saveSession();
+    await LocalSessionRepository().saveSession(displayName: 'Minh');
 
     expect(await resolveStartupRoute(), AppRoutes.main);
   });

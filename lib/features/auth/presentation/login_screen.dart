@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/features/auth/data/local_session_repository.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 
@@ -12,20 +13,16 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final emailFocusNode = FocusNode();
-  final passwordFocusNode = FocusNode();
+  final _displayNameController = TextEditingController();
+  final _displayNameFocusNode = FocusNode();
 
-  bool _obscureText = true;
+  String? _displayNameError;
   bool _isLoggingIn = false;
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    emailFocusNode.dispose();
-    passwordFocusNode.dispose();
+    _displayNameController.dispose();
+    _displayNameFocusNode.dispose();
     super.dispose();
   }
 
@@ -34,15 +31,31 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    _isLoggingIn = true;
+    final displayName = _displayNameController.text.trim();
+    if (displayName.isEmpty) {
+      setState(() {
+        _displayNameError = 'Enter a display name';
+      });
+      return;
+    }
+
+    setState(() {
+      _displayNameError = null;
+      _isLoggingIn = true;
+    });
+
     try {
-      await LocalSessionRepository().saveSession();
+      await LocalSessionRepository().saveSession(displayName: displayName);
       if (!mounted) {
         return;
       }
       Get.offNamed(AppRoutes.main);
     } finally {
-      _isLoggingIn = false;
+      if (mounted) {
+        setState(() {
+          _isLoggingIn = false;
+        });
+      }
     }
   }
 
@@ -67,158 +80,96 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Center(
                       child: SizedBox(
                         width: double.infinity,
-                        child: Card(
-                          color: Colors.transparent,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                AnimatedBuilder(
-                                  animation: emailFocusNode,
-                                  builder: (context, child) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(
-                                          10.0,
-                                        ),
-                                        boxShadow:
-                                            emailFocusNode.hasFocus
-                                                ? [
-                                                  const BoxShadow(
-                                                    color: Colors.grey,
-                                                    spreadRadius: 2.0,
-                                                    blurRadius: 5.0,
-                                                    offset: Offset(0, 2),
-                                                  ),
-                                                ]
-                                                : null,
-                                        border:
-                                            emailFocusNode.hasFocus
-                                                ? Border.all(
+                        child: IwCard(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Local profile',
+                                style: Theme.of(context).textTheme.titleLarge,
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Choose the name InfinityWorld uses on this device.',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 20),
+                              AnimatedBuilder(
+                                animation: _displayNameFocusNode,
+                                builder: (context, child) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow:
+                                          _displayNameFocusNode.hasFocus
+                                              ? [
+                                                const BoxShadow(
                                                   color: Colors.grey,
-                                                  width: 1.0,
-                                                )
-                                                : null,
-                                      ),
-                                      child: TextField(
-                                        autocorrect: false,
-                                        autofillHints: null,
-                                        controller: _emailController,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              10,
-                                            ),
-                                            borderSide: BorderSide.none,
+                                                  spreadRadius: 2,
+                                                  blurRadius: 5,
+                                                  offset: Offset(0, 2),
+                                                ),
+                                              ]
+                                              : null,
+                                      border:
+                                          _displayNameFocusNode.hasFocus
+                                              ? Border.all(color: Colors.grey)
+                                              : null,
+                                    ),
+                                    child: TextField(
+                                      autofillHints: const [AutofillHints.name],
+                                      controller: _displayNameController,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
                                           ),
-                                          filled: true,
-                                          fillColor: const Color(0xfff8fafc),
-                                          hintText: 'Enter your email',
-                                          hintStyle: const TextStyle(
-                                            color: Color(0xff94a3b8),
-                                          ),
-                                          isDense: true,
-                                          prefixIcon: const Icon(Icons.email),
+                                          borderSide: BorderSide.none,
                                         ),
-                                        enableSuggestions: false,
-                                        focusNode: emailFocusNode,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.deny(' '),
-                                          FilteringTextInputFormatter.allow(
-                                            RegExp(r'[\x20-\x7E]'),
-                                          ),
-                                        ],
-                                        keyboardType: TextInputType.text,
-                                        textInputAction: TextInputAction.next,
-                                      ),
-                                    );
-                                  },
-                                ),
-                                const SizedBox(height: 10),
-                                AnimatedBuilder(
-                                  animation: passwordFocusNode,
-                                  builder: (context, child) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xfff8fafc),
-                                        borderRadius: BorderRadius.circular(
-                                          10.0,
+                                        errorText: _displayNameError,
+                                        filled: true,
+                                        fillColor: const Color(0xfff8fafc),
+                                        hintText: 'Display name',
+                                        hintStyle: const TextStyle(
+                                          color: Color(0xff94a3b8),
                                         ),
-                                        boxShadow:
-                                            passwordFocusNode.hasFocus
-                                                ? [
-                                                  const BoxShadow(
-                                                    color: Colors.grey,
-                                                    spreadRadius: 2.0,
-                                                    blurRadius: 5.0,
-                                                    offset: Offset(0, 2),
-                                                  ),
-                                                ]
-                                                : null,
-                                        border:
-                                            passwordFocusNode.hasFocus
-                                                ? Border.all(
-                                                  color: Colors.grey,
-                                                  width: 1.0,
-                                                )
-                                                : null,
+                                        isDense: true,
+                                        prefixIcon: const Icon(Icons.person),
                                       ),
-                                      child: TextField(
-                                        autocorrect: false,
-                                        controller: _passwordController,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              10,
-                                            ),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          filled: true,
-                                          fillColor: Colors.white,
-                                          hintText: 'Enter your password',
-                                          hintStyle: const TextStyle(
-                                            color: Color(0xff94a3b8),
-                                          ),
-                                          isDense: true,
-                                          prefixIcon: const Icon(Icons.lock),
-                                          suffixIcon: IconButton(
-                                            icon: Icon(
-                                              _obscureText
-                                                  ? Icons.visibility_off
-                                                  : Icons.visibility,
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                _obscureText = !_obscureText;
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                        enableSuggestions: false,
-                                        focusNode: passwordFocusNode,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.deny(' '),
-                                          FilteringTextInputFormatter.allow(
-                                            RegExp(r'[\x20-\x7E]'),
-                                          ),
-                                        ],
-                                        keyboardType: TextInputType.text,
-                                        obscureText: _obscureText,
-                                        textInputAction: TextInputAction.done,
-                                      ),
-                                    );
-                                  },
+                                      focusNode: _displayNameFocusNode,
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(40),
+                                      ],
+                                      keyboardType: TextInputType.name,
+                                      onChanged: (_) {
+                                        if (_displayNameError == null) {
+                                          return;
+                                        }
+                                        setState(() {
+                                          _displayNameError = null;
+                                        });
+                                      },
+                                      onSubmitted: (_) => _login(),
+                                      textCapitalization:
+                                          TextCapitalization.words,
+                                      textInputAction: TextInputAction.done,
+                                    ),
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              ElevatedButton(
+                                onPressed: _isLoggingIn ? null : _login,
+                                child: Text(
+                                  _isLoggingIn
+                                      ? 'Entering...'
+                                      : 'Enter InfinityWorld',
                                 ),
-                                const SizedBox(height: 20),
-                                ElevatedButton(
-                                  onPressed: _login,
-                                  child: const Text('Sign in'),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

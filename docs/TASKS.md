@@ -20,7 +20,7 @@ Current architecture status:
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
 - `lib/design_system/tokens/` and `lib/design_system/components/iw_card.dart` now provide the first design-system token/card slice.
 - Auth/Login presentation now lives under `lib/features/auth/presentation/`.
-- Local session persistence now lives under `lib/features/auth/data/local_session_repository.dart` and uses `shared_preferences`.
+- Local session/profile persistence now lives under `lib/features/auth/data/local_session_repository.dart` and uses `shared_preferences`.
 - BMI was the initial migration pilot and now lives under `lib/features/bmi/`.
 - Chat presentation now lives under `lib/features/chat/presentation/`.
 - Dashboard presentation now lives under `lib/features/dashboard/presentation/`.
@@ -32,7 +32,7 @@ Current architecture status:
 - Fox hardening plan exists at `docs/features/FOX_HARDENING_PLAN.md`.
 - Summertime Saga hardening plan exists at `docs/features/SUMMERTIME_SAGA_HARDENING_PLAN.md`.
 - Phase 2 migration map exists at `docs/PHASE2_MIGRATION_MAP.md`.
-- `shared_preferences` is active for the first local session flag.
+- `shared_preferences` is active for the first local session flag and display name.
 - Riverpod, go_router, and Dio are not active yet.
 
 Current tests:
@@ -40,6 +40,7 @@ Current tests:
 - App startup smoke tests cover logged-out Login startup and logged-in Main startup.
 - Local session repository and startup route resolver unit coverage exists.
 - Login/logout session navigation widget coverage exists.
+- Local display-name validation and persistence coverage exists.
 - App theme unit coverage exists.
 - `IwCard` widget coverage exists.
 - BMI domain unit tests exist.
@@ -60,7 +61,7 @@ Current tests:
 Current phase:
 
 - Phase 4: App Bootstrap and Local Session.
-- Phase 4 session bootstrap is active. Startup now resolves Login or Main from the local session flag without starting a router migration.
+- Phase 4 session bootstrap and local profile entry are active. Startup resolves Login or Main from local session/profile state without starting a router migration.
 
 Android toolchain status:
 
@@ -99,6 +100,7 @@ Completed stabilization tasks:
 - Phase 3 token/card implementation slice was completed; the app now has Midnight Violet light/dark theme data, core color/spacing/radius tokens, `IwCard`, focused tests, and Profile as the first pilot screen.
 - Phase 4 bootstrap/session kickoff audit was completed; current startup and logout/login paths were inspected, and the first implementation slice was scoped to local session bootstrap on top of the existing GetX app.
 - Local session bootstrap was implemented; `shared_preferences` stores the session flag, startup resolves Login/Main before `runApp`, and existing login/logout actions save and clear the flag.
+- Local profile entry was implemented; Login now captures a display name, validates blank input, persists the profile locally, and logout clears the display name with the session.
 
 ## Recommended Next Work
 
@@ -115,26 +117,24 @@ Task sizing note:
 
 ### Primary
 
-T34 — Local profile entry implementation
+T35 — Phase 4 checkpoint audit
 
 Reason:
 
-- T33 added the local session flag and startup redirect.
-- The Login screen still looks like backend email/password auth even though the product direction is local/fake profile first.
-- Phase 4 still needs a small local profile value, not just an anonymous session flag.
+- T33 added startup session routing, and T34 added local display-name profile entry.
+- Phase 4 exit criteria appear implemented, but routing, shell ownership, and docs should be checked before starting the high-risk router migration phase.
+- The next step should be an audit/checkpoint, not go_router implementation.
 
 Scope:
 
-- Preserve GetX routing and `GetMaterialApp`.
-- Keep using `shared_preferences`; do not add a new storage package.
-- Replace the credential-looking login inputs with a local display-name entry flow.
-- Persist and clear the local display name through the existing auth data path.
-- Keep startup/session behavior from T33 unchanged.
-- Add focused tests for display-name persistence and login validation.
+- Inspect `lib/main.dart`, `lib/app/bootstrap/`, auth data/presentation, dashboard logout, route tests, and current startup smoke tests.
+- Confirm whether Phase 4 can be closed and what should gate Phase 5.
+- Update planning docs only; do not start go_router migration or Riverpod work.
+- Note any concrete blocker or follow-up if Phase 4 is not ready to close.
 
 Verification:
 
-- Startup/routing gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
@@ -173,7 +173,7 @@ Current phase:
 
 Decision:
 
-- Local session bootstrap is implemented on the current GetX app; continue Phase 4 with the smallest local profile entry slice.
+- Local session bootstrap and local profile entry are implemented on the current GetX app; run a Phase 4 checkpoint before Phase 5.
 
 Do not enter yet:
 
@@ -183,15 +183,16 @@ Reason:
 
 - The app has enough design-system foundation to start startup/session work.
 - GetX routing remains active and should be preserved during the first bootstrap/session slice.
-- Phase 4 can continue without introducing Riverpod, go_router, Dio, or real backend authentication.
+- Phase 4 checkpoint can run without introducing Riverpod, go_router, Dio, or real backend authentication.
 
 Exit criteria:
 
 - Done: Bootstrap/session scope is audited and planned.
-- Done: Local session flag persistence is implemented.
+- Done: Local session flag and display-name persistence are implemented.
 - Done: App startup redirects to Main when a previous local session exists and Login when it does not.
 - Done: Logout clears the local session and returns to Login.
-- Remaining: Local profile display-name persistence replaces the credential-looking fake auth screen.
+- Done: Local profile display-name entry replaces the credential-looking fake auth screen.
+- Remaining: Phase 4 checkpoint audit confirms closure and scopes Phase 5.
 
 ## Verification Gates
 

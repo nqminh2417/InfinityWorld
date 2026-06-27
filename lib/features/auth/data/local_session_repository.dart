@@ -5,18 +5,40 @@ class LocalSessionRepository {
     : _preferences = preferences ?? SharedPreferencesAsync();
 
   static const String isLoggedInKey = 'iw_is_logged_in';
+  static const String displayNameKey = 'iw_display_name';
 
   final SharedPreferencesAsync _preferences;
 
   Future<bool> hasSession() async {
-    return await _preferences.getBool(isLoggedInKey) ?? false;
+    final isLoggedIn = await _preferences.getBool(isLoggedInKey) ?? false;
+    if (!isLoggedIn) {
+      return false;
+    }
+
+    return await getDisplayName() != null;
   }
 
-  Future<void> saveSession() {
-    return _preferences.setBool(isLoggedInKey, true);
+  Future<String?> getDisplayName() async {
+    final displayName = (await _preferences.getString(displayNameKey))?.trim();
+    return displayName == null || displayName.isEmpty ? null : displayName;
   }
 
-  Future<void> clearSession() {
-    return _preferences.remove(isLoggedInKey);
+  Future<void> saveSession({required String displayName}) async {
+    final trimmedDisplayName = displayName.trim();
+    if (trimmedDisplayName.isEmpty) {
+      throw ArgumentError.value(
+        displayName,
+        'displayName',
+        'must not be blank',
+      );
+    }
+
+    await _preferences.setBool(isLoggedInKey, true);
+    await _preferences.setString(displayNameKey, trimmedDisplayName);
+  }
+
+  Future<void> clearSession() async {
+    await _preferences.remove(isLoggedInKey);
+    await _preferences.remove(displayNameKey);
   }
 }

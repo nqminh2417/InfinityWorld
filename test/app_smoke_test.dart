@@ -34,7 +34,7 @@ void main() {
   testWidgets('app starts on the main shell when a local session exists', (
     tester,
   ) async {
-    await LocalSessionRepository().saveSession();
+    await LocalSessionRepository().saveSession(displayName: 'Minh');
     final initialRoute = await resolveStartupRoute();
 
     await tester.pumpWidget(MainApp(initialRoute: initialRoute));
@@ -63,7 +63,7 @@ void main() {
     await tester.pump();
 
     expect(find.byType(SingleChildScrollView), findsOneWidget);
-    expect(find.text('Sign in'), findsOneWidget);
+    expect(find.text('Enter InfinityWorld'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }
