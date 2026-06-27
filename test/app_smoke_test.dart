@@ -1,16 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:infinity_world/app/bootstrap/startup_route_resolver.dart';
+import 'package:infinity_world/features/auth/data/local_session_repository.dart';
 import 'package:infinity_world/features/auth/presentation/login_screen.dart';
 import 'package:infinity_world/main.dart';
+import 'package:infinity_world/screens/main/main_screen.dart';
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
 void main() {
-  testWidgets('app starts on the login screen without framework exceptions', (
+  setUp(() {
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
+  });
+
+  tearDown(() {
+    Get.reset();
+    SharedPreferencesAsyncPlatform.instance = null;
+  });
+
+  testWidgets('app starts on the login screen without a local session', (
     tester,
   ) async {
-    await tester.pumpWidget(const MainApp());
+    final initialRoute = await resolveStartupRoute();
+
+    await tester.pumpWidget(MainApp(initialRoute: initialRoute));
 
     expect(find.byType(LoginScreen), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('app starts on the main shell when a local session exists', (
+    tester,
+  ) async {
+    await LocalSessionRepository().saveSession();
+    final initialRoute = await resolveStartupRoute();
+
+    await tester.pumpWidget(MainApp(initialRoute: initialRoute));
+
+    expect(find.byType(MainScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

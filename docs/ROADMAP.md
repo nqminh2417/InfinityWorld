@@ -20,6 +20,7 @@ The current app is transitional. The target architecture in `docs/ARCHITECTURE.m
 Current structure:
 
 - `lib/main.dart` still owns root app composition and uses `GetMaterialApp`.
+- `lib/app/bootstrap/startup_route_resolver.dart` now resolves the startup route from the local session flag before `runApp`.
 - `lib/routes/app_pages.dart` and `lib/routes/app_routes.dart` still define legacy GetX routing.
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
 - `lib/design_system/` now contains the first tokens and `IwCard` component slice.
@@ -27,6 +28,7 @@ Current structure:
 - `lib/screens/main/main_screen.dart` still owns the legacy bottom-tab shell.
 - Shared legacy UI remains under `lib/widgets/`.
 - `lib/core/config/constants.dart` contains early runtime constants.
+- `lib/features/auth/data/local_session_repository.dart` stores the first local session flag with `shared_preferences`.
 - Feature placement completed for the Phase 2 selected screens/features:
   - `lib/features/bmi/domain/bmi_calculator.dart`
   - `lib/features/bmi/presentation/bmi_screen.dart`
@@ -50,8 +52,8 @@ Current structure:
 Current dependencies:
 
 - Flutter SDK constraint: `^3.7.0`
-- Runtime packages: `get`, `http`, `change_app_package_name`
-- Dev packages: `flutter_test`, `flutter_lints`
+- Runtime packages: `get`, `http`, `change_app_package_name`, `shared_preferences`
+- Dev packages: `flutter_test`, `flutter_lints`, `shared_preferences_platform_interface`
 
 Riverpod, go_router, and Dio are target-direction technologies but are not installed or active yet. Do not introduce them until their explicit phases/tasks begin.
 
@@ -191,7 +193,7 @@ Non-goals:
 
 ## Phase 4: App Bootstrap and Local Session
 
-Status: current / kickoff audited; first implementation slice is ready.
+Status: current / local session flag implemented; local profile entry remains.
 
 Goal:
 
@@ -208,19 +210,25 @@ This phase may still use existing routing until the router migration starts.
 
 Kickoff audit findings:
 
-- `lib/main.dart` currently starts `GetMaterialApp` at `AppRoutes.login`.
-- `lib/features/auth/presentation/login_screen.dart` navigates to `AppRoutes.main` without saving a local session.
-- `lib/features/dashboard/presentation/dashboard_screen.dart` navigates to `AppRoutes.login` on logout without clearing a local session.
+- Before T33, `lib/main.dart` started `GetMaterialApp` at `AppRoutes.login`.
+- Before T33, `lib/features/auth/presentation/login_screen.dart` navigated to `AppRoutes.main` without saving a local session.
+- Before T33, `lib/features/dashboard/presentation/dashboard_screen.dart` navigated to `AppRoutes.login` on logout without clearing a local session.
 - `lib/routes/app_pages.dart` and `lib/routes/app_routes.dart` already expose the legacy Login and Main routes needed for the first slice.
-- `shared_preferences` is not installed yet.
+- Before T33, `shared_preferences` was not installed.
 
-First implementation slice:
+Completed first implementation slice:
 
 - Keep GetX routing and `GetMaterialApp`.
-- Add `shared_preferences` only for the local session flag.
-- Add a small bootstrap resolver under `lib/app/bootstrap/` to choose Login or Main before `runApp`.
-- Save session on the existing local login action and clear session on the existing dashboard logout action.
-- Cover logged-out and logged-in startup paths with focused tests.
+- Added `shared_preferences` only for the local session flag.
+- Added a small bootstrap resolver under `lib/app/bootstrap/` to choose Login or Main before `runApp`.
+- Saved session on the existing local login action and cleared session on the existing dashboard logout action.
+- Covered logged-out and logged-in startup paths with focused tests.
+
+Remaining Phase 4 slice:
+
+- Replace the credential-looking Login form with a local display-name entry flow.
+- Persist and clear the local display name through the existing auth data path.
+- Keep the GetX router and T33 startup/session behavior unchanged.
 
 Non-goals:
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infinity_world/features/auth/data/local_session_repository.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -10,6 +11,8 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  bool _isLoggingOut = false;
+
   void _toFoxRandom() async {
     Get.toNamed(AppRoutes.fox);
   }
@@ -18,8 +21,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Get.toNamed(AppRoutes.test);
   }
 
-  void _logout() async {
-    Get.offAllNamed(AppRoutes.login);
+  Future<void> _logout() async {
+    if (_isLoggingOut) {
+      return;
+    }
+
+    _isLoggingOut = true;
+    try {
+      await LocalSessionRepository().clearSession();
+      if (!mounted) {
+        return;
+      }
+      Get.offAllNamed(AppRoutes.login);
+    } finally {
+      _isLoggingOut = false;
+    }
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:infinity_world/features/auth/data/local_session_repository.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final passwordFocusNode = FocusNode();
 
   bool _obscureText = true;
+  bool _isLoggingIn = false;
 
   @override
   void dispose() {
@@ -27,8 +29,21 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _login() {
-    Get.offNamed(AppRoutes.main);
+  Future<void> _login() async {
+    if (_isLoggingIn) {
+      return;
+    }
+
+    _isLoggingIn = true;
+    try {
+      await LocalSessionRepository().saveSession();
+      if (!mounted) {
+        return;
+      }
+      Get.offNamed(AppRoutes.main);
+    } finally {
+      _isLoggingIn = false;
+    }
   }
 
   @override
