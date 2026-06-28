@@ -66,6 +66,7 @@ Current phase:
 - Phase 5: Router Migration.
 - go_router root parity is implemented.
 - Main shell ownership has moved to `lib/app/shell/` without changing tabs or routing behavior.
+- Legacy GetX cleanup has been audited; only inactive `AppPages` routing and the `get` package remain.
 
 Android toolchain status:
 
@@ -110,6 +111,7 @@ Completed stabilization tasks:
 - go_router root parity slice was completed; `MaterialApp.router` now uses the active route table, Login/Dashboard navigation use go_router, and `MainScreen` remains unchanged.
 - Main shell ownership audit was completed; `MainScreen` is only a legacy wrapper for Dashboard / Chat / Profile, child screens still own their own `Scaffold`/SafeArea where needed, and the next shell slice should move ownership before any five-tab or `ShellRoute` work.
 - Main shell ownership move was completed; `MainScreen` now lives under `lib/app/shell/`, while `/main` and the existing Dashboard / Chat / Profile tabs stay unchanged.
+- Legacy GetX route cleanup audit was completed; Dart GetX usage is limited to inactive `lib/routes/app_pages.dart`, while active routing and tests use go_router through `MainApp`.
 
 ## Recommended Next Work
 
@@ -126,32 +128,34 @@ Task sizing note:
 
 ### Primary
 
-T40 - Legacy GetX route cleanup audit
+T41 - Remove inactive GetX route table and dependency
 
 Reason:
 
 - The active root router is go_router.
-- `lib/routes/app_pages.dart` remains as an inactive legacy GetX route table.
-- The `get` dependency remains installed only for legacy cleanup scope.
+- The T40 audit found no active production GetX navigation calls.
+- `lib/routes/app_pages.dart` is the only Dart file importing `package:get/get.dart`.
+- The `get` package remains installed only for that inactive route table.
 
 Scope:
 
-- Inventory remaining GetX imports/usages after root go_router parity and shell ownership move.
-- Decide whether `lib/routes/app_pages.dart` and the `get` dependency can be removed in one small implementation task.
-- Update planning docs only; do not remove files or dependencies during the audit.
+- Delete inactive `lib/routes/app_pages.dart`.
+- Remove the `get` dependency and update `pubspec.lock`.
+- Keep `lib/routes/app_routes.dart` as the shared path contract.
+- Rename or update stale route smoke test naming if needed, while preserving existing route coverage.
 - Do not introduce five target tabs, `ShellRoute`, Riverpod, Dio, or visual redesign.
 
 Verification:
 
-- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Dependency/routing gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T41 - Live-network route smoke strategy
+T42 - Live-network route smoke strategy
 
 Choose this if Fox and Summertime Saga direct route coverage should be solved before shell work.
 
-T42 - Five-tab shell implementation audit
+T43 - Five-tab shell implementation audit
 
 Choose this if Home / Explore / Tools / Library / Settings should be scoped before legacy cleanup.
 
@@ -165,7 +169,7 @@ Choose this if current package/build risk should be reviewed before the next pha
 - Shell redesign, five-tab migration, or `ShellRoute` without an explicit scoped task.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
-- GetX package removal or legacy route deletion without a cleanup task.
+- Removing `AppRoutes` or active go_router routes during GetX cleanup.
 - Built-in Kotlin migration.
 - Real backend authentication.
 - More design-system components unless explicitly assigned.
@@ -182,7 +186,7 @@ Current phase:
 
 Decision:
 
-- T39 moved the existing shell to `lib/app/shell/`. Scope legacy GetX cleanup before removing route files or dependencies.
+- T40 scoped legacy GetX cleanup. Remove only inactive `AppPages` and the `get` dependency; keep `AppRoutes` and active go_router routes.
 
 Do not enter yet:
 
@@ -190,7 +194,7 @@ Do not enter yet:
 
 Reason:
 
-- GetX routing remains active and should not be removed until go_router parity is proven.
+- The inactive GetX route table and `get` dependency should be removed before starting Riverpod foundation work.
 - Phase 4 startup/session behavior must survive every router slice.
 - Router migration should not be mixed with Riverpod, Dio, real backend authentication, or shell redesign.
 
@@ -203,7 +207,8 @@ Exit criteria:
 - Done: Root go_router parity slice is implemented and verified.
 - Done: Shell ownership is audited before `MainScreen` is moved or `ShellRoute` is introduced.
 - Done: Existing shell ownership moved to `lib/app/shell/` while preserving current behavior.
-- Remaining: Legacy GetX route cleanup is scoped after parity passes.
+- Done: Legacy GetX route cleanup is scoped after parity passes.
+- Remaining: Remove inactive GetX route table and dependency.
 
 ## Verification Gates
 

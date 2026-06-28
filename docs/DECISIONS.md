@@ -32,9 +32,11 @@ lib/features/<feature>/
 
 Small features may stay simple. Larger features may use `data/`, `domain/`, `application/`, and `presentation/` subfolders when needed.
 
-### 2026-06-23: Keep GetX during the transitional migration phase
+### 2026-06-23: Do not expand GetX during the transitional migration phase
 
-GetX routing remains active for now. Do not convert routing to go_router until an explicit router migration phase starts. Do not expand GetX for new architecture work.
+GetX was kept during early transitional work. Active routing now uses go_router, and remaining GetX code is limited to inactive cleanup scope.
+
+Do not expand GetX for new architecture work.
 
 ### 2026-06-23: Do not introduce target libraries before their phase
 
@@ -66,13 +68,19 @@ The audited `MainScreen` is a thin legacy shell wrapper for Dashboard, Chat, and
 
 Do not combine future shell work with unrelated Riverpod, Dio, GetX cleanup, or visual redesign work. Home / Explore / Tools / Library / Settings and `ShellRoute` need their own scoped task.
 
+### 2026-06-28: GetX cleanup should remove only inactive routing
+
+The T40 audit found no active GetX navigation calls. Remaining Dart GetX usage is limited to inactive `lib/routes/app_pages.dart`, and the `get` dependency exists only for that file.
+
+The cleanup implementation should delete `lib/routes/app_pages.dart` and remove `get`, but keep `lib/routes/app_routes.dart` as the shared route path contract for go_router and startup/session code.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:
 
 - Domain logic lives under `lib/features/bmi/domain/`.
 - Presentation lives under `lib/features/bmi/presentation/`.
-- Legacy GetX routing still opens the BMI screen.
+- Active go_router routing opens the BMI screen. The inactive legacy GetX route table is pending cleanup.
 
 ### 2026-06-23: Apply Flutter UI layout safety rules for UI work
 

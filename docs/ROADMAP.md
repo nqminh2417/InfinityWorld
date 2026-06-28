@@ -23,7 +23,7 @@ Current structure:
 - `lib/app/bootstrap/startup_route_resolver.dart` now resolves the startup route from the local session flag before `runApp`.
 - `lib/app/router/app_router.dart` maps the current route table with go_router.
 - `lib/routes/app_routes.dart` still defines shared path constants.
-- `lib/routes/app_pages.dart` remains as an inactive legacy GetX route table until cleanup is scoped.
+- `lib/routes/app_pages.dart` remains as an inactive legacy GetX route table until cleanup implementation removes it.
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
 - `lib/design_system/` now contains the first tokens and `IwCard` component slice.
 - Selected feature screens have been moved under `lib/features/`.
@@ -63,7 +63,7 @@ go_router is active for the root route table. Riverpod and Dio are target-direct
 
 - Login build-time `setState()` risk has been fixed; emulator/device visual review remains a later QA activity.
 - go_router is the active root router.
-- `lib/routes/` remains an active legacy area because `app_pages.dart` still contains the inactive GetX route table.
+- `lib/routes/app_pages.dart` is inactive legacy code; `lib/routes/app_routes.dart` remains the shared path contract for go_router.
 - Some networking still uses direct `http` services under feature folders.
 - Feature placement does not mean shell design has migrated; `MainScreen` now lives in `lib/app/shell/` but still preserves the current three-tab shell behavior.
 - Theme/design-system implementation now has a first token/card slice; broader components and visual adoption remain incomplete.
@@ -253,7 +253,7 @@ Non-goals:
 
 ## Phase 5: Router Migration
 
-Status: current / root parity implemented; shell ownership moved.
+Status: current / root parity implemented; shell ownership moved; GetX cleanup scoped.
 
 Goal:
 
@@ -310,9 +310,16 @@ Shell ownership move:
 - Completed: kept the `MainScreen` class name, `/main` route behavior, and Dashboard / Chat / Profile tabs unchanged.
 - Completed: updated the active go_router table, inactive legacy GetX route table, and route/session smoke tests to import the shell from `lib/app/shell/`.
 
+Legacy GetX cleanup audit findings:
+
+- Dart GetX usage is limited to `lib/routes/app_pages.dart`.
+- `lib/routes/app_pages.dart` is inactive; active routing is owned by `lib/app/router/app_router.dart` and `MaterialApp.router`.
+- `get` remains a direct dependency only to compile the inactive GetX route table.
+- `lib/routes/app_routes.dart` should stay because it is still the shared path contract used by active go_router routes and startup/session code.
+
 Next router-phase focus:
 
-- Audit remaining GetX route files and dependency before deleting `lib/routes/app_pages.dart` or removing `get`.
+- Remove inactive `lib/routes/app_pages.dart` and the `get` dependency in one small cleanup task.
 - Keep Home / Explore / Tools / Library / Settings and `ShellRoute` for later scoped tasks.
 
 ## Phase 6: Riverpod Foundation
