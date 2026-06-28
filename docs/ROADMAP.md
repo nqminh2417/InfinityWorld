@@ -1,6 +1,6 @@
 # Infinity World Roadmap
 
-Last updated: 2026-06-27
+Last updated: 2026-06-28
 
 ## Purpose
 
@@ -193,7 +193,7 @@ Non-goals:
 
 ## Phase 4: App Bootstrap and Local Session
 
-Status: current / local session and profile entry implemented; checkpoint pending.
+Status: complete as of 2026-06-28.
 
 Goal:
 
@@ -231,10 +231,17 @@ Completed local profile slice:
 - Kept the GetX router and T33 startup/session behavior unchanged.
 - Covered blank-name validation and local profile persistence with focused tests.
 
-Remaining Phase 4 checkpoint:
+Checkpoint findings:
 
-- Confirm Phase 4 closure before starting Phase 5.
-- Scope router migration gates without implementing go_router during the checkpoint.
+- Audited `lib/main.dart`, `lib/app/bootstrap/`, auth session storage, Login local profile entry, Dashboard logout, legacy GetX routes, and focused startup/session tests.
+- Confirmed startup resolves Login or Main before `runApp` using the local session/profile state.
+- Confirmed Login saves a nonblank display name, logout clears the session/profile, and tests cover startup, login validation, login persistence, and logout.
+- Confirmed Riverpod, go_router, Dio, and real backend authentication were not introduced.
+
+Phase 4 closure:
+
+- No Phase 4 blocker remains.
+- The legacy main shell and GetX route table remain active by design and are Phase 5 concerns.
 
 Non-goals:
 
@@ -244,7 +251,7 @@ Non-goals:
 
 ## Phase 5: Router Migration
 
-Status: deferred, high risk.
+Status: current / kickoff audit next.
 
 Goal:
 
@@ -252,10 +259,19 @@ Goal:
 
 Rules:
 
-- Start only with an explicit router migration task.
+- Start with a router migration kickoff audit before adding packages or changing routes.
 - Keep existing important screens reachable.
 - Do not remove GetX until replacement routing is stable and verified.
 - Add route tests or startup smoke tests where practical.
+- Preserve Phase 4 startup/session/login/logout behavior during every router slice.
+- Do not combine go_router work with Riverpod, Dio, real auth, or shell redesign.
+
+Entry audit should confirm:
+
+- Current route inventory and navigation calls.
+- Main shell ownership and whether shell migration is part of the first router slice.
+- Startup redirect parity for logged-out and logged-in local sessions.
+- A test strategy for live-network routes whose default constructors still start HTTP work.
 
 ## Phase 6: Riverpod Foundation
 

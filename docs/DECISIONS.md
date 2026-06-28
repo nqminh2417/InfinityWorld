@@ -1,6 +1,6 @@
 # Infinity World Decisions
 
-Last updated: 2026-06-27
+Last updated: 2026-06-28
 
 This file records durable product, architecture, workflow, and safety decisions for Infinity World. Keep entries concise and update them when a decision changes.
 
@@ -47,6 +47,12 @@ The first Phase 4 implementation should preserve the current GetX router and `Ge
 Use `shared_preferences` for the initial local session flag, add a small bootstrap resolver before `runApp`, and update the existing login/logout actions to save and clear that flag.
 
 Do not introduce Riverpod, go_router, Dio, real backend auth, or a broad auth redesign in this slice.
+
+### 2026-06-28: Close Phase 4 before router migration
+
+Phase 4 is closed with local session/profile startup behavior implemented on the existing GetX app.
+
+Start Phase 5 with a router migration kickoff audit before adding go_router or changing production routes. The first router implementation must preserve startup/session/login/logout behavior, keep important screens reachable, and avoid mixing in Riverpod, Dio, real backend authentication, or shell redesign.
 
 ### 2026-06-23: BMI is the current migration pilot
 

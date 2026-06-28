@@ -1,6 +1,6 @@
 # Infinity World Active Tasks
 
-Last updated: 2026-06-27
+Last updated: 2026-06-28
 
 ## Current Status
 
@@ -60,8 +60,8 @@ Current tests:
 
 Current phase:
 
-- Phase 4: App Bootstrap and Local Session.
-- Phase 4 session bootstrap and local profile entry are active. Startup resolves Login or Main from local session/profile state without starting a router migration.
+- Phase 5: Router Migration.
+- Phase 4 is closed. The next step is a router migration kickoff audit; do not add go_router or change routes before that audit.
 
 Android toolchain status:
 
@@ -101,12 +101,13 @@ Completed stabilization tasks:
 - Phase 4 bootstrap/session kickoff audit was completed; current startup and logout/login paths were inspected, and the first implementation slice was scoped to local session bootstrap on top of the existing GetX app.
 - Local session bootstrap was implemented; `shared_preferences` stores the session flag, startup resolves Login/Main before `runApp`, and existing login/logout actions save and clear the flag.
 - Local profile entry was implemented; Login now captures a display name, validates blank input, persists the profile locally, and logout clears the display name with the session.
+- Phase 4 checkpoint audit was completed; startup/session/profile behavior is covered, no Phase 4 blocker remains, and Phase 5 should begin with a router migration audit rather than implementation.
 
 ## Recommended Next Work
 
 Current phase:
 
-- Phase 4 — App Bootstrap and Local Session
+- Phase 5 — Router Migration
 
 Task sizing note:
 
@@ -117,20 +118,20 @@ Task sizing note:
 
 ### Primary
 
-T35 — Phase 4 checkpoint audit
+T36 — Router migration kickoff audit
 
 Reason:
 
-- T33 added startup session routing, and T34 added local display-name profile entry.
-- Phase 4 exit criteria appear implemented, but routing, shell ownership, and docs should be checked before starting the high-risk router migration phase.
-- The next step should be an audit/checkpoint, not go_router implementation.
+- Phase 4 is closed, and GetX routing still owns the route table and navigation calls.
+- Router migration has higher blast radius than the local session slices.
+- The first Phase 5 task should define route inventory, shell ownership, and parity gates before adding go_router.
 
 Scope:
 
-- Inspect `lib/main.dart`, `lib/app/bootstrap/`, auth data/presentation, dashboard logout, route tests, and current startup smoke tests.
-- Confirm whether Phase 4 can be closed and what should gate Phase 5.
-- Update planning docs only; do not start go_router migration or Riverpod work.
-- Note any concrete blocker or follow-up if Phase 4 is not ready to close.
+- Inspect `lib/main.dart`, `lib/routes/`, `lib/screens/main/main_screen.dart`, auth/dashboard navigation calls, feature routes, and current route/startup tests.
+- Define the smallest first go_router slice and rollback/parity gates.
+- Decide whether main shell ownership must be clarified before route implementation.
+- Update planning docs only; do not install go_router, remove GetX, or change production routing.
 
 Verification:
 
@@ -153,7 +154,7 @@ Choose this if current package/build risk should be reviewed before the next pha
 ### Do not start yet
 
 - Riverpod activation.
-- go_router migration.
+- go_router implementation or package install before the kickoff audit.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor.
 - GetX routing replacement.
@@ -169,30 +170,28 @@ Choose this if current package/build risk should be reviewed before the next pha
 
 Current phase:
 
-- Phase 4 — App Bootstrap and Local Session.
+- Phase 5 — Router Migration.
 
 Decision:
 
-- Local session bootstrap and local profile entry are implemented on the current GetX app; run a Phase 4 checkpoint before Phase 5.
+- Phase 4 is closed. Start Phase 5 with a router migration kickoff audit before implementation.
 
 Do not enter yet:
 
-- Phase 5 — Router Migration.
+- Phase 6 — Riverpod Foundation.
 
 Reason:
 
-- The app has enough design-system foundation to start startup/session work.
-- GetX routing remains active and should be preserved during the first bootstrap/session slice.
-- Phase 4 checkpoint can run without introducing Riverpod, go_router, Dio, or real backend authentication.
+- GetX routing remains active and should not be removed until go_router parity is proven.
+- Phase 4 startup/session behavior must survive every router slice.
+- Router migration should not be mixed with Riverpod, Dio, real backend authentication, or shell redesign.
 
 Exit criteria:
 
-- Done: Bootstrap/session scope is audited and planned.
-- Done: Local session flag and display-name persistence are implemented.
-- Done: App startup redirects to Main when a previous local session exists and Login when it does not.
-- Done: Logout clears the local session and returns to Login.
-- Done: Local profile display-name entry replaces the credential-looking fake auth screen.
-- Remaining: Phase 4 checkpoint audit confirms closure and scopes Phase 5.
+- Remaining: Router inventory and navigation-call audit is documented.
+- Remaining: First go_router migration slice is scoped.
+- Remaining: Startup/session/login/logout parity gates are defined.
+- Remaining: Live-network route smoke-test strategy is documented.
 
 ## Verification Gates
 
