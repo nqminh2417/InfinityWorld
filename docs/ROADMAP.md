@@ -273,7 +273,7 @@ Kickoff audit findings:
 - `lib/main.dart` still uses `GetMaterialApp` with an initial route resolved by `lib/app/bootstrap/startup_route_resolver.dart`.
 - Production GetX navigation calls are limited to Login entering `/main`, Dashboard opening `/fox`, `/testscreen`, `/smts_home`, `/bmi`, and Dashboard logout returning to `/login`.
 - `lib/screens/main/main_screen.dart` owns the legacy three-tab shell: Dashboard, Chat, and Profile. It does not yet match the target Home / Explore / Tools / Library / Settings shell.
-- Existing route tests cover deterministic routes. Fox and Summertime Saga direct route smoke tests remain deferred because their default route constructors start live HTTP work in `initState()`.
+- At kickoff, existing route tests covered deterministic routes, while Fox and Summertime Saga direct route smoke tests stayed deferred because their default route constructors started live HTTP work in `initState()`.
 - A source check against the official `go_router` package docs confirmed the expected root pattern is `GoRouter` with `MaterialApp.router`, URL-based navigation such as `context.go()`, redirects, and shell-route support for nested navigation.
 
 First implementation slice:
@@ -293,7 +293,7 @@ First-slice parity gates:
 - Login saves a local profile and navigates to Main.
 - Logout clears the local session/profile and returns to Login.
 - Deterministic route smoke tests continue to cover Login, Main, Dashboard, BMI, Test, Settings, Profile, and Chat.
-- Fox and Summertime Saga remain mapped routes, but direct route smoke tests stay deferred until their default constructors no longer start live HTTP; rely on existing fake-network feature tests for those screens during the root parity slice.
+- Fox and Summertime Saga remain mapped routes. During the root parity slice, direct route smoke tests stayed deferred and relied on existing fake-network feature tests for those screens.
 - Full screen-move/routing gate passes: `flutter pub get`, `dart format`, `flutter analyze`, `flutter test`, `flutter build apk --debug`, and `git diff --check`.
 
 Shell ownership audit findings:
@@ -322,9 +322,15 @@ Legacy GetX cleanup:
 - Completed: removed the `get` dependency and lockfile entry.
 - Completed: renamed route smoke coverage to `test/routes/app_router_test.dart`.
 
+Live-network route smoke strategy:
+
+- Completed: audited `app_router.dart`, Fox, Summertime Saga, and existing fake-network tests.
+- Decision: add a small router factory override seam for tests, then use `FoxRandomScreen(service: ...)` and `SmtsHomeScreen(loadProgress: ..., logoUrl: '')` for deterministic route smoke coverage.
+- Do not wait for Dio, Riverpod, or networking migration for this coverage.
+
 Next router-phase focus:
 
-- Decide the live-network route smoke-test strategy for Fox and Summertime Saga.
+- Implement deterministic route smoke tests for Fox and Summertime Saga using router-level builder overrides.
 - Keep Home / Explore / Tools / Library / Settings and `ShellRoute` for later scoped tasks.
 
 ## Phase 6: Riverpod Foundation

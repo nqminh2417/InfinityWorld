@@ -74,6 +74,12 @@ The T40 audit found no active GetX navigation calls. Remaining Dart GetX usage w
 
 T41 deleted `lib/routes/app_pages.dart` and removed `get`, but kept `lib/routes/app_routes.dart` as the shared route path contract for go_router and startup/session code.
 
+### 2026-06-29: Live-network route smoke tests should use router builder overrides
+
+The T42 audit found that Fox and Summertime Saga already expose deterministic screen seams: `FoxRandomScreen(service: ...)` and `SmtsHomeScreen(loadProgress: ..., logoUrl: ...)`.
+
+Do not wait for Dio, Riverpod, or a networking migration just to smoke-test their go_router paths. The next implementation should add the smallest test-only seam at the router factory level so route tests can override those two builders with fake loaders while production routes keep the current default constructors.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:

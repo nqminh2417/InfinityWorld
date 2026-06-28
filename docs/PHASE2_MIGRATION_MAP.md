@@ -109,6 +109,7 @@ Deferred route rendering tests:
 
 - Fox, because the screen starts live HTTP work in `initState()`.
 - Summertime Saga, because the go_router route still uses the default live loader.
+- T42 strategy: cover both routes with router-level builder overrides and existing fake-network screen seams.
 
 ## Placement rules
 

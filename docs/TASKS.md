@@ -59,7 +59,7 @@ Current tests:
 - Profile presentation widget test exists.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
-- Fox and Summertime Saga route rendering tests are deferred because their default route constructors still start live HTTP work in `initState()`.
+- Fox and Summertime Saga route rendering tests remain to be implemented with router-level builder overrides, using their existing fake-network screen seams.
 
 Current phase:
 
@@ -113,6 +113,7 @@ Completed stabilization tasks:
 - Main shell ownership move was completed; `MainScreen` now lives under `lib/app/shell/`, while `/main` and the existing Dashboard / Chat / Profile tabs stay unchanged.
 - Legacy GetX route cleanup audit was completed; Dart GetX usage is limited to inactive `lib/routes/app_pages.dart`, while active routing and tests use go_router through `MainApp`.
 - Inactive GetX route cleanup was completed; `lib/routes/app_pages.dart` and the `get` dependency were removed, while `AppRoutes` remains the shared path contract.
+- Live-network route smoke strategy was completed; Fox and Summertime Saga should get deterministic route tests through router-level builder overrides, not live network calls or a networking migration.
 
 ## Recommended Next Work
 
@@ -129,30 +130,30 @@ Task sizing note:
 
 ### Primary
 
-T42 - Live-network route smoke strategy
+T43 - Deterministic live-network route smoke implementation
 
 Reason:
 
 - Fox and Summertime Saga remain mapped go_router routes.
-- Direct route rendering tests are still deferred because default constructors start live HTTP work in `initState()`.
-- Their feature tests already use fake-network seams, but route-level coverage needs a small strategy before implementation.
+- Their screen constructors already accept fake loaders/services for deterministic tests.
+- Route-level coverage only needs a small router factory override seam.
 
 Scope:
 
-- Inspect Fox and Summertime Saga route constructors, existing fake-network tests, and `app_router.dart`.
-- Decide whether direct route smoke tests need injectable route builders, route-level test seams, or should remain deferred until networking migration.
-- Update planning docs only; do not refactor screen constructors or network code during the audit.
+- Add optional route builder overrides to `createAppRouter` or the narrowest equivalent test harness.
+- Add deterministic `/fox` and `/smts_home` route smoke tests using existing fake loaders/services.
+- Keep production default route constructors unchanged.
 - Do not introduce five target tabs, `ShellRoute`, Riverpod, Dio, or visual redesign.
 
 Verification:
 
-- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Routing/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T43 - Five-tab shell implementation audit
+T44 - Five-tab shell implementation audit
 
-Choose this if Home / Explore / Tools / Library / Settings should be scoped before legacy cleanup.
+Choose this after live-network route smoke coverage is implemented, or sooner only if route coverage is explicitly deferred.
 
 T30 — Dependency/toolchain audit
 
@@ -161,7 +162,7 @@ Choose this if current package/build risk should be reviewed before the next pha
 ### Do not start yet
 
 - Riverpod activation.
-- Shell redesign, five-tab migration, or `ShellRoute` without an explicit scoped task.
+- Shell redesign, five-tab migration, or `ShellRoute` before T43 route smoke coverage unless explicitly approved.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
 - Removing `AppRoutes` or active go_router routes.
@@ -181,7 +182,7 @@ Current phase:
 
 Decision:
 
-- T41 removed inactive GetX routing and dependency. Decide the live-network route smoke strategy before starting larger shell routing work.
+- T42 decided the live-network route smoke strategy. Implement deterministic Fox and Summertime Saga route smoke coverage before larger shell routing work.
 
 Do not enter yet:
 
@@ -189,7 +190,7 @@ Do not enter yet:
 
 Reason:
 
-- Remaining route-smoke and shell-routing work should finish before starting Riverpod foundation work.
+- Remaining route-smoke implementation and shell-routing work should finish before starting Riverpod foundation work.
 - Phase 4 startup/session behavior must survive every router slice.
 - Router migration should not be mixed with Riverpod, Dio, real backend authentication, or shell redesign.
 
@@ -204,7 +205,8 @@ Exit criteria:
 - Done: Existing shell ownership moved to `lib/app/shell/` while preserving current behavior.
 - Done: Legacy GetX route cleanup is scoped after parity passes.
 - Done: Inactive GetX route table and dependency removed.
-- Remaining: Decide direct route smoke strategy for live-network route constructors.
+- Done: Direct route smoke strategy for live-network route constructors is decided.
+- Remaining: Implement deterministic route smoke tests for Fox and Summertime Saga.
 
 ## Verification Gates
 

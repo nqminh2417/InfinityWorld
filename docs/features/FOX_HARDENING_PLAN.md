@@ -129,7 +129,7 @@ Phase 2 status:
 
 - Dio/network layer migration.
 - Riverpod controller/provider migration.
-- go_router route migration.
+- `/fox` route smoke coverage through router-level builder overrides.
 - Offline cache or favorites.
 - Gallery/history of fox images.
 - Fullscreen image viewer.
