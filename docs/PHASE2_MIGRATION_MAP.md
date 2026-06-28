@@ -1,6 +1,6 @@
 # Infinity World Phase 2 Migration Map
 
-Last updated: 2026-06-26
+Last updated: 2026-06-28
 
 ## Purpose
 
@@ -13,6 +13,11 @@ Checkpoint outcome on 2026-06-26:
 - Phase 2 selected feature placement work is complete.
 - Remaining tracked legacy screen ownership is the main shell, not a simple feature-screen move.
 - GetX routes remain active and should be handled in a later explicit routing phase.
+
+Post-Phase-2 update on 2026-06-28:
+
+- T39 moved the legacy main shell ownership to `lib/app/shell/main_screen.dart`.
+- No tracked Dart files remain under `lib/screens/`.
 
 ## Current feature placements
 
@@ -46,14 +51,14 @@ Still transitional after Phase 2:
 
 - `lib/main.dart` still owns root app composition.
 - `lib/routes/` still owns legacy GetX route registration.
-- `lib/screens/main/main_screen.dart` still owns the legacy bottom-tab shell.
+- The legacy three-tab shell behavior now lives under `lib/app/shell/main_screen.dart`.
 - No selected feature-screen Dart files remain under tracked `lib/screens/` paths.
 
 ## Remaining legacy screen map
 
 | Legacy path | Current role | Phase 2 action | Risk | Notes |
 |---|---|---:|---:|---|
-| `lib/screens/main/main_screen.dart` | Legacy bottom-tab shell | Do not move in Phase 2 unless explicitly approved | High | Belongs closer to future `app/shell`, not a feature screen. |
+| `lib/screens/main/main_screen.dart` | Legacy bottom-tab shell | Moved after Phase 2 in T39 | Done | Current owner: `lib/app/shell/main_screen.dart`. |
 
 ## Recommended ordering
 

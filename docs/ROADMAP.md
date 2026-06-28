@@ -27,7 +27,7 @@ Current structure:
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
 - `lib/design_system/` now contains the first tokens and `IwCard` component slice.
 - Selected feature screens have been moved under `lib/features/`.
-- `lib/screens/main/main_screen.dart` still contains the legacy bottom-tab shell; ownership should move to `lib/app/shell/` in the next router slice.
+- `lib/app/shell/main_screen.dart` now contains the current legacy bottom-tab shell.
 - Shared legacy UI remains under `lib/widgets/`.
 - `lib/core/config/constants.dart` contains early runtime constants.
 - `lib/features/auth/data/local_session_repository.dart` stores the first local session flag and display name with `shared_preferences`.
@@ -63,9 +63,9 @@ go_router is active for the root route table. Riverpod and Dio are target-direct
 
 - Login build-time `setState()` risk has been fixed; emulator/device visual review remains a later QA activity.
 - go_router is the active root router.
-- `lib/screens/` and `lib/routes/` remain active legacy areas.
+- `lib/routes/` remains an active legacy area because `app_pages.dart` still contains the inactive GetX route table.
 - Some networking still uses direct `http` services under feature folders.
-- Feature placement does not mean shell architecture has migrated; the legacy `MainScreen` still owns the current three-tab shell behavior and remains in the old `lib/screens/` location.
+- Feature placement does not mean shell design has migrated; `MainScreen` now lives in `lib/app/shell/` but still preserves the current three-tab shell behavior.
 - Theme/design-system implementation now has a first token/card slice; broader components and visual adoption remain incomplete.
 - Android toolchain versions have been pulled forward on `home/devbyMinh-current` with explicit approval: Gradle 8.14.5, Android Gradle Plugin 8.11.1, Kotlin Gradle Plugin 2.2.20, Java/Kotlin target 17.
 - Built-in Kotlin migration remains deferred until an AGP 9.x migration or a build requirement forces it.
@@ -253,7 +253,7 @@ Non-goals:
 
 ## Phase 5: Router Migration
 
-Status: current / root parity implemented; shell ownership audited.
+Status: current / root parity implemented; shell ownership moved.
 
 Goal:
 
@@ -304,11 +304,16 @@ Shell ownership audit findings:
 - Dashboard and Profile currently own their own `Scaffold` and SafeArea handling, so a shell move should not also refactor child-screen layout.
 - The next low-risk slice is an ownership move to `lib/app/shell/`; five target tabs and `ShellRoute` should wait for a dedicated shell-routing/design task.
 
+Shell ownership move:
+
+- Completed: moved `MainScreen` from `lib/screens/main/main_screen.dart` to `lib/app/shell/main_screen.dart`.
+- Completed: kept the `MainScreen` class name, `/main` route behavior, and Dashboard / Chat / Profile tabs unchanged.
+- Completed: updated the active go_router table, inactive legacy GetX route table, and route/session smoke tests to import the shell from `lib/app/shell/`.
+
 Next router-phase focus:
 
-- Move ownership of the existing `MainScreen` shell to `lib/app/shell/` while preserving the current Dashboard / Chat / Profile tabs.
-- Keep Home / Explore / Tools / Library / Settings and `ShellRoute` for later scoped tasks after the shell owner is in the target app layer.
-- Keep legacy GetX route files/dependency until cleanup is explicitly scoped.
+- Audit remaining GetX route files and dependency before deleting `lib/routes/app_pages.dart` or removing `get`.
+- Keep Home / Explore / Tools / Library / Settings and `ShellRoute` for later scoped tasks.
 
 ## Phase 6: Riverpod Foundation
 

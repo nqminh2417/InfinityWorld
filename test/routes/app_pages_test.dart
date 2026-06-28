@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:infinity_world/app/shell/main_screen.dart';
 import 'package:infinity_world/features/auth/presentation/login_screen.dart';
 import 'package:infinity_world/features/bmi/presentation/bmi_screen.dart';
 import 'package:infinity_world/features/chat/presentation/chat_screen.dart';
@@ -8,7 +9,6 @@ import 'package:infinity_world/features/settings/presentation/settings_screen.da
 import 'package:infinity_world/features/test/presentation/test_screen.dart';
 import 'package:infinity_world/main.dart';
 import 'package:infinity_world/routes/app_routes.dart';
-import 'package:infinity_world/screens/main/main_screen.dart';
 
 void main() {
   testWidgets('settings route opens the existing settings screen', (
