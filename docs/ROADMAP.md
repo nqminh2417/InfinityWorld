@@ -251,7 +251,7 @@ Non-goals:
 
 ## Phase 5: Router Migration
 
-Status: current / kickoff audit next.
+Status: current / kickoff audit complete; first implementation slice scoped.
 
 Goal:
 
@@ -266,12 +266,34 @@ Rules:
 - Preserve Phase 4 startup/session/login/logout behavior during every router slice.
 - Do not combine go_router work with Riverpod, Dio, real auth, or shell redesign.
 
-Entry audit should confirm:
+Kickoff audit findings:
 
-- Current route inventory and navigation calls.
-- Main shell ownership and whether shell migration is part of the first router slice.
-- Startup redirect parity for logged-out and logged-in local sessions.
-- A test strategy for live-network routes whose default constructors still start HTTP work.
+- Current GetX route table has ten paths: `/login`, `/main`, `/dashboard`, `/chat`, `/profile`, `/settings`, `/smts_home`, `/testscreen`, `/fox`, and `/bmi`.
+- `lib/main.dart` still uses `GetMaterialApp` with an initial route resolved by `lib/app/bootstrap/startup_route_resolver.dart`.
+- Production GetX navigation calls are limited to Login entering `/main`, Dashboard opening `/fox`, `/testscreen`, `/smts_home`, `/bmi`, and Dashboard logout returning to `/login`.
+- `lib/screens/main/main_screen.dart` owns the legacy three-tab shell: Dashboard, Chat, and Profile. It does not yet match the target Home / Explore / Tools / Library / Settings shell.
+- Existing route tests cover deterministic routes. Fox and Summertime Saga direct route smoke tests remain deferred because their default route constructors start live HTTP work in `initState()`.
+- A source check against the official `go_router` package docs confirmed the expected root pattern is `GoRouter` with `MaterialApp.router`, URL-based navigation such as `context.go()`, redirects, and shell-route support for nested navigation.
+
+First implementation slice:
+
+- Add `go_router` and introduce a small `lib/app/router/` route configuration.
+- Keep existing `AppRoutes` path constants as the route contract during the first slice.
+- Swap root app composition from `GetMaterialApp` to `MaterialApp.router`.
+- Map the existing route table to go_router, preserving the same startup/Login/Main behavior.
+- Replace the current production GetX navigation calls in Login and Dashboard.
+- Keep `MainScreen` unchanged; do not redesign shell tabs or introduce `ShellRoute` in the first slice.
+- Keep legacy GetX route files/dependency until go_router parity is proven and cleanup is explicitly scoped.
+
+First-slice parity gates:
+
+- Logged-out startup opens Login.
+- Logged-in local session opens Main.
+- Login saves a local profile and navigates to Main.
+- Logout clears the local session/profile and returns to Login.
+- Deterministic route smoke tests continue to cover Login, Main, Dashboard, BMI, Test, Settings, Profile, and Chat.
+- Fox and Summertime Saga remain mapped routes, but direct route smoke tests stay deferred until their default constructors no longer start live HTTP; rely on existing fake-network feature tests for those screens during the root parity slice.
+- Full screen-move/routing gate passes: `flutter pub get`, `dart format`, `flutter analyze`, `flutter test`, `flutter build apk --debug`, and `git diff --check`.
 
 ## Phase 6: Riverpod Foundation
 

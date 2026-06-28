@@ -54,6 +54,12 @@ Phase 4 is closed with local session/profile startup behavior implemented on the
 
 Start Phase 5 with a router migration kickoff audit before adding go_router or changing production routes. The first router implementation must preserve startup/session/login/logout behavior, keep important screens reachable, and avoid mixing in Riverpod, Dio, real backend authentication, or shell redesign.
 
+### 2026-06-28: First go_router slice is root parity only
+
+The first go_router implementation should add the package, introduce a small `lib/app/router/` configuration, preserve existing `AppRoutes` path strings, and replace root `GetMaterialApp` with `MaterialApp.router`.
+
+It should map the existing route table, replace the current production GetX navigation calls, and keep `MainScreen` unchanged. Do not introduce `ShellRoute`, redesign the bottom navigation, remove GetX, add Riverpod, add Dio, or change real authentication in the first router slice.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:

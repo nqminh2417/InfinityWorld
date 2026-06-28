@@ -14,7 +14,7 @@ Current architecture status:
 
 - Transitional architecture.
 - `lib/main.dart` still owns app composition.
-- GetX routing is still active under `lib/routes/`.
+- GetX routing is still active under `lib/routes/`; the first go_router parity slice is scoped but not implemented.
 - The legacy main shell still lives under `lib/screens/main/main_screen.dart`.
 - `lib/app/bootstrap/startup_route_resolver.dart` now chooses Login or Main from the local session flag before `runApp`.
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
@@ -61,7 +61,7 @@ Current tests:
 Current phase:
 
 - Phase 5: Router Migration.
-- Phase 4 is closed. The next step is a router migration kickoff audit; do not add go_router or change routes before that audit.
+- Phase 5 kickoff audit is complete. The next step is a small go_router root parity slice.
 
 Android toolchain status:
 
@@ -102,6 +102,7 @@ Completed stabilization tasks:
 - Local session bootstrap was implemented; `shared_preferences` stores the session flag, startup resolves Login/Main before `runApp`, and existing login/logout actions save and clear the flag.
 - Local profile entry was implemented; Login now captures a display name, validates blank input, persists the profile locally, and logout clears the display name with the session.
 - Phase 4 checkpoint audit was completed; startup/session/profile behavior is covered, no Phase 4 blocker remains, and Phase 5 should begin with a router migration audit rather than implementation.
+- Router migration kickoff audit was completed; current routes and navigation calls are inventoried, the legacy three-tab shell is deferred, and the first go_router slice is scoped to root route parity.
 
 ## Recommended Next Work
 
@@ -118,34 +119,35 @@ Task sizing note:
 
 ### Primary
 
-T36 — Router migration kickoff audit
+T37 — go_router root parity slice
 
 Reason:
 
-- Phase 4 is closed, and GetX routing still owns the route table and navigation calls.
-- Router migration has higher blast radius than the local session slices.
-- The first Phase 5 task should define route inventory, shell ownership, and parity gates before adding go_router.
+- T36 found the production GetX navigation surface is small enough for one root parity slice.
+- The first implementation should migrate root routing without redesigning the shell or introducing Riverpod.
+- Keeping the existing route paths and `MainScreen` lowers rollback risk.
 
 Scope:
 
-- Inspect `lib/main.dart`, `lib/routes/`, `lib/screens/main/main_screen.dart`, auth/dashboard navigation calls, feature routes, and current route/startup tests.
-- Define the smallest first go_router slice and rollback/parity gates.
-- Decide whether main shell ownership must be clarified before route implementation.
-- Update planning docs only; do not install go_router, remove GetX, or change production routing.
+- Add `go_router` and introduce the smallest `lib/app/router/` configuration.
+- Keep `AppRoutes` as the path contract and map the existing ten routes.
+- Replace root `GetMaterialApp` with `MaterialApp.router`.
+- Replace production GetX navigation calls in Login and Dashboard.
+- Keep `MainScreen` unchanged and defer shell redesign, `ShellRoute`, Riverpod, Dio, and GetX cleanup.
 
 Verification:
 
-- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Screen move/routing/startup gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T28 — Main shell audit
+T38 — Main shell ownership audit
 
-Choose this if shell ownership should be clarified before starting design-system work.
+Choose this if shell route design should be clarified before the root parity slice.
 
-T29 — Live-network route smoke strategy
+T39 — Live-network route smoke strategy
 
-Choose this if Fox and Summertime Saga route smoke coverage should be solved before design work.
+Choose this if Fox and Summertime Saga direct route coverage should be solved before router implementation.
 
 T30 — Dependency/toolchain audit
 
@@ -154,10 +156,11 @@ Choose this if current package/build risk should be reviewed before the next pha
 ### Do not start yet
 
 - Riverpod activation.
-- go_router implementation or package install before the kickoff audit.
+- GetX route cleanup before go_router parity passes.
+- Shell redesign or five-tab migration inside the root router slice.
 - Dio/network layer.
-- Broad `lib/main.dart` app composition refactor.
-- GetX routing replacement.
+- Broad `lib/main.dart` app composition refactor beyond root router parity.
+- GetX package removal or legacy route deletion before parity passes.
 - Built-in Kotlin migration.
 - Real backend authentication.
 - More design-system components unless explicitly assigned.
@@ -174,7 +177,7 @@ Current phase:
 
 Decision:
 
-- Phase 4 is closed. Start Phase 5 with a router migration kickoff audit before implementation.
+- T36 completed the route audit. Start implementation with root go_router parity only.
 
 Do not enter yet:
 
@@ -188,10 +191,12 @@ Reason:
 
 Exit criteria:
 
-- Remaining: Router inventory and navigation-call audit is documented.
-- Remaining: First go_router migration slice is scoped.
-- Remaining: Startup/session/login/logout parity gates are defined.
-- Remaining: Live-network route smoke-test strategy is documented.
+- Done: Router inventory and navigation-call audit is documented.
+- Done: First go_router migration slice is scoped.
+- Done: Startup/session/login/logout parity gates are defined.
+- Done: Live-network route smoke-test strategy is documented.
+- Remaining: Root go_router parity slice is implemented and verified.
+- Remaining: Legacy GetX route cleanup is scoped after parity passes.
 
 ## Verification Gates
 
