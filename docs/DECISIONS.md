@@ -60,6 +60,12 @@ The first go_router implementation should add the package, introduce a small `li
 
 It should map the existing route table, replace the current production GetX navigation calls, and keep `MainScreen` unchanged. Do not introduce `ShellRoute`, redesign the bottom navigation, remove GetX, add Riverpod, add Dio, or change real authentication in the first router slice.
 
+### 2026-06-28: Move shell ownership before shell redesign
+
+The audited `MainScreen` is a thin legacy shell wrapper for Dashboard, Chat, and Profile. The next shell implementation should move that ownership to `lib/app/shell/` while preserving current tabs and `/main` behavior.
+
+Do not combine this ownership move with Home / Explore / Tools / Library / Settings, `ShellRoute`, Riverpod, Dio, GetX cleanup, or a visual redesign.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:

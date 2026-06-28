@@ -64,7 +64,8 @@ Current tests:
 Current phase:
 
 - Phase 5: Router Migration.
-- go_router root parity is implemented. The next step is a shell ownership audit before moving `MainScreen` or introducing shell routing.
+- go_router root parity is implemented.
+- Main shell ownership has been audited. The next step is moving the existing shell ownership to `lib/app/shell/` without changing tabs or routing behavior.
 
 Android toolchain status:
 
@@ -107,6 +108,7 @@ Completed stabilization tasks:
 - Phase 4 checkpoint audit was completed; startup/session/profile behavior is covered, no Phase 4 blocker remains, and Phase 5 should begin with a router migration audit rather than implementation.
 - Router migration kickoff audit was completed; current routes and navigation calls are inventoried, the legacy three-tab shell is deferred, and the first go_router slice is scoped to root route parity.
 - go_router root parity slice was completed; `MaterialApp.router` now uses the active route table, Login/Dashboard navigation use go_router, and `MainScreen` remains unchanged.
+- Main shell ownership audit was completed; `MainScreen` is only a legacy wrapper for Dashboard / Chat / Profile, child screens still own their own `Scaffold`/SafeArea where needed, and the next shell slice should move ownership before any five-tab or `ShellRoute` work.
 
 ## Recommended Next Work
 
@@ -123,32 +125,33 @@ Task sizing note:
 
 ### Primary
 
-T38 — Main shell ownership audit
+T39 - Move Main shell ownership to `lib/app/shell/`
 
 Reason:
 
-- T37 kept `MainScreen` unchanged to avoid mixing root routing with shell redesign.
-- `lib/screens/main/main_screen.dart` still owns a legacy Dashboard / Chat / Profile bottom tab shell.
-- The target architecture expects app shell ownership under `lib/app/shell/` and eventual Home / Explore / Tools / Library / Settings navigation.
+- T38 found that `MainScreen` is a thin stateful wrapper around Dashboard / Chat / Profile.
+- The target architecture expects shell ownership under `lib/app/shell/`.
+- Moving ownership first is lower risk than combining a file move with five-tab content design or `ShellRoute`.
 
 Scope:
 
-- Inspect `lib/screens/main/main_screen.dart`, current bottom-tab behavior, route entry points, and target shell docs.
-- Decide whether the next shell implementation should only move ownership to `lib/app/shell/` or also introduce the five target tabs.
-- Define whether `ShellRoute` belongs in the next implementation slice or a later one.
-- Update planning docs only; do not move `MainScreen`, redesign tabs, remove GetX, or change production routing.
+- Move the existing `MainScreen` shell code to `lib/app/shell/` with the smallest rename/import update that preserves behavior.
+- Keep `/main` mapped to the same shell behavior.
+- Keep the existing Dashboard / Chat / Profile tabs.
+- Update imports and route/smoke tests.
+- Do not introduce Home / Explore / Tools / Library / Settings, `ShellRoute`, Riverpod, Dio, GetX cleanup, or a visual redesign.
 
 Verification:
 
-- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Screen move/routing gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T39 — Legacy GetX route cleanup audit
+T40 - Legacy GetX route cleanup audit
 
 Choose this if unused GetX route files/dependency should be scoped before shell work.
 
-T40 — Live-network route smoke strategy
+T41 - Live-network route smoke strategy
 
 Choose this if Fox and Summertime Saga direct route coverage should be solved before shell work.
 
@@ -159,7 +162,7 @@ Choose this if current package/build risk should be reviewed before the next pha
 ### Do not start yet
 
 - Riverpod activation.
-- Shell redesign or five-tab migration before the shell ownership audit.
+- Shell redesign, five-tab migration, or `ShellRoute` before the ownership move.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
 - GetX package removal or legacy route deletion without a cleanup task.
@@ -179,7 +182,7 @@ Current phase:
 
 Decision:
 
-- T37 completed root go_router parity. Audit shell ownership before moving `MainScreen` or adding shell routing.
+- T38 completed the shell ownership audit. Move the existing shell to `lib/app/shell/` before adding five-tab navigation or `ShellRoute`.
 
 Do not enter yet:
 
@@ -198,8 +201,9 @@ Exit criteria:
 - Done: Startup/session/login/logout parity gates are defined.
 - Done: Live-network route smoke-test strategy is documented.
 - Done: Root go_router parity slice is implemented and verified.
+- Done: Shell ownership is audited before `MainScreen` is moved or `ShellRoute` is introduced.
+- Remaining: Move existing shell ownership to `lib/app/shell/` while preserving current behavior.
 - Remaining: Legacy GetX route cleanup is scoped after parity passes.
-- Remaining: Shell ownership is audited before `MainScreen` is moved or `ShellRoute` is introduced.
 
 ## Verification Gates
 
