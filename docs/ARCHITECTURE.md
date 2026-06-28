@@ -327,7 +327,7 @@ Mixing several state libraries for new code
 
 ## 7. Legacy GetX Strategy
 
-GetX exists in the current project and is considered legacy.
+GetX was removed from active project dependencies after the go_router parity and cleanup slices.
 
 Rules:
 
@@ -335,11 +335,10 @@ Rules:
 Do not expand GetX usage for new code.
 Do not introduce new GetX controllers.
 Do not add new GetX routes.
-Do not rewrite the whole app only to remove GetX unless explicitly requested.
-Migrate away from GetX gradually and safely.
+Do not reintroduce GetX for routing or state work.
 ```
 
-Migration direction:
+Completed migration direction:
 
 ```text
 GetX routing → go_router
@@ -347,7 +346,9 @@ GetX navigation calls → context.go / context.push
 GetX state if any → Riverpod
 ```
 
-Existing GetX code can remain temporarily until the equivalent new app shell and routing foundation are stable.
+No active GetX state remained after routing cleanup.
+
+If old documentation mentions GetX routes, treat it as historical context unless the codebase reintroduces a concrete usage.
 
 ## 8. BLoC and Provider Policy
 
@@ -921,7 +922,7 @@ Do not claim a command passed unless it was actually executed.
 
 ## 24. Migration Strategy
 
-The project currently has legacy structure and GetX usage.
+The project currently has legacy structure, but active routing has moved to go_router and the inactive GetX route table has been removed.
 
 Migration should be incremental.
 
@@ -936,7 +937,7 @@ Preferred migration order:
 6. Introduce go_router for new routing.
 7. Introduce Riverpod for new state/dependencies.
 8. Migrate feature by feature.
-9. Remove GetX only after replacement is stable.
+9. Completed: remove inactive GetX routing after go_router replacement is stable.
 ```
 
 Avoid a large rewrite unless explicitly requested.

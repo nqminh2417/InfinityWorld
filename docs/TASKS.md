@@ -1,6 +1,6 @@
 # Infinity World Active Tasks
 
-Last updated: 2026-06-28
+Last updated: 2026-06-29
 
 ## Current Status
 
@@ -16,7 +16,7 @@ Current architecture status:
 - `lib/main.dart` still owns app composition and now uses `MaterialApp.router`.
 - `lib/app/router/app_router.dart` owns the active go_router route table.
 - `lib/routes/app_routes.dart` remains the shared path contract.
-- `lib/routes/app_pages.dart` remains as inactive legacy GetX route table pending explicit cleanup.
+- Inactive legacy `lib/routes/app_pages.dart` has been removed.
 - The current main shell now lives under `lib/app/shell/main_screen.dart` and still preserves the legacy Dashboard / Chat / Profile tabs.
 - `lib/app/bootstrap/startup_route_resolver.dart` now chooses Login or Main from the local session flag before `runApp`.
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
@@ -66,7 +66,7 @@ Current phase:
 - Phase 5: Router Migration.
 - go_router root parity is implemented.
 - Main shell ownership has moved to `lib/app/shell/` without changing tabs or routing behavior.
-- Legacy GetX cleanup has been audited; only inactive `AppPages` routing and the `get` package remain.
+- Legacy GetX cleanup is implemented; active routing is go_router-only.
 
 Android toolchain status:
 
@@ -112,6 +112,7 @@ Completed stabilization tasks:
 - Main shell ownership audit was completed; `MainScreen` is only a legacy wrapper for Dashboard / Chat / Profile, child screens still own their own `Scaffold`/SafeArea where needed, and the next shell slice should move ownership before any five-tab or `ShellRoute` work.
 - Main shell ownership move was completed; `MainScreen` now lives under `lib/app/shell/`, while `/main` and the existing Dashboard / Chat / Profile tabs stay unchanged.
 - Legacy GetX route cleanup audit was completed; Dart GetX usage is limited to inactive `lib/routes/app_pages.dart`, while active routing and tests use go_router through `MainApp`.
+- Inactive GetX route cleanup was completed; `lib/routes/app_pages.dart` and the `get` dependency were removed, while `AppRoutes` remains the shared path contract.
 
 ## Recommended Next Work
 
@@ -128,32 +129,26 @@ Task sizing note:
 
 ### Primary
 
-T41 - Remove inactive GetX route table and dependency
+T42 - Live-network route smoke strategy
 
 Reason:
 
-- The active root router is go_router.
-- The T40 audit found no active production GetX navigation calls.
-- `lib/routes/app_pages.dart` is the only Dart file importing `package:get/get.dart`.
-- The `get` package remains installed only for that inactive route table.
+- Fox and Summertime Saga remain mapped go_router routes.
+- Direct route rendering tests are still deferred because default constructors start live HTTP work in `initState()`.
+- Their feature tests already use fake-network seams, but route-level coverage needs a small strategy before implementation.
 
 Scope:
 
-- Delete inactive `lib/routes/app_pages.dart`.
-- Remove the `get` dependency and update `pubspec.lock`.
-- Keep `lib/routes/app_routes.dart` as the shared path contract.
-- Rename or update stale route smoke test naming if needed, while preserving existing route coverage.
+- Inspect Fox and Summertime Saga route constructors, existing fake-network tests, and `app_router.dart`.
+- Decide whether direct route smoke tests need injectable route builders, route-level test seams, or should remain deferred until networking migration.
+- Update planning docs only; do not refactor screen constructors or network code during the audit.
 - Do not introduce five target tabs, `ShellRoute`, Riverpod, Dio, or visual redesign.
 
 Verification:
 
-- Dependency/routing gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
-
-T42 - Live-network route smoke strategy
-
-Choose this if Fox and Summertime Saga direct route coverage should be solved before shell work.
 
 T43 - Five-tab shell implementation audit
 
@@ -169,7 +164,7 @@ Choose this if current package/build risk should be reviewed before the next pha
 - Shell redesign, five-tab migration, or `ShellRoute` without an explicit scoped task.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
-- Removing `AppRoutes` or active go_router routes during GetX cleanup.
+- Removing `AppRoutes` or active go_router routes.
 - Built-in Kotlin migration.
 - Real backend authentication.
 - More design-system components unless explicitly assigned.
@@ -186,7 +181,7 @@ Current phase:
 
 Decision:
 
-- T40 scoped legacy GetX cleanup. Remove only inactive `AppPages` and the `get` dependency; keep `AppRoutes` and active go_router routes.
+- T41 removed inactive GetX routing and dependency. Decide the live-network route smoke strategy before starting larger shell routing work.
 
 Do not enter yet:
 
@@ -194,7 +189,7 @@ Do not enter yet:
 
 Reason:
 
-- The inactive GetX route table and `get` dependency should be removed before starting Riverpod foundation work.
+- Remaining route-smoke and shell-routing work should finish before starting Riverpod foundation work.
 - Phase 4 startup/session behavior must survive every router slice.
 - Router migration should not be mixed with Riverpod, Dio, real backend authentication, or shell redesign.
 
@@ -208,7 +203,8 @@ Exit criteria:
 - Done: Shell ownership is audited before `MainScreen` is moved or `ShellRoute` is introduced.
 - Done: Existing shell ownership moved to `lib/app/shell/` while preserving current behavior.
 - Done: Legacy GetX route cleanup is scoped after parity passes.
-- Remaining: Remove inactive GetX route table and dependency.
+- Done: Inactive GetX route table and dependency removed.
+- Remaining: Decide direct route smoke strategy for live-network route constructors.
 
 ## Verification Gates
 

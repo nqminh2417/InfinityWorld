@@ -1,6 +1,6 @@
 # Infinity World Phase 2 Migration Map
 
-Last updated: 2026-06-28
+Last updated: 2026-06-29
 
 ## Purpose
 
@@ -18,6 +18,11 @@ Post-Phase-2 update on 2026-06-28:
 
 - T39 moved the legacy main shell ownership to `lib/app/shell/main_screen.dart`.
 - No tracked Dart files remain under `lib/screens/`.
+
+Post-router-cleanup update on 2026-06-29:
+
+- T41 removed the inactive GetX route table and `get` dependency.
+- Active routing is now go_router-only.
 
 ## Current feature placements
 
@@ -50,7 +55,7 @@ Already placed under `lib/features/`:
 Still transitional after Phase 2:
 
 - `lib/main.dart` still owns root app composition.
-- `lib/routes/` still owns legacy GetX route registration.
+- `lib/routes/app_routes.dart` still owns shared route path constants.
 - The legacy three-tab shell behavior now lives under `lib/app/shell/main_screen.dart`.
 - No selected feature-screen Dart files remain under tracked `lib/screens/` paths.
 
@@ -103,12 +108,12 @@ Covered by deterministic route smoke tests:
 Deferred route rendering tests:
 
 - Fox, because the screen starts live HTTP work in `initState()`.
-- Summertime Saga, because the legacy route still uses the default live loader.
+- Summertime Saga, because the go_router route still uses the default live loader.
 
 ## Placement rules
 
 - Move one screen or feature folder at a time.
-- Keep GetX route registration in `lib/routes/`.
+- Keep route path constants in `lib/routes/app_routes.dart`.
 - Update only imports and narrow tests needed for the move.
 - Do not redesign UI during placement-only tasks.
 - Do not introduce Riverpod, go_router, Dio, or new dependencies.

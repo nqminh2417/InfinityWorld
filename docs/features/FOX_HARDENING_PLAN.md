@@ -1,19 +1,19 @@
 # Fox Feature Hardening Plan
 
-Last updated: 2026-06-26
+Last updated: 2026-06-29
 
 ## Scope
 
 This plan prepares the legacy Fox feature for a safe feature-structure move.
 
-Do not use this plan to start Riverpod, go_router, Dio, or a UI redesign. Those remain later phases.
+Do not use this plan to start Riverpod, Dio, or a UI redesign. Routing moved to go_router later in Phase 5.
 
 ## Current flow
 
 ```text
 DashboardScreen
--> Get.toNamed(AppRoutes.fox)
--> AppPages.fox
+-> context.go(AppRoutes.fox)
+-> GoRoute in lib/app/router/app_router.dart
 -> FoxRandomScreen
 -> FoxApiService.getRandomFox()
 -> https://randomfox.ca/floof/
@@ -26,8 +26,10 @@ Current files:
 - `lib/features/fox/presentation/fox_random_screen.dart`
 - `lib/features/fox/data/fox_api_service.dart`
 - `lib/features/fox/domain/fox_model.dart`
-- `lib/routes/app_pages.dart`
+- `lib/app/router/app_router.dart`
 - `lib/routes/app_routes.dart`
+
+Historical notes below may mention GetX route registration because they describe completed pre-router tasks. Current routing is go_router-only.
 
 ## Findings before T14
 

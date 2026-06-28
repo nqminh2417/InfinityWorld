@@ -1,19 +1,19 @@
 # Summertime Saga Feature Hardening Plan
 
-Last updated: 2026-06-26
+Last updated: 2026-06-29
 
 ## Scope
 
 This plan records the Summertime Saga hardening and feature placement sequence.
 
-Do not use this plan to start Dio, Riverpod, go_router, or a UI redesign. Those remain later phases.
+Do not use this plan to start Dio, Riverpod, or a UI redesign. Routing moved to go_router later in Phase 5.
 
 ## Current flow
 
 ```text
 DashboardScreen
--> Get.toNamed(AppRoutes.smtsHome)
--> AppPages.smtsHome
+-> context.go(AppRoutes.smtsHome)
+-> GoRoute in lib/app/router/app_router.dart
 -> SmtsHomeScreen
 -> SmtsService.getProgress()
 -> https://summertimesaga.com/data/progress.json
@@ -27,7 +27,7 @@ Current files:
 - `lib/features/summertime_saga/data/smts_service.dart`
 - `lib/features/summertime_saga/domain/smts_progress_model.dart`
 - `lib/features/summertime_saga/presentation/widgets/progress_bar.dart`
-- `lib/routes/app_pages.dart`
+- `lib/app/router/app_router.dart`
 - `lib/routes/app_routes.dart`
 - `lib/core/config/constants.dart`
 - `android/app/src/main/AndroidManifest.xml`
@@ -39,7 +39,9 @@ Current files:
 - `SmtsHomeScreen` force-unwraps many nullable API fields, for example totals, issues, departments, and nested percent values.
 - `ProgressBar` force-unwraps nullable counts and percent values; missing or invalid API data can crash rendering.
 - The current body uses a fixed full-height container with a non-scrollable `Column`; small screens or large content can overflow.
-- Legacy route rendering tests remain deferred because the GetX route still uses the default live loader.
+- Direct route rendering tests remain deferred because the go_router route still uses the default live loader.
+
+Historical notes below may mention GetX route registration because they describe completed pre-router tasks. Current routing is go_router-only.
 
 Resolved in T23:
 

@@ -1,6 +1,6 @@
 # Infinity World Decisions
 
-Last updated: 2026-06-28
+Last updated: 2026-06-29
 
 This file records durable product, architecture, workflow, and safety decisions for Infinity World. Keep entries concise and update them when a decision changes.
 
@@ -68,11 +68,11 @@ The audited `MainScreen` is a thin legacy shell wrapper for Dashboard, Chat, and
 
 Do not combine future shell work with unrelated Riverpod, Dio, GetX cleanup, or visual redesign work. Home / Explore / Tools / Library / Settings and `ShellRoute` need their own scoped task.
 
-### 2026-06-28: GetX cleanup should remove only inactive routing
+### 2026-06-28: GetX cleanup removed only inactive routing
 
-The T40 audit found no active GetX navigation calls. Remaining Dart GetX usage is limited to inactive `lib/routes/app_pages.dart`, and the `get` dependency exists only for that file.
+The T40 audit found no active GetX navigation calls. Remaining Dart GetX usage was limited to inactive `lib/routes/app_pages.dart`, and the `get` dependency existed only for that file.
 
-The cleanup implementation should delete `lib/routes/app_pages.dart` and remove `get`, but keep `lib/routes/app_routes.dart` as the shared route path contract for go_router and startup/session code.
+T41 deleted `lib/routes/app_pages.dart` and removed `get`, but kept `lib/routes/app_routes.dart` as the shared route path contract for go_router and startup/session code.
 
 ### 2026-06-23: BMI is the current migration pilot
 
@@ -80,7 +80,7 @@ BMI is the first small feature used to prove gradual migration:
 
 - Domain logic lives under `lib/features/bmi/domain/`.
 - Presentation lives under `lib/features/bmi/presentation/`.
-- Active go_router routing opens the BMI screen. The inactive legacy GetX route table is pending cleanup.
+- Active go_router routing opens the BMI screen. The inactive legacy GetX route table has been removed.
 
 ### 2026-06-23: Apply Flutter UI layout safety rules for UI work
 
