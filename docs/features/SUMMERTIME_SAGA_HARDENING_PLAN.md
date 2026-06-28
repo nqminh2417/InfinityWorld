@@ -39,7 +39,7 @@ Current files:
 - `SmtsHomeScreen` force-unwraps many nullable API fields, for example totals, issues, departments, and nested percent values.
 - `ProgressBar` force-unwraps nullable counts and percent values; missing or invalid API data can crash rendering.
 - The current body uses a fixed full-height container with a non-scrollable `Column`; small screens or large content can overflow.
-- Direct route rendering tests remain deferred until the router factory exposes test builder overrides for the existing fake loader seam.
+- Direct route rendering tests were completed later in T43 through a router-level builder override and fake loader.
 
 Historical notes below may mention GetX route registration because they describe completed pre-router tasks. Current routing is go_router-only.
 
@@ -163,7 +163,7 @@ Result:
 
 - Files were placed under `data/`, `domain/`, and `presentation/`.
 - Tests were moved to matching feature test folders.
-- Route smoke coverage remains deferred until the router factory exposes test builder overrides for the existing fake loader seam.
+- Route smoke coverage was completed later in T43 through a router-level builder override and fake loader.
 
 Verification:
 
@@ -177,7 +177,6 @@ Verification:
 
 - Dio/network layer migration.
 - Riverpod controller/provider migration.
-- `/smts_home` route smoke coverage through router-level builder overrides.
 - Offline cache or local persistence.
 - Feature redesign.
 - Full architecture migration for `lib/main.dart` or the app shell.

@@ -124,12 +124,12 @@ Verified with:
 Phase 2 status:
 
 - Fox is complete for Phase 2 unless a new concrete risk, failed verification, blocker, or user-approved remaining scope appears.
+- `/fox` route smoke coverage was completed later in T43 through a router-level builder override and fake service.
 
 ## Deferred
 
 - Dio/network layer migration.
 - Riverpod controller/provider migration.
-- `/fox` route smoke coverage through router-level builder overrides.
 - Offline cache or favorites.
 - Gallery/history of fox images.
 - Fullscreen image viewer.

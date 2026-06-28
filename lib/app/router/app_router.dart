@@ -12,7 +12,11 @@ import 'package:infinity_world/features/summertime_saga/presentation/smts_home_s
 import 'package:infinity_world/features/test/presentation/test_screen.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 
-GoRouter createAppRouter({String initialLocation = AppRoutes.login}) {
+GoRouter createAppRouter({
+  String initialLocation = AppRoutes.login,
+  GoRouterWidgetBuilder? smtsHomeRouteBuilder,
+  GoRouterWidgetBuilder? foxRouteBuilder,
+}) {
   return GoRouter(
     initialLocation: initialLocation,
     routes: <RouteBase>[
@@ -54,9 +58,11 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) {
       ),
       GoRoute(
         path: AppRoutes.smtsHome,
-        builder: (BuildContext context, GoRouterState state) {
-          return SmtsHomeScreen();
-        },
+        builder:
+            smtsHomeRouteBuilder ??
+            (BuildContext context, GoRouterState state) {
+              return SmtsHomeScreen();
+            },
       ),
       GoRoute(
         path: AppRoutes.test,
@@ -66,9 +72,11 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) {
       ),
       GoRoute(
         path: AppRoutes.fox,
-        builder: (BuildContext context, GoRouterState state) {
-          return const FoxRandomScreen();
-        },
+        builder:
+            foxRouteBuilder ??
+            (BuildContext context, GoRouterState state) {
+              return const FoxRandomScreen();
+            },
       ),
       GoRoute(
         path: AppRoutes.bmi,

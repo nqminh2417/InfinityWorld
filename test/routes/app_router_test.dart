@@ -1,11 +1,20 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
+import 'package:infinity_world/app/router/app_router.dart';
 import 'package:infinity_world/app/shell/main_screen.dart';
 import 'package:infinity_world/features/auth/presentation/login_screen.dart';
 import 'package:infinity_world/features/bmi/presentation/bmi_screen.dart';
 import 'package:infinity_world/features/chat/presentation/chat_screen.dart';
 import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:infinity_world/features/fox/data/fox_api_service.dart';
+import 'package:infinity_world/features/fox/presentation/fox_random_screen.dart';
 import 'package:infinity_world/features/profile/presentation/profile_screen.dart';
 import 'package:infinity_world/features/settings/presentation/settings_screen.dart';
+import 'package:infinity_world/features/summertime_saga/domain/smts_progress_model.dart';
+import 'package:infinity_world/features/summertime_saga/presentation/smts_home_screen.dart';
 import 'package:infinity_world/features/test/presentation/test_screen.dart';
 import 'package:infinity_world/main.dart';
 import 'package:infinity_world/routes/app_routes.dart';
@@ -71,5 +80,70 @@ void main() {
 
     expect(find.byType(TestScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Fox route opens without live network', (tester) async {
+    final pendingResponse = Completer<http.Response>();
+    var requestCount = 0;
+
+    await tester.pumpWidget(
+      MaterialApp.router(
+        routerConfig: createAppRouter(
+          initialLocation: AppRoutes.fox,
+          foxRouteBuilder:
+              (_, __) => FoxRandomScreen(
+                service: FoxApiService(
+                  httpGet: (_) {
+                    requestCount++;
+
+                    return pendingResponse.future;
+                  },
+                ),
+              ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.byType(FoxRandomScreen), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(requestCount, 1);
+    expect(tester.takeException(), isNull);
+
+    pendingResponse.complete(http.Response('Server error', 500));
+    await tester.pump();
+  });
+
+  testWidgets('Summertime Saga route opens without live network', (
+    tester,
+  ) async {
+    final pendingProgress = Completer<SmtsProgressModel>();
+    var requestCount = 0;
+
+    await tester.pumpWidget(
+      MaterialApp.router(
+        routerConfig: createAppRouter(
+          initialLocation: AppRoutes.smtsHome,
+          smtsHomeRouteBuilder:
+              (_, __) => SmtsHomeScreen(
+                logoUrl: '',
+                loadProgress: () {
+                  requestCount++;
+
+                  return pendingProgress.future;
+                },
+              ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.byType(SmtsHomeScreen), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(requestCount, 1);
+    expect(tester.takeException(), isNull);
+
+    pendingProgress.complete(SmtsProgressModel(version: '0.20.16'));
+    await tester.pump();
   });
 }

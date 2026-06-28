@@ -48,7 +48,7 @@ Current structure:
   - `test/features/bmi/domain/bmi_calculator_test.dart`
   - `test/features/bmi/presentation/bmi_screen_test.dart`
   - focused feature tests under `test/features/`
-  - `test/routes/app_router_test.dart`
+  - `test/routes/app_router_test.dart`, including deterministic route smoke coverage for live-network Fox and Summertime Saga paths
 
 Current dependencies:
 
@@ -328,9 +328,15 @@ Live-network route smoke strategy:
 - Decision: add a small router factory override seam for tests, then use `FoxRandomScreen(service: ...)` and `SmtsHomeScreen(loadProgress: ..., logoUrl: '')` for deterministic route smoke coverage.
 - Do not wait for Dio, Riverpod, or networking migration for this coverage.
 
+Live-network route smoke implementation:
+
+- Completed: added optional Fox and Summertime Saga builder overrides to `createAppRouter`.
+- Completed: added deterministic `/fox` and `/smts_home` route smoke tests using fake services/loaders.
+- Production route constructors remain unchanged when no override is supplied.
+
 Next router-phase focus:
 
-- Implement deterministic route smoke tests for Fox and Summertime Saga using router-level builder overrides.
+- Audit the five-tab shell implementation slice.
 - Keep Home / Explore / Tools / Library / Settings and `ShellRoute` for later scoped tasks.
 
 ## Phase 6: Riverpod Foundation
