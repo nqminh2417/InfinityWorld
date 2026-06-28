@@ -334,10 +334,17 @@ Live-network route smoke implementation:
 - Completed: added deterministic `/fox` and `/smts_home` route smoke tests using fake services/loaders.
 - Production route constructors remain unchanged when no override is supplied.
 
+Five-tab shell implementation audit:
+
+- Completed: audited `MainScreen`, `app_router.dart`, existing feature roots, route tests, and layout/system UI policy.
+- Findings: `MainScreen` is still a local-state shell using Dashboard / Chat / Profile; Home, Explore, Tools, and Library feature roots do not exist yet; Settings exists but is still a placeholder.
+- Decision: implement the first five-tab slice inside `MainScreen` without `ShellRoute`, keeping `/main` as the startup shell route and keeping direct routes for existing feature parity.
+- Do not use Fox or Summertime Saga as tab roots because their default screens start network work in `initState()`.
+
 Next router-phase focus:
 
-- Audit the five-tab shell implementation slice.
-- Keep Home / Explore / Tools / Library / Settings and `ShellRoute` for later scoped tasks.
+- Implement a local five-tab shell skeleton in `MainScreen`.
+- Keep `ShellRoute`, tab-specific route paths, and richer tab content for later scoped tasks.
 
 ## Phase 6: Riverpod Foundation
 

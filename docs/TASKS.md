@@ -67,6 +67,7 @@ Current phase:
 - go_router root parity is implemented.
 - Main shell ownership has moved to `lib/app/shell/` without changing tabs or routing behavior.
 - Legacy GetX cleanup is implemented; active routing is go_router-only.
+- Five-tab shell implementation audit is complete; the next shell slice should stay local to `MainScreen` and defer `ShellRoute`.
 
 Android toolchain status:
 
@@ -115,6 +116,7 @@ Completed stabilization tasks:
 - Inactive GetX route cleanup was completed; `lib/routes/app_pages.dart` and the `get` dependency were removed, while `AppRoutes` remains the shared path contract.
 - Live-network route smoke strategy was completed; Fox and Summertime Saga should get deterministic route tests through router-level builder overrides, not live network calls or a networking migration.
 - Deterministic live-network route smoke implementation was completed; `/fox` and `/smts_home` now render in route tests through fake services/loaders.
+- Five-tab shell implementation audit was completed; the first implementation should update `MainScreen` to the five target tabs without `ShellRoute`, new dependencies, Riverpod, Dio, or live-network tab roots.
 
 ## Recommended Next Work
 
@@ -131,26 +133,32 @@ Task sizing note:
 
 ### Primary
 
-T44 - Five-tab shell implementation audit
+T45 - Local five-tab shell skeleton implementation
 
 Reason:
 
-- Route parity, GetX cleanup, and live-network route smoke coverage are now complete.
-- The current shell still preserves the legacy Dashboard / Chat / Profile tabs.
-- The target shell is Home / Explore / Tools / Library / Settings and should be audited before implementation.
+- T44 found that `MainScreen` can move to the target five-tab labels before `ShellRoute`.
+- `/main` should remain the startup shell route for Phase 4 session parity.
+- Home can temporarily preserve existing Dashboard access while richer tab roots are scoped later.
 
 Scope:
 
-- Inspect `lib/app/shell/main_screen.dart`, `lib/app/router/app_router.dart`, existing feature screens, and target navigation docs.
-- Decide the smallest five-tab shell implementation slice and whether `ShellRoute` belongs in that slice or later.
-- Update planning docs only; do not implement shell tabs during the audit.
-- Do not introduce Riverpod, Dio, real auth, or visual redesign.
+- Update `lib/app/shell/main_screen.dart` from Dashboard / Chat / Profile to Home / Explore / Tools / Library / Settings.
+- Keep implementation local to `MainScreen`; do not add `ShellRoute` or new route paths in this slice.
+- Preserve existing Dashboard/module/logout access from the first tab.
+- Use lightweight placeholder tab bodies for roots that do not exist yet; do not mount Fox or Summertime Saga as tab roots.
+- Add focused shell/widget coverage for five labels and tab switching.
+- Do not introduce Riverpod, Dio, real auth, new dependencies, or visual redesign.
 
 Verification:
 
-- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Routing/UI gate from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
+
+T46 - ShellRoute/deep-link audit
+
+Choose this after the local five-tab shell works, if tab-specific URLs or browser-like deep links become necessary.
 
 T30 — Dependency/toolchain audit
 
@@ -159,7 +167,7 @@ Choose this if current package/build risk should be reviewed before the next pha
 ### Do not start yet
 
 - Riverpod activation.
-- Shell redesign, five-tab migration, or `ShellRoute` before T44 audit unless explicitly approved.
+- Full shell redesign or `ShellRoute` before the local five-tab shell skeleton is implemented and verified.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
 - Removing `AppRoutes` or active go_router routes.
@@ -179,7 +187,7 @@ Current phase:
 
 Decision:
 
-- T43 implemented deterministic Fox and Summertime Saga route smoke coverage. Audit the five-tab shell before larger shell routing work.
+- T44 completed the five-tab shell implementation audit. Implement a local five-tab shell skeleton before `ShellRoute` or Riverpod work.
 
 Do not enter yet:
 
@@ -187,7 +195,7 @@ Do not enter yet:
 
 Reason:
 
-- Shell-routing audit and implementation work should finish before starting Riverpod foundation work.
+- Local five-tab shell implementation should finish before starting Riverpod foundation work.
 - Phase 4 startup/session behavior must survive every router slice.
 - Router migration should not be mixed with Riverpod, Dio, real backend authentication, or shell redesign.
 
@@ -204,7 +212,8 @@ Exit criteria:
 - Done: Inactive GetX route table and dependency removed.
 - Done: Direct route smoke strategy for live-network route constructors is decided.
 - Done: Deterministic route smoke tests for Fox and Summertime Saga are implemented.
-- Remaining: Audit the five-tab shell implementation slice.
+- Done: Five-tab shell implementation slice is audited.
+- Remaining: Implement the local five-tab shell skeleton.
 
 ## Verification Gates
 

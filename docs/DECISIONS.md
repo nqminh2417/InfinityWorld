@@ -66,7 +66,7 @@ It should map the existing route table, replace the current production GetX navi
 
 The audited `MainScreen` is a thin legacy shell wrapper for Dashboard, Chat, and Profile. T39 moved that ownership to `lib/app/shell/main_screen.dart` while preserving current tabs and `/main` behavior.
 
-Do not combine future shell work with unrelated Riverpod, Dio, GetX cleanup, or visual redesign work. Home / Explore / Tools / Library / Settings and `ShellRoute` need their own scoped task.
+Do not combine future shell work with unrelated Riverpod, Dio, GetX cleanup, or visual redesign work. The five target tabs and any later `ShellRoute`/deep-link work should remain scoped separately.
 
 ### 2026-06-28: GetX cleanup removed only inactive routing
 
@@ -79,6 +79,12 @@ T41 deleted `lib/routes/app_pages.dart` and removed `get`, but kept `lib/routes/
 The T42 audit found that Fox and Summertime Saga already expose deterministic screen seams: `FoxRandomScreen(service: ...)` and `SmtsHomeScreen(loadProgress: ..., logoUrl: ...)`.
 
 Do not wait for Dio, Riverpod, or a networking migration just to smoke-test their go_router paths. The next implementation should add the smallest test-only seam at the router factory level so route tests can override those two builders with fake loaders while production routes keep the current default constructors.
+
+### 2026-06-29: First five-tab shell slice should stay local to `MainScreen`
+
+The T44 audit found that `MainScreen` is still a local-state bottom-navigation shell and the target root feature folders for Home, Explore, Tools, and Library do not exist yet.
+
+The first five-tab implementation should update `MainScreen` to the target Home / Explore / Tools / Library / Settings labels without introducing `ShellRoute`, Riverpod, Dio, new route paths, or live-network tab roots. Keep `/main` as the startup shell route, keep direct route parity for existing feature routes, and preserve current Dashboard access from the first tab until richer Home/Tools/Explore roots are scoped.
 
 ### 2026-06-23: BMI is the current migration pilot
 
