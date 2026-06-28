@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/get_navigation.dart';
+import 'package:go_router/go_router.dart';
 import 'package:infinity_world/app/bootstrap/startup_route_resolver.dart';
+import 'package:infinity_world/app/router/app_router.dart';
 import 'package:infinity_world/app/theme/app_theme.dart';
 import 'package:infinity_world/core/config/constants.dart';
-
-import 'package:infinity_world/routes/app_pages.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 
 Future<void> main() async {
@@ -15,17 +14,18 @@ Future<void> main() async {
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key, this.initialRoute = AppRoutes.login});
+  MainApp({super.key, this.initialRoute = AppRoutes.login})
+    : router = createAppRouter(initialLocation: initialRoute);
 
   final String initialRoute;
+  final GoRouter router;
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MaterialApp.router(
       title: Cfg.appName,
       debugShowCheckedModeBanner: false,
-      initialRoute: initialRoute,
-      getPages: AppPages.pages,
+      routerConfig: router,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,

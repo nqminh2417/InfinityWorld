@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:infinity_world/features/auth/data/local_session_repository.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 
@@ -13,12 +13,12 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   bool _isLoggingOut = false;
 
-  void _toFoxRandom() async {
-    Get.toNamed(AppRoutes.fox);
+  void _toFoxRandom() {
+    context.push(AppRoutes.fox);
   }
 
-  void _toTestScreen() async {
-    Get.toNamed(AppRoutes.test);
+  void _toTestScreen() {
+    context.push(AppRoutes.test);
   }
 
   Future<void> _logout() async {
@@ -32,7 +32,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       if (!mounted) {
         return;
       }
-      Get.offAllNamed(AppRoutes.login);
+      context.go(AppRoutes.login);
     } finally {
       _isLoggingOut = false;
     }
@@ -55,8 +55,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               leading: const Icon(Icons.beach_access),
               title: const Text('Summertime Saga'),
               onTap: () {
-                // Navigator.push(context, MaterialPageRoute(builder: (context) => SmtsHomeScreen()));
-                Get.toNamed(AppRoutes.smtsHome);
+                context.push(AppRoutes.smtsHome);
               },
             ),
             ListTile(
@@ -68,7 +67,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               leading: const Icon(Icons.arrow_forward_rounded),
               title: const Text('BMI Calculator'),
               onTap: () {
-                Get.toNamed(AppRoutes.bmi);
+                context.push(AppRoutes.bmi);
               },
             ),
             ListTile(

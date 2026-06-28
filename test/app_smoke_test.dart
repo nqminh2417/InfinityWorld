@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get/get.dart';
 import 'package:infinity_world/app/bootstrap/startup_route_resolver.dart';
 import 'package:infinity_world/features/auth/data/local_session_repository.dart';
 import 'package:infinity_world/features/auth/presentation/login_screen.dart';
@@ -16,7 +15,6 @@ void main() {
   });
 
   tearDown(() {
-    Get.reset();
     SharedPreferencesAsyncPlatform.instance = null;
   });
 
@@ -50,7 +48,7 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
     await tester.pumpWidget(
-      GetMaterialApp(
+      MaterialApp(
         home: MediaQuery(
           data: const MediaQueryData(
             size: Size(360, 640),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/features/auth/data/local_session_repository.dart';
 import 'package:infinity_world/routes/app_routes.dart';
@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) {
         return;
       }
-      Get.offNamed(AppRoutes.main);
+      context.go(AppRoutes.main);
     } finally {
       if (mounted) {
         setState(() {

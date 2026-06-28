@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get/get.dart';
 import 'package:infinity_world/features/auth/data/local_session_repository.dart';
 import 'package:infinity_world/features/auth/presentation/login_screen.dart';
-import 'package:infinity_world/routes/app_pages.dart';
+import 'package:infinity_world/main.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 import 'package:infinity_world/screens/main/main_screen.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
@@ -16,14 +15,11 @@ void main() {
   });
 
   tearDown(() {
-    Get.reset();
     SharedPreferencesAsyncPlatform.instance = null;
   });
 
   testWidgets('login requires a local display name', (tester) async {
-    await tester.pumpWidget(
-      GetMaterialApp(initialRoute: AppRoutes.login, getPages: AppPages.pages),
-    );
+    await tester.pumpWidget(MainApp(initialRoute: AppRoutes.login));
 
     await tester.tap(find.text('Enter InfinityWorld'));
     await tester.pump();
@@ -37,9 +33,7 @@ void main() {
   testWidgets('login saves a local profile before opening main', (
     tester,
   ) async {
-    await tester.pumpWidget(
-      GetMaterialApp(initialRoute: AppRoutes.login, getPages: AppPages.pages),
-    );
+    await tester.pumpWidget(MainApp(initialRoute: AppRoutes.login));
 
     await tester.enterText(find.byType(TextField), 'Minh');
     await tester.tap(find.text('Enter InfinityWorld'));
@@ -58,9 +52,7 @@ void main() {
     final repository = LocalSessionRepository();
     await repository.saveSession(displayName: 'Minh');
 
-    await tester.pumpWidget(
-      GetMaterialApp(initialRoute: AppRoutes.main, getPages: AppPages.pages),
-    );
+    await tester.pumpWidget(MainApp(initialRoute: AppRoutes.main));
 
     await tester.tap(find.text('Log out'));
     await tester.pumpAndSettle();

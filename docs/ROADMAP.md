@@ -19,9 +19,11 @@ The current app is transitional. The target architecture in `docs/ARCHITECTURE.m
 
 Current structure:
 
-- `lib/main.dart` still owns root app composition and uses `GetMaterialApp`.
+- `lib/main.dart` still owns root app composition and now uses `MaterialApp.router`.
 - `lib/app/bootstrap/startup_route_resolver.dart` now resolves the startup route from the local session flag before `runApp`.
-- `lib/routes/app_pages.dart` and `lib/routes/app_routes.dart` still define legacy GetX routing.
+- `lib/app/router/app_router.dart` maps the current route table with go_router.
+- `lib/routes/app_routes.dart` still defines shared path constants.
+- `lib/routes/app_pages.dart` remains as an inactive legacy GetX route table until cleanup is scoped.
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
 - `lib/design_system/` now contains the first tokens and `IwCard` component slice.
 - Selected feature screens have been moved under `lib/features/`.
@@ -52,18 +54,18 @@ Current structure:
 Current dependencies:
 
 - Flutter SDK constraint: `^3.7.0`
-- Runtime packages: `get`, `http`, `change_app_package_name`, `shared_preferences`
+- Runtime packages: `get`, `go_router`, `http`, `change_app_package_name`, `shared_preferences`
 - Dev packages: `flutter_test`, `flutter_lints`, `shared_preferences_platform_interface`
 
-Riverpod, go_router, and Dio are target-direction technologies but are not installed or active yet. Do not introduce them until their explicit phases/tasks begin.
+go_router is active for the root route table. Riverpod and Dio are target-direction technologies but are not installed or active yet. Do not introduce them until their explicit phases/tasks begin.
 
 ## Current Known Risks
 
 - Login build-time `setState()` risk has been fixed; emulator/device visual review remains a later QA activity.
-- GetX routing remains the active router.
+- go_router is the active root router.
 - `lib/screens/` and `lib/routes/` remain active legacy areas.
 - Some networking still uses direct `http` services under feature folders.
-- Feature placement does not mean routing architecture has migrated; the legacy GetX route table still owns screen registration.
+- Feature placement does not mean shell architecture has migrated; the legacy `MainScreen` still owns the current three-tab shell.
 - Theme/design-system implementation now has a first token/card slice; broader components and visual adoption remain incomplete.
 - Android toolchain versions have been pulled forward on `home/devbyMinh-current` with explicit approval: Gradle 8.14.5, Android Gradle Plugin 8.11.1, Kotlin Gradle Plugin 2.2.20, Java/Kotlin target 17.
 - Built-in Kotlin migration remains deferred until an AGP 9.x migration or a build requirement forces it.
@@ -251,7 +253,7 @@ Non-goals:
 
 ## Phase 5: Router Migration
 
-Status: current / kickoff audit complete; first implementation slice scoped.
+Status: current / root parity implemented; shell ownership pending.
 
 Goal:
 
@@ -277,13 +279,13 @@ Kickoff audit findings:
 
 First implementation slice:
 
-- Add `go_router` and introduce a small `lib/app/router/` route configuration.
-- Keep existing `AppRoutes` path constants as the route contract during the first slice.
-- Swap root app composition from `GetMaterialApp` to `MaterialApp.router`.
-- Map the existing route table to go_router, preserving the same startup/Login/Main behavior.
-- Replace the current production GetX navigation calls in Login and Dashboard.
-- Keep `MainScreen` unchanged; do not redesign shell tabs or introduce `ShellRoute` in the first slice.
-- Keep legacy GetX route files/dependency until go_router parity is proven and cleanup is explicitly scoped.
+- Completed: added `go_router` and introduced `lib/app/router/app_router.dart`.
+- Completed: kept existing `AppRoutes` path constants as the route contract.
+- Completed: swapped root app composition from `GetMaterialApp` to `MaterialApp.router`.
+- Completed: mapped the existing route table to go_router, preserving the same startup/Login/Main behavior.
+- Completed: replaced the current production GetX navigation calls in Login and Dashboard.
+- Completed: kept `MainScreen` unchanged; no shell redesign or `ShellRoute` was introduced.
+- Remaining: keep legacy GetX route files/dependency until cleanup is explicitly scoped.
 
 First-slice parity gates:
 
@@ -294,6 +296,11 @@ First-slice parity gates:
 - Deterministic route smoke tests continue to cover Login, Main, Dashboard, BMI, Test, Settings, Profile, and Chat.
 - Fox and Summertime Saga remain mapped routes, but direct route smoke tests stay deferred until their default constructors no longer start live HTTP; rely on existing fake-network feature tests for those screens during the root parity slice.
 - Full screen-move/routing gate passes: `flutter pub get`, `dart format`, `flutter analyze`, `flutter test`, `flutter build apk --debug`, and `git diff --check`.
+
+Next router-phase focus:
+
+- Audit ownership of `lib/screens/main/main_screen.dart` before moving it or introducing `ShellRoute`.
+- Decide whether the next implementation should be shell ownership, GetX cleanup, or five-tab shell work.
 
 ## Phase 6: Riverpod Foundation
 

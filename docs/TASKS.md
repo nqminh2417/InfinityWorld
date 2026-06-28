@@ -13,8 +13,10 @@ Current branch workflow:
 Current architecture status:
 
 - Transitional architecture.
-- `lib/main.dart` still owns app composition.
-- GetX routing is still active under `lib/routes/`; the first go_router parity slice is scoped but not implemented.
+- `lib/main.dart` still owns app composition and now uses `MaterialApp.router`.
+- `lib/app/router/app_router.dart` owns the active go_router route table.
+- `lib/routes/app_routes.dart` remains the shared path contract.
+- `lib/routes/app_pages.dart` remains as inactive legacy GetX route table pending explicit cleanup.
 - The legacy main shell still lives under `lib/screens/main/main_screen.dart`.
 - `lib/app/bootstrap/startup_route_resolver.dart` now chooses Login or Main from the local session flag before `runApp`.
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
@@ -33,7 +35,8 @@ Current architecture status:
 - Summertime Saga hardening plan exists at `docs/features/SUMMERTIME_SAGA_HARDENING_PLAN.md`.
 - Phase 2 migration map exists at `docs/PHASE2_MIGRATION_MAP.md`.
 - `shared_preferences` is active for the first local session flag and display name.
-- Riverpod, go_router, and Dio are not active yet.
+- go_router is active for root routing.
+- Riverpod and Dio are not active yet.
 
 Current tests:
 
@@ -61,7 +64,7 @@ Current tests:
 Current phase:
 
 - Phase 5: Router Migration.
-- Phase 5 kickoff audit is complete. The next step is a small go_router root parity slice.
+- go_router root parity is implemented. The next step is a shell ownership audit before moving `MainScreen` or introducing shell routing.
 
 Android toolchain status:
 
@@ -103,6 +106,7 @@ Completed stabilization tasks:
 - Local profile entry was implemented; Login now captures a display name, validates blank input, persists the profile locally, and logout clears the display name with the session.
 - Phase 4 checkpoint audit was completed; startup/session/profile behavior is covered, no Phase 4 blocker remains, and Phase 5 should begin with a router migration audit rather than implementation.
 - Router migration kickoff audit was completed; current routes and navigation calls are inventoried, the legacy three-tab shell is deferred, and the first go_router slice is scoped to root route parity.
+- go_router root parity slice was completed; `MaterialApp.router` now uses the active route table, Login/Dashboard navigation use go_router, and `MainScreen` remains unchanged.
 
 ## Recommended Next Work
 
@@ -119,35 +123,34 @@ Task sizing note:
 
 ### Primary
 
-T37 — go_router root parity slice
+T38 — Main shell ownership audit
 
 Reason:
 
-- T36 found the production GetX navigation surface is small enough for one root parity slice.
-- The first implementation should migrate root routing without redesigning the shell or introducing Riverpod.
-- Keeping the existing route paths and `MainScreen` lowers rollback risk.
+- T37 kept `MainScreen` unchanged to avoid mixing root routing with shell redesign.
+- `lib/screens/main/main_screen.dart` still owns a legacy Dashboard / Chat / Profile bottom tab shell.
+- The target architecture expects app shell ownership under `lib/app/shell/` and eventual Home / Explore / Tools / Library / Settings navigation.
 
 Scope:
 
-- Add `go_router` and introduce the smallest `lib/app/router/` configuration.
-- Keep `AppRoutes` as the path contract and map the existing ten routes.
-- Replace root `GetMaterialApp` with `MaterialApp.router`.
-- Replace production GetX navigation calls in Login and Dashboard.
-- Keep `MainScreen` unchanged and defer shell redesign, `ShellRoute`, Riverpod, Dio, and GetX cleanup.
+- Inspect `lib/screens/main/main_screen.dart`, current bottom-tab behavior, route entry points, and target shell docs.
+- Decide whether the next shell implementation should only move ownership to `lib/app/shell/` or also introduce the five target tabs.
+- Define whether `ShellRoute` belongs in the next implementation slice or a later one.
+- Update planning docs only; do not move `MainScreen`, redesign tabs, remove GetX, or change production routing.
 
 Verification:
 
-- Screen move/routing/startup gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T38 — Main shell ownership audit
+T39 — Legacy GetX route cleanup audit
 
-Choose this if shell route design should be clarified before the root parity slice.
+Choose this if unused GetX route files/dependency should be scoped before shell work.
 
-T39 — Live-network route smoke strategy
+T40 — Live-network route smoke strategy
 
-Choose this if Fox and Summertime Saga direct route coverage should be solved before router implementation.
+Choose this if Fox and Summertime Saga direct route coverage should be solved before shell work.
 
 T30 — Dependency/toolchain audit
 
@@ -156,11 +159,10 @@ Choose this if current package/build risk should be reviewed before the next pha
 ### Do not start yet
 
 - Riverpod activation.
-- GetX route cleanup before go_router parity passes.
-- Shell redesign or five-tab migration inside the root router slice.
+- Shell redesign or five-tab migration before the shell ownership audit.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
-- GetX package removal or legacy route deletion before parity passes.
+- GetX package removal or legacy route deletion without a cleanup task.
 - Built-in Kotlin migration.
 - Real backend authentication.
 - More design-system components unless explicitly assigned.
@@ -177,7 +179,7 @@ Current phase:
 
 Decision:
 
-- T36 completed the route audit. Start implementation with root go_router parity only.
+- T37 completed root go_router parity. Audit shell ownership before moving `MainScreen` or adding shell routing.
 
 Do not enter yet:
 
@@ -195,8 +197,9 @@ Exit criteria:
 - Done: First go_router migration slice is scoped.
 - Done: Startup/session/login/logout parity gates are defined.
 - Done: Live-network route smoke-test strategy is documented.
-- Remaining: Root go_router parity slice is implemented and verified.
+- Done: Root go_router parity slice is implemented and verified.
 - Remaining: Legacy GetX route cleanup is scoped after parity passes.
+- Remaining: Shell ownership is audited before `MainScreen` is moved or `ShellRoute` is introduced.
 
 ## Verification Gates
 
