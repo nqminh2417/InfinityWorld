@@ -372,7 +372,7 @@ Next phase focus:
 
 ## Phase 6: Riverpod Foundation
 
-Status: current / fourth implementation slice complete, next consumer audit next.
+Status: current / fourth implementation slice complete, fifth implementation slice scoped.
 
 Goal:
 
@@ -456,6 +456,14 @@ Fourth implementation slice:
 - Completed: preserved the existing ListView/SafeArea structure for normal-screen layout safety.
 - Completed: updated focused Dashboard widget coverage with in-memory local session data.
 - Theme preferences, root `ThemeMode`, profile editing, shell tab state, network migration, Dio, `ShellRoute`, and visual redesign remain out of scope.
+
+Next-consumer audit after Dashboard findings:
+
+- Root theme mode is the next useful Riverpod consumer because `MainApp` still hardcodes `ThemeMode.system` while light/dark themes and Riverpod root wiring already exist.
+- The fifth slice should introduce a small app-level theme-mode provider seam consumed by `MainApp`, preserving the runtime default of `ThemeMode.system`.
+- Keep Settings theme controls, persisted theme preference semantics, theme style switching, Neon/Vice themes, visual redesign, shell tab state, form-state migration, Dio, network state, real auth, and `ShellRoute` out of scope for this foundation slice.
+- Main shell tab index, BMI/Login/Test form state, and simple screen-local state should stay local for now because they do not need shared app-level ownership.
+- Fox and Summertime Saga async state should wait for Phase 7 networking/Dio work because their Riverpod migration should own API/error/retry behavior together.
 
 ## Phase 7: Networking Foundation
 

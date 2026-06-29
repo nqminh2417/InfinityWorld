@@ -138,6 +138,7 @@ Completed stabilization tasks:
 - Riverpod Settings profile summary slice was completed; Settings now consumes `currentDisplayNameProvider` and focused widget coverage verifies the persisted display name.
 - Riverpod next-consumer audit after Settings was completed; Dashboard/Home read-only greeting was selected as the fourth Riverpod consumer because it can reuse `currentDisplayNameProvider` without theme, shell, form, or network migration.
 - Riverpod Dashboard local greeting slice was completed; Dashboard now consumes `currentDisplayNameProvider` and focused widget coverage verifies the persisted display name.
+- Riverpod next-consumer audit after Dashboard was completed; root theme mode provider foundation was selected as the fifth Riverpod consumer because `MainApp` still hardcodes `ThemeMode.system` while light/dark app themes and Riverpod root wiring already exist.
 
 ## Recommended Next Work
 
@@ -154,25 +155,25 @@ Task sizing note:
 
 ### Primary
 
-T56 - Riverpod next-consumer audit after Dashboard
+T57 - Riverpod theme mode provider foundation slice
 
 Reason:
 
-- T55 completed the Dashboard/Home greeting slice.
-- The next Riverpod consumer should be selected before another implementation slice.
-- Remaining candidates still have different risk profiles: theme preferences touch app-level `ThemeMode`, shell tab state affects navigation ownership, BMI/Login/Test form state is UI-local, and Fox/Summertime Saga are network-backed.
+- T56 selected root theme mode as the smallest useful fifth Riverpod consumer.
+- `MainApp` currently hardcodes `ThemeMode.system` even though Midnight Violet light/dark themes and Riverpod root wiring already exist.
+- A provider foundation can preserve current runtime behavior while preparing app-level theme preferences without changing Settings UI or visual design.
 
 Scope:
 
-- Inspect likely next Riverpod consumers and current tests after the Dashboard slice.
-- Choose the smallest fifth Riverpod implementation slice and verification gate.
-- Update planning docs only; do not migrate more state during the audit.
+- Add a small app-level theme-mode provider under `lib/app/theme/`.
+- Wire `MainApp` to consume the provider while preserving the default `ThemeMode.system` behavior.
+- Add focused test coverage for the default/provider-override behavior.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not add profile editing, avatar selection, theme preferences, root `ThemeMode`, Settings redesign, Dio, real auth, `ShellRoute`, new feature roots, network state migration, shell tab-state migration, or visual redesign during the audit.
+- Do not add Settings theme controls, persisted theme preference semantics, theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, network state migration, Dio, real auth, `ShellRoute`, or new feature roots in this slice.
 
 Verification:
 
-- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
@@ -180,13 +181,13 @@ T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Riverpod.
 
-T57 - Riverpod fifth implementation slice
+T58 - Riverpod next-consumer audit after theme mode provider
 
-Choose this only after T56 scopes the next Riverpod consumer.
+Choose this after T57 if another Riverpod consumer needs to be selected before persistence, Settings UI, shell state, or network migration.
 
 ### Do not start yet
 
-- Riverpod feature rewrites beyond the T55 Dashboard greeting slice before T56 scopes the next consumer.
+- Riverpod feature rewrites beyond the scoped T57 theme-mode provider foundation slice.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
@@ -207,7 +208,7 @@ Current phase:
 
 Decision:
 
-- T55 completed Dashboard/Home read-only greeting consumption. Start T56 before any broader feature-state migration.
+- T56 selected root theme mode provider foundation as the fifth Riverpod slice. Start T57 before any broader feature-state migration.
 
 Do not enter yet:
 
@@ -230,7 +231,8 @@ Exit criteria:
 - Done: Implemented and verified the Settings profile summary slice.
 - Done: Chose Dashboard/Home read-only greeting as the next Riverpod consumer.
 - Done: Implemented and verified the Dashboard local greeting slice.
-- Remaining: Choose the next Riverpod consumer before a fifth implementation slice.
+- Done: Chose root theme mode provider foundation as the next Riverpod consumer.
+- Remaining: Implement and verify the theme mode provider foundation slice.
 
 ## Verification Gates
 
