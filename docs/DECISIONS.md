@@ -132,9 +132,9 @@ T57 introduced a small app-level theme-mode provider consumed by `MainApp`, keep
 
 ### 2026-06-29: Sixth Riverpod slice is Settings Appearance theme-mode summary
 
-The T58 audit selected Settings Appearance read-only theme-mode summary as the sixth Riverpod slice.
+The T58 audit selected Settings Appearance read-only theme-mode summary as the sixth Riverpod slice, and T59 implemented it.
 
-T59 should add a small read-only Appearance summary in Settings that consumes `appThemeModeProvider` and displays the current theme mode label while keeping the runtime default at `ThemeMode.system`. Settings theme controls, persisted theme preference semantics, theme style switching, Settings redesign, shell tab state, form state, network features, Dio, `ShellRoute`, real auth, and visual redesign stay out of scope.
+Settings now has a small read-only Appearance summary that consumes `appThemeModeProvider` and displays the current theme mode label while keeping the runtime default at `ThemeMode.system`. Settings theme controls, persisted theme preference semantics, theme style switching, Settings redesign, shell tab state, form state, network features, Dio, `ShellRoute`, real auth, and visual redesign stay out of scope.
 
 ### 2026-06-23: BMI is the current migration pilot
 

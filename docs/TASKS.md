@@ -28,7 +28,7 @@ Current architecture status:
 - Local session/profile persistence now lives under `lib/features/auth/data/local_session_repository.dart` and uses `shared_preferences`.
 - Dashboard/Home now consumes the persisted local display name through Riverpod.
 - Profile now consumes the persisted local display name through Riverpod.
-- Settings now consumes the persisted local display name through Riverpod.
+- Settings now consumes the persisted local display name and app theme mode through Riverpod.
 - BMI was the initial migration pilot and now lives under `lib/features/bmi/`.
 - Chat presentation now lives under `lib/features/chat/presentation/`.
 - Dashboard presentation now lives under `lib/features/dashboard/presentation/`.
@@ -65,7 +65,7 @@ Current tests:
 - Summertime Saga service/model tests exist with fake-network coverage for success, non-2xx, malformed JSON, missing schema, and timeout handling.
 - Summertime Saga screen widget tests exist for deterministic loading, success, error/retry, incomplete data, dispose safety, and small-screen scroll safety.
 - Profile presentation widget test exists and covers persisted local display-name rendering.
-- Settings presentation widget test exists and covers persisted local display-name rendering.
+- Settings presentation widget test exists and covers persisted local display-name rendering, the read-only Appearance theme-mode summary, and provider override behavior.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
 - Fox and Summertime Saga route smoke tests use router-level builder overrides with their existing fake-network screen seams.
@@ -79,7 +79,7 @@ Current phase:
 - Active routing is go_router-only; GetX routing is removed.
 - `/main` remains the local session shell entry point.
 - `ShellRoute`/`StatefulShellRoute` should wait for real tab root screens and tab-owned child route stacks.
-- Riverpod is installed and active for root `ProviderScope`, the local session repository provider seam, Profile display-name consumption, Settings profile-summary consumption, Dashboard/Home greeting consumption, and root theme-mode consumption.
+- Riverpod is installed and active for root `ProviderScope`, the local session repository provider seam, Profile display-name consumption, Settings profile-summary/theme-mode consumption, Dashboard/Home greeting consumption, and root theme-mode consumption.
 
 Android toolchain status:
 
@@ -143,6 +143,7 @@ Completed stabilization tasks:
 - Riverpod next-consumer audit after Dashboard was completed; root theme mode provider foundation was selected as the fifth Riverpod consumer because `MainApp` still hardcodes `ThemeMode.system` while light/dark app themes and Riverpod root wiring already exist.
 - Riverpod theme mode provider foundation slice was completed; `MainApp` now consumes `appThemeModeProvider`, default behavior stays `ThemeMode.system`, and focused coverage verifies provider default and override behavior.
 - Riverpod next-consumer audit after theme mode provider was completed; Settings Appearance read-only theme-mode summary was selected as the sixth Riverpod consumer because it can reuse `appThemeModeProvider` without persistence, controls, or root app changes.
+- Riverpod Settings appearance theme-mode summary slice was completed; Settings now consumes `appThemeModeProvider` and focused widget coverage verifies the default System label and provider override behavior.
 
 ## Recommended Next Work
 
@@ -159,25 +160,25 @@ Task sizing note:
 
 ### Primary
 
-T59 - Riverpod Settings appearance theme-mode summary slice
+T60 - Riverpod next-consumer audit after Settings appearance
 
 Reason:
 
-- T58 selected Settings Appearance read-only theme-mode summary as the smallest useful sixth Riverpod consumer.
-- Settings is the app configuration surface and already consumes Riverpod state.
-- The existing `appThemeModeProvider` can be shown in Settings before adding persistence, controls, or theme style switching.
+- T59 completed the Settings Appearance read-only theme-mode summary without controls or persistence semantics.
+- The next Riverpod consumer should be selected before expanding theme preferences, shell state, form state, or network state.
+- Remaining candidates have different ownership risks: theme persistence/Settings controls touch local storage and user-facing settings semantics, shell tab state touches navigation ownership, form state is still UI-local, and Fox/Summertime Saga remain network-backed.
 
 Scope:
 
-- Add a small read-only Appearance summary in Settings that watches `appThemeModeProvider`.
-- Display the current theme mode as a user-facing label while preserving the current `ThemeMode.system` default.
-- Update focused Settings widget coverage, including provider override behavior where useful.
+- Inspect likely next Riverpod consumers and current tests after the Settings Appearance slice.
+- Choose the smallest seventh Riverpod implementation slice and verification gate.
+- Update planning docs only; do not migrate more state during the audit.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not add Settings theme controls, persisted theme preference semantics, theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, network state migration, Dio, real auth, `ShellRoute`, or new feature roots in this slice.
+- Do not add Settings theme controls, persisted theme preference semantics, theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, network state migration, Dio, real auth, `ShellRoute`, or new feature roots during the audit.
 
 Verification:
 
-- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
@@ -185,13 +186,13 @@ T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Riverpod.
 
-T60 - Riverpod next-consumer audit after Settings appearance
+T61 - Riverpod seventh implementation slice
 
-Choose this after T59 if another Riverpod consumer needs to be selected before persistence, controls, shell state, or network migration.
+Choose this only after T60 scopes the next Riverpod consumer.
 
 ### Do not start yet
 
-- Riverpod feature rewrites beyond the scoped T59 Settings appearance summary slice.
+- Riverpod feature rewrites beyond the scoped T59 Settings appearance summary slice before T60 scopes the next consumer.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
@@ -212,7 +213,7 @@ Current phase:
 
 Decision:
 
-- T58 selected Settings Appearance read-only theme-mode summary as the sixth Riverpod slice. Start T59 before any broader feature-state migration.
+- T59 completed Settings Appearance read-only theme-mode summary. Start T60 before any broader feature-state migration.
 
 Do not enter yet:
 
@@ -238,7 +239,8 @@ Exit criteria:
 - Done: Chose root theme mode provider foundation as the next Riverpod consumer.
 - Done: Implemented and verified the theme mode provider foundation slice.
 - Done: Chose Settings Appearance read-only theme-mode summary as the next Riverpod consumer.
-- Remaining: Implement and verify the Settings appearance theme-mode summary slice.
+- Done: Implemented and verified the Settings appearance theme-mode summary slice.
+- Remaining: Choose the next Riverpod consumer before a seventh implementation slice.
 
 ## Verification Gates
 

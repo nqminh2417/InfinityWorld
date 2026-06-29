@@ -33,7 +33,7 @@ Current structure:
 - `lib/features/auth/data/local_session_repository.dart` stores the first local session flag and display name with `shared_preferences`.
 - `lib/features/auth/application/session_providers.dart` exposes the local session repository and current display-name providers.
 - `lib/features/profile/presentation/profile_screen.dart` now consumes the persisted local display name through Riverpod.
-- `lib/features/settings/presentation/settings_screen.dart` now consumes the persisted local display name through Riverpod.
+- `lib/features/settings/presentation/settings_screen.dart` now consumes the persisted local display name and app theme mode through Riverpod.
 - `lib/features/dashboard/presentation/dashboard_screen.dart` now consumes the persisted local display name through Riverpod.
 - Feature placement completed for the Phase 2 selected screens/features:
   - `lib/features/bmi/domain/bmi_calculator.dart`
@@ -373,7 +373,7 @@ Next phase focus:
 
 ## Phase 6: Riverpod Foundation
 
-Status: current / fifth implementation slice complete, sixth implementation slice scoped.
+Status: current / sixth implementation slice complete, next consumer audit next.
 
 Goal:
 
@@ -480,6 +480,13 @@ Next-consumer audit after theme mode provider findings:
 - The slice should reuse the existing provider and focused Settings widget coverage; it should not add persistence, controls, theme style switching, Settings redesign, or root app behavior changes.
 - Theme mode persistence and interactive Settings controls are useful later, but they should wait for a dedicated task because they touch local storage, app-level rebuild behavior, and user-facing settings semantics.
 - Main shell tab state, BMI/Login/Test form state, and simple screen-local state should stay local for now; Fox and Summertime Saga async state should wait for Phase 7 networking/Dio work.
+
+Sixth implementation slice:
+
+- Completed: added a read-only Appearance summary to Settings that consumes `appThemeModeProvider`.
+- Completed: displays the current theme mode label while preserving the runtime default of `ThemeMode.system`.
+- Completed: updated focused Settings widget coverage for the default System label and provider override behavior.
+- Settings theme controls, persisted theme preference semantics, theme style switching, Settings redesign, shell tab state, form-state migration, Dio, network state, real auth, and `ShellRoute` remain out of scope.
 
 ## Phase 7: Networking Foundation
 

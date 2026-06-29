@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:infinity_world/app/theme/app_theme_mode_provider.dart';
 import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/features/auth/data/local_session_repository.dart';
 import 'package:infinity_world/features/settings/presentation/settings_screen.dart';
@@ -36,9 +37,29 @@ void main() {
       findsOneWidget,
     );
     expect(find.byType(ListView), findsOneWidget);
-    expect(find.byType(IwCard), findsOneWidget);
+    expect(find.byType(IwCard), findsNWidgets(2));
     expect(find.text('Local profile'), findsOneWidget);
     expect(find.text('Minh'), findsOneWidget);
+    expect(find.text('Appearance'), findsOneWidget);
+    expect(find.text('Theme mode'), findsOneWidget);
+    expect(find.text('System'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Settings screen shows overridden theme mode summary', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [appThemeModeProvider.overrideWithValue(ThemeMode.dark)],
+        child: const MaterialApp(home: SettingsScreen()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Appearance'), findsOneWidget);
+    expect(find.text('Theme mode'), findsOneWidget);
+    expect(find.text('Dark'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }
