@@ -128,7 +128,7 @@ T55 showed the persisted local display name in a small Dashboard/Home greeting b
 
 The T56 audit selected root theme mode provider foundation as the fifth Riverpod slice.
 
-T57 should introduce a small app-level theme-mode provider consumed by `MainApp`, keeping the runtime default at `ThemeMode.system` and preserving routes, `/main`, startup/session behavior, and the five-tab shell. Settings theme controls, persisted theme preference semantics, theme style switching, Neon/Vice themes, shell tab state, form state, network features, Dio, `ShellRoute`, real auth, and visual redesign stay out of scope.
+T57 introduced a small app-level theme-mode provider consumed by `MainApp`, keeping the runtime default at `ThemeMode.system` and preserving routes, `/main`, startup/session behavior, and the five-tab shell. Settings theme controls, persisted theme preference semantics, theme style switching, Neon/Vice themes, shell tab state, form state, network features, Dio, `ShellRoute`, real auth, and visual redesign stay out of scope.
 
 ### 2026-06-23: BMI is the current migration pilot
 

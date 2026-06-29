@@ -13,7 +13,7 @@ Current branch workflow:
 Current architecture status:
 
 - Transitional architecture.
-- `lib/main.dart` still owns app composition and now uses `MaterialApp.router`.
+- `lib/main.dart` still owns app composition, now uses `MaterialApp.router`, and consumes the Riverpod app theme-mode provider.
 - `lib/app/router/app_router.dart` owns the active go_router route table.
 - `lib/routes/app_routes.dart` remains the shared path contract.
 - Inactive legacy `lib/routes/app_pages.dart` has been removed.
@@ -21,6 +21,7 @@ Current architecture status:
 - `lib/app/bootstrap/startup_route_resolver.dart` now chooses Login or Main from the local session flag before `runApp`.
 - `lib/main.dart` now wraps the runtime app with Riverpod `ProviderScope`.
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
+- `lib/app/theme/app_theme_mode_provider.dart` now exposes the app-level theme mode provider with the current default of `ThemeMode.system`.
 - `lib/design_system/tokens/` and `lib/design_system/components/iw_card.dart` now provide the first design-system token/card slice.
 - Auth/Login presentation now lives under `lib/features/auth/presentation/`.
 - Auth session dependency injection now starts at `lib/features/auth/application/session_providers.dart`.
@@ -41,7 +42,7 @@ Current architecture status:
 - Phase 2 migration map exists at `docs/PHASE2_MIGRATION_MAP.md`.
 - `shared_preferences` is active for the first local session flag and display name.
 - go_router is active for root routing.
-- Riverpod is active for the first local session repository provider seam.
+- Riverpod is active for the first local session repository provider seam and the root theme-mode provider seam.
 - Dio is not active yet.
 
 Current tests:
@@ -51,6 +52,7 @@ Current tests:
 - Login/logout session navigation widget coverage exists and overrides the local session repository provider.
 - Local display-name validation and persistence coverage exists.
 - App theme unit coverage exists.
+- App theme-mode provider coverage exists for the default and root-app override behavior.
 - `IwCard` widget coverage exists.
 - BMI domain unit tests exist.
 - BMI presentation widget tests exist.
@@ -77,7 +79,7 @@ Current phase:
 - Active routing is go_router-only; GetX routing is removed.
 - `/main` remains the local session shell entry point.
 - `ShellRoute`/`StatefulShellRoute` should wait for real tab root screens and tab-owned child route stacks.
-- Riverpod is installed and active for root `ProviderScope`, the local session repository provider seam, Profile display-name consumption, Settings profile-summary consumption, and Dashboard/Home greeting consumption.
+- Riverpod is installed and active for root `ProviderScope`, the local session repository provider seam, Profile display-name consumption, Settings profile-summary consumption, Dashboard/Home greeting consumption, and root theme-mode consumption.
 
 Android toolchain status:
 
@@ -139,6 +141,7 @@ Completed stabilization tasks:
 - Riverpod next-consumer audit after Settings was completed; Dashboard/Home read-only greeting was selected as the fourth Riverpod consumer because it can reuse `currentDisplayNameProvider` without theme, shell, form, or network migration.
 - Riverpod Dashboard local greeting slice was completed; Dashboard now consumes `currentDisplayNameProvider` and focused widget coverage verifies the persisted display name.
 - Riverpod next-consumer audit after Dashboard was completed; root theme mode provider foundation was selected as the fifth Riverpod consumer because `MainApp` still hardcodes `ThemeMode.system` while light/dark app themes and Riverpod root wiring already exist.
+- Riverpod theme mode provider foundation slice was completed; `MainApp` now consumes `appThemeModeProvider`, default behavior stays `ThemeMode.system`, and focused coverage verifies provider default and override behavior.
 
 ## Recommended Next Work
 
@@ -155,25 +158,25 @@ Task sizing note:
 
 ### Primary
 
-T57 - Riverpod theme mode provider foundation slice
+T58 - Riverpod next-consumer audit after theme mode provider
 
 Reason:
 
-- T56 selected root theme mode as the smallest useful fifth Riverpod consumer.
-- `MainApp` currently hardcodes `ThemeMode.system` even though Midnight Violet light/dark themes and Riverpod root wiring already exist.
-- A provider foundation can preserve current runtime behavior while preparing app-level theme preferences without changing Settings UI or visual design.
+- T57 completed the root theme mode provider foundation without Settings controls or persistence semantics.
+- The next Riverpod consumer should be selected before expanding theme preferences, shell state, form state, or network state.
+- Remaining candidates have different ownership risks: theme persistence/Settings controls touch local storage and UI, shell tab state touches navigation ownership, form state is still UI-local, and Fox/Summertime Saga remain network-backed.
 
 Scope:
 
-- Add a small app-level theme-mode provider under `lib/app/theme/`.
-- Wire `MainApp` to consume the provider while preserving the default `ThemeMode.system` behavior.
-- Add focused test coverage for the default/provider-override behavior.
+- Inspect likely next Riverpod consumers and current tests after the theme mode provider slice.
+- Choose the smallest sixth Riverpod implementation slice and verification gate.
+- Update planning docs only; do not migrate more state during the audit.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not add Settings theme controls, persisted theme preference semantics, theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, network state migration, Dio, real auth, `ShellRoute`, or new feature roots in this slice.
+- Do not add Settings theme controls, persisted theme preference semantics, theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, network state migration, Dio, real auth, `ShellRoute`, or new feature roots during the audit.
 
 Verification:
 
-- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
@@ -181,13 +184,13 @@ T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Riverpod.
 
-T58 - Riverpod next-consumer audit after theme mode provider
+T59 - Riverpod sixth implementation slice
 
-Choose this after T57 if another Riverpod consumer needs to be selected before persistence, Settings UI, shell state, or network migration.
+Choose this only after T58 scopes the next Riverpod consumer.
 
 ### Do not start yet
 
-- Riverpod feature rewrites beyond the scoped T57 theme-mode provider foundation slice.
+- Riverpod feature rewrites beyond the scoped T57 theme-mode provider foundation slice before T58 scopes the next consumer.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
@@ -208,7 +211,7 @@ Current phase:
 
 Decision:
 
-- T56 selected root theme mode provider foundation as the fifth Riverpod slice. Start T57 before any broader feature-state migration.
+- T57 completed root theme mode provider foundation. Start T58 before any broader feature-state migration.
 
 Do not enter yet:
 
@@ -232,7 +235,8 @@ Exit criteria:
 - Done: Chose Dashboard/Home read-only greeting as the next Riverpod consumer.
 - Done: Implemented and verified the Dashboard local greeting slice.
 - Done: Chose root theme mode provider foundation as the next Riverpod consumer.
-- Remaining: Implement and verify the theme mode provider foundation slice.
+- Done: Implemented and verified the theme mode provider foundation slice.
+- Remaining: Choose the next Riverpod consumer before a sixth implementation slice.
 
 ## Verification Gates
 

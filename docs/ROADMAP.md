@@ -19,11 +19,12 @@ The current app is transitional. The target architecture in `docs/ARCHITECTURE.m
 
 Current structure:
 
-- `lib/main.dart` still owns root app composition and now uses `MaterialApp.router`.
+- `lib/main.dart` still owns root app composition, now uses `MaterialApp.router`, and consumes the Riverpod app theme-mode provider.
 - `lib/app/bootstrap/startup_route_resolver.dart` now resolves the startup route from the local session flag before `runApp`.
 - `lib/app/router/app_router.dart` maps the current route table with go_router.
 - `lib/routes/app_routes.dart` still defines shared path constants.
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
+- `lib/app/theme/app_theme_mode_provider.dart` exposes the app-level theme mode seam with the current default of `ThemeMode.system`.
 - `lib/design_system/` now contains the first tokens and `IwCard` component slice.
 - Selected feature screens have been moved under `lib/features/`.
 - `lib/app/shell/main_screen.dart` now contains the local five-tab bottom shell skeleton.
@@ -60,7 +61,7 @@ Current dependencies:
 - Runtime packages: `go_router`, `flutter_riverpod`, `http`, `change_app_package_name`, `shared_preferences`
 - Dev packages: `flutter_test`, `flutter_lints`, `shared_preferences_platform_interface`
 
-go_router is active for the root route table. Riverpod is active for the first local session repository provider seam. Dio is still a target-direction technology and is not installed or active yet.
+go_router is active for the root route table. Riverpod is active for the first local session repository provider seam and root theme-mode provider seam. Dio is still a target-direction technology and is not installed or active yet.
 
 ## Current Known Risks
 
@@ -372,7 +373,7 @@ Next phase focus:
 
 ## Phase 6: Riverpod Foundation
 
-Status: current / fourth implementation slice complete, fifth implementation slice scoped.
+Status: current / fifth implementation slice complete, next consumer audit next.
 
 Goal:
 
@@ -464,6 +465,13 @@ Next-consumer audit after Dashboard findings:
 - Keep Settings theme controls, persisted theme preference semantics, theme style switching, Neon/Vice themes, visual redesign, shell tab state, form-state migration, Dio, network state, real auth, and `ShellRoute` out of scope for this foundation slice.
 - Main shell tab index, BMI/Login/Test form state, and simple screen-local state should stay local for now because they do not need shared app-level ownership.
 - Fox and Summertime Saga async state should wait for Phase 7 networking/Dio work because their Riverpod migration should own API/error/retry behavior together.
+
+Fifth implementation slice:
+
+- Completed: added `appThemeModeProvider` under `lib/app/theme/` with the current default of `ThemeMode.system`.
+- Completed: converted `MainApp` to consume the provider while keeping `MaterialApp.router`, `/main`, startup/session behavior, direct route parity, and the five-tab shell unchanged.
+- Completed: added focused coverage for the provider default and `MainApp` provider override behavior.
+- Settings theme controls, persisted theme preference semantics, theme style switching, Neon/Vice themes, visual redesign, shell tab state, form-state migration, Dio, network state, real auth, and `ShellRoute` remain out of scope.
 
 ## Phase 7: Networking Foundation
 
