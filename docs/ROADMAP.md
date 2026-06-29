@@ -56,12 +56,12 @@ Current dependencies:
 - Runtime packages: `go_router`, `http`, `change_app_package_name`, `shared_preferences`
 - Dev packages: `flutter_test`, `flutter_lints`, `shared_preferences_platform_interface`
 
-go_router is active for the root route table. Riverpod and Dio are target-direction technologies but are not installed or active yet. Do not introduce them until their explicit phases/tasks begin.
+go_router is active for the root route table. Phase 5 router migration is complete enough to close with `ShellRoute` deferred. Riverpod and Dio are target-direction technologies but are not installed or active yet. Do not introduce them until their explicit phases/tasks begin.
 
 ## Current Known Risks
 
 - Login build-time `setState()` risk has been fixed; emulator/device visual review remains a later QA activity.
-- go_router is the active root router.
+- go_router is the active root router and Phase 5 is closed.
 - `lib/routes/app_routes.dart` remains the shared path contract for go_router.
 - Some networking still uses direct `http` services under feature folders.
 - Feature placement does not mean rich tab content has migrated; `MainScreen` now lives in `lib/app/shell/` with a local five-tab shell skeleton and placeholder tab bodies where roots are not implemented yet.
@@ -252,7 +252,7 @@ Non-goals:
 
 ## Phase 5: Router Migration
 
-Status: current / root parity implemented; shell ownership moved; GetX cleanup complete; local five-tab shell skeleton implemented.
+Status: complete as of 2026-06-29.
 
 Goal:
 
@@ -355,14 +355,20 @@ ShellRoute/deep-link audit:
 - Decision: do not add `ShellRoute`, `StatefulShellRoute`, `/home`, `/explore`, `/tools`, or `/library` yet.
 - Future shell routing should prefer `StatefulShellRoute` over plain `ShellRoute` if the app needs separate tab navigation stacks or preserved tab branch state.
 
-Next router-phase focus:
+Phase 5 checkpoint:
 
-- Run a Phase 5 checkpoint audit and decide whether the router phase can close before Riverpod foundation work.
-- Keep richer tab content and tab-specific paths for later feature-expansion tasks.
+- Completed: re-audited active router composition, route constants, startup/session flow, direct route smoke tests, shell widget coverage, dependency state, and planning docs.
+- Decision: close Phase 5 with `ShellRoute`, tab-specific route paths, richer tab content, and feature root expansion deferred.
+- Remaining router work should be driven by concrete future feature needs, not by Phase 5 migration cleanup.
+
+Next phase focus:
+
+- Start Phase 6 with a Riverpod foundation kickoff audit.
+- Keep Riverpod implementation, Dio, real auth, shell-route work, and feature expansion out of the kickoff audit.
 
 ## Phase 6: Riverpod Foundation
 
-Status: deferred, high risk.
+Status: current / kickoff audit next.
 
 Goal:
 

@@ -94,6 +94,12 @@ The official go_router docs describe URL-based navigation and deep linking throu
 
 Do not implement `ShellRoute`, `StatefulShellRoute`, `/home`, `/explore`, `/tools`, or `/library` until real tab root screens and at least one tab-owned child route/back-stack need exist. The next router task should be a Phase 5 checkpoint audit, not another routing implementation slice.
 
+### 2026-06-29: Close Phase 5 before Riverpod foundation
+
+The T47 checkpoint found that Phase 5 routing goals are complete enough to close: active routing is go_router-only, startup/session parity is preserved through `/main`, direct route smoke tests cover the active route table including fake-network Fox and Summertime Saga routes, `MainScreen` owns the local five-tab shell, and `ShellRoute` is intentionally deferred.
+
+Start Phase 6 with a Riverpod foundation kickoff audit before adding Riverpod or rewriting state. Do not combine Riverpod introduction with Dio, real backend auth, shell-route work, feature expansion, or visual redesign.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:
