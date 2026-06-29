@@ -370,7 +370,7 @@ Next phase focus:
 
 ## Phase 6: Riverpod Foundation
 
-Status: current / second implementation slice complete, next consumer audit next.
+Status: current / second implementation slice complete, third implementation slice scoped.
 
 Goal:
 
@@ -421,6 +421,14 @@ Second implementation slice:
 - Completed: kept Profile's existing layout, SafeArea/scroll behavior, route path, and design-system card structure.
 - Completed: updated focused Profile widget coverage with in-memory local session data.
 - Profile editing, avatar selection, theme preferences, Settings redesign, root theme mode changes, Dio, network state migration, and shell tab-state migration remain out of scope.
+
+Next-consumer audit after Profile findings:
+
+- Settings is the smallest useful third Riverpod consumer because it is still a placeholder normal app screen, belongs to local profile/app configuration, and can show the existing persisted display name read-only.
+- The next slice can reuse `currentDisplayNameProvider`; it does not need a new repository, persistence key, route, feature root, theme controller, or network layer.
+- The Settings slice should add a focused widget test with in-memory local session data because Settings currently only has route smoke coverage.
+- Keep Settings theme preferences, root `ThemeMode`, profile editing, avatar selection, Main shell tab state, BMI/Login form state, Dashboard/Home greeting, Fox/Summertime Saga async state, Dio, real auth, `ShellRoute`, and visual redesign out of the third Riverpod slice.
+- Fox and Summertime Saga remain better Phase 7 candidates because their Riverpod migration should be tied to networking/error/retry ownership, not the Phase 6 local-state foundation.
 
 ## Phase 7: Networking Foundation
 

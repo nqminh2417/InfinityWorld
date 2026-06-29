@@ -112,6 +112,12 @@ The T50 audit selected Profile local display-name consumption as the second Rive
 
 T51 added a read-only current display-name provider backed by the existing local session repository, converted Profile to show the persisted local display name when available, and kept Profile layout, routes, Settings, theme preferences, shell tab state, BMI form state, network features, Dio, and real auth out of scope.
 
+### 2026-06-29: Third Riverpod slice is Settings profile summary
+
+The T52 audit selected Settings read-only profile summary as the third Riverpod slice.
+
+T53 should convert Settings to consume the existing `currentDisplayNameProvider` and show the persisted local display name in a small read-only summary, while keeping profile editing, avatar selection, theme preferences, root `ThemeMode`, Settings redesign, shell tab state, BMI/Login form state, network features, Dio, `ShellRoute`, and real auth out of scope.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:

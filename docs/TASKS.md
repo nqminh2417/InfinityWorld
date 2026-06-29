@@ -75,6 +75,7 @@ Current phase:
 - `/main` remains the local session shell entry point.
 - `ShellRoute`/`StatefulShellRoute` should wait for real tab root screens and tab-owned child route stacks.
 - Riverpod is installed and active for root `ProviderScope`, the local session repository provider seam, and Profile display-name consumption.
+- T52 selected Settings read-only profile summary as the third Riverpod implementation slice.
 
 Android toolchain status:
 
@@ -131,6 +132,7 @@ Completed stabilization tasks:
 - Riverpod foundation implementation slice was completed; `flutter_riverpod` is installed, the runtime app has root `ProviderScope`, Login/Dashboard consume `localSessionRepositoryProvider`, and session-flow tests override the provider seam.
 - Riverpod next-consumer audit was completed; Profile was selected as the second Riverpod consumer because it can show the persisted local display name through a read-only provider without broad state migration.
 - Riverpod Profile display-name provider slice was completed; Profile now consumes `currentDisplayNameProvider` and focused widget coverage verifies the persisted display name.
+- Riverpod next-consumer audit after Profile was completed; Settings read-only profile summary was selected as the third Riverpod consumer because it can reuse `currentDisplayNameProvider` without theme, shell, form, or network migration.
 
 ## Recommended Next Work
 
@@ -147,25 +149,25 @@ Task sizing note:
 
 ### Primary
 
-T52 - Riverpod next-consumer audit after Profile
+T53 - Riverpod Settings profile summary slice
 
 Reason:
 
-- T51 completed the Profile display-name provider slice.
-- The next Riverpod consumer should be selected before another implementation slice.
-- Theme preferences, shell tab state, BMI form state, and network-backed feature controllers still have different risk profiles.
+- T52 selected Settings as the smallest useful third Riverpod consumer.
+- Settings currently has only route smoke coverage and placeholder content, while the product direction says Settings owns local profile/app configuration.
+- A read-only profile summary can reuse `currentDisplayNameProvider` without adding persistence, routes, feature roots, theme controls, or networking.
 
 Scope:
 
-- Inspect likely next Riverpod consumers and current tests after the Profile slice.
-- Choose the smallest third Riverpod implementation slice and verification gate.
-- Update planning docs only; do not migrate more state during the audit.
+- Convert Settings to consume `currentDisplayNameProvider` and show the persisted local display name when available.
+- Preserve the existing Settings route, shell behavior, and normal-screen SafeArea/system UI expectations.
+- Add focused Settings widget coverage with in-memory local session data.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not add profile editing, avatar selection, theme preferences, Settings redesign, Dio, real auth, `ShellRoute`, new feature roots, network state migration, shell tab-state migration, or visual redesign during the audit.
+- Do not add profile editing, avatar selection, theme preferences, root `ThemeMode`, Settings redesign, Dio, real auth, `ShellRoute`, new feature roots, network state migration, shell tab-state migration, Dashboard/Home greeting, or visual redesign.
 
 Verification:
 
-- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
@@ -173,13 +175,13 @@ T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Riverpod.
 
-T53 - Riverpod third implementation slice
+T54 - Riverpod next-consumer audit after Settings
 
-Choose this only after T52 scopes the next Riverpod consumer.
+Choose this only after T53 passes and another Riverpod consumer should be selected.
 
 ### Do not start yet
 
-- Riverpod feature rewrites beyond the T51 Profile display-name slice before T52 scopes the next consumer.
+- Riverpod feature rewrites beyond the scoped T53 Settings profile summary slice.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
@@ -200,7 +202,7 @@ Current phase:
 
 Decision:
 
-- T51 completed Profile local display-name consumption. Start T52 before any broader feature-state migration.
+- T52 selected Settings read-only profile summary as the third Riverpod slice. Start T53 before any broader feature-state migration.
 
 Do not enter yet:
 
@@ -219,7 +221,8 @@ Exit criteria:
 - Done: Verified startup/session/login/logout parity after the first Riverpod slice.
 - Done: Chose Profile display-name consumption as the next Riverpod consumer.
 - Done: Implemented and verified the Profile display-name provider slice.
-- Remaining: Choose the next Riverpod consumer before a third implementation slice.
+- Done: Chose Settings read-only profile summary as the next Riverpod consumer.
+- Remaining: Implement and verify the Settings profile summary slice.
 
 ## Verification Gates
 
