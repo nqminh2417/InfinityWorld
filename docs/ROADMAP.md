@@ -53,10 +53,10 @@ Current structure:
 Current dependencies:
 
 - Flutter SDK constraint: `^3.7.0`
-- Runtime packages: `go_router`, `http`, `change_app_package_name`, `shared_preferences`
+- Runtime packages: `go_router`, `flutter_riverpod`, `http`, `change_app_package_name`, `shared_preferences`
 - Dev packages: `flutter_test`, `flutter_lints`, `shared_preferences_platform_interface`
 
-go_router is active for the root route table. Phase 5 router migration is complete enough to close with `ShellRoute` deferred. Riverpod and Dio are target-direction technologies but are not installed or active yet. Do not introduce them until their explicit phases/tasks begin.
+go_router is active for the root route table. Riverpod is active for the first local session repository provider seam. Dio is still a target-direction technology and is not installed or active yet.
 
 ## Current Known Risks
 
@@ -368,7 +368,7 @@ Next phase focus:
 
 ## Phase 6: Riverpod Foundation
 
-Status: current / kickoff audit complete, first implementation slice next.
+Status: current / first implementation slice complete, next consumer audit next.
 
 Goal:
 
@@ -383,7 +383,7 @@ Rules:
 
 Kickoff audit findings:
 
-- Riverpod is not installed or active yet; current runtime state dependencies are `go_router`, `http`, and `shared_preferences`.
+- Before T49, Riverpod was not installed or active; runtime state dependencies were `go_router`, `http`, and `shared_preferences`.
 - Root app composition is still in `lib/main.dart`, with `MainApp` creating a `GoRouter` and using `MaterialApp.router`.
 - Startup route selection is resolved before `runApp` by `lib/app/bootstrap/startup_route_resolver.dart`.
 - Local session/profile state is centralized in `lib/features/auth/data/local_session_repository.dart`.
@@ -392,16 +392,16 @@ Kickoff audit findings:
 - Settings is still a placeholder screen, so it should not become the first Riverpod/theme-preference migration unless that feature is explicitly scoped.
 - Current mutable UI state remains local to screens such as Login, Main shell tab index, BMI, Fox, and Summertime Saga.
 - Existing tests already cover startup/session routing, login/logout session behavior, route parity, shell tab switching, and local session repository persistence.
-- Current Riverpod docs for `flutter_riverpod` 3.3.0 confirm the root app needs `ProviderScope`, providers can expose dependencies/state, and tests can override providers through `ProviderScope(overrides: ...)`.
+- Current Riverpod docs for `flutter_riverpod` 3.3.x confirm the root app needs `ProviderScope`, providers can expose dependencies/state, and tests can override providers through `ProviderScope(overrides: ...)`.
 
 First implementation slice:
 
-- Add `flutter_riverpod` only in the implementation task, not in the kickoff audit.
-- Wrap `MainApp` with root `ProviderScope`.
-- Add the smallest provider seam for `LocalSessionRepository`.
-- Update Login, Dashboard, and startup/session tests to consume or override that repository seam where needed.
-- Preserve `/main`, direct route parity, local session behavior, and the local five-tab shell.
-- Do not migrate BMI, Fox, Summertime Saga, theme preferences, Settings, Dio, real auth, `ShellRoute`, or feature roots in the first Riverpod slice.
+- Completed: added `flutter_riverpod`.
+- Completed: wrapped the runtime app with root `ProviderScope`.
+- Completed: added the smallest provider seam for `LocalSessionRepository`.
+- Completed: updated Login, Dashboard, and startup/session tests to consume or override that repository seam where needed.
+- Preserved `/main`, direct route parity, local session behavior, and the local five-tab shell.
+- BMI, Fox, Summertime Saga, theme preferences, Settings, Dio, real auth, `ShellRoute`, and feature roots remain unmigrated by design.
 
 ## Phase 7: Networking Foundation
 

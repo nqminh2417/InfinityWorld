@@ -104,7 +104,7 @@ Start Phase 6 with a Riverpod foundation kickoff audit before adding Riverpod or
 
 The T48 audit scoped the first Riverpod implementation to root `ProviderScope` setup and one `LocalSessionRepository` provider seam.
 
-The first implementation should add `flutter_riverpod`, keep `/main` and active go_router routes unchanged, update Login/Dashboard/startup-session tests for provider overrides where needed, and avoid migrating BMI, Fox, Summertime Saga, Settings, theme preferences, Dio, real auth, shell routes, or feature roots.
+T49 added `flutter_riverpod`, kept `/main` and active go_router routes unchanged, updated Login/Dashboard/startup-session tests for provider overrides, and avoided migrating BMI, Fox, Summertime Saga, Settings, theme preferences, Dio, real auth, shell routes, or feature roots.
 
 ### 2026-06-23: BMI is the current migration pilot
 

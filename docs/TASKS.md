@@ -19,9 +19,11 @@ Current architecture status:
 - Inactive legacy `lib/routes/app_pages.dart` has been removed.
 - The current main shell lives under `lib/app/shell/main_screen.dart` and exposes a local Home / Explore / Tools / Library / Settings skeleton.
 - `lib/app/bootstrap/startup_route_resolver.dart` now chooses Login or Main from the local session flag before `runApp`.
+- `lib/main.dart` now wraps the runtime app with Riverpod `ProviderScope`.
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
 - `lib/design_system/tokens/` and `lib/design_system/components/iw_card.dart` now provide the first design-system token/card slice.
 - Auth/Login presentation now lives under `lib/features/auth/presentation/`.
+- Auth session dependency injection now starts at `lib/features/auth/application/session_providers.dart`.
 - Local session/profile persistence now lives under `lib/features/auth/data/local_session_repository.dart` and uses `shared_preferences`.
 - BMI was the initial migration pilot and now lives under `lib/features/bmi/`.
 - Chat presentation now lives under `lib/features/chat/presentation/`.
@@ -36,13 +38,14 @@ Current architecture status:
 - Phase 2 migration map exists at `docs/PHASE2_MIGRATION_MAP.md`.
 - `shared_preferences` is active for the first local session flag and display name.
 - go_router is active for root routing.
-- Riverpod and Dio are not active yet.
+- Riverpod is active for the first local session repository provider seam.
+- Dio is not active yet.
 
 Current tests:
 
 - App startup smoke tests cover logged-out Login startup and logged-in Main startup.
 - Local session repository and startup route resolver unit coverage exists.
-- Login/logout session navigation widget coverage exists.
+- Login/logout session navigation widget coverage exists and overrides the local session repository provider.
 - Local display-name validation and persistence coverage exists.
 - App theme unit coverage exists.
 - `IwCard` widget coverage exists.
@@ -70,8 +73,7 @@ Current phase:
 - Active routing is go_router-only; GetX routing is removed.
 - `/main` remains the local session shell entry point.
 - `ShellRoute`/`StatefulShellRoute` should wait for real tab root screens and tab-owned child route stacks.
-- Riverpod is not installed or active yet.
-- T48 scoped the first Riverpod implementation slice to root `ProviderScope` plus a local session repository provider seam.
+- Riverpod is installed and active only for root `ProviderScope` plus a local session repository provider seam.
 
 Android toolchain status:
 
@@ -124,7 +126,8 @@ Completed stabilization tasks:
 - Local five-tab shell skeleton was completed; `/main` now shows Home / Explore / Tools / Library / Settings, Home preserves Dashboard access, and network-backed Fox/Summertime routes stay direct instead of tab roots.
 - ShellRoute/deep-link audit was completed; current `GoRoute` coverage is enough, tab-specific shell routes are deferred, and future nested tab navigation should prefer `StatefulShellRoute` if separate tab stacks become necessary.
 - Phase 5 checkpoint audit was completed; router migration is closed with root go_router parity, direct route coverage, local five-tab shell behavior, and `ShellRoute` deferred until a real nested tab-routing need exists.
-- Riverpod foundation kickoff audit was completed; Riverpod is still not installed, and the first implementation slice is scoped to root `ProviderScope`, a `LocalSessionRepository` provider seam, and focused startup/login/logout test overrides.
+- Riverpod foundation kickoff audit was completed; at that point Riverpod was not installed, and the first implementation slice was scoped to root `ProviderScope`, a `LocalSessionRepository` provider seam, and focused startup/login/logout test overrides.
+- Riverpod foundation implementation slice was completed; `flutter_riverpod` is installed, the runtime app has root `ProviderScope`, Login/Dashboard consume `localSessionRepositoryProvider`, and session-flow tests override the provider seam.
 
 ## Recommended Next Work
 
@@ -141,40 +144,39 @@ Task sizing note:
 
 ### Primary
 
-T49 - Riverpod foundation implementation slice
+T50 - Riverpod next-consumer audit
 
 Reason:
 
-- T48 scoped the first Riverpod slice.
-- The current app has a single useful dependency seam: `LocalSessionRepository`.
-- Root `ProviderScope` plus one repository provider proves Riverpod without rewriting feature state.
+- T49 proved the root/session provider seam.
+- The next Riverpod consumer should be selected before another implementation slice.
+- Theme preferences, local profile display, shell tab state, and feature controllers have different risk profiles.
 
 Scope:
 
-- Add `flutter_riverpod`.
-- Wrap the root app in `ProviderScope`.
-- Add a provider seam for `LocalSessionRepository`.
-- Update Login, Dashboard, and startup/session tests to consume or override that seam where needed.
+- Inspect likely next Riverpod consumers and current tests.
+- Choose the smallest second Riverpod implementation slice and verification gate.
+- Update planning docs only; do not migrate more state during the audit.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
 - Do not migrate BMI, Fox, Summertime Saga, theme preferences, Settings, Dio, real auth, `ShellRoute`, new feature roots, or visual redesign.
 
 Verification:
 
-- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
 T30 — Dependency/toolchain audit
 
-Choose this if package/build risk should be reviewed before adding Riverpod.
+Choose this if package/build risk should be reviewed after adding Riverpod.
 
-T50 - Riverpod next-consumer audit
+T51 - Riverpod second implementation slice
 
-Choose this after T49 if the next Riverpod consumer should be selected before another implementation slice.
+Choose this only after T50 scopes the next Riverpod consumer.
 
 ### Do not start yet
 
-- Riverpod feature rewrites beyond the T49 local-session seam.
+- Riverpod feature rewrites beyond the T49 local-session seam before T50 scopes the next consumer.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
@@ -195,7 +197,7 @@ Current phase:
 
 Decision:
 
-- T48 completed the Riverpod foundation kickoff audit. Start T49 with the smallest implementation slice before any feature-state migration.
+- T49 completed the smallest Riverpod implementation slice. Start T50 before any feature-state migration.
 
 Do not enter yet:
 
@@ -210,9 +212,9 @@ Reason:
 Exit criteria:
 
 - Done: Riverpod foundation kickoff audit scoped the first implementation slice.
-- Remaining: Add root `ProviderScope` and a `LocalSessionRepository` provider seam.
-- Remaining: Verify startup/session/login/logout parity after the first Riverpod slice.
-- Remaining: Choose the next Riverpod consumer only after T49 passes.
+- Done: Added root `ProviderScope` and a `LocalSessionRepository` provider seam.
+- Done: Verified startup/session/login/logout parity after the first Riverpod slice.
+- Remaining: Choose the next Riverpod consumer before a second implementation slice.
 
 ## Verification Gates
 

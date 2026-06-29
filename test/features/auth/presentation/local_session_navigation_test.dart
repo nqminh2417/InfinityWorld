@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:infinity_world/app/shell/main_screen.dart';
+import 'package:infinity_world/features/auth/application/session_providers.dart';
 import 'package:infinity_world/features/auth/data/local_session_repository.dart';
 import 'package:infinity_world/features/auth/presentation/login_screen.dart';
 import 'package:infinity_world/main.dart';
@@ -19,27 +21,34 @@ void main() {
   });
 
   testWidgets('login requires a local display name', (tester) async {
-    await tester.pumpWidget(MainApp(initialRoute: AppRoutes.login));
+    final repository = LocalSessionRepository();
+
+    await tester.pumpWidget(
+      _sessionApp(initialRoute: AppRoutes.login, repository: repository),
+    );
 
     await tester.tap(find.text('Enter InfinityWorld'));
     await tester.pump();
 
     expect(find.byType(LoginScreen), findsOneWidget);
     expect(find.text('Enter a display name'), findsOneWidget);
-    expect(await LocalSessionRepository().hasSession(), isFalse);
+    expect(await repository.hasSession(), isFalse);
     expect(tester.takeException(), isNull);
   });
 
   testWidgets('login saves a local profile before opening main', (
     tester,
   ) async {
-    await tester.pumpWidget(MainApp(initialRoute: AppRoutes.login));
+    final repository = LocalSessionRepository();
+
+    await tester.pumpWidget(
+      _sessionApp(initialRoute: AppRoutes.login, repository: repository),
+    );
 
     await tester.enterText(find.byType(TextField), 'Minh');
     await tester.tap(find.text('Enter InfinityWorld'));
     await tester.pumpAndSettle();
 
-    final repository = LocalSessionRepository();
     expect(find.byType(MainScreen), findsOneWidget);
     expect(await repository.hasSession(), isTrue);
     expect(await repository.getDisplayName(), 'Minh');
@@ -52,7 +61,9 @@ void main() {
     final repository = LocalSessionRepository();
     await repository.saveSession(displayName: 'Minh');
 
-    await tester.pumpWidget(MainApp(initialRoute: AppRoutes.main));
+    await tester.pumpWidget(
+      _sessionApp(initialRoute: AppRoutes.main, repository: repository),
+    );
 
     await tester.tap(find.text('Log out'));
     await tester.pumpAndSettle();
@@ -62,4 +73,14 @@ void main() {
     expect(await repository.getDisplayName(), isNull);
     expect(tester.takeException(), isNull);
   });
+}
+
+Widget _sessionApp({
+  required String initialRoute,
+  required LocalSessionRepository repository,
+}) {
+  return ProviderScope(
+    overrides: [localSessionRepositoryProvider.overrideWithValue(repository)],
+    child: MainApp(initialRoute: initialRoute),
+  );
 }

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:infinity_world/features/auth/data/local_session_repository.dart';
+import 'package:infinity_world/features/auth/application/session_providers.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 
-class DashboardScreen extends StatefulWidget {
+class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   bool _isLoggingOut = false;
 
   void _toFoxRandom() {
@@ -28,7 +29,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     _isLoggingOut = true;
     try {
-      await LocalSessionRepository().clearSession();
+      await ref.read(localSessionRepositoryProvider).clearSession();
       if (!mounted) {
         return;
       }

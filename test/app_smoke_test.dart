@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:infinity_world/app/bootstrap/startup_route_resolver.dart';
 import 'package:infinity_world/app/shell/main_screen.dart';
@@ -23,7 +24,7 @@ void main() {
   ) async {
     final initialRoute = await resolveStartupRoute();
 
-    await tester.pumpWidget(MainApp(initialRoute: initialRoute));
+    await tester.pumpWidget(_app(initialRoute));
 
     expect(find.byType(LoginScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -35,7 +36,7 @@ void main() {
     await LocalSessionRepository().saveSession(displayName: 'Minh');
     final initialRoute = await resolveStartupRoute();
 
-    await tester.pumpWidget(MainApp(initialRoute: initialRoute));
+    await tester.pumpWidget(_app(initialRoute));
 
     expect(find.byType(MainScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -48,13 +49,15 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: MediaQuery(
-          data: const MediaQueryData(
-            size: Size(360, 640),
-            viewInsets: EdgeInsets.only(bottom: 300),
+      const ProviderScope(
+        child: MaterialApp(
+          home: MediaQuery(
+            data: MediaQueryData(
+              size: Size(360, 640),
+              viewInsets: EdgeInsets.only(bottom: 300),
+            ),
+            child: LoginScreen(),
           ),
-          child: const LoginScreen(),
         ),
       ),
     );
@@ -64,4 +67,8 @@ void main() {
     expect(find.text('Enter InfinityWorld'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+}
+
+Widget _app(String initialRoute) {
+  return ProviderScope(child: MainApp(initialRoute: initialRoute));
 }

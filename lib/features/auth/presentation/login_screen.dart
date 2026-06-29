@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:infinity_world/design_system/components/iw_card.dart';
-import 'package:infinity_world/features/auth/data/local_session_repository.dart';
+import 'package:infinity_world/features/auth/application/session_providers.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _displayNameController = TextEditingController();
   final _displayNameFocusNode = FocusNode();
 
@@ -45,7 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await LocalSessionRepository().saveSession(displayName: displayName);
+      await ref
+          .read(localSessionRepositoryProvider)
+          .saveSession(displayName: displayName);
       if (!mounted) {
         return;
       }

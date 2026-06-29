@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:infinity_world/app/bootstrap/startup_route_resolver.dart';
 import 'package:infinity_world/app/router/app_router.dart';
@@ -10,7 +11,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final initialRoute = await resolveStartupRoute();
 
-  runApp(MainApp(initialRoute: initialRoute));
+  runApp(ProviderScope(child: MainApp(initialRoute: initialRoute)));
 }
 
 class MainApp extends StatelessWidget {

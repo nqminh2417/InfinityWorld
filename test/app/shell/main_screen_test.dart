@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:infinity_world/app/shell/main_screen.dart';
 import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
@@ -9,7 +10,9 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(360, 640));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    await tester.pumpWidget(const MaterialApp(home: MainScreen()));
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: MainScreen())),
+    );
     await tester.pump();
 
     final nav = tester.widget<BottomNavigationBar>(
@@ -30,7 +33,9 @@ void main() {
   });
 
   testWidgets('main shell switches tabs locally', (tester) async {
-    await tester.pumpWidget(const MaterialApp(home: MainScreen()));
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: MainScreen())),
+    );
 
     await tester.tap(find.byIcon(Icons.handyman_rounded));
     await tester.pump();

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:infinity_world/app/router/app_router.dart';
@@ -23,7 +24,7 @@ void main() {
   testWidgets('settings route opens the existing settings screen', (
     tester,
   ) async {
-    await tester.pumpWidget(MainApp(initialRoute: AppRoutes.settings));
+    await tester.pumpWidget(_app(AppRoutes.settings));
 
     expect(find.byType(SettingsScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -32,28 +33,28 @@ void main() {
   testWidgets('profile route opens the existing profile screen', (
     tester,
   ) async {
-    await tester.pumpWidget(MainApp(initialRoute: AppRoutes.profile));
+    await tester.pumpWidget(_app(AppRoutes.profile));
 
     expect(find.byType(ProfileScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
   testWidgets('chat route opens the existing chat screen', (tester) async {
-    await tester.pumpWidget(MainApp(initialRoute: AppRoutes.chat));
+    await tester.pumpWidget(_app(AppRoutes.chat));
 
     expect(find.byType(ChatScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
   testWidgets('login route opens the existing login screen', (tester) async {
-    await tester.pumpWidget(MainApp(initialRoute: AppRoutes.login));
+    await tester.pumpWidget(_app(AppRoutes.login));
 
     expect(find.byType(LoginScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
   testWidgets('main route opens the existing main shell', (tester) async {
-    await tester.pumpWidget(MainApp(initialRoute: AppRoutes.main));
+    await tester.pumpWidget(_app(AppRoutes.main));
 
     expect(find.byType(MainScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -62,21 +63,21 @@ void main() {
   testWidgets('dashboard route opens the existing dashboard screen', (
     tester,
   ) async {
-    await tester.pumpWidget(MainApp(initialRoute: AppRoutes.dashboard));
+    await tester.pumpWidget(_app(AppRoutes.dashboard));
 
     expect(find.byType(DashboardScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
   testWidgets('BMI route opens the existing BMI screen', (tester) async {
-    await tester.pumpWidget(MainApp(initialRoute: AppRoutes.bmi));
+    await tester.pumpWidget(_app(AppRoutes.bmi));
 
     expect(find.byType(BmiScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
   testWidgets('test route opens the existing test screen', (tester) async {
-    await tester.pumpWidget(MainApp(initialRoute: AppRoutes.test));
+    await tester.pumpWidget(_app(AppRoutes.test));
 
     expect(find.byType(TestScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -146,4 +147,8 @@ void main() {
     pendingProgress.complete(SmtsProgressModel(version: '0.20.16'));
     await tester.pump();
   });
+}
+
+Widget _app(String initialRoute) {
+  return ProviderScope(child: MainApp(initialRoute: initialRoute));
 }
