@@ -13,7 +13,13 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final brightness = Theme.of(context).brightness;
     final displayName = ref.watch(currentDisplayNameProvider);
-    final themeMode = ref.watch(appThemeModeProvider);
+    final themeMode = ref
+        .watch(appThemeModeProvider)
+        .when(
+          data: (value) => value,
+          error: (_, __) => ThemeMode.system,
+          loading: () => ThemeMode.system,
+        );
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),

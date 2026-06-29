@@ -24,7 +24,7 @@ Current structure:
 - `lib/app/router/app_router.dart` maps the current route table with go_router.
 - `lib/routes/app_routes.dart` still defines shared path constants.
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
-- `lib/app/theme/app_theme_mode_provider.dart` exposes the app-level theme mode seam with the current default of `ThemeMode.system`.
+- `lib/app/theme/app_theme_mode_provider.dart` exposes the persisted app-level theme mode provider/controller with a fallback default of `ThemeMode.system`.
 - `lib/design_system/` now contains the first tokens and `IwCard` component slice.
 - Selected feature screens have been moved under `lib/features/`.
 - `lib/app/shell/main_screen.dart` now contains the local five-tab bottom shell skeleton.
@@ -61,7 +61,7 @@ Current dependencies:
 - Runtime packages: `go_router`, `flutter_riverpod`, `http`, `change_app_package_name`, `shared_preferences`
 - Dev packages: `flutter_test`, `flutter_lints`, `shared_preferences_platform_interface`
 
-go_router is active for the root route table. Riverpod is active for the first local session repository provider seam and root theme-mode provider seam. Dio is still a target-direction technology and is not installed or active yet.
+go_router is active for the root route table. Riverpod is active for the first local session repository provider seam and persisted root theme-mode provider seam. Dio is still a target-direction technology and is not installed or active yet.
 
 ## Current Known Risks
 
@@ -373,7 +373,7 @@ Next phase focus:
 
 ## Phase 6: Riverpod Foundation
 
-Status: current / seventh implementation slice scoped.
+Status: current / seventh implementation slice complete, Settings controls slice scoped.
 
 Goal:
 
@@ -485,17 +485,25 @@ Sixth implementation slice:
 
 - Completed: added a read-only Appearance summary to Settings that consumes `appThemeModeProvider`.
 - Completed: displays the current theme mode label while preserving the runtime default of `ThemeMode.system`.
-- Completed: updated focused Settings widget coverage for the default System label and provider override behavior.
+- Completed: updated focused Settings widget coverage for the default System label; persisted mode coverage is added by the seventh slice.
 - Settings theme controls, persisted theme preference semantics, theme style switching, Settings redesign, shell tab state, form-state migration, Dio, network state, real auth, and `ShellRoute` remain out of scope.
 
 Next-consumer audit after Settings Appearance findings:
 
-- `MainApp` and Settings now both consume `appThemeModeProvider`, but the provider still returns the hardcoded default `ThemeMode.system`.
+- At the T60 audit, `MainApp` and Settings both consumed `appThemeModeProvider`, but the provider still returned the hardcoded default `ThemeMode.system`.
 - Theme mode persistence foundation is the smallest useful seventh Riverpod slice because theme preference is documented local-first Settings/profile data and `shared_preferences` is already active.
 - The seventh slice should introduce the smallest app-theme preference boundary backed by local storage, preserve `ThemeMode.system` when no valid stored value exists, and keep existing root/Settings read-only consumption working.
 - Interactive Settings theme controls should wait until the persisted provider/controller foundation exists.
 - Shell tab state, BMI/Login/Test form state, and simple widget-local state should stay local; Fox and Summertime Saga async state should continue to wait for Phase 7 networking/Dio ownership.
 - Theme style switching, Neon/Vice themes, visual redesign, Dio, network state, real auth, `ShellRoute`, and new feature roots remain out of scope.
+
+Seventh implementation slice:
+
+- Completed: added a small app theme-mode repository/controller backed by `shared_preferences`.
+- Completed: `appThemeModeProvider` now loads persisted `ThemeMode.system`, `ThemeMode.light`, or `ThemeMode.dark`, and falls back to System for missing or invalid stored values.
+- Completed: `MainApp` and Settings keep using the provider with a System fallback while persisted state resolves.
+- Completed: focused tests cover default, persisted, invalid, update, root-app, and Settings summary behavior.
+- Interactive Settings theme controls, theme style switching, Neon/Vice themes, visual redesign, shell tab state, form-state migration, Dio, network state, real auth, `ShellRoute`, and new feature roots remain out of scope.
 
 ## Phase 7: Networking Foundation
 

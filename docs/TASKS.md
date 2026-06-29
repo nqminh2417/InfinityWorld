@@ -21,7 +21,7 @@ Current architecture status:
 - `lib/app/bootstrap/startup_route_resolver.dart` now chooses Login or Main from the local session flag before `runApp`.
 - `lib/main.dart` now wraps the runtime app with Riverpod `ProviderScope`.
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
-- `lib/app/theme/app_theme_mode_provider.dart` now exposes the app-level theme mode provider with the current default of `ThemeMode.system`.
+- `lib/app/theme/app_theme_mode_provider.dart` now exposes the persisted app-level theme mode provider/controller with a fallback default of `ThemeMode.system`.
 - `lib/design_system/tokens/` and `lib/design_system/components/iw_card.dart` now provide the first design-system token/card slice.
 - Auth/Login presentation now lives under `lib/features/auth/presentation/`.
 - Auth session dependency injection now starts at `lib/features/auth/application/session_providers.dart`.
@@ -52,7 +52,7 @@ Current tests:
 - Login/logout session navigation widget coverage exists and overrides the local session repository provider.
 - Local display-name validation and persistence coverage exists.
 - App theme unit coverage exists.
-- App theme-mode provider coverage exists for the default and root-app override behavior.
+- App theme-mode provider coverage exists for default, persisted, invalid, update, root-app persisted, and Settings summary behavior.
 - `IwCard` widget coverage exists.
 - BMI domain unit tests exist.
 - BMI presentation widget tests exist.
@@ -65,7 +65,7 @@ Current tests:
 - Summertime Saga service/model tests exist with fake-network coverage for success, non-2xx, malformed JSON, missing schema, and timeout handling.
 - Summertime Saga screen widget tests exist for deterministic loading, success, error/retry, incomplete data, dispose safety, and small-screen scroll safety.
 - Profile presentation widget test exists and covers persisted local display-name rendering.
-- Settings presentation widget test exists and covers persisted local display-name rendering, the read-only Appearance theme-mode summary, and provider override behavior.
+- Settings presentation widget test exists and covers persisted local display-name rendering, the read-only Appearance theme-mode summary, and persisted theme-mode behavior.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
 - Fox and Summertime Saga route smoke tests use router-level builder overrides with their existing fake-network screen seams.
@@ -79,7 +79,7 @@ Current phase:
 - Active routing is go_router-only; GetX routing is removed.
 - `/main` remains the local session shell entry point.
 - `ShellRoute`/`StatefulShellRoute` should wait for real tab root screens and tab-owned child route stacks.
-- Riverpod is installed and active for root `ProviderScope`, the local session repository provider seam, Profile display-name consumption, Settings profile-summary/theme-mode consumption, Dashboard/Home greeting consumption, and root theme-mode consumption.
+- Riverpod is installed and active for root `ProviderScope`, the local session repository provider seam, Profile display-name consumption, Settings profile-summary/theme-mode consumption, Dashboard/Home greeting consumption, and persisted root theme-mode consumption.
 
 Android toolchain status:
 
@@ -143,8 +143,9 @@ Completed stabilization tasks:
 - Riverpod next-consumer audit after Dashboard was completed; root theme mode provider foundation was selected as the fifth Riverpod consumer because `MainApp` still hardcodes `ThemeMode.system` while light/dark app themes and Riverpod root wiring already exist.
 - Riverpod theme mode provider foundation slice was completed; `MainApp` now consumes `appThemeModeProvider`, default behavior stays `ThemeMode.system`, and focused coverage verifies provider default and override behavior.
 - Riverpod next-consumer audit after theme mode provider was completed; Settings Appearance read-only theme-mode summary was selected as the sixth Riverpod consumer because it can reuse `appThemeModeProvider` without persistence, controls, or root app changes.
-- Riverpod Settings appearance theme-mode summary slice was completed; Settings now consumes `appThemeModeProvider` and focused widget coverage verifies the default System label and provider override behavior.
+- Riverpod Settings appearance theme-mode summary slice was completed; Settings now consumes `appThemeModeProvider` and focused widget coverage verifies the default System label, with persisted-value behavior covered by the T61 slice.
 - Riverpod next-consumer audit after Settings Appearance was completed; theme-mode persistence foundation was selected as the seventh Riverpod slice because root app and Settings already consume `appThemeModeProvider`, but it still returns a hardcoded `ThemeMode.system` value.
+- Riverpod theme-mode persistence foundation slice was completed; `appThemeModeProvider` is now backed by `shared_preferences`, preserves System for missing or invalid stored values, and exposes a controller update method for a later Settings controls slice.
 
 ## Recommended Next Work
 
@@ -161,22 +162,21 @@ Task sizing note:
 
 ### Primary
 
-T61 - Riverpod theme-mode persistence foundation slice
+T62 - Riverpod Settings theme-mode controls slice
 
 Reason:
 
-- T60 found that `MainApp` and Settings already consume `appThemeModeProvider`, but the provider still returns a hardcoded `ThemeMode.system` value.
-- Theme mode preference is documented local-first Settings/profile data, and `shared_preferences` is already active.
-- A persisted provider/controller foundation can be verified independently before adding interactive Settings controls.
+- T61 established the persisted theme-mode provider/controller foundation.
+- Settings already has a read-only Appearance summary and is the correct app configuration surface.
+- The next slice can add controls that call the existing Riverpod controller without changing theme style, shell state, routes, or network behavior.
 
 Scope:
 
-- Introduce the smallest app-theme preference boundary backed by `shared_preferences`.
-- Preserve `ThemeMode.system` when no valid stored value exists.
-- Keep existing root app and Settings read-only theme-mode consumption working.
-- Add or update focused provider/root/Settings coverage for default, persisted, invalid, and update behavior where useful.
+- Add compact Settings Appearance controls for choosing System, Light, or Dark through `appThemeModeProvider`.
+- Keep the existing Settings layout, route, and read-only profile summary behavior stable.
+- Update focused Settings/widget coverage for selecting a theme mode and persisting the selected value.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not add interactive Settings theme controls, theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, network state migration, Dio, real auth, `ShellRoute`, or new feature roots in this slice.
+- Do not add theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, network state migration, Dio, real auth, `ShellRoute`, or new feature roots in this slice.
 
 Verification:
 
@@ -188,14 +188,14 @@ T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Riverpod.
 
-T62 - Riverpod Settings theme-mode controls slice
+T63 - Riverpod next-consumer audit after Settings theme controls
 
-Choose this only after T61 establishes the persisted theme-mode provider/controller foundation.
+Choose this only after T62 verifies interactive Settings theme-mode controls.
 
 ### Do not start yet
 
-- Interactive Settings theme-mode controls before T61 establishes the persisted provider/controller foundation.
-- Riverpod feature rewrites beyond the scoped T61 theme-mode persistence foundation slice.
+- Riverpod feature rewrites beyond the scoped T62 Settings theme-mode controls slice.
+- Theme style switching, Neon/Vice themes, or visual redesign before a dedicated theme-style task.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
@@ -216,7 +216,7 @@ Current phase:
 
 Decision:
 
-- T60 selected theme-mode persistence foundation as the seventh Riverpod slice. Start T61 before any broader feature-state migration.
+- T61 completed theme-mode persistence foundation. Start T62 before any broader feature-state migration.
 
 Do not enter yet:
 
@@ -244,7 +244,8 @@ Exit criteria:
 - Done: Chose Settings Appearance read-only theme-mode summary as the next Riverpod consumer.
 - Done: Implemented and verified the Settings appearance theme-mode summary slice.
 - Done: Chose theme-mode persistence foundation as the next Riverpod slice.
-- Remaining: Implement and verify the theme-mode persistence foundation slice.
+- Done: Implemented and verified the theme-mode persistence foundation slice.
+- Remaining: Implement and verify the Settings theme-mode controls slice.
 
 ## Verification Gates
 

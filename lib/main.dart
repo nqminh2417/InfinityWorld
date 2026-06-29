@@ -24,7 +24,13 @@ class MainApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(appThemeModeProvider);
+    final themeMode = ref
+        .watch(appThemeModeProvider)
+        .when(
+          data: (value) => value,
+          error: (_, __) => ThemeMode.system,
+          loading: () => ThemeMode.system,
+        );
 
     return MaterialApp.router(
       title: Cfg.appName,

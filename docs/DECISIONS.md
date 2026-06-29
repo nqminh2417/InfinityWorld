@@ -138,9 +138,13 @@ Settings now has a small read-only Appearance summary that consumes `appThemeMod
 
 ### 2026-06-29: Seventh Riverpod slice is theme-mode persistence foundation
 
-The T60 audit selected app theme-mode persistence foundation as the seventh Riverpod slice.
+The T60 audit selected app theme-mode persistence foundation as the seventh Riverpod slice, and T61 implemented it.
 
-T61 should replace the hardcoded app theme-mode seam with a small Riverpod-managed theme-mode preference boundary backed by `shared_preferences`, while preserving `ThemeMode.system` when no valid stored value exists. Existing root app and Settings read-only consumption should keep working. Interactive Settings theme controls, theme style switching, Neon/Vice themes, visual redesign, shell tab state, form state, network features, Dio, `ShellRoute`, real auth, and new feature roots stay out of scope.
+The app theme-mode provider is now Riverpod-managed and backed by `shared_preferences`, while preserving `ThemeMode.system` when no valid stored value exists. Existing root app and Settings read-only consumption continue to work through the same provider. Interactive Settings theme controls, theme style switching, Neon/Vice themes, visual redesign, shell tab state, form state, network features, Dio, `ShellRoute`, real auth, and new feature roots stay out of scope.
+
+### 2026-06-29: Eighth Riverpod slice is Settings theme-mode controls
+
+T62 should add the smallest Settings Appearance controls for selecting System, Light, or Dark through the persisted `appThemeModeProvider` controller. Keep the existing Settings layout, route behavior, local session flow, and five-tab shell stable. Theme style switching, Neon/Vice themes, visual redesign, shell state, form state, network features, Dio, `ShellRoute`, real auth, and new feature roots stay out of scope.
 
 ### 2026-06-23: BMI is the current migration pilot
 

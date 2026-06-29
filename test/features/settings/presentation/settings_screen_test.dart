@@ -46,14 +46,16 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Settings screen shows overridden theme mode summary', (
+  testWidgets('Settings screen shows persisted theme mode summary', (
     tester,
   ) async {
+    SharedPreferencesAsyncPlatform
+        .instance = InMemorySharedPreferencesAsync.withData({
+      AppThemeModeRepository.themeModeKey: ThemeMode.dark.name,
+    });
+
     await tester.pumpWidget(
-      ProviderScope(
-        overrides: [appThemeModeProvider.overrideWithValue(ThemeMode.dark)],
-        child: const MaterialApp(home: SettingsScreen()),
-      ),
+      const ProviderScope(child: MaterialApp(home: SettingsScreen())),
     );
     await tester.pumpAndSettle();
 
