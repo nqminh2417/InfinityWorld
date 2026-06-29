@@ -25,6 +25,7 @@ Current architecture status:
 - Auth/Login presentation now lives under `lib/features/auth/presentation/`.
 - Auth session dependency injection now starts at `lib/features/auth/application/session_providers.dart`.
 - Local session/profile persistence now lives under `lib/features/auth/data/local_session_repository.dart` and uses `shared_preferences`.
+- Dashboard/Home now consumes the persisted local display name through Riverpod.
 - Profile now consumes the persisted local display name through Riverpod.
 - Settings now consumes the persisted local display name through Riverpod.
 - BMI was the initial migration pilot and now lives under `lib/features/bmi/`.
@@ -54,7 +55,7 @@ Current tests:
 - BMI domain unit tests exist.
 - BMI presentation widget tests exist.
 - Chat route smoke test exists.
-- Dashboard presentation widget test exists for small-screen scroll safety.
+- Dashboard presentation widget test exists for small-screen scroll safety and persisted local display-name rendering.
 - Deterministic route smoke tests exist for Login, Main, Dashboard, Chat, Profile, Settings, BMI, Test, Fox, and Summertime Saga.
 - Test screen widget coverage exists for small-screen keyboard/scroll safety.
 - Fox API service and model parsing tests exist.
@@ -76,7 +77,7 @@ Current phase:
 - Active routing is go_router-only; GetX routing is removed.
 - `/main` remains the local session shell entry point.
 - `ShellRoute`/`StatefulShellRoute` should wait for real tab root screens and tab-owned child route stacks.
-- Riverpod is installed and active for root `ProviderScope`, the local session repository provider seam, Profile display-name consumption, and Settings profile-summary consumption.
+- Riverpod is installed and active for root `ProviderScope`, the local session repository provider seam, Profile display-name consumption, Settings profile-summary consumption, and Dashboard/Home greeting consumption.
 
 Android toolchain status:
 
@@ -136,6 +137,7 @@ Completed stabilization tasks:
 - Riverpod next-consumer audit after Profile was completed; Settings read-only profile summary was selected as the third Riverpod consumer because it can reuse `currentDisplayNameProvider` without theme, shell, form, or network migration.
 - Riverpod Settings profile summary slice was completed; Settings now consumes `currentDisplayNameProvider` and focused widget coverage verifies the persisted display name.
 - Riverpod next-consumer audit after Settings was completed; Dashboard/Home read-only greeting was selected as the fourth Riverpod consumer because it can reuse `currentDisplayNameProvider` without theme, shell, form, or network migration.
+- Riverpod Dashboard local greeting slice was completed; Dashboard now consumes `currentDisplayNameProvider` and focused widget coverage verifies the persisted display name.
 
 ## Recommended Next Work
 
@@ -152,25 +154,25 @@ Task sizing note:
 
 ### Primary
 
-T55 - Riverpod Dashboard local greeting slice
+T56 - Riverpod next-consumer audit after Dashboard
 
 Reason:
 
-- T54 selected Dashboard/Home greeting as the smallest useful fourth Riverpod consumer.
-- Dashboard is currently the Home tab body and already uses Riverpod for logout.
-- A read-only greeting can reuse `currentDisplayNameProvider` without adding persistence, routes, feature roots, theme controls, or networking.
+- T55 completed the Dashboard/Home greeting slice.
+- The next Riverpod consumer should be selected before another implementation slice.
+- Remaining candidates still have different risk profiles: theme preferences touch app-level `ThemeMode`, shell tab state affects navigation ownership, BMI/Login/Test form state is UI-local, and Fox/Summertime Saga are network-backed.
 
 Scope:
 
-- Show the persisted local display name in a small read-only Dashboard/Home greeting when available.
-- Preserve the existing Dashboard route, module navigation list, logout behavior, layout safety, and shell behavior.
-- Update focused Dashboard widget coverage with in-memory local session data.
+- Inspect likely next Riverpod consumers and current tests after the Dashboard slice.
+- Choose the smallest fifth Riverpod implementation slice and verification gate.
+- Update planning docs only; do not migrate more state during the audit.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not add profile editing, avatar selection, theme preferences, root `ThemeMode`, Settings redesign, Dio, real auth, `ShellRoute`, new feature roots, network state migration, shell tab-state migration, or visual redesign.
+- Do not add profile editing, avatar selection, theme preferences, root `ThemeMode`, Settings redesign, Dio, real auth, `ShellRoute`, new feature roots, network state migration, shell tab-state migration, or visual redesign during the audit.
 
 Verification:
 
-- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
@@ -178,13 +180,13 @@ T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Riverpod.
 
-T56 - Riverpod next-consumer audit after Dashboard
+T57 - Riverpod fifth implementation slice
 
-Choose this only after T55 passes and another Riverpod consumer should be selected.
+Choose this only after T56 scopes the next Riverpod consumer.
 
 ### Do not start yet
 
-- Riverpod feature rewrites beyond the scoped T55 Dashboard greeting slice.
+- Riverpod feature rewrites beyond the T55 Dashboard greeting slice before T56 scopes the next consumer.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
@@ -205,7 +207,7 @@ Current phase:
 
 Decision:
 
-- T54 selected Dashboard/Home read-only greeting as the fourth Riverpod slice. Start T55 before any broader feature-state migration.
+- T55 completed Dashboard/Home read-only greeting consumption. Start T56 before any broader feature-state migration.
 
 Do not enter yet:
 
@@ -227,7 +229,8 @@ Exit criteria:
 - Done: Chose Settings read-only profile summary as the next Riverpod consumer.
 - Done: Implemented and verified the Settings profile summary slice.
 - Done: Chose Dashboard/Home read-only greeting as the next Riverpod consumer.
-- Remaining: Implement and verify the Dashboard local greeting slice.
+- Done: Implemented and verified the Dashboard local greeting slice.
+- Remaining: Choose the next Riverpod consumer before a fifth implementation slice.
 
 ## Verification Gates
 

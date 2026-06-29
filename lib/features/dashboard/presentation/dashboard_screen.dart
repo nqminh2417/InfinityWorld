@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:infinity_world/design_system/tokens/iw_spacing.dart';
 import 'package:infinity_world/features/auth/application/session_providers.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 
@@ -41,6 +42,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final displayName = ref.watch(currentDisplayNameProvider);
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -52,6 +55,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         top: false,
         child: ListView(
           children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                IwSpacing.screenPadding,
+                IwSpacing.space16,
+                IwSpacing.screenPadding,
+                IwSpacing.space8,
+              ),
+              child: Text(
+                displayName.when(
+                  data:
+                      (value) =>
+                          value == null
+                              ? 'Welcome back'
+                              : 'Welcome back, $value',
+                  error: (_, __) => 'Welcome back',
+                  loading: () => 'Loading your local profile...',
+                ),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
             ListTile(
               leading: const Icon(Icons.beach_access),
               title: const Text('Summertime Saga'),

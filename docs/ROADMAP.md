@@ -33,6 +33,7 @@ Current structure:
 - `lib/features/auth/application/session_providers.dart` exposes the local session repository and current display-name providers.
 - `lib/features/profile/presentation/profile_screen.dart` now consumes the persisted local display name through Riverpod.
 - `lib/features/settings/presentation/settings_screen.dart` now consumes the persisted local display name through Riverpod.
+- `lib/features/dashboard/presentation/dashboard_screen.dart` now consumes the persisted local display name through Riverpod.
 - Feature placement completed for the Phase 2 selected screens/features:
   - `lib/features/bmi/domain/bmi_calculator.dart`
   - `lib/features/bmi/presentation/bmi_screen.dart`
@@ -371,7 +372,7 @@ Next phase focus:
 
 ## Phase 6: Riverpod Foundation
 
-Status: current / third implementation slice complete, fourth implementation slice scoped.
+Status: current / fourth implementation slice complete, next consumer audit next.
 
 Goal:
 
@@ -447,6 +448,14 @@ Next-consumer audit after Settings findings:
 - Theme preferences remain useful later, but they touch root `ThemeMode`, persistence semantics, and app-level rebuild behavior, so they should wait for a dedicated theme-mode provider slice.
 - Main shell tab index, BMI/Login form state, and Test form state remain local UI state for now; moving them to Riverpod would add ownership complexity without shared-state value.
 - Fox and Summertime Saga async state should continue to wait for Phase 7 networking/Dio work because they involve API/retry/error ownership, not just local Riverpod foundation.
+
+Fourth implementation slice:
+
+- Completed: converted Dashboard/Home to consume `currentDisplayNameProvider` for a read-only greeting.
+- Completed: showed the saved local display name without changing the existing module navigation list, logout behavior, route paths, or shell behavior.
+- Completed: preserved the existing ListView/SafeArea structure for normal-screen layout safety.
+- Completed: updated focused Dashboard widget coverage with in-memory local session data.
+- Theme preferences, root `ThemeMode`, profile editing, shell tab state, network migration, Dio, `ShellRoute`, and visual redesign remain out of scope.
 
 ## Phase 7: Networking Foundation
 

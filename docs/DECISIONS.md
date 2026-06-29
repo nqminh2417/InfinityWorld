@@ -122,7 +122,7 @@ T53 converted Settings to consume the existing `currentDisplayNameProvider` and 
 
 The T54 audit selected Dashboard/Home read-only greeting as the fourth Riverpod slice.
 
-T55 should show the persisted local display name in a small Dashboard/Home greeting by reusing `currentDisplayNameProvider`, while keeping routes, `/main`, shell tab state, module navigation, logout behavior, profile editing, theme preferences, root `ThemeMode`, network features, Dio, `ShellRoute`, real auth, and visual redesign out of scope.
+T55 showed the persisted local display name in a small Dashboard/Home greeting by reusing `currentDisplayNameProvider`, while keeping routes, `/main`, shell tab state, module navigation, logout behavior, profile editing, theme preferences, root `ThemeMode`, network features, Dio, `ShellRoute`, real auth, and visual redesign out of scope.
 
 ### 2026-06-23: BMI is the current migration pilot
 
