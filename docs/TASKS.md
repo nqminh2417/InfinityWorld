@@ -26,6 +26,7 @@ Current architecture status:
 - Auth session dependency injection now starts at `lib/features/auth/application/session_providers.dart`.
 - Local session/profile persistence now lives under `lib/features/auth/data/local_session_repository.dart` and uses `shared_preferences`.
 - Profile now consumes the persisted local display name through Riverpod.
+- Settings now consumes the persisted local display name through Riverpod.
 - BMI was the initial migration pilot and now lives under `lib/features/bmi/`.
 - Chat presentation now lives under `lib/features/chat/presentation/`.
 - Dashboard presentation now lives under `lib/features/dashboard/presentation/`.
@@ -61,6 +62,7 @@ Current tests:
 - Summertime Saga service/model tests exist with fake-network coverage for success, non-2xx, malformed JSON, missing schema, and timeout handling.
 - Summertime Saga screen widget tests exist for deterministic loading, success, error/retry, incomplete data, dispose safety, and small-screen scroll safety.
 - Profile presentation widget test exists and covers persisted local display-name rendering.
+- Settings presentation widget test exists and covers persisted local display-name rendering.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
 - Fox and Summertime Saga route smoke tests use router-level builder overrides with their existing fake-network screen seams.
@@ -74,8 +76,7 @@ Current phase:
 - Active routing is go_router-only; GetX routing is removed.
 - `/main` remains the local session shell entry point.
 - `ShellRoute`/`StatefulShellRoute` should wait for real tab root screens and tab-owned child route stacks.
-- Riverpod is installed and active for root `ProviderScope`, the local session repository provider seam, and Profile display-name consumption.
-- T52 selected Settings read-only profile summary as the third Riverpod implementation slice.
+- Riverpod is installed and active for root `ProviderScope`, the local session repository provider seam, Profile display-name consumption, and Settings profile-summary consumption.
 
 Android toolchain status:
 
@@ -133,6 +134,7 @@ Completed stabilization tasks:
 - Riverpod next-consumer audit was completed; Profile was selected as the second Riverpod consumer because it can show the persisted local display name through a read-only provider without broad state migration.
 - Riverpod Profile display-name provider slice was completed; Profile now consumes `currentDisplayNameProvider` and focused widget coverage verifies the persisted display name.
 - Riverpod next-consumer audit after Profile was completed; Settings read-only profile summary was selected as the third Riverpod consumer because it can reuse `currentDisplayNameProvider` without theme, shell, form, or network migration.
+- Riverpod Settings profile summary slice was completed; Settings now consumes `currentDisplayNameProvider` and focused widget coverage verifies the persisted display name.
 
 ## Recommended Next Work
 
@@ -149,25 +151,25 @@ Task sizing note:
 
 ### Primary
 
-T53 - Riverpod Settings profile summary slice
+T54 - Riverpod next-consumer audit after Settings
 
 Reason:
 
-- T52 selected Settings as the smallest useful third Riverpod consumer.
-- Settings currently has only route smoke coverage and placeholder content, while the product direction says Settings owns local profile/app configuration.
-- A read-only profile summary can reuse `currentDisplayNameProvider` without adding persistence, routes, feature roots, theme controls, or networking.
+- T53 completed the Settings profile summary slice.
+- The next Riverpod consumer should be selected before another implementation slice.
+- Remaining candidates still have different risk profiles: theme preferences touch app-level `ThemeMode`, shell tab state affects navigation ownership, BMI/Login form state is UI-local, and Fox/Summertime Saga are network-backed.
 
 Scope:
 
-- Convert Settings to consume `currentDisplayNameProvider` and show the persisted local display name when available.
-- Preserve the existing Settings route, shell behavior, and normal-screen SafeArea/system UI expectations.
-- Add focused Settings widget coverage with in-memory local session data.
+- Inspect likely next Riverpod consumers and current tests after the Settings slice.
+- Choose the smallest fourth Riverpod implementation slice and verification gate.
+- Update planning docs only; do not migrate more state during the audit.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not add profile editing, avatar selection, theme preferences, root `ThemeMode`, Settings redesign, Dio, real auth, `ShellRoute`, new feature roots, network state migration, shell tab-state migration, Dashboard/Home greeting, or visual redesign.
+- Do not add profile editing, avatar selection, theme preferences, root `ThemeMode`, Settings redesign, Dio, real auth, `ShellRoute`, new feature roots, network state migration, shell tab-state migration, Dashboard/Home greeting, or visual redesign during the audit.
 
 Verification:
 
-- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
@@ -175,13 +177,13 @@ T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Riverpod.
 
-T54 - Riverpod next-consumer audit after Settings
+T55 - Riverpod fourth implementation slice
 
-Choose this only after T53 passes and another Riverpod consumer should be selected.
+Choose this only after T54 scopes the next Riverpod consumer.
 
 ### Do not start yet
 
-- Riverpod feature rewrites beyond the scoped T53 Settings profile summary slice.
+- Riverpod feature rewrites beyond the T53 Settings profile summary slice before T54 scopes the next consumer.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
@@ -202,7 +204,7 @@ Current phase:
 
 Decision:
 
-- T52 selected Settings read-only profile summary as the third Riverpod slice. Start T53 before any broader feature-state migration.
+- T53 completed Settings read-only profile summary consumption. Start T54 before any broader feature-state migration.
 
 Do not enter yet:
 
@@ -222,7 +224,8 @@ Exit criteria:
 - Done: Chose Profile display-name consumption as the next Riverpod consumer.
 - Done: Implemented and verified the Profile display-name provider slice.
 - Done: Chose Settings read-only profile summary as the next Riverpod consumer.
-- Remaining: Implement and verify the Settings profile summary slice.
+- Done: Implemented and verified the Settings profile summary slice.
+- Remaining: Choose the next Riverpod consumer before a fourth implementation slice.
 
 ## Verification Gates
 

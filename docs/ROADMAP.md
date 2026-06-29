@@ -32,6 +32,7 @@ Current structure:
 - `lib/features/auth/data/local_session_repository.dart` stores the first local session flag and display name with `shared_preferences`.
 - `lib/features/auth/application/session_providers.dart` exposes the local session repository and current display-name providers.
 - `lib/features/profile/presentation/profile_screen.dart` now consumes the persisted local display name through Riverpod.
+- `lib/features/settings/presentation/settings_screen.dart` now consumes the persisted local display name through Riverpod.
 - Feature placement completed for the Phase 2 selected screens/features:
   - `lib/features/bmi/domain/bmi_calculator.dart`
   - `lib/features/bmi/presentation/bmi_screen.dart`
@@ -370,7 +371,7 @@ Next phase focus:
 
 ## Phase 6: Riverpod Foundation
 
-Status: current / second implementation slice complete, third implementation slice scoped.
+Status: current / third implementation slice complete, next consumer audit next.
 
 Goal:
 
@@ -429,6 +430,14 @@ Next-consumer audit after Profile findings:
 - The Settings slice should add a focused widget test with in-memory local session data because Settings currently only has route smoke coverage.
 - Keep Settings theme preferences, root `ThemeMode`, profile editing, avatar selection, Main shell tab state, BMI/Login form state, Dashboard/Home greeting, Fox/Summertime Saga async state, Dio, real auth, `ShellRoute`, and visual redesign out of the third Riverpod slice.
 - Fox and Summertime Saga remain better Phase 7 candidates because their Riverpod migration should be tied to networking/error/retry ownership, not the Phase 6 local-state foundation.
+
+Third implementation slice:
+
+- Completed: converted Settings to consume `currentDisplayNameProvider`.
+- Completed: showed the saved local display name in a small read-only Settings profile summary.
+- Completed: kept the existing Settings route, normal-screen SafeArea/system UI expectations, and shell behavior.
+- Completed: added focused Settings widget coverage with in-memory local session data.
+- Theme preferences, root `ThemeMode`, profile editing, avatar selection, Settings redesign, shell tab state, network migration, Dio, `ShellRoute`, and real auth remain out of scope.
 
 ## Phase 7: Networking Foundation
 

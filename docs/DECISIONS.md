@@ -116,7 +116,7 @@ T51 added a read-only current display-name provider backed by the existing local
 
 The T52 audit selected Settings read-only profile summary as the third Riverpod slice.
 
-T53 should convert Settings to consume the existing `currentDisplayNameProvider` and show the persisted local display name in a small read-only summary, while keeping profile editing, avatar selection, theme preferences, root `ThemeMode`, Settings redesign, shell tab state, BMI/Login form state, network features, Dio, `ShellRoute`, and real auth out of scope.
+T53 converted Settings to consume the existing `currentDisplayNameProvider` and show the persisted local display name in a small read-only summary, while keeping profile editing, avatar selection, theme preferences, root `ThemeMode`, Settings redesign, shell tab state, BMI/Login form state, network features, Dio, `ShellRoute`, and real auth out of scope.
 
 ### 2026-06-23: BMI is the current migration pilot
 
