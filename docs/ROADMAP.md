@@ -373,7 +373,7 @@ Next phase focus:
 
 ## Phase 6: Riverpod Foundation
 
-Status: current / sixth implementation slice complete, next consumer audit next.
+Status: current / seventh implementation slice scoped.
 
 Goal:
 
@@ -487,6 +487,15 @@ Sixth implementation slice:
 - Completed: displays the current theme mode label while preserving the runtime default of `ThemeMode.system`.
 - Completed: updated focused Settings widget coverage for the default System label and provider override behavior.
 - Settings theme controls, persisted theme preference semantics, theme style switching, Settings redesign, shell tab state, form-state migration, Dio, network state, real auth, and `ShellRoute` remain out of scope.
+
+Next-consumer audit after Settings Appearance findings:
+
+- `MainApp` and Settings now both consume `appThemeModeProvider`, but the provider still returns the hardcoded default `ThemeMode.system`.
+- Theme mode persistence foundation is the smallest useful seventh Riverpod slice because theme preference is documented local-first Settings/profile data and `shared_preferences` is already active.
+- The seventh slice should introduce the smallest app-theme preference boundary backed by local storage, preserve `ThemeMode.system` when no valid stored value exists, and keep existing root/Settings read-only consumption working.
+- Interactive Settings theme controls should wait until the persisted provider/controller foundation exists.
+- Shell tab state, BMI/Login/Test form state, and simple widget-local state should stay local; Fox and Summertime Saga async state should continue to wait for Phase 7 networking/Dio ownership.
+- Theme style switching, Neon/Vice themes, visual redesign, Dio, network state, real auth, `ShellRoute`, and new feature roots remain out of scope.
 
 ## Phase 7: Networking Foundation
 

@@ -136,6 +136,12 @@ The T58 audit selected Settings Appearance read-only theme-mode summary as the s
 
 Settings now has a small read-only Appearance summary that consumes `appThemeModeProvider` and displays the current theme mode label while keeping the runtime default at `ThemeMode.system`. Settings theme controls, persisted theme preference semantics, theme style switching, Settings redesign, shell tab state, form state, network features, Dio, `ShellRoute`, real auth, and visual redesign stay out of scope.
 
+### 2026-06-29: Seventh Riverpod slice is theme-mode persistence foundation
+
+The T60 audit selected app theme-mode persistence foundation as the seventh Riverpod slice.
+
+T61 should replace the hardcoded app theme-mode seam with a small Riverpod-managed theme-mode preference boundary backed by `shared_preferences`, while preserving `ThemeMode.system` when no valid stored value exists. Existing root app and Settings read-only consumption should keep working. Interactive Settings theme controls, theme style switching, Neon/Vice themes, visual redesign, shell tab state, form state, network features, Dio, `ShellRoute`, real auth, and new feature roots stay out of scope.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:
