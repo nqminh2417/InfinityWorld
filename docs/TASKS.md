@@ -142,6 +142,7 @@ Completed stabilization tasks:
 - Riverpod Dashboard local greeting slice was completed; Dashboard now consumes `currentDisplayNameProvider` and focused widget coverage verifies the persisted display name.
 - Riverpod next-consumer audit after Dashboard was completed; root theme mode provider foundation was selected as the fifth Riverpod consumer because `MainApp` still hardcodes `ThemeMode.system` while light/dark app themes and Riverpod root wiring already exist.
 - Riverpod theme mode provider foundation slice was completed; `MainApp` now consumes `appThemeModeProvider`, default behavior stays `ThemeMode.system`, and focused coverage verifies provider default and override behavior.
+- Riverpod next-consumer audit after theme mode provider was completed; Settings Appearance read-only theme-mode summary was selected as the sixth Riverpod consumer because it can reuse `appThemeModeProvider` without persistence, controls, or root app changes.
 
 ## Recommended Next Work
 
@@ -158,25 +159,25 @@ Task sizing note:
 
 ### Primary
 
-T58 - Riverpod next-consumer audit after theme mode provider
+T59 - Riverpod Settings appearance theme-mode summary slice
 
 Reason:
 
-- T57 completed the root theme mode provider foundation without Settings controls or persistence semantics.
-- The next Riverpod consumer should be selected before expanding theme preferences, shell state, form state, or network state.
-- Remaining candidates have different ownership risks: theme persistence/Settings controls touch local storage and UI, shell tab state touches navigation ownership, form state is still UI-local, and Fox/Summertime Saga remain network-backed.
+- T58 selected Settings Appearance read-only theme-mode summary as the smallest useful sixth Riverpod consumer.
+- Settings is the app configuration surface and already consumes Riverpod state.
+- The existing `appThemeModeProvider` can be shown in Settings before adding persistence, controls, or theme style switching.
 
 Scope:
 
-- Inspect likely next Riverpod consumers and current tests after the theme mode provider slice.
-- Choose the smallest sixth Riverpod implementation slice and verification gate.
-- Update planning docs only; do not migrate more state during the audit.
+- Add a small read-only Appearance summary in Settings that watches `appThemeModeProvider`.
+- Display the current theme mode as a user-facing label while preserving the current `ThemeMode.system` default.
+- Update focused Settings widget coverage, including provider override behavior where useful.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not add Settings theme controls, persisted theme preference semantics, theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, network state migration, Dio, real auth, `ShellRoute`, or new feature roots during the audit.
+- Do not add Settings theme controls, persisted theme preference semantics, theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, network state migration, Dio, real auth, `ShellRoute`, or new feature roots in this slice.
 
 Verification:
 
-- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
@@ -184,13 +185,13 @@ T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Riverpod.
 
-T59 - Riverpod sixth implementation slice
+T60 - Riverpod next-consumer audit after Settings appearance
 
-Choose this only after T58 scopes the next Riverpod consumer.
+Choose this after T59 if another Riverpod consumer needs to be selected before persistence, controls, shell state, or network migration.
 
 ### Do not start yet
 
-- Riverpod feature rewrites beyond the scoped T57 theme-mode provider foundation slice before T58 scopes the next consumer.
+- Riverpod feature rewrites beyond the scoped T59 Settings appearance summary slice.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
@@ -211,7 +212,7 @@ Current phase:
 
 Decision:
 
-- T57 completed root theme mode provider foundation. Start T58 before any broader feature-state migration.
+- T58 selected Settings Appearance read-only theme-mode summary as the sixth Riverpod slice. Start T59 before any broader feature-state migration.
 
 Do not enter yet:
 
@@ -236,7 +237,8 @@ Exit criteria:
 - Done: Implemented and verified the Dashboard local greeting slice.
 - Done: Chose root theme mode provider foundation as the next Riverpod consumer.
 - Done: Implemented and verified the theme mode provider foundation slice.
-- Remaining: Choose the next Riverpod consumer before a sixth implementation slice.
+- Done: Chose Settings Appearance read-only theme-mode summary as the next Riverpod consumer.
+- Remaining: Implement and verify the Settings appearance theme-mode summary slice.
 
 ## Verification Gates
 

@@ -373,7 +373,7 @@ Next phase focus:
 
 ## Phase 6: Riverpod Foundation
 
-Status: current / fifth implementation slice complete, next consumer audit next.
+Status: current / fifth implementation slice complete, sixth implementation slice scoped.
 
 Goal:
 
@@ -472,6 +472,14 @@ Fifth implementation slice:
 - Completed: converted `MainApp` to consume the provider while keeping `MaterialApp.router`, `/main`, startup/session behavior, direct route parity, and the five-tab shell unchanged.
 - Completed: added focused coverage for the provider default and `MainApp` provider override behavior.
 - Settings theme controls, persisted theme preference semantics, theme style switching, Neon/Vice themes, visual redesign, shell tab state, form-state migration, Dio, network state, real auth, and `ShellRoute` remain out of scope.
+
+Next-consumer audit after theme mode provider findings:
+
+- Settings Appearance is the smallest useful sixth Riverpod consumer because Settings is the app configuration surface, is already a `ConsumerWidget`, and can read the existing `appThemeModeProvider`.
+- The sixth slice should add a read-only Appearance summary that shows the current theme mode label while preserving the current default of `ThemeMode.system`.
+- The slice should reuse the existing provider and focused Settings widget coverage; it should not add persistence, controls, theme style switching, Settings redesign, or root app behavior changes.
+- Theme mode persistence and interactive Settings controls are useful later, but they should wait for a dedicated task because they touch local storage, app-level rebuild behavior, and user-facing settings semantics.
+- Main shell tab state, BMI/Login/Test form state, and simple screen-local state should stay local for now; Fox and Summertime Saga async state should wait for Phase 7 networking/Dio work.
 
 ## Phase 7: Networking Foundation
 
