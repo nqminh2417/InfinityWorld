@@ -371,7 +371,7 @@ Next phase focus:
 
 ## Phase 6: Riverpod Foundation
 
-Status: current / third implementation slice complete, next consumer audit next.
+Status: current / third implementation slice complete, fourth implementation slice scoped.
 
 Goal:
 
@@ -438,6 +438,15 @@ Third implementation slice:
 - Completed: kept the existing Settings route, normal-screen SafeArea/system UI expectations, and shell behavior.
 - Completed: added focused Settings widget coverage with in-memory local session data.
 - Theme preferences, root `ThemeMode`, profile editing, avatar selection, Settings redesign, shell tab state, network migration, Dio, `ShellRoute`, and real auth remain out of scope.
+
+Next-consumer audit after Settings findings:
+
+- Dashboard is the smallest useful fourth Riverpod consumer because it already acts as the current Home tab body, already uses Riverpod for logout, and can show the existing persisted display name as a read-only greeting.
+- The next slice can reuse `currentDisplayNameProvider`; it does not need a new repository, persistence key, route, feature root, theme controller, or network layer.
+- The Dashboard slice should update focused Dashboard widget coverage with in-memory local session data and preserve the existing navigation list, logout behavior, `/main`, and direct route parity.
+- Theme preferences remain useful later, but they touch root `ThemeMode`, persistence semantics, and app-level rebuild behavior, so they should wait for a dedicated theme-mode provider slice.
+- Main shell tab index, BMI/Login form state, and Test form state remain local UI state for now; moving them to Riverpod would add ownership complexity without shared-state value.
+- Fox and Summertime Saga async state should continue to wait for Phase 7 networking/Dio work because they involve API/retry/error ownership, not just local Riverpod foundation.
 
 ## Phase 7: Networking Foundation
 

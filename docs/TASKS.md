@@ -135,6 +135,7 @@ Completed stabilization tasks:
 - Riverpod Profile display-name provider slice was completed; Profile now consumes `currentDisplayNameProvider` and focused widget coverage verifies the persisted display name.
 - Riverpod next-consumer audit after Profile was completed; Settings read-only profile summary was selected as the third Riverpod consumer because it can reuse `currentDisplayNameProvider` without theme, shell, form, or network migration.
 - Riverpod Settings profile summary slice was completed; Settings now consumes `currentDisplayNameProvider` and focused widget coverage verifies the persisted display name.
+- Riverpod next-consumer audit after Settings was completed; Dashboard/Home read-only greeting was selected as the fourth Riverpod consumer because it can reuse `currentDisplayNameProvider` without theme, shell, form, or network migration.
 
 ## Recommended Next Work
 
@@ -151,25 +152,25 @@ Task sizing note:
 
 ### Primary
 
-T54 - Riverpod next-consumer audit after Settings
+T55 - Riverpod Dashboard local greeting slice
 
 Reason:
 
-- T53 completed the Settings profile summary slice.
-- The next Riverpod consumer should be selected before another implementation slice.
-- Remaining candidates still have different risk profiles: theme preferences touch app-level `ThemeMode`, shell tab state affects navigation ownership, BMI/Login form state is UI-local, and Fox/Summertime Saga are network-backed.
+- T54 selected Dashboard/Home greeting as the smallest useful fourth Riverpod consumer.
+- Dashboard is currently the Home tab body and already uses Riverpod for logout.
+- A read-only greeting can reuse `currentDisplayNameProvider` without adding persistence, routes, feature roots, theme controls, or networking.
 
 Scope:
 
-- Inspect likely next Riverpod consumers and current tests after the Settings slice.
-- Choose the smallest fourth Riverpod implementation slice and verification gate.
-- Update planning docs only; do not migrate more state during the audit.
+- Show the persisted local display name in a small read-only Dashboard/Home greeting when available.
+- Preserve the existing Dashboard route, module navigation list, logout behavior, layout safety, and shell behavior.
+- Update focused Dashboard widget coverage with in-memory local session data.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not add profile editing, avatar selection, theme preferences, root `ThemeMode`, Settings redesign, Dio, real auth, `ShellRoute`, new feature roots, network state migration, shell tab-state migration, Dashboard/Home greeting, or visual redesign during the audit.
+- Do not add profile editing, avatar selection, theme preferences, root `ThemeMode`, Settings redesign, Dio, real auth, `ShellRoute`, new feature roots, network state migration, shell tab-state migration, or visual redesign.
 
 Verification:
 
-- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
@@ -177,13 +178,13 @@ T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Riverpod.
 
-T55 - Riverpod fourth implementation slice
+T56 - Riverpod next-consumer audit after Dashboard
 
-Choose this only after T54 scopes the next Riverpod consumer.
+Choose this only after T55 passes and another Riverpod consumer should be selected.
 
 ### Do not start yet
 
-- Riverpod feature rewrites beyond the T53 Settings profile summary slice before T54 scopes the next consumer.
+- Riverpod feature rewrites beyond the scoped T55 Dashboard greeting slice.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
@@ -204,7 +205,7 @@ Current phase:
 
 Decision:
 
-- T53 completed Settings read-only profile summary consumption. Start T54 before any broader feature-state migration.
+- T54 selected Dashboard/Home read-only greeting as the fourth Riverpod slice. Start T55 before any broader feature-state migration.
 
 Do not enter yet:
 
@@ -225,7 +226,8 @@ Exit criteria:
 - Done: Implemented and verified the Profile display-name provider slice.
 - Done: Chose Settings read-only profile summary as the next Riverpod consumer.
 - Done: Implemented and verified the Settings profile summary slice.
-- Remaining: Choose the next Riverpod consumer before a fourth implementation slice.
+- Done: Chose Dashboard/Home read-only greeting as the next Riverpod consumer.
+- Remaining: Implement and verify the Dashboard local greeting slice.
 
 ## Verification Gates
 
