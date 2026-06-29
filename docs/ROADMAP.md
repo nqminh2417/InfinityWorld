@@ -26,7 +26,7 @@ Current structure:
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
 - `lib/design_system/` now contains the first tokens and `IwCard` component slice.
 - Selected feature screens have been moved under `lib/features/`.
-- `lib/app/shell/main_screen.dart` now contains the current legacy bottom-tab shell.
+- `lib/app/shell/main_screen.dart` now contains the local five-tab bottom shell skeleton.
 - Shared legacy UI remains under `lib/widgets/`.
 - `lib/core/config/constants.dart` contains early runtime constants.
 - `lib/features/auth/data/local_session_repository.dart` stores the first local session flag and display name with `shared_preferences`.
@@ -64,7 +64,7 @@ go_router is active for the root route table. Riverpod and Dio are target-direct
 - go_router is the active root router.
 - `lib/routes/app_routes.dart` remains the shared path contract for go_router.
 - Some networking still uses direct `http` services under feature folders.
-- Feature placement does not mean shell design has migrated; `MainScreen` now lives in `lib/app/shell/` but still preserves the current three-tab shell behavior.
+- Feature placement does not mean rich tab content has migrated; `MainScreen` now lives in `lib/app/shell/` with a local five-tab shell skeleton and placeholder tab bodies where roots are not implemented yet.
 - Theme/design-system implementation now has a first token/card slice; broader components and visual adoption remain incomplete.
 - Android toolchain versions have been pulled forward on `home/devbyMinh-current` with explicit approval: Gradle 8.14.5, Android Gradle Plugin 8.11.1, Kotlin Gradle Plugin 2.2.20, Java/Kotlin target 17.
 - Built-in Kotlin migration remains deferred until an AGP 9.x migration or a build requirement forces it.
@@ -252,7 +252,7 @@ Non-goals:
 
 ## Phase 5: Router Migration
 
-Status: current / root parity implemented; shell ownership moved; GetX cleanup complete.
+Status: current / root parity implemented; shell ownership moved; GetX cleanup complete; local five-tab shell skeleton implemented.
 
 Goal:
 
@@ -341,10 +341,17 @@ Five-tab shell implementation audit:
 - Decision: implement the first five-tab slice inside `MainScreen` without `ShellRoute`, keeping `/main` as the startup shell route and keeping direct routes for existing feature parity.
 - Do not use Fox or Summertime Saga as tab roots because their default screens start network work in `initState()`.
 
+Local five-tab shell skeleton:
+
+- Completed: `MainScreen` now exposes Home / Explore / Tools / Library / Settings in a fixed bottom navigation bar.
+- Completed: Home preserves existing Dashboard access, including module links and logout.
+- Completed: Explore, Tools, and Library use local safe placeholder tab bodies; Settings uses the existing settings screen.
+- `ShellRoute`, tab-specific route paths, richer tab content, Riverpod, Dio, and live-network tab roots remain deferred.
+
 Next router-phase focus:
 
-- Implement a local five-tab shell skeleton in `MainScreen`.
-- Keep `ShellRoute`, tab-specific route paths, and richer tab content for later scoped tasks.
+- Audit whether `ShellRoute` and tab-specific deep links are needed before Phase 5 checkpoint/closure.
+- Keep richer tab content for later feature-expansion tasks.
 
 ## Phase 6: Riverpod Foundation
 

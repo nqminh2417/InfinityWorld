@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:infinity_world/features/chat/presentation/chat_screen.dart';
+import 'package:infinity_world/design_system/tokens/iw_spacing.dart';
 import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
-import 'package:infinity_world/features/profile/presentation/profile_screen.dart';
+import 'package:infinity_world/features/settings/presentation/settings_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -13,10 +13,12 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [
+  final List<Widget> _screens = const [
     DashboardScreen(),
-    ChatScreen(),
-    ProfileScreen(),
+    _ShellPlaceholderTab(title: 'Explore', icon: Icons.explore_rounded),
+    _ShellPlaceholderTab(title: 'Tools', icon: Icons.handyman_rounded),
+    _ShellPlaceholderTab(title: 'Library', icon: Icons.local_library_rounded),
+    SettingsScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -30,16 +32,58 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
+            icon: Icon(Icons.home_rounded),
+            label: 'Home',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.explore_rounded),
+            label: 'Explore',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.handyman_rounded),
+            label: 'Tools',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_library_rounded),
+            label: 'Library',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings_rounded),
+            label: 'Settings',
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _ShellPlaceholderTab extends StatelessWidget {
+  const _ShellPlaceholderTab({required this.title, required this.icon});
+
+  final String title;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(title)),
+      body: SafeArea(
+        top: false,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(IwSpacing.screenPadding),
+            child: Icon(
+              icon,
+              size: IwSpacing.space48,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+        ),
       ),
     );
   }
