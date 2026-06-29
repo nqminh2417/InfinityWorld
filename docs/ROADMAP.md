@@ -30,6 +30,8 @@ Current structure:
 - Shared legacy UI remains under `lib/widgets/`.
 - `lib/core/config/constants.dart` contains early runtime constants.
 - `lib/features/auth/data/local_session_repository.dart` stores the first local session flag and display name with `shared_preferences`.
+- `lib/features/auth/application/session_providers.dart` exposes the local session repository and current display-name providers.
+- `lib/features/profile/presentation/profile_screen.dart` now consumes the persisted local display name through Riverpod.
 - Feature placement completed for the Phase 2 selected screens/features:
   - `lib/features/bmi/domain/bmi_calculator.dart`
   - `lib/features/bmi/presentation/bmi_screen.dart`
@@ -368,7 +370,7 @@ Next phase focus:
 
 ## Phase 6: Riverpod Foundation
 
-Status: current / first implementation slice complete, next consumer audit next.
+Status: current / second implementation slice complete, next consumer audit next.
 
 Goal:
 
@@ -414,11 +416,11 @@ Next-consumer audit findings:
 
 Second implementation slice:
 
-- Add a read-only current display-name provider under the auth application layer.
-- Convert Profile to consume the provider and show the saved local display name instead of the hard-coded `InfinityWorld` fallback when available.
-- Keep Profile's existing layout, SafeArea/scroll behavior, route path, and design-system card structure.
-- Update focused Profile widget coverage with a provider override or in-memory local session data.
-- Do not implement profile editing, avatar selection, theme preferences, Settings redesign, root theme mode changes, Dio, network state migration, or shell tab-state migration in this slice.
+- Completed: added a read-only current display-name provider under the auth application layer.
+- Completed: converted Profile to consume the provider and show the saved local display name instead of the hard-coded `InfinityWorld` fallback when available.
+- Completed: kept Profile's existing layout, SafeArea/scroll behavior, route path, and design-system card structure.
+- Completed: updated focused Profile widget coverage with in-memory local session data.
+- Profile editing, avatar selection, theme preferences, Settings redesign, root theme mode changes, Dio, network state migration, and shell tab-state migration remain out of scope.
 
 ## Phase 7: Networking Foundation
 

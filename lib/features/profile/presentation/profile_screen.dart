@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/design_system/tokens/iw_colors.dart';
 import 'package:infinity_world/design_system/tokens/iw_spacing.dart';
+import 'package:infinity_world/features/auth/application/session_providers.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final brightness = Theme.of(context).brightness;
+    final displayName = ref.watch(currentDisplayNameProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -70,7 +68,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                     const SizedBox(height: IwSpacing.space4),
                                     Text(
-                                      'InfinityWorld',
+                                      displayName.when(
+                                        data:
+                                            (value) => value ?? 'InfinityWorld',
+                                        error: (_, __) => 'InfinityWorld',
+                                        loading: () => 'Loading profile...',
+                                      ),
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodyMedium?.copyWith(

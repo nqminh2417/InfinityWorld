@@ -110,7 +110,7 @@ T49 added `flutter_riverpod`, kept `/main` and active go_router routes unchanged
 
 The T50 audit selected Profile local display-name consumption as the second Riverpod slice.
 
-T51 should add a read-only current display-name provider backed by the existing local session repository, convert Profile to show the persisted local display name when available, and keep Profile layout, routes, Settings, theme preferences, shell tab state, BMI form state, network features, Dio, and real auth out of scope.
+T51 added a read-only current display-name provider backed by the existing local session repository, converted Profile to show the persisted local display name when available, and kept Profile layout, routes, Settings, theme preferences, shell tab state, BMI form state, network features, Dio, and real auth out of scope.
 
 ### 2026-06-23: BMI is the current migration pilot
 
