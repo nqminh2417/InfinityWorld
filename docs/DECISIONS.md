@@ -106,6 +106,12 @@ The T48 audit scoped the first Riverpod implementation to root `ProviderScope` s
 
 T49 added `flutter_riverpod`, kept `/main` and active go_router routes unchanged, updated Login/Dashboard/startup-session tests for provider overrides, and avoided migrating BMI, Fox, Summertime Saga, Settings, theme preferences, Dio, real auth, shell routes, or feature roots.
 
+### 2026-06-29: Second Riverpod slice is Profile display name
+
+The T50 audit selected Profile local display-name consumption as the second Riverpod slice.
+
+T51 should add a read-only current display-name provider backed by the existing local session repository, convert Profile to show the persisted local display name when available, and keep Profile layout, routes, Settings, theme preferences, shell tab state, BMI form state, network features, Dio, and real auth out of scope.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:

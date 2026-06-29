@@ -74,6 +74,7 @@ Current phase:
 - `/main` remains the local session shell entry point.
 - `ShellRoute`/`StatefulShellRoute` should wait for real tab root screens and tab-owned child route stacks.
 - Riverpod is installed and active only for root `ProviderScope` plus a local session repository provider seam.
+- T50 selected Profile local display-name consumption as the second Riverpod slice.
 
 Android toolchain status:
 
@@ -128,6 +129,7 @@ Completed stabilization tasks:
 - Phase 5 checkpoint audit was completed; router migration is closed with root go_router parity, direct route coverage, local five-tab shell behavior, and `ShellRoute` deferred until a real nested tab-routing need exists.
 - Riverpod foundation kickoff audit was completed; at that point Riverpod was not installed, and the first implementation slice was scoped to root `ProviderScope`, a `LocalSessionRepository` provider seam, and focused startup/login/logout test overrides.
 - Riverpod foundation implementation slice was completed; `flutter_riverpod` is installed, the runtime app has root `ProviderScope`, Login/Dashboard consume `localSessionRepositoryProvider`, and session-flow tests override the provider seam.
+- Riverpod next-consumer audit was completed; Profile was selected as the second Riverpod consumer because it can show the persisted local display name through a read-only provider without broad state migration.
 
 ## Recommended Next Work
 
@@ -144,25 +146,26 @@ Task sizing note:
 
 ### Primary
 
-T50 - Riverpod next-consumer audit
+T51 - Riverpod Profile display-name provider slice
 
 Reason:
 
-- T49 proved the root/session provider seam.
-- The next Riverpod consumer should be selected before another implementation slice.
-- Theme preferences, local profile display, shell tab state, and feature controllers have different risk profiles.
+- T50 selected Profile as the smallest useful next Riverpod consumer.
+- Profile currently displays a hard-coded local profile subtitle.
+- The existing `LocalSessionRepository.getDisplayName()` and `localSessionRepositoryProvider` already provide the needed data seam.
 
 Scope:
 
-- Inspect likely next Riverpod consumers and current tests.
-- Choose the smallest second Riverpod implementation slice and verification gate.
-- Update planning docs only; do not migrate more state during the audit.
+- Add a read-only current display-name provider under auth application code.
+- Convert Profile to consume the provider and show the persisted display name when available.
+- Preserve Profile route behavior, layout safety, existing card structure, and `/main` route parity.
+- Update focused Profile widget coverage with provider override or in-memory session data.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not migrate BMI, Fox, Summertime Saga, theme preferences, Settings, Dio, real auth, `ShellRoute`, new feature roots, or visual redesign.
+- Do not add profile editing, avatar selection, theme preferences, Settings redesign, Dio, real auth, `ShellRoute`, new feature roots, network state migration, shell tab-state migration, or visual redesign.
 
 Verification:
 
-- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
@@ -170,13 +173,13 @@ T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Riverpod.
 
-T51 - Riverpod second implementation slice
+T52 - Riverpod next-consumer audit after Profile
 
-Choose this only after T50 scopes the next Riverpod consumer.
+Choose this only after T51 passes and another consumer should be selected.
 
 ### Do not start yet
 
-- Riverpod feature rewrites beyond the T49 local-session seam before T50 scopes the next consumer.
+- Riverpod feature rewrites beyond the T51 Profile display-name slice.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
@@ -197,7 +200,7 @@ Current phase:
 
 Decision:
 
-- T49 completed the smallest Riverpod implementation slice. Start T50 before any feature-state migration.
+- T50 selected Profile local display-name consumption as the second Riverpod slice. Start T51 before any broader feature-state migration.
 
 Do not enter yet:
 
@@ -214,7 +217,8 @@ Exit criteria:
 - Done: Riverpod foundation kickoff audit scoped the first implementation slice.
 - Done: Added root `ProviderScope` and a `LocalSessionRepository` provider seam.
 - Done: Verified startup/session/login/logout parity after the first Riverpod slice.
-- Remaining: Choose the next Riverpod consumer before a second implementation slice.
+- Done: Chose Profile display-name consumption as the next Riverpod consumer.
+- Remaining: Implement and verify the Profile display-name provider slice.
 
 ## Verification Gates
 

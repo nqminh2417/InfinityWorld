@@ -403,6 +403,23 @@ First implementation slice:
 - Preserved `/main`, direct route parity, local session behavior, and the local five-tab shell.
 - BMI, Fox, Summertime Saga, theme preferences, Settings, Dio, real auth, `ShellRoute`, and feature roots remain unmigrated by design.
 
+Next-consumer audit findings:
+
+- Profile is the smallest useful second Riverpod consumer because it already displays a hard-coded local profile label while `LocalSessionRepository.getDisplayName()` exposes the persisted display name.
+- The second slice can reuse the existing `localSessionRepositoryProvider`; no new dependency, persistence layer, route, or feature root is needed.
+- Current Riverpod docs for `flutter_riverpod` 3.3.x support this shape with `FutureProvider` for asynchronous read-only state, `ConsumerWidget`/`ref.watch` for UI consumption, `AsyncValue` loading/error/data handling, and `ProviderScope` overrides in widget tests.
+- Settings/theme preferences are more useful later, but they touch root `ThemeMode`, persistence semantics, and app-level rebuild behavior.
+- Main shell tab index, BMI form inputs, and Login form state remain local UI state for now; moving them to Riverpod would add ownership complexity without shared-state value.
+- Fox and Summertime Saga async state should wait for Phase 7 networking/Dio work because they involve API/retry/error behavior, not just local Riverpod foundation.
+
+Second implementation slice:
+
+- Add a read-only current display-name provider under the auth application layer.
+- Convert Profile to consume the provider and show the saved local display name instead of the hard-coded `InfinityWorld` fallback when available.
+- Keep Profile's existing layout, SafeArea/scroll behavior, route path, and design-system card structure.
+- Update focused Profile widget coverage with a provider override or in-memory local session data.
+- Do not implement profile editing, avatar selection, theme preferences, Settings redesign, root theme mode changes, Dio, network state migration, or shell tab-state migration in this slice.
+
 ## Phase 7: Networking Foundation
 
 Status: deferred, medium/high risk.
