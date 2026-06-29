@@ -68,8 +68,9 @@ Current phase:
 - go_router root parity is implemented.
 - Main shell ownership has moved to `lib/app/shell/` without changing tabs or routing behavior.
 - Legacy GetX cleanup is implemented; active routing is go_router-only.
-- Five-tab shell implementation audit is complete; the next shell slice should stay local to `MainScreen` and defer `ShellRoute`.
+- Five-tab shell implementation audit is complete; the first shell slice stayed local to `MainScreen` and deferred `ShellRoute`.
 - Local five-tab shell skeleton is implemented; `ShellRoute` and tab-specific paths remain deferred.
+- ShellRoute/deep-link audit is complete; `ShellRoute`/`StatefulShellRoute` should wait for real tab root screens and tab-owned child route stacks.
 
 Android toolchain status:
 
@@ -120,6 +121,7 @@ Completed stabilization tasks:
 - Deterministic live-network route smoke implementation was completed; `/fox` and `/smts_home` now render in route tests through fake services/loaders.
 - Five-tab shell implementation audit was completed; the first implementation should update `MainScreen` to the five target tabs without `ShellRoute`, new dependencies, Riverpod, Dio, or live-network tab roots.
 - Local five-tab shell skeleton was completed; `/main` now shows Home / Explore / Tools / Library / Settings, Home preserves Dashboard access, and network-backed Fox/Summertime routes stay direct instead of tab roots.
+- ShellRoute/deep-link audit was completed; current `GoRoute` coverage is enough, tab-specific shell routes are deferred, and future nested tab navigation should prefer `StatefulShellRoute` if separate tab stacks become necessary.
 
 ## Recommended Next Work
 
@@ -136,19 +138,19 @@ Task sizing note:
 
 ### Primary
 
-T46 - ShellRoute/deep-link audit
+T47 - Phase 5 checkpoint audit
 
 Reason:
 
-- T45 implemented the local five-tab shell skeleton under `/main`.
-- `ShellRoute` and tab-specific URLs remain deferred.
-- Audit before deciding whether Phase 5 needs shell route paths or can move toward checkpoint/closure.
+- T46 found no current need for `ShellRoute` or tab-specific paths.
+- Phase 5 has implemented root go_router parity, GetX cleanup, deterministic route smoke coverage, and the local five-tab shell.
+- A checkpoint should decide whether Phase 5 can close before Riverpod foundation work.
 
 Scope:
 
-- Inspect `lib/app/shell/main_screen.dart`, `lib/app/router/app_router.dart`, `lib/routes/app_routes.dart`, startup/session tests, direct route tests, and navigation docs.
-- Decide whether tab-specific paths/deep links are needed now or should remain deferred.
-- Update planning docs only; do not implement `ShellRoute` during the audit.
+- Re-audit Phase 5 route/session outputs, tests, docs, and remaining router risks.
+- Decide whether router migration can close with `ShellRoute` deferred.
+- Update planning docs only; do not implement Riverpod, Dio, `ShellRoute`, or new feature roots during the checkpoint.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
 - Do not introduce Riverpod, Dio, real auth, new dependencies, or visual redesign.
 
@@ -158,9 +160,9 @@ Verification:
 
 ### Alternatives
 
-T47 - Phase 5 checkpoint audit
+T48 - Riverpod foundation kickoff audit
 
-Choose this after T46, or earlier only if the project should explicitly defer `ShellRoute` and close the router phase.
+Choose this only after T47 closes Phase 5 or explicitly approves moving into Phase 6.
 
 T30 — Dependency/toolchain audit
 
@@ -169,7 +171,7 @@ Choose this if current package/build risk should be reviewed before the next pha
 ### Do not start yet
 
 - Riverpod activation.
-- `ShellRoute` implementation before T46 decides it is needed.
+- `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
 - Removing `AppRoutes` or active go_router routes.
@@ -189,7 +191,7 @@ Current phase:
 
 Decision:
 
-- T45 completed the local five-tab shell skeleton. Audit `ShellRoute`/deep-link need before implementing shell route paths or entering Riverpod work.
+- T46 completed the ShellRoute/deep-link audit and deferred shell route paths. Run a Phase 5 checkpoint before entering Riverpod work.
 
 Do not enter yet:
 
@@ -197,7 +199,7 @@ Do not enter yet:
 
 Reason:
 
-- ShellRoute/deep-link direction should be decided before starting Riverpod foundation work.
+- Phase 5 closure should be decided before starting Riverpod foundation work.
 - Phase 4 startup/session behavior must survive every router slice.
 - Router migration should not be mixed with Riverpod, Dio, real backend authentication, or shell redesign.
 
@@ -216,7 +218,8 @@ Exit criteria:
 - Done: Deterministic route smoke tests for Fox and Summertime Saga are implemented.
 - Done: Five-tab shell implementation slice is audited.
 - Done: Local five-tab shell skeleton is implemented.
-- Remaining: Audit whether `ShellRoute`/tab-specific deep links are needed now.
+- Done: `ShellRoute`/tab-specific deep-link need is audited and deferred.
+- Remaining: Complete Phase 5 checkpoint audit.
 
 ## Verification Gates
 

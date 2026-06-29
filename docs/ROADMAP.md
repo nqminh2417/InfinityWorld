@@ -284,7 +284,7 @@ First implementation slice:
 - Completed: mapped the existing route table to go_router, preserving the same startup/Login/Main behavior.
 - Completed: replaced the current production GetX navigation calls in Login and Dashboard.
 - Completed: kept `MainScreen` unchanged; no shell redesign or `ShellRoute` was introduced.
-- Remaining: keep legacy GetX route files/dependency until cleanup is explicitly scoped.
+- Completed later: legacy GetX route files/dependency were removed after parity passed.
 
 First-slice parity gates:
 
@@ -348,10 +348,17 @@ Local five-tab shell skeleton:
 - Completed: Explore, Tools, and Library use local safe placeholder tab bodies; Settings uses the existing settings screen.
 - `ShellRoute`, tab-specific route paths, richer tab content, Riverpod, Dio, and live-network tab roots remain deferred.
 
+ShellRoute/deep-link audit:
+
+- Completed: audited current `MainScreen`, `app_router.dart`, `AppRoutes`, startup/session tests, route smoke tests, and current go_router shell-route guidance.
+- Findings: `/main` is still the only startup/session shell entry point, direct feature routes remain covered, and no tab currently owns a nested route stack.
+- Decision: do not add `ShellRoute`, `StatefulShellRoute`, `/home`, `/explore`, `/tools`, or `/library` yet.
+- Future shell routing should prefer `StatefulShellRoute` over plain `ShellRoute` if the app needs separate tab navigation stacks or preserved tab branch state.
+
 Next router-phase focus:
 
-- Audit whether `ShellRoute` and tab-specific deep links are needed before Phase 5 checkpoint/closure.
-- Keep richer tab content for later feature-expansion tasks.
+- Run a Phase 5 checkpoint audit and decide whether the router phase can close before Riverpod foundation work.
+- Keep richer tab content and tab-specific paths for later feature-expansion tasks.
 
 ## Phase 6: Riverpod Foundation
 

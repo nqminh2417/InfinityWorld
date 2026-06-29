@@ -86,6 +86,14 @@ The T44 audit found that `MainScreen` is still a local-state bottom-navigation s
 
 The first five-tab implementation should update `MainScreen` to the target Home / Explore / Tools / Library / Settings labels without introducing `ShellRoute`, Riverpod, Dio, new route paths, or live-network tab roots. Keep `/main` as the startup shell route, keep direct route parity for existing feature routes, and preserve current Dashboard access from the first tab until richer Home/Tools/Explore roots are scoped.
 
+### 2026-06-29: Defer `ShellRoute` until real tab routes or tab stacks exist
+
+The T46 audit found no current need for `ShellRoute` or tab-specific paths. The app is Android-first, `/main` remains the local session shell entry point, the five-tab shell is local state, Explore/Tools/Library are placeholders, and important feature screens already have direct go_router routes.
+
+The official go_router docs describe URL-based navigation and deep linking through `GoRoute`, while shell APIs are for nested/multiple Navigator layouts. `StatefulShellRoute` is the better future fit if InfinityWorld needs separate tab navigation stacks or state preservation per branch.
+
+Do not implement `ShellRoute`, `StatefulShellRoute`, `/home`, `/explore`, `/tools`, or `/library` until real tab root screens and at least one tab-owned child route/back-stack need exist. The next router task should be a Phase 5 checkpoint audit, not another routing implementation slice.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:
