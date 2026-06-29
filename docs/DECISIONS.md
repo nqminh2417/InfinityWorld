@@ -100,6 +100,12 @@ The T47 checkpoint found that Phase 5 routing goals are complete enough to close
 
 Start Phase 6 with a Riverpod foundation kickoff audit before adding Riverpod or rewriting state. Do not combine Riverpod introduction with Dio, real backend auth, shell-route work, feature expansion, or visual redesign.
 
+### 2026-06-29: First Riverpod slice is root/session provider only
+
+The T48 audit scoped the first Riverpod implementation to root `ProviderScope` setup and one `LocalSessionRepository` provider seam.
+
+The first implementation should add `flutter_riverpod`, keep `/main` and active go_router routes unchanged, update Login/Dashboard/startup-session tests for provider overrides where needed, and avoid migrating BMI, Fox, Summertime Saga, Settings, theme preferences, Dio, real auth, shell routes, or feature roots.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:

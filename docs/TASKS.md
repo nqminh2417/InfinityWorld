@@ -71,6 +71,7 @@ Current phase:
 - `/main` remains the local session shell entry point.
 - `ShellRoute`/`StatefulShellRoute` should wait for real tab root screens and tab-owned child route stacks.
 - Riverpod is not installed or active yet.
+- T48 scoped the first Riverpod implementation slice to root `ProviderScope` plus a local session repository provider seam.
 
 Android toolchain status:
 
@@ -123,6 +124,7 @@ Completed stabilization tasks:
 - Local five-tab shell skeleton was completed; `/main` now shows Home / Explore / Tools / Library / Settings, Home preserves Dashboard access, and network-backed Fox/Summertime routes stay direct instead of tab roots.
 - ShellRoute/deep-link audit was completed; current `GoRoute` coverage is enough, tab-specific shell routes are deferred, and future nested tab navigation should prefer `StatefulShellRoute` if separate tab stacks become necessary.
 - Phase 5 checkpoint audit was completed; router migration is closed with root go_router parity, direct route coverage, local five-tab shell behavior, and `ShellRoute` deferred until a real nested tab-routing need exists.
+- Riverpod foundation kickoff audit was completed; Riverpod is still not installed, and the first implementation slice is scoped to root `ProviderScope`, a `LocalSessionRepository` provider seam, and focused startup/login/logout test overrides.
 
 ## Recommended Next Work
 
@@ -139,39 +141,40 @@ Task sizing note:
 
 ### Primary
 
-T48 - Riverpod foundation kickoff audit
+T49 - Riverpod foundation implementation slice
 
 Reason:
 
-- Phase 5 router migration is closed.
-- Riverpod is the next documented architecture foundation, but it is not installed or active yet.
-- A kickoff audit should choose the smallest first Riverpod slice before any package or state rewrite.
+- T48 scoped the first Riverpod slice.
+- The current app has a single useful dependency seam: `LocalSessionRepository`.
+- Root `ProviderScope` plus one repository provider proves Riverpod without rewriting feature state.
 
 Scope:
 
-- Inspect current stateful/session/theme/settings/auth dependency points and existing tests.
-- Decide the smallest Riverpod foundation implementation slice and verification gate.
-- Update planning docs only; do not install Riverpod during the kickoff audit.
+- Add `flutter_riverpod`.
+- Wrap the root app in `ProviderScope`.
+- Add a provider seam for `LocalSessionRepository`.
+- Update Login, Dashboard, and startup/session tests to consume or override that seam where needed.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not introduce Dio, real auth, `ShellRoute`, new feature roots, or visual redesign.
+- Do not migrate BMI, Fox, Summertime Saga, theme preferences, Settings, Dio, real auth, `ShellRoute`, new feature roots, or visual redesign.
 
 Verification:
 
-- Docs/audit gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
-T49 - Riverpod foundation implementation slice
-
-Choose this only after T48 scopes and approves the first Riverpod slice.
-
 T30 — Dependency/toolchain audit
 
-Choose this if current package/build risk should be reviewed before the next phase.
+Choose this if package/build risk should be reviewed before adding Riverpod.
+
+T50 - Riverpod next-consumer audit
+
+Choose this after T49 if the next Riverpod consumer should be selected before another implementation slice.
 
 ### Do not start yet
 
-- Riverpod activation before the T48 kickoff audit scopes the first slice.
+- Riverpod feature rewrites beyond the T49 local-session seam.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
 - Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
@@ -192,7 +195,7 @@ Current phase:
 
 Decision:
 
-- T47 closed Phase 5. Start Phase 6 with a Riverpod foundation kickoff audit before installing Riverpod or rewriting state.
+- T48 completed the Riverpod foundation kickoff audit. Start T49 with the smallest implementation slice before any feature-state migration.
 
 Do not enter yet:
 
@@ -200,28 +203,16 @@ Do not enter yet:
 
 Reason:
 
-- Riverpod foundation should start with an audit because the app still uses local widget state and simple repositories.
+- Riverpod foundation should start with root wiring and one dependency seam because the app still uses local widget state and simple repositories.
 - Phase 4 startup/session behavior must survive the first Riverpod slice.
 - Riverpod work should not be mixed with Dio, real backend authentication, shell-route work, or visual redesign.
 
 Exit criteria:
 
-- Done: Router inventory and navigation-call audit is documented.
-- Done: First go_router migration slice is scoped.
-- Done: Startup/session/login/logout parity gates are defined.
-- Done: Live-network route smoke-test strategy is documented.
-- Done: Root go_router parity slice is implemented and verified.
-- Done: Shell ownership is audited before `MainScreen` is moved or `ShellRoute` is introduced.
-- Done: Existing shell ownership moved to `lib/app/shell/` while preserving current behavior.
-- Done: Legacy GetX route cleanup is scoped after parity passes.
-- Done: Inactive GetX route table and dependency removed.
-- Done: Direct route smoke strategy for live-network route constructors is decided.
-- Done: Deterministic route smoke tests for Fox and Summertime Saga are implemented.
-- Done: Five-tab shell implementation slice is audited.
-- Done: Local five-tab shell skeleton is implemented.
-- Done: `ShellRoute`/tab-specific deep-link need is audited and deferred.
-- Done: Phase 5 checkpoint audit completed and router migration closed.
-- Remaining: Audit the smallest Riverpod foundation implementation slice.
+- Done: Riverpod foundation kickoff audit scoped the first implementation slice.
+- Remaining: Add root `ProviderScope` and a `LocalSessionRepository` provider seam.
+- Remaining: Verify startup/session/login/logout parity after the first Riverpod slice.
+- Remaining: Choose the next Riverpod consumer only after T49 passes.
 
 ## Verification Gates
 
