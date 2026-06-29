@@ -42,7 +42,8 @@ void main() {
     expect(find.text('Minh'), findsOneWidget);
     expect(find.text('Appearance'), findsOneWidget);
     expect(find.text('Theme mode'), findsOneWidget);
-    expect(find.text('System'), findsOneWidget);
+    expect(find.text('System'), findsWidgets);
+    expect(_selectedThemeMode(tester), ThemeMode.system);
     expect(tester.takeException(), isNull);
   });
 
@@ -61,7 +62,32 @@ void main() {
 
     expect(find.text('Appearance'), findsOneWidget);
     expect(find.text('Theme mode'), findsOneWidget);
-    expect(find.text('Dark'), findsOneWidget);
+    expect(find.text('Dark'), findsWidgets);
+    expect(_selectedThemeMode(tester), ThemeMode.dark);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('Settings screen persists selected theme mode', (tester) async {
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: SettingsScreen())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(_selectedThemeMode(tester), ThemeMode.system);
+
+    await tester.tap(find.text('Light'));
+    await tester.pumpAndSettle();
+
+    expect(_selectedThemeMode(tester), ThemeMode.light);
+    expect(await AppThemeModeRepository().getThemeMode(), ThemeMode.light);
+    expect(tester.takeException(), isNull);
+  });
+}
+
+ThemeMode _selectedThemeMode(WidgetTester tester) {
+  final segmentedButton = tester.widget<SegmentedButton<ThemeMode>>(
+    find.byType(SegmentedButton<ThemeMode>),
+  );
+
+  return segmentedButton.selected.single;
 }

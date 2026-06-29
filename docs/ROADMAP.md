@@ -33,7 +33,7 @@ Current structure:
 - `lib/features/auth/data/local_session_repository.dart` stores the first local session flag and display name with `shared_preferences`.
 - `lib/features/auth/application/session_providers.dart` exposes the local session repository and current display-name providers.
 - `lib/features/profile/presentation/profile_screen.dart` now consumes the persisted local display name through Riverpod.
-- `lib/features/settings/presentation/settings_screen.dart` now consumes the persisted local display name and app theme mode through Riverpod.
+- `lib/features/settings/presentation/settings_screen.dart` now consumes the persisted local display name and app theme mode through Riverpod and exposes theme-mode controls.
 - `lib/features/dashboard/presentation/dashboard_screen.dart` now consumes the persisted local display name through Riverpod.
 - Feature placement completed for the Phase 2 selected screens/features:
   - `lib/features/bmi/domain/bmi_calculator.dart`
@@ -373,7 +373,7 @@ Next phase focus:
 
 ## Phase 6: Riverpod Foundation
 
-Status: current / seventh implementation slice complete, Settings controls slice scoped.
+Status: current / eighth implementation slice complete, next-consumer audit scoped.
 
 Goal:
 
@@ -504,6 +504,13 @@ Seventh implementation slice:
 - Completed: `MainApp` and Settings keep using the provider with a System fallback while persisted state resolves.
 - Completed: focused tests cover default, persisted, invalid, update, root-app, and Settings summary behavior.
 - Interactive Settings theme controls, theme style switching, Neon/Vice themes, visual redesign, shell tab state, form-state migration, Dio, network state, real auth, `ShellRoute`, and new feature roots remain out of scope.
+
+Eighth implementation slice:
+
+- Completed: added compact Settings Appearance controls for choosing System, Light, or Dark through `appThemeModeProvider`.
+- Completed: selections persist through the existing shared_preferences-backed theme-mode controller and update Settings consumption.
+- Completed: focused Settings widget coverage verifies selected state and persistence behavior.
+- Theme style switching, Neon/Vice themes, visual redesign, shell tab state, form-state migration, Dio, network state, real auth, `ShellRoute`, and new feature roots remain out of scope.
 
 ## Phase 7: Networking Foundation
 

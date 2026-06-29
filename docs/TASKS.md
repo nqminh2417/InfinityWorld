@@ -28,7 +28,7 @@ Current architecture status:
 - Local session/profile persistence now lives under `lib/features/auth/data/local_session_repository.dart` and uses `shared_preferences`.
 - Dashboard/Home now consumes the persisted local display name through Riverpod.
 - Profile now consumes the persisted local display name through Riverpod.
-- Settings now consumes the persisted local display name and app theme mode through Riverpod.
+- Settings now consumes the persisted local display name and app theme mode through Riverpod and exposes theme-mode controls.
 - BMI was the initial migration pilot and now lives under `lib/features/bmi/`.
 - Chat presentation now lives under `lib/features/chat/presentation/`.
 - Dashboard presentation now lives under `lib/features/dashboard/presentation/`.
@@ -65,7 +65,7 @@ Current tests:
 - Summertime Saga service/model tests exist with fake-network coverage for success, non-2xx, malformed JSON, missing schema, and timeout handling.
 - Summertime Saga screen widget tests exist for deterministic loading, success, error/retry, incomplete data, dispose safety, and small-screen scroll safety.
 - Profile presentation widget test exists and covers persisted local display-name rendering.
-- Settings presentation widget test exists and covers persisted local display-name rendering, the read-only Appearance theme-mode summary, and persisted theme-mode behavior.
+- Settings presentation widget test exists and covers persisted local display-name rendering, Appearance theme-mode summary, persisted theme-mode behavior, and theme-mode selection/persistence behavior.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
 - Fox and Summertime Saga route smoke tests use router-level builder overrides with their existing fake-network screen seams.
@@ -146,6 +146,7 @@ Completed stabilization tasks:
 - Riverpod Settings appearance theme-mode summary slice was completed; Settings now consumes `appThemeModeProvider` and focused widget coverage verifies the default System label, with persisted-value behavior covered by the T61 slice.
 - Riverpod next-consumer audit after Settings Appearance was completed; theme-mode persistence foundation was selected as the seventh Riverpod slice because root app and Settings already consume `appThemeModeProvider`, but it still returns a hardcoded `ThemeMode.system` value.
 - Riverpod theme-mode persistence foundation slice was completed; `appThemeModeProvider` is now backed by `shared_preferences`, preserves System for missing or invalid stored values, and exposes a controller update method for a later Settings controls slice.
+- Riverpod Settings theme-mode controls slice was completed; Settings Appearance now offers System / Light / Dark controls through `appThemeModeProvider`, and focused widget coverage verifies selection persistence.
 
 ## Recommended Next Work
 
@@ -162,21 +163,21 @@ Task sizing note:
 
 ### Primary
 
-T62 - Riverpod Settings theme-mode controls slice
+T63 - Riverpod next-consumer audit after Settings theme controls
 
 Reason:
 
-- T61 established the persisted theme-mode provider/controller foundation.
-- Settings already has a read-only Appearance summary and is the correct app configuration surface.
-- The next slice can add controls that call the existing Riverpod controller without changing theme style, shell state, routes, or network behavior.
+- T62 completed the local theme-mode preference path from provider persistence to Settings controls.
+- The next Riverpod consumer should be selected before touching shell state, form state, network ownership, or theme style.
+- Remaining candidates have different risk profiles, so the next step should be an audit instead of an implementation slice.
 
 Scope:
 
-- Add compact Settings Appearance controls for choosing System, Light, or Dark through `appThemeModeProvider`.
-- Keep the existing Settings layout, route, and read-only profile summary behavior stable.
-- Update focused Settings/widget coverage for selecting a theme mode and persisting the selected value.
+- Inspect remaining likely Riverpod consumers after Settings theme controls.
+- Choose the smallest next implementation slice or recommend a Phase 6 checkpoint if no local-state consumer is worthwhile.
+- Update planning docs only; do not migrate state during the audit.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not add theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, network state migration, Dio, real auth, `ShellRoute`, or new feature roots in this slice.
+- Do not add theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, network state migration, Dio, real auth, `ShellRoute`, or new feature roots in this audit.
 
 Verification:
 
@@ -188,13 +189,13 @@ T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Riverpod.
 
-T63 - Riverpod next-consumer audit after Settings theme controls
+T64 - Riverpod ninth implementation slice
 
-Choose this only after T62 verifies interactive Settings theme-mode controls.
+Choose this only after T63 scopes the next consumer and verification plan.
 
 ### Do not start yet
 
-- Riverpod feature rewrites beyond the scoped T62 Settings theme-mode controls slice.
+- Riverpod feature rewrites beyond the scoped T63 next-consumer audit.
 - Theme style switching, Neon/Vice themes, or visual redesign before a dedicated theme-style task.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
 - Dio/network layer.
@@ -216,7 +217,7 @@ Current phase:
 
 Decision:
 
-- T61 completed theme-mode persistence foundation. Start T62 before any broader feature-state migration.
+- T62 completed Settings theme-mode controls. Start T63 before any broader feature-state migration.
 
 Do not enter yet:
 
@@ -245,7 +246,8 @@ Exit criteria:
 - Done: Implemented and verified the Settings appearance theme-mode summary slice.
 - Done: Chose theme-mode persistence foundation as the next Riverpod slice.
 - Done: Implemented and verified the theme-mode persistence foundation slice.
-- Remaining: Implement and verify the Settings theme-mode controls slice.
+- Done: Implemented and verified the Settings theme-mode controls slice.
+- Remaining: Choose the next Riverpod consumer before a ninth implementation slice.
 
 ## Verification Gates
 

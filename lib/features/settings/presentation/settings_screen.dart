@@ -71,6 +71,33 @@ class SettingsScreen extends ConsumerWidget {
                       color: IwColors.textSecondary(brightness),
                     ),
                   ),
+                  const SizedBox(height: IwSpacing.space12),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: SegmentedButton<ThemeMode>(
+                      showSelectedIcon: false,
+                      segments: const [
+                        ButtonSegment<ThemeMode>(
+                          value: ThemeMode.system,
+                          label: Text('System'),
+                        ),
+                        ButtonSegment<ThemeMode>(
+                          value: ThemeMode.light,
+                          label: Text('Light'),
+                        ),
+                        ButtonSegment<ThemeMode>(
+                          value: ThemeMode.dark,
+                          label: Text('Dark'),
+                        ),
+                      ],
+                      selected: {themeMode},
+                      onSelectionChanged: (selection) async {
+                        await ref
+                            .read(appThemeModeProvider.notifier)
+                            .setThemeMode(selection.single);
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
