@@ -170,6 +170,12 @@ The shared networking foundation should remain just the Dio client/provider boun
 
 The next networking slice should migrate Summertime Saga to the same boundary while preserving its existing service and screen behavior.
 
+### 2026-06-30: Complete current direct HTTP migration before broader network policy
+
+T67 migrated `SmtsService` to the Dio-backed path, added a Summertime Saga service provider, kept screen and route loader seams deterministic, and removed the unused `http` dependency after no Dart imports remained.
+
+Both current API-backed features now use Dio-backed services. The next Phase 7 task should be a checkpoint audit, not retry/cache/offline/global error policy, unless a concrete blocker appears.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:

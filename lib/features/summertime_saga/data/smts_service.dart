@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:infinity_world/core/config/constants.dart';
+import 'package:infinity_world/core/network/dio_provider.dart';
 import 'package:infinity_world/features/summertime_saga/domain/smts_progress_model.dart';
-
-typedef SmtsHttpGet = Future<http.Response> Function(Uri uri);
 
 class SmtsServiceException implements Exception {
   const SmtsServiceException(this.message);
@@ -16,13 +15,13 @@ class SmtsServiceException implements Exception {
 }
 
 class SmtsService {
-  SmtsService({SmtsHttpGet? httpGet, Duration timeout = _defaultTimeout})
-    : _httpGet = httpGet ?? http.get,
+  SmtsService({Dio? dio, Duration timeout = _defaultTimeout})
+    : _dio = dio ?? createDioClient(timeout: timeout),
       _timeout = timeout;
 
   static const Duration _defaultTimeout = Duration(seconds: 15);
 
-  final SmtsHttpGet _httpGet;
+  final Dio _dio;
   final Duration _timeout;
 
   static Future<SmtsProgressModel> getProgress() {
@@ -30,24 +29,53 @@ class SmtsService {
   }
 
   Future<SmtsProgressModel> fetchProgress() async {
-    final http.Response response;
+    final Response<String> response;
 
     try {
-      response = await _httpGet(Cfg.smtsProgressUri).timeout(_timeout);
+      response = await _dio
+          .getUri<String>(
+            Cfg.smtsProgressUri,
+            options: Options(
+              responseType: ResponseType.plain,
+              validateStatus: (_) => true,
+            ),
+          )
+          .timeout(_timeout);
     } on TimeoutException {
       throw const SmtsServiceException('Progress request timed out');
-    } catch (error) {
+    } on DioException catch (error) {
+      if (error.type == DioExceptionType.connectionTimeout ||
+          error.type == DioExceptionType.sendTimeout ||
+          error.type == DioExceptionType.receiveTimeout) {
+        throw const SmtsServiceException('Progress request timed out');
+      }
+
+      final statusCode = error.response?.statusCode;
+      if (statusCode != null) {
+        throw SmtsServiceException('Failed to load progress: $statusCode');
+      }
+
+      throw SmtsServiceException(
+        'Failed to load progress: ${error.message ?? error}',
+      );
+    } on Object catch (error) {
       throw SmtsServiceException('Failed to load progress: $error');
     }
 
-    if (response.statusCode < 200 || response.statusCode >= 300) {
+    final statusCode = response.statusCode;
+    if (statusCode == null || statusCode < 200 || statusCode >= 300) {
       throw SmtsServiceException(
-        'Failed to load progress: ${response.statusCode}',
+        'Failed to load progress: ${statusCode ?? 'unknown'}',
       );
     }
 
     try {
-      return SmtsProgressModel.fromJson(response.body);
+      final body = response.data;
+      if (body == null) {
+        throw const FormatException('Progress response is empty');
+      }
+
+      return SmtsProgressModel.fromJson(body);
     } on FormatException catch (error) {
       throw SmtsServiceException('Invalid progress response: ${error.message}');
     } on TypeError {

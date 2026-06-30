@@ -10,6 +10,7 @@ import 'package:infinity_world/features/fox/application/fox_providers.dart';
 import 'package:infinity_world/features/fox/presentation/fox_random_screen.dart';
 import 'package:infinity_world/features/profile/presentation/profile_screen.dart';
 import 'package:infinity_world/features/settings/presentation/settings_screen.dart';
+import 'package:infinity_world/features/summertime_saga/application/smts_providers.dart';
 import 'package:infinity_world/features/summertime_saga/presentation/smts_home_screen.dart';
 import 'package:infinity_world/features/test/presentation/test_screen.dart';
 import 'package:infinity_world/routes/app_routes.dart';
@@ -63,7 +64,13 @@ GoRouter createAppRouter({
         builder:
             smtsHomeRouteBuilder ??
             (BuildContext context, GoRouterState state) {
-              return SmtsHomeScreen();
+              return Consumer(
+                builder: (context, ref, _) {
+                  return SmtsHomeScreen(
+                    loadProgress: ref.watch(smtsServiceProvider).fetchProgress,
+                  );
+                },
+              );
             },
       ),
       GoRoute(

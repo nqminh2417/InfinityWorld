@@ -58,17 +58,17 @@ Current structure:
 Current dependencies:
 
 - Flutter SDK constraint: `^3.7.0`
-- Runtime packages: `go_router`, `flutter_riverpod`, `dio`, `http`, `change_app_package_name`, `shared_preferences`
+- Runtime packages: `go_router`, `flutter_riverpod`, `dio`, `change_app_package_name`, `shared_preferences`
 - Dev packages: `flutter_test`, `flutter_lints`, `shared_preferences_platform_interface`
 
-go_router is active for the root route table. Riverpod foundation is complete for current local session/profile/theme preferences. Dio is active for the Fox service pilot, while Summertime Saga still uses `http`.
+go_router is active for the root route table. Riverpod foundation is complete for current local session/profile/theme preferences. Dio is active for Fox and Summertime Saga, and `http` has been removed.
 
 ## Current Known Risks
 
 - Login build-time `setState()` risk has been fixed; emulator/device visual review remains a later QA activity.
 - go_router is the active root router and Phase 5 is closed.
 - `lib/routes/app_routes.dart` remains the shared path contract for go_router.
-- Summertime Saga still uses a direct `http` service under its feature folder.
+- Broader networking policy for retry/cache/offline behavior remains deferred until a concrete feature need exists.
 - Feature placement does not mean rich tab content has migrated; `MainScreen` now lives in `lib/app/shell/` with a local five-tab shell skeleton and placeholder tab bodies where roots are not implemented yet.
 - Theme/design-system implementation now has a first token/card slice; broader components and visual adoption remain incomplete.
 - Android toolchain versions have been pulled forward on `home/devbyMinh-current` with explicit approval: Gradle 8.14.5, Android Gradle Plugin 8.11.1, Kotlin Gradle Plugin 2.2.20, Java/Kotlin target 17.
@@ -528,7 +528,7 @@ Phase 6 checkpoint:
 
 ## Phase 7: Networking Foundation
 
-Status: current / first implementation slice complete.
+Status: current / two-feature Dio migration complete, checkpoint next.
 
 Goal:
 
@@ -552,8 +552,12 @@ First implementation slice:
 
 Next implementation slice:
 
-- Migrate `SmtsService` to the shared Dio boundary while preserving its configured URL, timeout/status/schema error handling, deterministic screen states, and fake-network tests.
-- Do not add retry/cache/offline/global error policy until the two existing API services are on the shared Dio boundary.
+- Completed: migrated `SmtsService` to the Dio-backed service path while preserving its configured URL, timeout/status/schema error handling, deterministic screen states, and fake-network tests.
+- Completed: removed the unused `http` dependency after no Dart imports remained.
+
+Checkpoint:
+
+- Re-audit Phase 7 before adding retry/cache/offline/global error policy or entering Phase 8.
 
 Rules:
 

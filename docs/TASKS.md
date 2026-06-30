@@ -46,7 +46,8 @@ Current architecture status:
 - Remaining likely Riverpod candidates are either temporary screen-local state or Phase 7 networking ownership.
 - `lib/core/network/dio_provider.dart` now provides the first shared Dio client/provider boundary.
 - Fox now uses Dio through `FoxApiService` and `foxApiServiceProvider`.
-- Summertime Saga still uses its existing direct `http` service and is the next networking migration candidate.
+- Summertime Saga now uses Dio through `SmtsService` and `smtsServiceProvider`.
+- The direct `http` dependency has been removed.
 
 Current tests:
 
@@ -155,6 +156,7 @@ Completed stabilization tasks:
 - Riverpod foundation checkpoint audit was completed; Phase 6 is closed, and Phase 7 should start with a networking foundation kickoff audit before any Dio implementation.
 - Phase 7 networking foundation kickoff audit was completed; direct `http` usage is limited to Fox and Summertime Saga feature services, both already have fake-network seams and route builder overrides, and the first implementation slice is scoped to Dio foundation plus a Fox service pilot.
 - Dio foundation and Fox service pilot slice was completed; `dio` is installed, the shared Dio provider boundary exists, Fox uses the Dio-backed service path, and focused/full tests pass.
+- Summertime Saga Dio migration slice was completed; `SmtsService` now uses the Dio-backed service path, fake-network service tests use a fake Dio adapter, route/screen seams stay deterministic, and the unused `http` dependency was removed.
 
 ## Recommended Next Work
 
@@ -171,39 +173,34 @@ Task sizing note:
 
 ### Primary
 
-T67 - Summertime Saga Dio migration slice
+T68 - Phase 7 networking foundation checkpoint audit
 
 Reason:
 
-- T66 proved the small Dio client/provider seam with the lower-risk Fox service.
-- Summertime Saga is now the remaining direct `http` API feature and already has fake-network service tests plus deterministic screen/route seams.
-- Migrating it next completes the current two-feature networking foundation without adding unused retry/cache/offline policy.
+- T66 and T67 migrated both current API-backed features to the Dio-backed service path.
+- No Dart code imports `package:http` anymore, and the dependency has been removed.
+- The next useful step is a checkpoint audit before adding retry/cache/offline policy or expanding Phase 7.
 
 Scope:
 
-- Migrate `SmtsService` from direct `http` to the existing shared Dio client/provider boundary while preserving `fetchProgress()` behavior, configured URL usage, status/error/timeout/schema handling, and screen retry behavior.
-- Update focused Summertime Saga service/model tests with fake Dio responses; keep screen and route tests deterministic without live network.
-- Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not add offline cache, retry policy, global error UI, real auth, route changes, `ShellRoute`, feature root expansion, Riverpod screen-state migration, or UI redesign in this slice.
+- Re-audit `dioProvider`, Fox, Summertime Saga, route seams, tests, dependency state, and planning docs.
+- Decide whether Phase 7 should close or whether one small networking cleanup remains.
+- Update planning docs only unless a concrete blocker is found.
+- Do not add retry/cache/offline policy, global error UI, real auth, route changes, `ShellRoute`, feature root expansion, Riverpod screen-state migration, or UI redesign in this audit.
 
 Verification:
 
-- `flutter pub get`
-- Dart logic/test gate from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Docs/audit gate from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
 T30 — Dependency/toolchain audit
 
-Choose this if package/build risk should be reviewed after adding Dio.
-
-T68 - Phase 7 networking foundation checkpoint audit
-
-Choose this after T67 migrates Summertime Saga, or earlier only if the phase needs to stop after the Fox pilot.
+Choose this if package/build risk should be reviewed after adding Dio and removing `http`.
 
 ### Do not start yet
 
-- Global retry/cache/offline policy before both current API services use the shared Dio boundary.
+- Global retry/cache/offline policy before the Phase 7 checkpoint audit confirms a concrete need.
 - Riverpod implementation slices unless a future feature has concrete shared-state ownership.
 - Theme style switching, Neon/Vice themes, or visual redesign before a dedicated theme-style task.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
@@ -225,7 +222,7 @@ Current phase:
 
 Decision:
 
-- T66 completed the small used Dio foundation plus Fox service pilot. Start T67 to migrate the remaining direct `http` API service before checkpointing Phase 7.
+- T67 completed the Summertime Saga Dio migration and removed the unused `http` dependency. Start T68 as a checkpoint audit before adding any broader networking policy.
 
 Do not enter yet:
 
@@ -233,16 +230,17 @@ Do not enter yet:
 
 Reason:
 
-- Networking foundation should start with one small vertical slice because current API-backed features already have fake-network test seams but still use direct `http`.
+- Networking foundation should checkpoint now that both current API-backed features use Dio-backed service paths.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, and the five-tab shell must remain stable during networking work.
 - Dio work should not be mixed with real backend authentication, shell-route work, visual redesign, or feature expansion.
 
 Exit criteria:
 
 - Done: Completed the Phase 7 networking foundation kickoff audit.
-- Done: Confirmed Dio is not installed yet and direct `http` usage is limited to Fox and Summertime Saga services.
+- Done: Confirmed at T65 that Dio was not installed yet and direct `http` usage was limited to Fox and Summertime Saga services.
 - Done: Implemented and verified the T66 Dio/Fox pilot.
-- Remaining: Implement and verify the T67 Summertime Saga Dio migration before adding broader network policies or checkpointing Phase 7.
+- Done: Implemented and verified the T67 Summertime Saga Dio migration and removed the unused `http` dependency.
+- Remaining: Complete the T68 checkpoint audit before adding broader network policies or entering Phase 8.
 
 ## Verification Gates
 
