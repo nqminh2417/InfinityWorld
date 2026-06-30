@@ -588,9 +588,14 @@ Kickoff audit findings:
 
 First implementation slice:
 
-- Selected: add a small Tools tab body that lists the existing BMI module and navigates to the existing BMI route.
-- Preserve the current direct `/bmi` route, Dashboard access, `/main` startup behavior, and local bottom navigation.
-- Do not add Wheel, Device Hub, AI Lab, `ShellRoute`, new packages, `IwModuleCard`, or broad Home redesign in this slice.
+- Completed: added a small Tools tab body that lists the existing BMI module and navigates to the existing BMI route.
+- Completed: preserved the current direct `/bmi` route, Dashboard access, `/main` startup behavior, and local bottom navigation.
+- Completed: kept Wheel, Device Hub, AI Lab, `ShellRoute`, new packages, `IwModuleCard`, and broad Home redesign out of scope.
+
+Next implementation slice:
+
+- Selected: add a small Explore tab body that lists existing Fox and Summertime Saga modules and navigates to their existing direct routes.
+- Do not load API data from the Explore tab body; network calls should remain inside the existing feature screens after navigation.
 
 Potential areas:
 

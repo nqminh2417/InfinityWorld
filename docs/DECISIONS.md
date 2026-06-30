@@ -186,7 +186,7 @@ Close Phase 7. Do not add retry/cache/offline/global error policy until a concre
 
 The T69 kickoff audit found that `/main` already has the target five bottom tabs, but Explore, Tools, and Library are still placeholder tab bodies. BMI is the smallest existing local utility module that fits a target tab.
 
-The next implementation should add a small Tools tab body that links to the existing BMI route. Do not add Wheel, Device Hub, AI Lab, new route paths, `ShellRoute`, new packages, persistence, networking, `IwModuleCard`, or a broad Home redesign in this first Phase 8 slice.
+T70 added a small Tools tab body that links to the existing BMI route. Wheel, Device Hub, AI Lab, new route paths, `ShellRoute`, new packages, persistence, networking, `IwModuleCard`, and broad Home redesign remain out of scope for this first Phase 8 slice.
 
 ### 2026-06-23: BMI is the current migration pilot
 

@@ -50,7 +50,8 @@ Current architecture status:
 - The direct `http` dependency has been removed.
 - Phase 7 networking foundation checkpoint is complete; broader retry/cache/offline/global error policy is deferred until a concrete feature needs it.
 - Phase 8 feature expansion kickoff audit is complete; the first implementation slice is scoped to a small Tools tab body for the existing BMI module.
-- `features/home`, `features/explore`, `features/tools`, and `features/library` roots do not exist yet.
+- Tools now has a first tab body at `lib/features/tools/presentation/tools_screen.dart`.
+- `features/home`, `features/explore`, and `features/library` roots do not exist yet.
 
 Current tests:
 
@@ -73,6 +74,7 @@ Current tests:
 - Summertime Saga screen widget tests exist for deterministic loading, success, error/retry, incomplete data, dispose safety, and small-screen scroll safety.
 - Profile presentation widget test exists and covers persisted local display-name rendering.
 - Settings presentation widget test exists and covers persisted local display-name rendering, Appearance theme-mode summary, persisted theme-mode behavior, and theme-mode selection/persistence behavior.
+- Tools presentation widget coverage exists for small-screen scroll safety and BMI route navigation.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
 - Fox and Summertime Saga route smoke tests use router-level builder overrides with their existing fake-network screen seams.
@@ -163,6 +165,7 @@ Completed stabilization tasks:
 - Summertime Saga Dio migration slice was completed; `SmtsService` now uses the Dio-backed service path, fake-network service tests use a fake Dio adapter, route/screen seams stay deterministic, and the unused `http` dependency was removed.
 - Phase 7 networking foundation checkpoint audit was completed; Dio backs both current API-backed feature services, direct `http` is gone, Android internet permission is present in the main manifest, and broader retry/cache/offline/global error policy remains deferred.
 - Phase 8 feature expansion kickoff audit was completed; Home/Settings are real tab bodies, Explore/Tools/Library are placeholders, no top-level tab feature roots exist yet, and Tools/BMI was selected as the smallest useful first Phase 8 slice.
+- Tools tab BMI catalog slice was completed; Tools now lists the existing BMI module, navigates to the existing `/bmi` route, and keeps `/main`, Dashboard access, direct BMI route behavior, and local bottom-navigation state stable.
 
 ## Recommended Next Work
 
@@ -179,21 +182,21 @@ Task sizing note:
 
 ### Primary
 
-T70 - Tools tab BMI catalog slice
+T71 - Explore existing modules catalog slice
 
 Reason:
 
-- Tools is still an icon-only placeholder tab.
-- BMI is already a clean local utility module with route and tests, so Tools can become useful without adding packages, persistence, network calls, or route architecture.
-- This is smaller and safer than starting RSS, Reader, Device Hub, AI Lab, or a Home redesign.
+- Explore is still an icon-only placeholder tab.
+- Fox and Summertime Saga are existing external/update modules with direct routes and deterministic tests.
+- A static Explore catalog can make the tab useful without new packages, route paths, API loading, persistence, or network-policy changes.
 
 Scope:
 
-- Add `lib/features/tools/presentation/tools_screen.dart` as a scroll-safe normal app screen.
-- Show the existing BMI module as the first Tools module and navigate to the existing `AppRoutes.bmi` route.
-- Wire the Tools bottom tab to the new screen and add focused widget/shell coverage.
-- Preserve `/main`, direct `/bmi`, Dashboard's existing BMI access, startup/session behavior, and local bottom-navigation state.
-- Do not add Wheel, Device Hub, AI Lab, new packages, new route paths, `ShellRoute`, `IwModuleCard`, persistence, networking, or a broad visual redesign.
+- Add `lib/features/explore/presentation/explore_screen.dart` as a scroll-safe normal app screen.
+- Show existing Fox and Summertime Saga modules as static Explore cards and navigate to the existing direct routes.
+- Wire the Explore bottom tab to the new screen and add focused widget/shell coverage.
+- Preserve `/main`, direct `/fox`, direct `/smts_home`, Dashboard access, startup/session behavior, and local bottom-navigation state.
+- Do not load API data from the Explore tab body, add RSS/news, add new route paths, add packages, add `ShellRoute`, add retry/cache/offline policy, or redesign Home.
 
 Verification:
 
@@ -209,13 +212,13 @@ T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Dio and removing `http`.
 
-T71 - Explore existing modules catalog slice
-
-Choose this if Explore should surface the existing Fox and Summertime Saga modules before Tools gets BMI.
-
 Emulator/device UI smoke review
 
-Choose this if visual/device confidence is more important than choosing the next feature slice.
+Choose this if visual/device confidence is more important than adding another tab catalog.
+
+T72 - Library placeholder content audit
+
+Choose this if Library should be scoped before more existing modules are surfaced.
 
 ### Do not start yet
 
@@ -232,7 +235,7 @@ Choose this if visual/device confidence is more important than choosing the next
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
-- Wheel, Device Hub, AI Lab, RSS, Reader, bookmarks, or persistence before the first Phase 8 tab slice lands.
+- Wheel, Device Hub, AI Lab, RSS, Reader, bookmarks, or persistence before the existing tab catalogs land.
 
 ### Phase guard
 
@@ -242,7 +245,7 @@ Current phase:
 
 Decision:
 
-- T69 selected a small Tools tab BMI catalog as the first Phase 8 implementation slice because it reuses an existing local utility module and avoids new route architecture, packages, networking, persistence, or redesign.
+- T70 implemented the small Tools tab BMI catalog. Continue Phase 8 with the same pattern by making Explore list existing external/update modules without loading network data in the tab body.
 
 Do not enter yet:
 
@@ -250,7 +253,7 @@ Do not enter yet:
 
 Reason:
 
-- The first Phase 8 implementation should prove a real tab body using the existing shell and route table before broader feature work.
+- Existing tab catalogs should prove useful tab bodies using the current shell and route table before broader feature work.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during feature expansion planning.
 - Feature expansion should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, or visual redesign.
 
@@ -262,7 +265,8 @@ Exit criteria:
 - Done: Implemented and verified the T67 Summertime Saga Dio migration and removed the unused `http` dependency.
 - Done: Completed the T68 checkpoint audit and closed Phase 7.
 - Done: Completed the T69 Phase 8 kickoff audit and selected the first tab-root slice.
-- Remaining: Implement the T70 Tools tab BMI catalog slice before larger Phase 8 expansion.
+- Done: Implemented the T70 Tools tab BMI catalog slice.
+- Remaining: Implement the T71 Explore existing modules catalog slice before larger Phase 8 expansion.
 
 ## Verification Gates
 

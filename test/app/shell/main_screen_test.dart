@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:infinity_world/app/shell/main_screen.dart';
 import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:infinity_world/features/settings/presentation/settings_screen.dart';
+import 'package:infinity_world/features/tools/presentation/tools_screen.dart';
 
 void main() {
   testWidgets('main shell shows the five target bottom tabs', (tester) async {
@@ -46,6 +47,8 @@ void main() {
 
     expect(nav.currentIndex, 2);
     expect(find.text('Tools'), findsNWidgets(2));
+    expect(find.byType(ToolsScreen), findsOneWidget);
+    expect(find.text('BMI Calculator'), findsOneWidget);
     expect(find.byType(DashboardScreen), findsNothing);
 
     await tester.tap(find.byIcon(Icons.settings_rounded));

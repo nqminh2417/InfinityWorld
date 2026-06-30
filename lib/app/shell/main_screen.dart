@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:infinity_world/design_system/tokens/iw_spacing.dart';
 import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:infinity_world/features/settings/presentation/settings_screen.dart';
+import 'package:infinity_world/features/tools/presentation/tools_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -16,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _screens = const [
     DashboardScreen(),
     _ShellPlaceholderTab(title: 'Explore', icon: Icons.explore_rounded),
-    _ShellPlaceholderTab(title: 'Tools', icon: Icons.handyman_rounded),
+    ToolsScreen(),
     _ShellPlaceholderTab(title: 'Library', icon: Icons.local_library_rounded),
     SettingsScreen(),
   ];
