@@ -162,6 +162,14 @@ The first Phase 7 implementation should add Dio only as part of a used vertical 
 
 Do not add unused networking scaffolding, migrate both services at once, introduce global retry/cache/offline policy, change routing, add real auth, or redesign UI in the first networking slice.
 
+### 2026-06-30: Keep the Dio foundation small after the Fox pilot
+
+T66 added `dio`, `lib/core/network/dio_provider.dart`, and a Fox service provider, then migrated `FoxApiService` to the Dio-backed path.
+
+The shared networking foundation should remain just the Dio client/provider boundary for now. Do not add `ApiResult`, global retry, cache, offline persistence, interceptors, auth headers, or shared error UI until a concrete feature needs them.
+
+The next networking slice should migrate Summertime Saga to the same boundary while preserving its existing service and screen behavior.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:

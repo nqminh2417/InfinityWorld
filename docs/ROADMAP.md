@@ -58,17 +58,17 @@ Current structure:
 Current dependencies:
 
 - Flutter SDK constraint: `^3.7.0`
-- Runtime packages: `go_router`, `flutter_riverpod`, `http`, `change_app_package_name`, `shared_preferences`
+- Runtime packages: `go_router`, `flutter_riverpod`, `dio`, `http`, `change_app_package_name`, `shared_preferences`
 - Dev packages: `flutter_test`, `flutter_lints`, `shared_preferences_platform_interface`
 
-go_router is active for the root route table. Riverpod foundation is complete for current local session/profile/theme preferences. Dio is still a target-direction technology and is not installed or active yet.
+go_router is active for the root route table. Riverpod foundation is complete for current local session/profile/theme preferences. Dio is active for the Fox service pilot, while Summertime Saga still uses `http`.
 
 ## Current Known Risks
 
 - Login build-time `setState()` risk has been fixed; emulator/device visual review remains a later QA activity.
 - go_router is the active root router and Phase 5 is closed.
 - `lib/routes/app_routes.dart` remains the shared path contract for go_router.
-- Fox and Summertime Saga still use direct `http` services under feature folders.
+- Summertime Saga still uses a direct `http` service under its feature folder.
 - Feature placement does not mean rich tab content has migrated; `MainScreen` now lives in `lib/app/shell/` with a local five-tab shell skeleton and placeholder tab bodies where roots are not implemented yet.
 - Theme/design-system implementation now has a first token/card slice; broader components and visual adoption remain incomplete.
 - Android toolchain versions have been pulled forward on `home/devbyMinh-current` with explicit approval: Gradle 8.14.5, Android Gradle Plugin 8.11.1, Kotlin Gradle Plugin 2.2.20, Java/Kotlin target 17.
@@ -528,7 +528,7 @@ Phase 6 checkpoint:
 
 ## Phase 7: Networking Foundation
 
-Status: current / first implementation slice scoped.
+Status: current / first implementation slice complete.
 
 Goal:
 
@@ -536,8 +536,8 @@ Goal:
 
 Kickoff audit findings:
 
-- Direct `http` usage is currently limited to `lib/features/fox/data/fox_api_service.dart` and `lib/features/summertime_saga/data/smts_service.dart`.
-- Dio is not installed yet.
+- Before T66, direct `http` usage was limited to `lib/features/fox/data/fox_api_service.dart` and `lib/features/summertime_saga/data/smts_service.dart`.
+- Dio was not installed before T66.
 - Fox and Summertime Saga both already have fake-network service seams and deterministic route smoke coverage through router builder overrides.
 - Current Dio guidance supports `Dio(BaseOptions(...))`, `Duration` timeout options, and interceptors, which is enough for a small shared client/provider foundation without inventing a larger network framework. Source checked: `https://github.com/cfug/dio/blob/main/dio/README.md`.
 - Fox is the smallest first pilot because its service contract is narrower than Summertime Saga and its existing tests already cover success, non-200 status, malformed JSON, missing required data, and timeout behavior.
@@ -545,10 +545,15 @@ Kickoff audit findings:
 
 First implementation slice:
 
-- Add `dio` for a used pilot, not as unused scaffolding.
-- Add the smallest shared Dio client/provider boundary needed by the pilot.
-- Migrate `FoxApiService` to the Dio-backed boundary while preserving behavior and fake-test coverage.
-- Keep Summertime Saga on `http` until the pilot passes.
+- Completed: added `dio` for a used pilot, not as unused scaffolding.
+- Completed: added the smallest shared Dio client/provider boundary needed by the pilot.
+- Completed: migrated `FoxApiService` to the Dio-backed boundary while preserving behavior and fake-test coverage.
+- Completed: kept Summertime Saga on `http` until the pilot passed.
+
+Next implementation slice:
+
+- Migrate `SmtsService` to the shared Dio boundary while preserving its configured URL, timeout/status/schema error handling, deterministic screen states, and fake-network tests.
+- Do not add retry/cache/offline/global error policy until the two existing API services are on the shared Dio boundary.
 
 Rules:
 

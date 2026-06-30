@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
 import 'package:infinity_world/app/router/app_router.dart';
 import 'package:infinity_world/app/shell/main_screen.dart';
 import 'package:infinity_world/features/auth/presentation/login_screen.dart';
@@ -11,6 +10,7 @@ import 'package:infinity_world/features/bmi/presentation/bmi_screen.dart';
 import 'package:infinity_world/features/chat/presentation/chat_screen.dart';
 import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:infinity_world/features/fox/data/fox_api_service.dart';
+import 'package:infinity_world/features/fox/domain/fox_model.dart';
 import 'package:infinity_world/features/fox/presentation/fox_random_screen.dart';
 import 'package:infinity_world/features/profile/presentation/profile_screen.dart';
 import 'package:infinity_world/features/settings/presentation/settings_screen.dart';
@@ -84,7 +84,7 @@ void main() {
   });
 
   testWidgets('Fox route opens without live network', (tester) async {
-    final pendingResponse = Completer<http.Response>();
+    final pendingFox = Completer<FoxModel>();
     var requestCount = 0;
 
     await tester.pumpWidget(
@@ -93,13 +93,11 @@ void main() {
           initialLocation: AppRoutes.fox,
           foxRouteBuilder:
               (_, __) => FoxRandomScreen(
-                service: FoxApiService(
-                  httpGet: (_) {
-                    requestCount++;
+                service: _FakeFoxApiService(() {
+                  requestCount++;
 
-                    return pendingResponse.future;
-                  },
-                ),
+                  return pendingFox.future;
+                }),
               ),
         ),
       ),
@@ -111,7 +109,7 @@ void main() {
     expect(requestCount, 1);
     expect(tester.takeException(), isNull);
 
-    pendingResponse.complete(http.Response('Server error', 500));
+    pendingFox.completeError(const FoxApiException('Failed to load fox: 500'));
     await tester.pump();
   });
 
@@ -151,4 +149,13 @@ void main() {
 
 Widget _app(String initialRoute) {
   return ProviderScope(child: MainApp(initialRoute: initialRoute));
+}
+
+class _FakeFoxApiService extends FoxApiService {
+  _FakeFoxApiService(this._load);
+
+  final Future<FoxModel> Function() _load;
+
+  @override
+  Future<FoxModel> getRandomFox() => _load();
 }

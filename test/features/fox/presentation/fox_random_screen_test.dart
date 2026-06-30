@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
 import 'package:infinity_world/features/fox/data/fox_api_service.dart';
+import 'package:infinity_world/features/fox/domain/fox_model.dart';
 import 'package:infinity_world/features/fox/presentation/fox_random_screen.dart';
 
 void main() {
@@ -18,12 +18,12 @@ void main() {
     tester,
   ) async {
     setSmallScreen(tester);
-    final pendingResponse = Completer<http.Response>();
+    final pendingFox = Completer<FoxModel>();
 
     await tester.pumpWidget(
       MaterialApp(
         home: FoxRandomScreen(
-          service: FoxApiService(httpGet: (_) => pendingResponse.future),
+          service: _FakeFoxApiService(() => pendingFox.future),
         ),
       ),
     );
@@ -34,7 +34,7 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
     expect(tester.takeException(), isNull);
 
-    pendingResponse.complete(http.Response('Server error', 500));
+    pendingFox.completeError(const FoxApiException('Failed to load fox: 500'));
     await tester.pump();
   });
 
@@ -43,18 +43,16 @@ void main() {
   ) async {
     setSmallScreen(tester);
     var requestCount = 0;
-    final retryResponse = Completer<http.Response>();
-    final service = FoxApiService(
-      httpGet: (_) {
-        requestCount++;
+    final retryFox = Completer<FoxModel>();
+    final service = _FakeFoxApiService(() {
+      requestCount++;
 
-        if (requestCount == 1) {
-          return Future.value(http.Response('Server error', 500));
-        }
+      if (requestCount == 1) {
+        return Future.error(const FoxApiException('Failed to load fox: 500'));
+      }
 
-        return retryResponse.future;
-      },
-    );
+      return retryFox.future;
+    });
 
     await tester.pumpWidget(
       MaterialApp(home: FoxRandomScreen(service: service)),
@@ -74,7 +72,16 @@ void main() {
     expect(requestCount, 2);
     expect(tester.takeException(), isNull);
 
-    retryResponse.complete(http.Response('Server error', 500));
+    retryFox.completeError(const FoxApiException('Failed to load fox: 500'));
     await tester.pump();
   });
+}
+
+class _FakeFoxApiService extends FoxApiService {
+  _FakeFoxApiService(this._load);
+
+  final Future<FoxModel> Function() _load;
+
+  @override
+  Future<FoxModel> getRandomFox() => _load();
 }

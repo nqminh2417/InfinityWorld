@@ -44,7 +44,9 @@ Current architecture status:
 - go_router is active for root routing.
 - Riverpod foundation is complete for current local session/profile/theme preferences.
 - Remaining likely Riverpod candidates are either temporary screen-local state or Phase 7 networking ownership.
-- Dio is not active yet.
+- `lib/core/network/dio_provider.dart` now provides the first shared Dio client/provider boundary.
+- Fox now uses Dio through `FoxApiService` and `foxApiServiceProvider`.
+- Summertime Saga still uses its existing direct `http` service and is the next networking migration candidate.
 
 Current tests:
 
@@ -61,7 +63,7 @@ Current tests:
 - Dashboard presentation widget test exists for small-screen scroll safety and persisted local display-name rendering.
 - Deterministic route smoke tests exist for Login, Main, Dashboard, Chat, Profile, Settings, BMI, Test, Fox, and Summertime Saga.
 - Test screen widget coverage exists for small-screen keyboard/scroll safety.
-- Fox API service and model parsing tests exist.
+- Fox API service and model parsing tests exist with fake Dio responses.
 - Fox screen loading/error/retry widget tests exist, avoid real network, and include small-screen scroll-safety coverage.
 - Summertime Saga service/model tests exist with fake-network coverage for success, non-2xx, malformed JSON, missing schema, and timeout handling.
 - Summertime Saga screen widget tests exist for deterministic loading, success, error/retry, incomplete data, dispose safety, and small-screen scroll safety.
@@ -152,6 +154,7 @@ Completed stabilization tasks:
 - Riverpod next-consumer audit after Settings theme controls was completed; no remaining low-risk local shared-state consumer is worth migrating before a Phase 6 checkpoint.
 - Riverpod foundation checkpoint audit was completed; Phase 6 is closed, and Phase 7 should start with a networking foundation kickoff audit before any Dio implementation.
 - Phase 7 networking foundation kickoff audit was completed; direct `http` usage is limited to Fox and Summertime Saga feature services, both already have fake-network seams and route builder overrides, and the first implementation slice is scoped to Dio foundation plus a Fox service pilot.
+- Dio foundation and Fox service pilot slice was completed; `dio` is installed, the shared Dio provider boundary exists, Fox uses the Dio-backed service path, and focused/full tests pass.
 
 ## Recommended Next Work
 
@@ -168,22 +171,20 @@ Task sizing note:
 
 ### Primary
 
-T66 - Dio foundation and Fox service pilot slice
+T67 - Summertime Saga Dio migration slice
 
 Reason:
 
-- T65 found only two direct `http` feature services: Fox and Summertime Saga.
-- Fox is the smaller first pilot because its service contract is narrow, it already has fake response tests, and its route smoke test already uses a builder override.
-- A used Dio client/provider slice avoids adding unused networking scaffolding while proving the test seam before the larger Summertime Saga migration.
+- T66 proved the small Dio client/provider seam with the lower-risk Fox service.
+- Summertime Saga is now the remaining direct `http` API feature and already has fake-network service tests plus deterministic screen/route seams.
+- Migrating it next completes the current two-feature networking foundation without adding unused retry/cache/offline policy.
 
 Scope:
 
-- Add `dio` only for this scoped pilot.
-- Add the smallest shared Dio client/provider boundary needed by the pilot, with `BaseOptions` and `Duration` timeouts matching current Dio guidance.
-- Migrate `FoxApiService` from direct `http` to the new Dio-backed boundary while preserving `getRandomFox()` behavior, response validation, timeout/error semantics, retry UI behavior, and route behavior.
-- Update focused Fox service/screen/route tests with fake Dio responses; do not use live network tests.
+- Migrate `SmtsService` from direct `http` to the existing shared Dio client/provider boundary while preserving `fetchProgress()` behavior, configured URL usage, status/error/timeout/schema handling, and screen retry behavior.
+- Update focused Summertime Saga service/model tests with fake Dio responses; keep screen and route tests deterministic without live network.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not migrate Summertime Saga, add offline cache, add retry policy, add global error UI, add real auth, change routing, introduce `ShellRoute`, expand feature roots, or redesign UI in this slice.
+- Do not add offline cache, retry policy, global error UI, real auth, route changes, `ShellRoute`, feature root expansion, Riverpod screen-state migration, or UI redesign in this slice.
 
 Verification:
 
@@ -196,13 +197,13 @@ T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Dio.
 
-T67 - Summertime Saga Dio migration slice
+T68 - Phase 7 networking foundation checkpoint audit
 
-Choose this after T66 proves the Dio client/test seam, or earlier only if the known Summertime Saga API risk becomes urgent.
+Choose this after T67 migrates Summertime Saga, or earlier only if the phase needs to stop after the Fox pilot.
 
 ### Do not start yet
 
-- Summertime Saga networking migration before T66 proves the smallest Dio pilot, unless explicitly assigned.
+- Global retry/cache/offline policy before both current API services use the shared Dio boundary.
 - Riverpod implementation slices unless a future feature has concrete shared-state ownership.
 - Theme style switching, Neon/Vice themes, or visual redesign before a dedicated theme-style task.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
@@ -212,7 +213,7 @@ Choose this after T66 proves the Dio client/test seam, or earlier only if the kn
 - Real backend authentication.
 - More design-system components unless explicitly assigned.
 - Full UI redesign unless explicitly approved.
-- Additional Fox follow-up tasks beyond the T66 Dio pilot unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
+- Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
 
@@ -224,7 +225,7 @@ Current phase:
 
 Decision:
 
-- T65 completed the networking kickoff audit. Start T66 as a small used Dio foundation plus Fox service pilot before migrating larger API-backed features.
+- T66 completed the small used Dio foundation plus Fox service pilot. Start T67 to migrate the remaining direct `http` API service before checkpointing Phase 7.
 
 Do not enter yet:
 
@@ -240,8 +241,8 @@ Exit criteria:
 
 - Done: Completed the Phase 7 networking foundation kickoff audit.
 - Done: Confirmed Dio is not installed yet and direct `http` usage is limited to Fox and Summertime Saga services.
-- Done: Chose Dio foundation plus Fox service pilot as the first networking implementation slice.
-- Remaining: Implement and verify the T66 Dio/Fox pilot before migrating Summertime Saga or adding broader network policies.
+- Done: Implemented and verified the T66 Dio/Fox pilot.
+- Remaining: Implement and verify the T67 Summertime Saga Dio migration before adding broader network policies or checkpointing Phase 7.
 
 ## Verification Gates
 
