@@ -1,6 +1,6 @@
 # Infinity World Active Tasks
 
-Last updated: 2026-06-29
+Last updated: 2026-06-30
 
 ## Current Status
 
@@ -43,6 +43,7 @@ Current architecture status:
 - `shared_preferences` is active for the first local session flag and display name.
 - go_router is active for root routing.
 - Riverpod is active for the first local session repository provider seam and the root theme-mode provider seam.
+- Remaining likely Riverpod candidates are either temporary screen-local state or Phase 7 networking ownership.
 - Dio is not active yet.
 
 Current tests:
@@ -147,6 +148,7 @@ Completed stabilization tasks:
 - Riverpod next-consumer audit after Settings Appearance was completed; theme-mode persistence foundation was selected as the seventh Riverpod slice because root app and Settings already consume `appThemeModeProvider`, but it still returns a hardcoded `ThemeMode.system` value.
 - Riverpod theme-mode persistence foundation slice was completed; `appThemeModeProvider` is now backed by `shared_preferences`, preserves System for missing or invalid stored values, and exposes a controller update method for a later Settings controls slice.
 - Riverpod Settings theme-mode controls slice was completed; Settings Appearance now offers System / Light / Dark controls through `appThemeModeProvider`, and focused widget coverage verifies selection persistence.
+- Riverpod next-consumer audit after Settings theme controls was completed; no remaining low-risk local shared-state consumer is worth migrating before a Phase 6 checkpoint.
 
 ## Recommended Next Work
 
@@ -163,25 +165,25 @@ Task sizing note:
 
 ### Primary
 
-T63 - Riverpod next-consumer audit after Settings theme controls
+T64 - Riverpod foundation checkpoint audit
 
 Reason:
 
-- T62 completed the local theme-mode preference path from provider persistence to Settings controls.
-- The next Riverpod consumer should be selected before touching shell state, form state, network ownership, or theme style.
-- Remaining candidates have different risk profiles, so the next step should be an audit instead of an implementation slice.
+- T63 found no remaining low-risk local shared-state consumer worth migrating immediately.
+- Main shell tab index and Login/BMI/Test form state are temporary screen-local state.
+- Fox and Summertime Saga async state should wait for Phase 7 networking/Dio ownership.
 
 Scope:
 
-- Inspect remaining likely Riverpod consumers after Settings theme controls.
-- Choose the smallest next implementation slice or recommend a Phase 6 checkpoint if no local-state consumer is worthwhile.
-- Update planning docs only; do not migrate state during the audit.
+- Re-audit the Phase 6 Riverpod provider seams, consumers, tests, and docs.
+- Decide whether Phase 6 can close and whether Phase 7 networking foundation should start next.
+- Update planning docs only; do not migrate state during the checkpoint.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not add theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, network state migration, Dio, real auth, `ShellRoute`, or new feature roots in this audit.
+- Do not add theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, network state migration, Dio, real auth, `ShellRoute`, or new feature roots in this checkpoint.
 
 Verification:
 
-- Dart logic/test gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Docs/audit gate from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
@@ -189,13 +191,14 @@ T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Riverpod.
 
-T64 - Riverpod ninth implementation slice
+T65 - Phase 7 networking foundation kickoff audit
 
-Choose this only after T63 scopes the next consumer and verification plan.
+Choose this only after T64 closes Phase 6 and explicitly opens Phase 7.
 
 ### Do not start yet
 
-- Riverpod feature rewrites beyond the scoped T63 next-consumer audit.
+- Riverpod implementation slices beyond the scoped T64 checkpoint unless the checkpoint finds a concrete local shared-state gap.
+- Phase 7 networking/Dio work before T64 closes Phase 6.
 - Theme style switching, Neon/Vice themes, or visual redesign before a dedicated theme-style task.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
 - Dio/network layer.
@@ -217,7 +220,7 @@ Current phase:
 
 Decision:
 
-- T62 completed Settings theme-mode controls. Start T63 before any broader feature-state migration.
+- T63 found no worthwhile next local-state consumer. Start T64 before any broader feature-state or networking migration.
 
 Do not enter yet:
 
@@ -247,7 +250,8 @@ Exit criteria:
 - Done: Chose theme-mode persistence foundation as the next Riverpod slice.
 - Done: Implemented and verified the theme-mode persistence foundation slice.
 - Done: Implemented and verified the Settings theme-mode controls slice.
-- Remaining: Choose the next Riverpod consumer before a ninth implementation slice.
+- Done: Completed the next-consumer audit after Settings theme controls.
+- Remaining: Complete the Phase 6 checkpoint before starting Phase 7.
 
 ## Verification Gates
 

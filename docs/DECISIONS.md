@@ -1,6 +1,6 @@
 # Infinity World Decisions
 
-Last updated: 2026-06-29
+Last updated: 2026-06-30
 
 This file records durable product, architecture, workflow, and safety decisions for Infinity World. Keep entries concise and update them when a decision changes.
 
@@ -145,6 +145,10 @@ The app theme-mode provider is now Riverpod-managed and backed by `shared_prefer
 ### 2026-06-29: Eighth Riverpod slice is Settings theme-mode controls
 
 T62 added compact Settings Appearance controls for selecting System, Light, or Dark through the persisted `appThemeModeProvider` controller. The existing Settings layout, route behavior, local session flow, and five-tab shell stay stable. Theme style switching, Neon/Vice themes, visual redesign, shell state, form state, network features, Dio, `ShellRoute`, real auth, and new feature roots stay out of scope.
+
+### 2026-06-30: Checkpoint Phase 6 before adding another Riverpod consumer
+
+The T63 audit found no remaining low-risk local shared-state consumer worth migrating immediately. Main shell tab index and Login/BMI/Test form state should stay local for now. Fox and Summertime Saga async state should wait for Phase 7 networking/Dio ownership. The next task should checkpoint Riverpod foundation before any further Riverpod implementation slice or Phase 7 work.
 
 ### 2026-06-23: BMI is the current migration pilot
 

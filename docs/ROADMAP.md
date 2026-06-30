@@ -1,6 +1,6 @@
 # Infinity World Roadmap
 
-Last updated: 2026-06-29
+Last updated: 2026-06-30
 
 ## Purpose
 
@@ -373,7 +373,7 @@ Next phase focus:
 
 ## Phase 6: Riverpod Foundation
 
-Status: current / eighth implementation slice complete, next-consumer audit scoped.
+Status: current / next-consumer audit complete, checkpoint scoped.
 
 Goal:
 
@@ -511,6 +511,13 @@ Eighth implementation slice:
 - Completed: selections persist through the existing shared_preferences-backed theme-mode controller and update Settings consumption.
 - Completed: focused Settings widget coverage verifies selected state and persistence behavior.
 - Theme style switching, Neon/Vice themes, visual redesign, shell tab state, form-state migration, Dio, network state, real auth, `ShellRoute`, and new feature roots remain out of scope.
+
+Next-consumer audit after Settings theme controls findings:
+
+- Main shell tab index is still temporary shell UI state and should stay local until tab-specific routes or branch stacks exist.
+- Login, BMI, and Test form state should stay local because controllers, validation text, and calculated output are screen-owned.
+- Fox and Summertime Saga async state should wait for Phase 7 networking/Dio ownership instead of becoming a Phase 6 Riverpod-only migration.
+- The next Phase 6 step should be a checkpoint audit to decide whether Riverpod foundation can close.
 
 ## Phase 7: Networking Foundation
 
