@@ -577,6 +577,21 @@ Kickoff:
 - Inventory the existing five-tab shell placeholders, direct feature routes, product direction, and test coverage.
 - Select one small vertical slice that improves a real tab or feature surface without broad routing, state, network, or visual redesign work.
 
+Kickoff audit findings:
+
+- Current `/main` still uses a local `BottomNavigationBar`; `ShellRoute` remains unnecessary until real tab-owned route stacks exist.
+- Home is the existing `DashboardScreen`, Settings is the existing `SettingsScreen`, and Explore / Tools / Library are icon-only placeholder tabs.
+- No `features/home`, `features/explore`, `features/tools`, or `features/library` root exists yet.
+- Existing feature and dev routes are still direct: BMI, Fox, Summertime Saga, Profile, Settings, Dashboard, Chat, and Test.
+- Tools is the smallest useful first tab-root slice because BMI is already a clean local utility module and can be linked without new packages, persistence, networking, or route architecture.
+- Explore can follow with existing Fox / Summertime Saga cards, but it is slightly broader because it surfaces API-backed modules.
+
+First implementation slice:
+
+- Selected: add a small Tools tab body that lists the existing BMI module and navigates to the existing BMI route.
+- Preserve the current direct `/bmi` route, Dashboard access, `/main` startup behavior, and local bottom navigation.
+- Do not add Wheel, Device Hub, AI Lab, `ShellRoute`, new packages, `IwModuleCard`, or broad Home redesign in this slice.
+
 Potential areas:
 
 - Home dashboard.

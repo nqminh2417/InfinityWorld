@@ -182,6 +182,12 @@ The T68 checkpoint confirmed that the shared Dio factory/provider boundary exist
 
 Close Phase 7. Do not add retry/cache/offline/global error policy until a concrete feature needs it. Start Phase 8 with a feature expansion kickoff audit before implementing another feature slice.
 
+### 2026-06-30: First Phase 8 slice is Tools BMI catalog
+
+The T69 kickoff audit found that `/main` already has the target five bottom tabs, but Explore, Tools, and Library are still placeholder tab bodies. BMI is the smallest existing local utility module that fits a target tab.
+
+The next implementation should add a small Tools tab body that links to the existing BMI route. Do not add Wheel, Device Hub, AI Lab, new route paths, `ShellRoute`, new packages, persistence, networking, `IwModuleCard`, or a broad Home redesign in this first Phase 8 slice.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:

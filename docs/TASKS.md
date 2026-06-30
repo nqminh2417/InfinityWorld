@@ -49,6 +49,8 @@ Current architecture status:
 - Summertime Saga now uses Dio through `SmtsService` and `smtsServiceProvider`.
 - The direct `http` dependency has been removed.
 - Phase 7 networking foundation checkpoint is complete; broader retry/cache/offline/global error policy is deferred until a concrete feature needs it.
+- Phase 8 feature expansion kickoff audit is complete; the first implementation slice is scoped to a small Tools tab body for the existing BMI module.
+- `features/home`, `features/explore`, `features/tools`, and `features/library` roots do not exist yet.
 
 Current tests:
 
@@ -160,6 +162,7 @@ Completed stabilization tasks:
 - Dio foundation and Fox service pilot slice was completed; `dio` is installed, the shared Dio provider boundary exists, Fox uses the Dio-backed service path, and focused/full tests pass.
 - Summertime Saga Dio migration slice was completed; `SmtsService` now uses the Dio-backed service path, fake-network service tests use a fake Dio adapter, route/screen seams stay deterministic, and the unused `http` dependency was removed.
 - Phase 7 networking foundation checkpoint audit was completed; Dio backs both current API-backed feature services, direct `http` is gone, Android internet permission is present in the main manifest, and broader retry/cache/offline/global error policy remains deferred.
+- Phase 8 feature expansion kickoff audit was completed; Home/Settings are real tab bodies, Explore/Tools/Library are placeholders, no top-level tab feature roots exist yet, and Tools/BMI was selected as the smallest useful first Phase 8 slice.
 
 ## Recommended Next Work
 
@@ -176,31 +179,39 @@ Task sizing note:
 
 ### Primary
 
-T69 - Phase 8 feature expansion kickoff audit
+T70 - Tools tab BMI catalog slice
 
 Reason:
 
-- Phase 7 is complete enough for the current API-backed surface.
-- The five-tab shell still contains placeholder roots for Explore, Tools, and Library, so feature expansion should begin with an audit rather than immediate implementation.
-- The next useful step is to choose one small Phase 8 vertical slice that improves a real tab or feature surface without destabilizing routing, Riverpod, or networking foundations.
+- Tools is still an icon-only placeholder tab.
+- BMI is already a clean local utility module with route and tests, so Tools can become useful without adding packages, persistence, network calls, or route architecture.
+- This is smaller and safer than starting RSS, Reader, Device Hub, AI Lab, or a Home redesign.
 
 Scope:
 
-- Audit current Home / Explore / Tools / Library / Settings shell content, direct feature routes, existing tests, and product direction.
-- Select the next smallest Phase 8 implementation slice with clear acceptance criteria and verification.
-- Update planning docs only unless a concrete blocker is found.
-- Do not implement the feature slice during the kickoff audit.
-- Do not add new packages, retry/cache/offline policy, real auth, `ShellRoute`, broad Riverpod migration, networking refactors, or visual redesign in this audit.
+- Add `lib/features/tools/presentation/tools_screen.dart` as a scroll-safe normal app screen.
+- Show the existing BMI module as the first Tools module and navigate to the existing `AppRoutes.bmi` route.
+- Wire the Tools bottom tab to the new screen and add focused widget/shell coverage.
+- Preserve `/main`, direct `/bmi`, Dashboard's existing BMI access, startup/session behavior, and local bottom-navigation state.
+- Do not add Wheel, Device Hub, AI Lab, new packages, new route paths, `ShellRoute`, `IwModuleCard`, persistence, networking, or a broad visual redesign.
 
 Verification:
 
-- Docs/audit gate from `docs/qa/IW_GIT_WORKFLOW.md`.
+- `dart format` for changed Dart files.
+- `flutter analyze`.
+- `flutter test`.
+- `flutter build apk --debug`.
+- `git diff --check`.
 
 ### Alternatives
 
 T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Dio and removing `http`.
+
+T71 - Explore existing modules catalog slice
+
+Choose this if Explore should surface the existing Fox and Summertime Saga modules before Tools gets BMI.
 
 Emulator/device UI smoke review
 
@@ -221,6 +232,7 @@ Choose this if visual/device confidence is more important than choosing the next
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
+- Wheel, Device Hub, AI Lab, RSS, Reader, bookmarks, or persistence before the first Phase 8 tab slice lands.
 
 ### Phase guard
 
@@ -230,15 +242,15 @@ Current phase:
 
 Decision:
 
-- T68 closed Phase 7 after confirming both current API-backed features use Dio-backed service paths and direct `http` is removed. Start Phase 8 with a feature expansion kickoff audit before implementing another feature slice.
+- T69 selected a small Tools tab BMI catalog as the first Phase 8 implementation slice because it reuses an existing local utility module and avoids new route architecture, packages, networking, persistence, or redesign.
 
 Do not enter yet:
 
-- Phase 8 implementation work.
+- Larger Phase 8 feature expansion.
 
 Reason:
 
-- The first Phase 8 implementation should be selected from the current shell, route, test, and product-direction inventory.
+- The first Phase 8 implementation should prove a real tab body using the existing shell and route table before broader feature work.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during feature expansion planning.
 - Feature expansion should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, or visual redesign.
 
@@ -249,7 +261,8 @@ Exit criteria:
 - Done: Implemented and verified the T66 Dio/Fox pilot.
 - Done: Implemented and verified the T67 Summertime Saga Dio migration and removed the unused `http` dependency.
 - Done: Completed the T68 checkpoint audit and closed Phase 7.
-- Remaining: Complete the T69 Phase 8 kickoff audit before starting feature expansion implementation.
+- Done: Completed the T69 Phase 8 kickoff audit and selected the first tab-root slice.
+- Remaining: Implement the T70 Tools tab BMI catalog slice before larger Phase 8 expansion.
 
 ## Verification Gates
 
