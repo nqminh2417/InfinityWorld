@@ -528,7 +528,7 @@ Phase 6 checkpoint:
 
 ## Phase 7: Networking Foundation
 
-Status: current / two-feature Dio migration complete, checkpoint next.
+Status: complete as of 2026-06-30.
 
 Goal:
 
@@ -557,7 +557,9 @@ Next implementation slice:
 
 Checkpoint:
 
-- Re-audit Phase 7 before adding retry/cache/offline/global error policy or entering Phase 8.
+- Completed: re-audited the Dio provider/factory, Fox service path, Summertime Saga service path, route seams, fake-network tests, dependency state, and Android internet permission.
+- Confirmed: both current API-backed features use Dio-backed service paths, no direct `http` dependency or Dart imports remain, and route/screen tests avoid live networking through existing seams.
+- Decision: close Phase 7 and defer retry/cache/offline/global error policy until a concrete feature needs it.
 
 Rules:
 
@@ -567,7 +569,13 @@ Rules:
 
 ## Phase 8: Feature Expansion
 
-Status: future.
+Status: current / kickoff audit next.
+
+Kickoff:
+
+- Start with a feature expansion audit before implementing a new feature slice.
+- Inventory the existing five-tab shell placeholders, direct feature routes, product direction, and test coverage.
+- Select one small vertical slice that improves a real tab or feature surface without broad routing, state, network, or visual redesign work.
 
 Potential areas:
 

@@ -176,6 +176,12 @@ T67 migrated `SmtsService` to the Dio-backed path, added a Summertime Saga servi
 
 Both current API-backed features now use Dio-backed services. The next Phase 7 task should be a checkpoint audit, not retry/cache/offline/global error policy, unless a concrete blocker appears.
 
+### 2026-06-30: Close networking foundation before feature expansion
+
+The T68 checkpoint confirmed that the shared Dio factory/provider boundary exists, Fox and Summertime Saga both use Dio-backed service paths, direct `http` imports and dependency entries are gone, fake-network tests remain in place, and Android release internet permission is present.
+
+Close Phase 7. Do not add retry/cache/offline/global error policy until a concrete feature needs it. Start Phase 8 with a feature expansion kickoff audit before implementing another feature slice.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:
