@@ -594,8 +594,12 @@ First implementation slice:
 
 Next implementation slice:
 
-- Selected: add a small Explore tab body that lists existing Fox and Summertime Saga modules and navigates to their existing direct routes.
-- Do not load API data from the Explore tab body; network calls should remain inside the existing feature screens after navigation.
+- Completed: added a small Explore tab body that lists existing Fox and Summertime Saga modules and navigates to their existing direct routes.
+- Completed: kept API loading out of the Explore tab body; network calls remain inside the existing feature screens after navigation.
+
+Next audit:
+
+- Audit Library before adding Reader, bookmarks, saved articles, local database, imports/downloads, or persistence.
 
 Potential areas:
 

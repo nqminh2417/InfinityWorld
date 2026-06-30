@@ -188,6 +188,12 @@ The T69 kickoff audit found that `/main` already has the target five bottom tabs
 
 T70 added a small Tools tab body that links to the existing BMI route. Wheel, Device Hub, AI Lab, new route paths, `ShellRoute`, new packages, persistence, networking, `IwModuleCard`, and broad Home redesign remain out of scope for this first Phase 8 slice.
 
+### 2026-06-30: Explore catalog stays static
+
+T71 added a small Explore tab body that links to the existing Fox and Summertime Saga routes. Explore must not load API data just to render the tab catalog; the existing feature screens remain responsible for network loading, error states, and retry behavior after navigation.
+
+Audit Library before adding Reader, bookmarks, saved articles, local database, imports/downloads, new packages, or persistence.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:
