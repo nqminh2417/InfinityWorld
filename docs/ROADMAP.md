@@ -68,7 +68,7 @@ go_router is active for the root route table. Riverpod foundation is complete fo
 - Login build-time `setState()` risk has been fixed; emulator/device visual review remains a later QA activity.
 - go_router is the active root router and Phase 5 is closed.
 - `lib/routes/app_routes.dart` remains the shared path contract for go_router.
-- Some networking still uses direct `http` services under feature folders.
+- Fox and Summertime Saga still use direct `http` services under feature folders.
 - Feature placement does not mean rich tab content has migrated; `MainScreen` now lives in `lib/app/shell/` with a local five-tab shell skeleton and placeholder tab bodies where roots are not implemented yet.
 - Theme/design-system implementation now has a first token/card slice; broader components and visual adoption remain incomplete.
 - Android toolchain versions have been pulled forward on `home/devbyMinh-current` with explicit approval: Gradle 8.14.5, Android Gradle Plugin 8.11.1, Kotlin Gradle Plugin 2.2.20, Java/Kotlin target 17.
@@ -528,15 +528,27 @@ Phase 6 checkpoint:
 
 ## Phase 7: Networking Foundation
 
-Status: current / kickoff audit scoped.
+Status: current / first implementation slice scoped.
 
 Goal:
 
 - Introduce Dio and consistent API error/loading behavior when a networking feature is actively migrated.
 
-Good future candidate:
+Kickoff audit findings:
 
-- Summertime Saga, after a focused audit, because it already has API/loading/null-state risk.
+- Direct `http` usage is currently limited to `lib/features/fox/data/fox_api_service.dart` and `lib/features/summertime_saga/data/smts_service.dart`.
+- Dio is not installed yet.
+- Fox and Summertime Saga both already have fake-network service seams and deterministic route smoke coverage through router builder overrides.
+- Current Dio guidance supports `Dio(BaseOptions(...))`, `Duration` timeout options, and interceptors, which is enough for a small shared client/provider foundation without inventing a larger network framework. Source checked: `https://github.com/cfug/dio/blob/main/dio/README.md`.
+- Fox is the smallest first pilot because its service contract is narrower than Summertime Saga and its existing tests already cover success, non-200 status, malformed JSON, missing required data, and timeout behavior.
+- Summertime Saga remains the larger follow-up because it has more API model and screen-state surface area.
+
+First implementation slice:
+
+- Add `dio` for a used pilot, not as unused scaffolding.
+- Add the smallest shared Dio client/provider boundary needed by the pilot.
+- Migrate `FoxApiService` to the Dio-backed boundary while preserving behavior and fake-test coverage.
+- Keep Summertime Saga on `http` until the pilot passes.
 
 Rules:
 

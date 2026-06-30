@@ -154,6 +154,14 @@ The T63 audit found no remaining low-risk local shared-state consumer worth migr
 
 The T64 checkpoint found Phase 6 complete enough for current local session/profile/theme preferences: root `ProviderScope`, local session repository injection, display-name consumption, persisted theme mode, Settings controls, and focused coverage are in place. Do not add another Riverpod-only implementation slice without a concrete shared-state need. Start Phase 7 with a networking foundation kickoff audit before adding Dio or migrating API-backed features.
 
+### 2026-06-30: First networking slice is Dio foundation plus Fox pilot
+
+The T65 audit found two direct `http` feature services: Fox and Summertime Saga. Both already have fake-network seams and deterministic route smoke coverage, and Dio is not installed yet.
+
+The first Phase 7 implementation should add Dio only as part of a used vertical slice: a smallest shared Dio client/provider boundary plus a Fox service migration. Fox is the smaller pilot because its service contract and tests are narrower. Summertime Saga remains the follow-up after the Dio client/test seam is proven.
+
+Do not add unused networking scaffolding, migrate both services at once, introduce global retry/cache/offline policy, change routing, add real auth, or redesign UI in the first networking slice.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:

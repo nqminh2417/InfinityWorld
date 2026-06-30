@@ -151,6 +151,7 @@ Completed stabilization tasks:
 - Riverpod Settings theme-mode controls slice was completed; Settings Appearance now offers System / Light / Dark controls through `appThemeModeProvider`, and focused widget coverage verifies selection persistence.
 - Riverpod next-consumer audit after Settings theme controls was completed; no remaining low-risk local shared-state consumer is worth migrating before a Phase 6 checkpoint.
 - Riverpod foundation checkpoint audit was completed; Phase 6 is closed, and Phase 7 should start with a networking foundation kickoff audit before any Dio implementation.
+- Phase 7 networking foundation kickoff audit was completed; direct `http` usage is limited to Fox and Summertime Saga feature services, both already have fake-network seams and route builder overrides, and the first implementation slice is scoped to Dio foundation plus a Fox service pilot.
 
 ## Recommended Next Work
 
@@ -167,39 +168,41 @@ Task sizing note:
 
 ### Primary
 
-T65 - Phase 7 networking foundation kickoff audit
+T66 - Dio foundation and Fox service pilot slice
 
 Reason:
 
-- T64 closed Phase 6 after confirming Riverpod foundation is complete enough for local session/profile/theme preferences.
-- Existing networking still uses direct `http` services under feature folders.
-- Dio remains the documented networking direction but is not installed or scoped yet.
+- T65 found only two direct `http` feature services: Fox and Summertime Saga.
+- Fox is the smaller first pilot because its service contract is narrow, it already has fake response tests, and its route smoke test already uses a builder override.
+- A used Dio client/provider slice avoids adding unused networking scaffolding while proving the test seam before the larger Summertime Saga migration.
 
 Scope:
 
-- Audit current network services, tests, route seams, and known networking risks.
-- Choose the smallest first Dio/networking implementation slice or recommend no implementation if the risk is not ready.
-- Update planning docs only; do not add Dio or migrate networking during the kickoff audit.
+- Add `dio` only for this scoped pilot.
+- Add the smallest shared Dio client/provider boundary needed by the pilot, with `BaseOptions` and `Duration` timeouts matching current Dio guidance.
+- Migrate `FoxApiService` from direct `http` to the new Dio-backed boundary while preserving `getRandomFox()` behavior, response validation, timeout/error semantics, retry UI behavior, and route behavior.
+- Update focused Fox service/screen/route tests with fake Dio responses; do not use live network tests.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not add theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, Riverpod feature rewrites, Dio, real auth, `ShellRoute`, or new feature roots in this audit.
+- Do not migrate Summertime Saga, add offline cache, add retry policy, add global error UI, add real auth, change routing, introduce `ShellRoute`, expand feature roots, or redesign UI in this slice.
 
 Verification:
 
-- Docs/audit gate from `docs/qa/IW_GIT_WORKFLOW.md`.
+- `flutter pub get`
+- Dart logic/test gate from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
 T30 — Dependency/toolchain audit
 
-Choose this if package/build risk should be reviewed after adding Riverpod.
+Choose this if package/build risk should be reviewed after adding Dio.
 
-T66 - Dio networking foundation implementation slice
+T67 - Summertime Saga Dio migration slice
 
-Choose this only after T65 scopes the first networking implementation slice.
+Choose this after T66 proves the Dio client/test seam, or earlier only if the known Summertime Saga API risk becomes urgent.
 
 ### Do not start yet
 
-- Dio/network implementation before T65 scopes the first networking slice.
+- Summertime Saga networking migration before T66 proves the smallest Dio pilot, unless explicitly assigned.
 - Riverpod implementation slices unless a future feature has concrete shared-state ownership.
 - Theme style switching, Neon/Vice themes, or visual redesign before a dedicated theme-style task.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
@@ -209,9 +212,9 @@ Choose this only after T65 scopes the first networking implementation slice.
 - Real backend authentication.
 - More design-system components unless explicitly assigned.
 - Full UI redesign unless explicitly approved.
-- Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
+- Additional Fox follow-up tasks beyond the T66 Dio pilot unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
-- Dio/Riverpod/go_router migration inside Summertime Saga follow-up tasks.
+- Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
 
 ### Phase guard
 
@@ -221,7 +224,7 @@ Current phase:
 
 Decision:
 
-- T64 closed Riverpod foundation. Start T65 before adding Dio or migrating networking.
+- T65 completed the networking kickoff audit. Start T66 as a small used Dio foundation plus Fox service pilot before migrating larger API-backed features.
 
 Do not enter yet:
 
@@ -229,31 +232,16 @@ Do not enter yet:
 
 Reason:
 
-- Networking foundation should begin with an audit because current API-backed features already have fake-network test seams but still use direct `http`.
+- Networking foundation should start with one small vertical slice because current API-backed features already have fake-network test seams but still use direct `http`.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, and the five-tab shell must remain stable during networking work.
 - Dio work should not be mixed with real backend authentication, shell-route work, visual redesign, or feature expansion.
 
 Exit criteria:
 
-- Done: Riverpod foundation kickoff audit scoped the first implementation slice.
-- Done: Added root `ProviderScope` and a `LocalSessionRepository` provider seam.
-- Done: Verified startup/session/login/logout parity after the first Riverpod slice.
-- Done: Chose Profile display-name consumption as the next Riverpod consumer.
-- Done: Implemented and verified the Profile display-name provider slice.
-- Done: Chose Settings read-only profile summary as the next Riverpod consumer.
-- Done: Implemented and verified the Settings profile summary slice.
-- Done: Chose Dashboard/Home read-only greeting as the next Riverpod consumer.
-- Done: Implemented and verified the Dashboard local greeting slice.
-- Done: Chose root theme mode provider foundation as the next Riverpod consumer.
-- Done: Implemented and verified the theme mode provider foundation slice.
-- Done: Chose Settings Appearance read-only theme-mode summary as the next Riverpod consumer.
-- Done: Implemented and verified the Settings appearance theme-mode summary slice.
-- Done: Chose theme-mode persistence foundation as the next Riverpod slice.
-- Done: Implemented and verified the theme-mode persistence foundation slice.
-- Done: Implemented and verified the Settings theme-mode controls slice.
-- Done: Completed the next-consumer audit after Settings theme controls.
-- Done: Completed the Phase 6 checkpoint and closed Riverpod foundation.
-- Remaining: Complete the Phase 7 networking foundation kickoff audit before adding Dio.
+- Done: Completed the Phase 7 networking foundation kickoff audit.
+- Done: Confirmed Dio is not installed yet and direct `http` usage is limited to Fox and Summertime Saga services.
+- Done: Chose Dio foundation plus Fox service pilot as the first networking implementation slice.
+- Remaining: Implement and verify the T66 Dio/Fox pilot before migrating Summertime Saga or adding broader network policies.
 
 ## Verification Gates
 
