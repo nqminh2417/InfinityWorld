@@ -61,7 +61,7 @@ Current dependencies:
 - Runtime packages: `go_router`, `flutter_riverpod`, `http`, `change_app_package_name`, `shared_preferences`
 - Dev packages: `flutter_test`, `flutter_lints`, `shared_preferences_platform_interface`
 
-go_router is active for the root route table. Riverpod is active for the first local session repository provider seam and persisted root theme-mode provider seam. Dio is still a target-direction technology and is not installed or active yet.
+go_router is active for the root route table. Riverpod foundation is complete for current local session/profile/theme preferences. Dio is still a target-direction technology and is not installed or active yet.
 
 ## Current Known Risks
 
@@ -366,14 +366,14 @@ Phase 5 checkpoint:
 - Decision: close Phase 5 with `ShellRoute`, tab-specific route paths, richer tab content, and feature root expansion deferred.
 - Remaining router work should be driven by concrete future feature needs, not by Phase 5 migration cleanup.
 
-Next phase focus:
+Later phase focus:
 
-- Start Phase 6 with a Riverpod foundation kickoff audit.
-- Keep Riverpod implementation, Dio, real auth, shell-route work, and feature expansion out of the kickoff audit.
+- Phase 6 Riverpod foundation is now closed.
+- Phase 7 starts with a networking foundation kickoff audit before adding Dio.
 
 ## Phase 6: Riverpod Foundation
 
-Status: current / next-consumer audit complete, checkpoint scoped.
+Status: complete as of 2026-06-30.
 
 Goal:
 
@@ -517,11 +517,18 @@ Next-consumer audit after Settings theme controls findings:
 - Main shell tab index is still temporary shell UI state and should stay local until tab-specific routes or branch stacks exist.
 - Login, BMI, and Test form state should stay local because controllers, validation text, and calculated output are screen-owned.
 - Fox and Summertime Saga async state should wait for Phase 7 networking/Dio ownership instead of becoming a Phase 6 Riverpod-only migration.
-- The next Phase 6 step should be a checkpoint audit to decide whether Riverpod foundation can close.
+- This led to the Phase 6 checkpoint audit.
+
+Phase 6 checkpoint:
+
+- Completed: re-audited root `ProviderScope`, local session repository provider, display-name provider consumers, persisted theme-mode provider/controller, Settings controls, and focused coverage.
+- Confirmed: Phase 6 is complete enough for current local session/profile/theme preferences.
+- Deferred: shell tab index and form state stay local; Fox and Summertime Saga async ownership moves to Phase 7 networking work.
+- Decision: close Phase 6 and start Phase 7 with a networking foundation kickoff audit before adding Dio.
 
 ## Phase 7: Networking Foundation
 
-Status: deferred, medium/high risk.
+Status: current / kickoff audit scoped.
 
 Goal:
 

@@ -150,6 +150,10 @@ T62 added compact Settings Appearance controls for selecting System, Light, or D
 
 The T63 audit found no remaining low-risk local shared-state consumer worth migrating immediately. Main shell tab index and Login/BMI/Test form state should stay local for now. Fox and Summertime Saga async state should wait for Phase 7 networking/Dio ownership. The next task should checkpoint Riverpod foundation before any further Riverpod implementation slice or Phase 7 work.
 
+### 2026-06-30: Close Riverpod foundation before networking foundation
+
+The T64 checkpoint found Phase 6 complete enough for current local session/profile/theme preferences: root `ProviderScope`, local session repository injection, display-name consumption, persisted theme mode, Settings controls, and focused coverage are in place. Do not add another Riverpod-only implementation slice without a concrete shared-state need. Start Phase 7 with a networking foundation kickoff audit before adding Dio or migrating API-backed features.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:

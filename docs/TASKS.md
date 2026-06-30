@@ -42,7 +42,7 @@ Current architecture status:
 - Phase 2 migration map exists at `docs/PHASE2_MIGRATION_MAP.md`.
 - `shared_preferences` is active for the first local session flag and display name.
 - go_router is active for root routing.
-- Riverpod is active for the first local session repository provider seam and the root theme-mode provider seam.
+- Riverpod foundation is complete for current local session/profile/theme preferences.
 - Remaining likely Riverpod candidates are either temporary screen-local state or Phase 7 networking ownership.
 - Dio is not active yet.
 
@@ -74,7 +74,8 @@ Current tests:
 
 Current phase:
 
-- Phase 6: Riverpod Foundation.
+- Phase 7: Networking Foundation.
+- Phase 6 Riverpod Foundation is closed.
 - Phase 5 router migration is closed.
 - go_router remains the active root router.
 - Active routing is go_router-only; GetX routing is removed.
@@ -149,12 +150,13 @@ Completed stabilization tasks:
 - Riverpod theme-mode persistence foundation slice was completed; `appThemeModeProvider` is now backed by `shared_preferences`, preserves System for missing or invalid stored values, and exposes a controller update method for a later Settings controls slice.
 - Riverpod Settings theme-mode controls slice was completed; Settings Appearance now offers System / Light / Dark controls through `appThemeModeProvider`, and focused widget coverage verifies selection persistence.
 - Riverpod next-consumer audit after Settings theme controls was completed; no remaining low-risk local shared-state consumer is worth migrating before a Phase 6 checkpoint.
+- Riverpod foundation checkpoint audit was completed; Phase 6 is closed, and Phase 7 should start with a networking foundation kickoff audit before any Dio implementation.
 
 ## Recommended Next Work
 
 Current phase:
 
-- Phase 6 — Riverpod Foundation
+- Phase 7 — Networking Foundation
 
 Task sizing note:
 
@@ -165,21 +167,21 @@ Task sizing note:
 
 ### Primary
 
-T64 - Riverpod foundation checkpoint audit
+T65 - Phase 7 networking foundation kickoff audit
 
 Reason:
 
-- T63 found no remaining low-risk local shared-state consumer worth migrating immediately.
-- Main shell tab index and Login/BMI/Test form state are temporary screen-local state.
-- Fox and Summertime Saga async state should wait for Phase 7 networking/Dio ownership.
+- T64 closed Phase 6 after confirming Riverpod foundation is complete enough for local session/profile/theme preferences.
+- Existing networking still uses direct `http` services under feature folders.
+- Dio remains the documented networking direction but is not installed or scoped yet.
 
 Scope:
 
-- Re-audit the Phase 6 Riverpod provider seams, consumers, tests, and docs.
-- Decide whether Phase 6 can close and whether Phase 7 networking foundation should start next.
-- Update planning docs only; do not migrate state during the checkpoint.
+- Audit current network services, tests, route seams, and known networking risks.
+- Choose the smallest first Dio/networking implementation slice or recommend no implementation if the risk is not ready.
+- Update planning docs only; do not add Dio or migrate networking during the kickoff audit.
 - Preserve `/main`, direct route parity, local session behavior, and the five-tab shell.
-- Do not add theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, network state migration, Dio, real auth, `ShellRoute`, or new feature roots in this checkpoint.
+- Do not add theme style switching, Neon/Vice themes, visual redesign, shell tab-state migration, form-state migration, Riverpod feature rewrites, Dio, real auth, `ShellRoute`, or new feature roots in this audit.
 
 Verification:
 
@@ -191,17 +193,16 @@ T30 — Dependency/toolchain audit
 
 Choose this if package/build risk should be reviewed after adding Riverpod.
 
-T65 - Phase 7 networking foundation kickoff audit
+T66 - Dio networking foundation implementation slice
 
-Choose this only after T64 closes Phase 6 and explicitly opens Phase 7.
+Choose this only after T65 scopes the first networking implementation slice.
 
 ### Do not start yet
 
-- Riverpod implementation slices beyond the scoped T64 checkpoint unless the checkpoint finds a concrete local shared-state gap.
-- Phase 7 networking/Dio work before T64 closes Phase 6.
+- Dio/network implementation before T65 scopes the first networking slice.
+- Riverpod implementation slices unless a future feature has concrete shared-state ownership.
 - Theme style switching, Neon/Vice themes, or visual redesign before a dedicated theme-style task.
 - `ShellRoute`/`StatefulShellRoute` implementation before real tab root screens and tab-owned child route stacks exist.
-- Dio/network layer.
 - Broad `lib/main.dart` app composition refactor beyond root router parity.
 - Removing `AppRoutes` or active go_router routes.
 - Built-in Kotlin migration.
@@ -216,21 +217,21 @@ Choose this only after T64 closes Phase 6 and explicitly opens Phase 7.
 
 Current phase:
 
-- Phase 6 — Riverpod Foundation.
+- Phase 7 — Networking Foundation.
 
 Decision:
 
-- T63 found no worthwhile next local-state consumer. Start T64 before any broader feature-state or networking migration.
+- T64 closed Riverpod foundation. Start T65 before adding Dio or migrating networking.
 
 Do not enter yet:
 
-- Phase 7 — Networking Foundation.
+- Phase 8 — Feature Expansion.
 
 Reason:
 
-- Riverpod foundation should finish local profile/theme state boundaries before Phase 7 networking ownership starts.
-- `/main`, startup/session, local profile behavior, and the five-tab shell must remain stable during theme preference work.
-- Riverpod work should not be mixed with Dio, real backend authentication, shell-route work, or visual redesign.
+- Networking foundation should begin with an audit because current API-backed features already have fake-network test seams but still use direct `http`.
+- `/main`, startup/session, local profile behavior, Riverpod theme/profile state, and the five-tab shell must remain stable during networking work.
+- Dio work should not be mixed with real backend authentication, shell-route work, visual redesign, or feature expansion.
 
 Exit criteria:
 
@@ -251,7 +252,8 @@ Exit criteria:
 - Done: Implemented and verified the theme-mode persistence foundation slice.
 - Done: Implemented and verified the Settings theme-mode controls slice.
 - Done: Completed the next-consumer audit after Settings theme controls.
-- Remaining: Complete the Phase 6 checkpoint before starting Phase 7.
+- Done: Completed the Phase 6 checkpoint and closed Riverpod foundation.
+- Remaining: Complete the Phase 7 networking foundation kickoff audit before adding Dio.
 
 ## Verification Gates
 
