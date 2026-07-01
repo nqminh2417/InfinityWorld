@@ -569,7 +569,7 @@ Rules:
 
 ## Phase 8: Feature Expansion
 
-Status: current / Home dashboard cleanup audit next.
+Status: current / Home dashboard first cleanup slice next.
 
 Kickoff:
 
@@ -607,9 +607,12 @@ Third implementation slice:
 - Completed: added a small Library empty-state tab body using existing design-system primitives.
 - Completed: kept Reader, bookmarks, saved articles, Drift/database schema, imports/downloads, new packages, new routes, and persistence out of the empty-state slice.
 
-Next audit:
+Home/Dashboard cleanup audit:
 
-- Audit Home/Dashboard before adding recent modules, pinned modules, richer Home summaries, new routes, or Home persistence.
+- Completed: audited Home/Dashboard before adding recent modules, pinned modules, richer Home summaries, new routes, or Home persistence.
+- Finding: Home still renders the existing `DashboardScreen`; no `features/home` root exists yet.
+- Finding: Dashboard already has focused coverage for scroll safety and persisted local greeting behavior, and route coverage still protects the direct `/dashboard` path.
+- Next slice: keep Dashboard as the Home tab and remove the no-op app-bar filter action before considering a `features/home` move, recent modules, pinned-module persistence, route cleanup, or visual redesign.
 
 Potential areas:
 

@@ -200,6 +200,12 @@ The T72 audit found no existing Reader, bookmark, saved-article, reading-progres
 
 T73 added only a static empty-state tab body using existing design-system primitives. Do not add Reader, bookmarks, saved articles, Drift/database schema, imports/downloads, new packages, new routes, or persistence until a concrete local content feature is scoped.
 
+### 2026-07-01: Home stays Dashboard-owned for first cleanup
+
+The T74 audit confirmed that Home still renders the existing `DashboardScreen`, no `features/home` root exists yet, and the direct Dashboard route plus Dashboard widget coverage already protect the current behavior.
+
+The next slice should keep Dashboard as the Home tab and remove only the no-op app-bar filter action. Do not move Home into a new feature root, add recent modules, add pinned-module persistence, remove direct routes, introduce `ShellRoute`, change logout/session behavior, or redesign Home until a later scoped task.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:
