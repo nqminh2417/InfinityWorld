@@ -105,6 +105,15 @@ Android toolchain status:
 - Gradle wrapper, Android Gradle Plugin, Kotlin Gradle Plugin, and Java/Kotlin target were upgraded for Flutter 3.44.2 compatibility on `home/devbyMinh-current` with explicit approval.
 - Built-in Kotlin migration remains deferred.
 
+QA/device readiness status:
+
+- T77 refreshed current automated gates on Flutter 3.44.2 / Dart 3.12.2: `flutter analyze`, `flutter test`, and `flutter build apk --debug` passed.
+- `flutter devices` currently detects Windows, Chrome, and Edge only; no Android emulator or physical Android device is running.
+- `flutter emulators` lists available Android AVDs: `Pixel_4_API_30` and `Pixel_6_API_33`.
+- Android main manifest includes `INTERNET`; release signing still uses debug keys and remains non-production.
+- Debug APK builds, but Flutter reports the known future Built-in Kotlin migration warning.
+- `README.md` is stale against the current roadmap, dependency set, and resolved known risks.
+
 Completed stabilization tasks:
 
 - Login build-time `setState()` risk was fixed; the form is now SafeArea-aware, scroll-safe, and covered by a small keyboard-inset widget test.
@@ -180,6 +189,7 @@ Completed stabilization tasks:
 - Home dashboard cleanup audit was completed; Dashboard remains the current Home tab body, `features/home` does not exist yet, direct feature/dev links and logout remain intentionally unchanged, and the first cleanup slice should stay small before any Home feature-root or persistence work.
 - Home dashboard first cleanup slice was completed; the no-op Dashboard app-bar filter action was removed while preserving Dashboard as the Home tab, direct route behavior, module links, greeting, and logout/session behavior.
 - Phase 8 checkpoint audit was completed; the five-tab shell has first useful tab surfaces, direct feature routes remain covered, no tab-owned route stacks exist yet, and larger feature expansion should wait until QA/device readiness is scoped.
+- Phase 9 QA/device readiness kickoff audit was completed; automated Flutter gates pass, Android AVDs exist but are not running, README/portfolio docs are stale, and the next useful slice is an Android emulator visual smoke review.
 
 ## Recommended Next Work
 
@@ -196,38 +206,38 @@ Task sizing note:
 
 ### Primary
 
-T77 - Phase 9 QA/device readiness kickoff audit
+T78 - Android emulator visual smoke review
 
 Reason:
 
-- Phase 8 now has first-pass Home, Explore, Tools, Library, and Settings tab surfaces.
-- No emulator/device visual smoke, screenshots, README/portfolio review, or release-readiness pass has been scoped yet.
-- A kickoff audit is cheaper and safer than starting screenshots, release work, or another feature module blindly.
+- T77 found automated Flutter gates and the debug APK are healthy, but no Android runtime visual smoke has been completed.
+- Android AVDs are available locally, so a device smoke review is the smallest useful Phase 9 confidence step.
+- README/screenshots/portfolio polish should use device findings instead of guessing from widget tests.
 
 Scope:
 
-- Audit current QA/device readiness: Flutter gates, Android debug build status, emulator/device smoke needs, screenshot/portfolio documentation needs, README state, and known release blockers.
-- Update planning docs only unless a concrete blocker is found.
-- Pick one small Phase 9 implementation/review slice.
-- Do not redesign screens, change app behavior, add packages, change Android toolchain/build files, add release signing, or start Reader/RSS/Device Hub/AI Lab implementation in this audit.
+- Launch one existing Android emulator, preferably `Pixel_6_API_33` unless unavailable.
+- Run the app on the emulator and smoke-check startup/login, Main shell tabs, Dashboard links, Settings theme controls, and current Explore/Tools/Library surfaces.
+- Record visual/layout issues, screenshots if cheap, and update planning docs with findings.
+- Do not fix UI issues, redesign screens, add packages, change Android build/toolchain files, add release signing, or start README/portfolio polish in this review slice unless a blocker prevents the smoke review.
 
 Verification:
 
-- Docs/audit gate from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Review/docs gate: emulator run evidence plus `git diff --check` for any planning-doc updates.
 
 ### Alternatives
 
-Emulator/device UI smoke review
+README current-state refresh
 
-Choose this if visual/device confidence is more important than scoping the broader Phase 9 plan first.
+Choose this if documentation accuracy is more important than runtime visual confidence.
 
 T30 — Dependency/toolchain audit
 
-Choose this if package/build risk should be reviewed before QA/device work.
+Choose this if package/build risk should be reviewed before device smoke.
 
 Small next feature scoping audit
 
-Choose this only if QA is deferred and the next concrete feature module needs scoping first.
+Choose this only if QA/device work is deferred and the next concrete feature module needs scoping first.
 
 ### Do not start yet
 
@@ -244,7 +254,7 @@ Choose this only if QA is deferred and the next concrete feature module needs sc
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
-- Wheel, Device Hub, AI Lab, RSS, Reader, bookmarks, Home recent modules, pinned-module persistence, or a `features/home` root before Phase 9 QA/device readiness is scoped or explicitly deferred.
+- Wheel, Device Hub, AI Lab, RSS, Reader, bookmarks, Home recent modules, pinned-module persistence, or a `features/home` root before Android device visual confidence and README/portfolio readiness are addressed or explicitly deferred.
 
 ### Phase guard
 
@@ -254,15 +264,15 @@ Current phase:
 
 Decision:
 
-- T76 closed the first Phase 8 tab-surface pass. Start Phase 9 with a QA/device readiness kickoff audit.
+- T77 scoped Phase 9 QA/device readiness. Run Android emulator visual smoke before README/screenshots/portfolio polish or broader feature work.
 
 Do not enter yet:
 
-- Larger Phase 9 implementation work.
+- Larger Phase 9 polish or release-readiness work.
 
 Reason:
 
-- Phase 9 should start by scoping the useful QA/device slice instead of mixing visual smoke, screenshots, README polish, release checks, and tooling changes.
+- Android runtime visual confidence is the immediate gap; automated Flutter gates and debug APK build already pass.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during QA planning.
 - QA/device readiness should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, or new feature modules.
 
@@ -281,7 +291,8 @@ Exit criteria:
 - Done: Completed the T74 Home dashboard cleanup audit.
 - Done: Implemented the T75 Home dashboard first cleanup slice.
 - Done: Completed the T76 Phase 8 checkpoint audit and closed the first tab-surface pass.
-- Remaining: Complete the T77 Phase 9 QA/device readiness kickoff audit before broader QA/device work.
+- Done: Completed the T77 Phase 9 QA/device readiness kickoff audit.
+- Remaining: Complete the T78 Android emulator visual smoke review before broader QA/device work.
 
 ## Verification Gates
 

@@ -639,7 +639,7 @@ Rules:
 
 ## Phase 9: QA, Device Review, and Portfolio Readiness
 
-Status: current / QA-device readiness kickoff audit next.
+Status: current / Android emulator visual smoke review next.
 
 Goal:
 
@@ -650,6 +650,21 @@ Notes:
 - Start with a QA/device readiness audit before running screenshots, release checks, or broad device review.
 - Emulator/device UI review is important for UI polish, but it is not required for every current small task.
 - UI tasks must still follow `docs/design/IW_LAYOUT_SAFETY.md` and `docs/design/IW_SYSTEM_UI_POLICY.md`.
+
+Kickoff audit findings:
+
+- Current automated gates pass: `flutter analyze`, `flutter test`, and `flutter build apk --debug`.
+- The debug APK builds, with the known future Built-in Kotlin migration warning still deferred.
+- `flutter devices` finds desktop/web targets only; no Android emulator or physical Android device is currently running.
+- `flutter emulators` lists `Pixel_4_API_30` and `Pixel_6_API_33`, so Android visual smoke can start without creating a new AVD.
+- `README.md` is stale against the current roadmap, dependency set, and resolved risks, but README/portfolio polish should follow the first Android visual smoke notes.
+- Release signing still uses debug keys and remains separate from early Phase 9 visual/device readiness work.
+
+First review slice:
+
+- Launch one existing Android emulator, preferably `Pixel_6_API_33`, and run the app.
+- Smoke-check startup/login, Main shell tabs, Dashboard links, Settings theme controls, and the first Explore/Tools/Library surfaces.
+- Record findings before screenshots, README polish, release signing, Android toolchain changes, or new feature work.
 
 ## Separate Branch Work
 

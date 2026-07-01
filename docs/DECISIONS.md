@@ -212,6 +212,12 @@ The T76 checkpoint found that the first Phase 8 pass is complete enough for now:
 
 Start Phase 9 with a QA/device readiness kickoff audit. Do not start larger Home, Reader, RSS, Device Hub, AI Lab, persistence, route cleanup, release signing, screenshots, or Android toolchain work until the QA/device scope is audited or explicitly deferred.
 
+### 2026-07-01: First Phase 9 slice is Android emulator visual smoke
+
+The T77 kickoff audit found that automated gates pass and the debug APK builds, but no Android emulator or physical Android device is currently running. Two Android AVDs are available locally: `Pixel_4_API_30` and `Pixel_6_API_33`.
+
+Start Phase 9 with a small Android emulator visual smoke review, preferably on `Pixel_6_API_33`. Defer README/portfolio polish, screenshots, release signing, Built-in Kotlin migration, Android toolchain changes, and new feature work until after the first runtime visual findings are recorded or explicitly deferred.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:
