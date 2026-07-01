@@ -52,8 +52,9 @@ Current architecture status:
 - Phase 8 feature expansion kickoff audit is complete; the first implementation slice is scoped to a small Tools tab body for the existing BMI module.
 - Tools now has a first tab body at `lib/features/tools/presentation/tools_screen.dart`.
 - Explore now has a first tab body at `lib/features/explore/presentation/explore_screen.dart`.
-- Library is still an icon-only shell placeholder; there is no existing Reader, bookmark, saved-article, reading-progress, or local database module to surface yet.
-- `features/home` and `features/library` roots do not exist yet.
+- Library now has a first empty-state tab body at `lib/features/library/presentation/library_screen.dart`.
+- There is no existing Reader, bookmark, saved-article, reading-progress, or local database module to surface yet.
+- `features/home` root does not exist yet.
 
 Current tests:
 
@@ -78,7 +79,7 @@ Current tests:
 - Settings presentation widget test exists and covers persisted local display-name rendering, Appearance theme-mode summary, persisted theme-mode behavior, and theme-mode selection/persistence behavior.
 - Tools presentation widget coverage exists for small-screen scroll safety and BMI route navigation.
 - Explore presentation widget coverage exists for small-screen scroll safety and fake-route navigation to Fox and Summertime Saga.
-- Library currently has only shell-label coverage through the main shell tests; no Library tab-body or presentation widget coverage exists yet.
+- Library presentation widget coverage exists for small-screen scroll safety and empty-state rendering.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
 - Fox and Summertime Saga route smoke tests use router-level builder overrides with their existing fake-network screen seams.
@@ -172,6 +173,7 @@ Completed stabilization tasks:
 - Tools tab BMI catalog slice was completed; Tools now lists the existing BMI module, navigates to the existing `/bmi` route, and keeps `/main`, Dashboard access, direct BMI route behavior, and local bottom-navigation state stable.
 - Explore existing modules catalog slice was completed; Explore now lists the existing Fox and Summertime Saga modules, navigates to existing direct routes, and does not load API data from the tab body.
 - Library placeholder content audit was completed; Library has no existing local content module or persistence foundation to surface yet, so the next slice should be a static empty-state tab body rather than Reader/bookmark/database work.
+- Library empty-state tab body slice was completed; Library now has a scroll-safe first tab body, focused widget coverage, and shell tab coverage without adding Reader, bookmarks, persistence, routes, or packages.
 
 ## Recommended Next Work
 
@@ -188,29 +190,24 @@ Task sizing note:
 
 ### Primary
 
-T73 - Library empty-state tab body slice
+T74 - Home dashboard cleanup audit
 
 Reason:
 
-- Library is still an icon-only placeholder tab.
-- There is no existing Reader, bookmarks, saved-article, or reading-progress module to surface yet.
-- A static empty state makes the tab useful without inventing persistence or fake content models.
+- Home is still the existing Dashboard screen rather than a scoped Home feature root.
+- The dashboard still owns mixed direct feature links and logout behavior from earlier phases.
+- After Tools, Explore, and Library received first tab bodies, Home/Dashboard should be audited before broader Phase 8 expansion.
 
 Scope:
 
-- Add `lib/features/library/presentation/library_screen.dart` as a scroll-safe normal app screen.
-- Show a calm Library empty state for saved content/reading progress using existing design-system tokens/components.
-- Wire the Library bottom tab to the new screen and add focused widget/shell coverage.
-- Preserve `/main`, direct feature routes, startup/session behavior, and local bottom-navigation state.
-- Do not implement Reader, bookmarks, saved articles, local database, imports/downloads, new packages, `ShellRoute`, new route paths, or persistence.
+- Audit current Dashboard-as-Home behavior, product direction, direct feature links, logout/session ownership, Riverpod consumers, and test coverage.
+- Decide whether the next slice should be a small Home dashboard cleanup, a `features/home` placement slice, or a Phase 8 checkpoint.
+- Update planning docs only unless a concrete blocker is found.
+- Do not redesign Home, add recent modules, add pinned module persistence, add new routes, introduce `ShellRoute`, or change login/logout behavior in this audit.
 
 Verification:
 
-- `dart format` for changed Dart files.
-- `flutter analyze`.
-- `flutter test`.
-- `flutter build apk --debug`.
-- `git diff --check`.
+- Docs/audit gate from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
@@ -222,9 +219,9 @@ Emulator/device UI smoke review
 
 Choose this if visual/device confidence is more important than implementing the Library empty state.
 
-T74 - Home dashboard cleanup audit
+T75 - Phase 8 checkpoint audit
 
-Choose this if Home/Dashboard should be scoped before Library implementation.
+Choose this if tab-root basics should be checkpointed before more implementation.
 
 ### Do not start yet
 
@@ -241,7 +238,7 @@ Choose this if Home/Dashboard should be scoped before Library implementation.
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
-- Wheel, Device Hub, AI Lab, RSS, Reader, bookmarks, or persistence before the Library empty-state body lands and a later persistence slice is scoped.
+- Wheel, Device Hub, AI Lab, RSS, Reader, bookmarks, or persistence before Home/Dashboard scope is audited and any later feature-specific slice is scoped.
 
 ### Phase guard
 
@@ -251,7 +248,7 @@ Current phase:
 
 Decision:
 
-- T72 audited Library and found no existing local content module or persistence foundation to surface yet. Implement a static Library empty-state tab body next.
+- T73 implemented the static Library empty-state tab body. Audit Home/Dashboard next before broader Phase 8 expansion.
 
 Do not enter yet:
 
@@ -259,7 +256,7 @@ Do not enter yet:
 
 Reason:
 
-- Library needs a useful static tab body before adding Reader/bookmarks/persistence.
+- Home is still Dashboard-owned and needs a scoped decision before cleanup, `features/home` placement, recent modules, or pinned-module work.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during feature expansion planning.
 - Feature expansion should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, or visual redesign.
 
@@ -274,7 +271,8 @@ Exit criteria:
 - Done: Implemented the T70 Tools tab BMI catalog slice.
 - Done: Implemented the T71 Explore existing modules catalog slice.
 - Done: Completed the T72 Library placeholder content audit.
-- Remaining: Implement the T73 Library empty-state tab body before adding Reader/bookmarks/persistence work.
+- Done: Implemented the T73 Library empty-state tab body.
+- Remaining: Complete the T74 Home dashboard cleanup audit before broader Phase 8 expansion.
 
 ## Verification Gates
 

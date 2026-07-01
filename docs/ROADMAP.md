@@ -569,7 +569,7 @@ Rules:
 
 ## Phase 8: Feature Expansion
 
-Status: current / Library empty-state slice next.
+Status: current / Home dashboard cleanup audit next.
 
 Kickoff:
 
@@ -600,12 +600,16 @@ Second implementation slice:
 Next audit:
 
 - Completed: audited Library before adding Reader, bookmarks, saved articles, local database, imports/downloads, or persistence.
-- Finding: Library is still an icon-only shell placeholder, and no Reader/bookmark/saved-article/reading-progress/local database module exists yet.
+- Audit finding: Library was still an icon-only shell placeholder, and no Reader/bookmark/saved-article/reading-progress/local database module existed yet.
 
-Next implementation slice:
+Third implementation slice:
 
-- Selected: add a small Library empty-state tab body using existing design-system primitives.
-- Do not add Reader, bookmarks, saved articles, Drift/database schema, imports/downloads, new packages, new routes, or persistence in the empty-state slice.
+- Completed: added a small Library empty-state tab body using existing design-system primitives.
+- Completed: kept Reader, bookmarks, saved articles, Drift/database schema, imports/downloads, new packages, new routes, and persistence out of the empty-state slice.
+
+Next audit:
+
+- Audit Home/Dashboard before adding recent modules, pinned modules, richer Home summaries, new routes, or Home persistence.
 
 Potential areas:
 

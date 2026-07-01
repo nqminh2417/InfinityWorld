@@ -198,7 +198,7 @@ Audit Library before adding Reader, bookmarks, saved articles, local database, i
 
 The T72 audit found no existing Reader, bookmark, saved-article, reading-progress, or local database module to surface in Library.
 
-The next Library slice should add only a static empty-state tab body using existing design-system primitives. Do not add Reader, bookmarks, saved articles, Drift/database schema, imports/downloads, new packages, new routes, or persistence until a concrete local content feature is scoped.
+T73 added only a static empty-state tab body using existing design-system primitives. Do not add Reader, bookmarks, saved articles, Drift/database schema, imports/downloads, new packages, new routes, or persistence until a concrete local content feature is scoped.
 
 ### 2026-06-23: BMI is the current migration pilot
 

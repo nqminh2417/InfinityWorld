@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:infinity_world/design_system/tokens/iw_spacing.dart';
 import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:infinity_world/features/explore/presentation/explore_screen.dart';
+import 'package:infinity_world/features/library/presentation/library_screen.dart';
 import 'package:infinity_world/features/settings/presentation/settings_screen.dart';
 import 'package:infinity_world/features/tools/presentation/tools_screen.dart';
 
@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
     DashboardScreen(),
     ExploreScreen(),
     ToolsScreen(),
-    _ShellPlaceholderTab(title: 'Library', icon: Icons.local_library_rounded),
+    LibraryScreen(),
     SettingsScreen(),
   ];
 
@@ -59,33 +59,6 @@ class _MainScreenState extends State<MainScreen> {
             label: 'Settings',
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _ShellPlaceholderTab extends StatelessWidget {
-  const _ShellPlaceholderTab({required this.title, required this.icon});
-
-  final String title;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: SafeArea(
-        top: false,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(IwSpacing.screenPadding),
-            child: Icon(
-              icon,
-              size: IwSpacing.space48,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-        ),
       ),
     );
   }

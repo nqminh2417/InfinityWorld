@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:infinity_world/app/shell/main_screen.dart';
 import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:infinity_world/features/explore/presentation/explore_screen.dart';
+import 'package:infinity_world/features/library/presentation/library_screen.dart';
 import 'package:infinity_world/features/settings/presentation/settings_screen.dart';
 import 'package:infinity_world/features/tools/presentation/tools_screen.dart';
 
@@ -62,6 +63,17 @@ void main() {
     expect(find.text('Tools'), findsNWidgets(2));
     expect(find.byType(ToolsScreen), findsOneWidget);
     expect(find.text('BMI Calculator'), findsOneWidget);
+    expect(find.byType(DashboardScreen), findsNothing);
+
+    await tester.tap(find.byIcon(Icons.local_library_rounded));
+    await tester.pump();
+
+    nav = tester.widget<BottomNavigationBar>(find.byType(BottomNavigationBar));
+
+    expect(nav.currentIndex, 3);
+    expect(find.text('Library'), findsNWidgets(2));
+    expect(find.byType(LibraryScreen), findsOneWidget);
+    expect(find.text('No saved content yet'), findsOneWidget);
     expect(find.byType(DashboardScreen), findsNothing);
 
     await tester.tap(find.byIcon(Icons.settings_rounded));
