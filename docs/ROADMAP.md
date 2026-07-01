@@ -569,7 +569,7 @@ Rules:
 
 ## Phase 8: Feature Expansion
 
-Status: current / Phase 8 checkpoint audit next.
+Status: complete for the first tab-surface pass as of 2026-07-01.
 
 Kickoff:
 
@@ -614,9 +614,13 @@ Home/Dashboard cleanup audit:
 - Finding: Dashboard already has focused coverage for scroll safety and persisted local greeting behavior, and route coverage still protects the direct `/dashboard` path.
 - Completed: kept Dashboard as the Home tab and removed the no-op app-bar filter action before considering a `features/home` move, recent modules, pinned-module persistence, route cleanup, or visual redesign.
 
-Next audit:
+Checkpoint:
 
-- Checkpoint Phase 8 tab-root basics before starting larger Home, Reader, RSS, Device Hub, AI Lab, persistence, route cleanup, or shell-routing work.
+- Completed: checkpointed Phase 8 tab-root basics before starting larger Home, Reader, RSS, Device Hub, AI Lab, persistence, route cleanup, or shell-routing work.
+- Confirmed: `/main` still uses the local five-tab `BottomNavigationBar`; no tab owns a nested route stack, so `ShellRoute` remains deferred.
+- Confirmed: Explore, Tools, Library, and Settings now have feature roots; Home still intentionally uses `DashboardScreen` and has no `features/home` root yet.
+- Confirmed: focused widget coverage exists for the five-tab shell and the first Home/Dashboard, Explore, Tools, Library, and Settings surfaces.
+- Decision: close Phase 8's first feature-expansion pass and start Phase 9 with a QA/device readiness kickoff audit before broader feature work.
 
 Potential areas:
 
@@ -635,7 +639,7 @@ Rules:
 
 ## Phase 9: QA, Device Review, and Portfolio Readiness
 
-Status: future.
+Status: current / QA-device readiness kickoff audit next.
 
 Goal:
 
@@ -643,6 +647,7 @@ Goal:
 
 Notes:
 
+- Start with a QA/device readiness audit before running screenshots, release checks, or broad device review.
 - Emulator/device UI review is important for UI polish, but it is not required for every current small task.
 - UI tasks must still follow `docs/design/IW_LAYOUT_SAFETY.md` and `docs/design/IW_SYSTEM_UI_POLICY.md`.
 

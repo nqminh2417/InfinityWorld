@@ -206,6 +206,12 @@ The T74 audit confirmed that Home still renders the existing `DashboardScreen`, 
 
 The next slice should keep Dashboard as the Home tab and remove only the no-op app-bar filter action. Do not move Home into a new feature root, add recent modules, add pinned-module persistence, remove direct routes, introduce `ShellRoute`, change logout/session behavior, or redesign Home until a later scoped task.
 
+### 2026-07-01: Close Phase 8 first tab-surface pass before QA
+
+The T76 checkpoint found that the first Phase 8 pass is complete enough for now: Home/Dashboard, Explore, Tools, Library, and Settings all have useful tab surfaces or existing bodies, direct feature routes remain covered, and no tab owns a nested route stack that would justify `ShellRoute`.
+
+Start Phase 9 with a QA/device readiness kickoff audit. Do not start larger Home, Reader, RSS, Device Hub, AI Lab, persistence, route cleanup, release signing, screenshots, or Android toolchain work until the QA/device scope is audited or explicitly deferred.
+
 ### 2026-06-23: BMI is the current migration pilot
 
 BMI is the first small feature used to prove gradual migration:

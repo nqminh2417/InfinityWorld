@@ -49,10 +49,11 @@ Current architecture status:
 - Summertime Saga now uses Dio through `SmtsService` and `smtsServiceProvider`.
 - The direct `http` dependency has been removed.
 - Phase 7 networking foundation checkpoint is complete; broader retry/cache/offline/global error policy is deferred until a concrete feature needs it.
-- Phase 8 feature expansion kickoff audit is complete; Tools, Explore, Library, and Home/Dashboard now have first small tab-body cleanup/content slices.
+- Phase 8 feature expansion checkpoint is complete; Tools, Explore, Library, and Home/Dashboard have first small tab-body cleanup/content slices.
 - Tools now has a first tab body at `lib/features/tools/presentation/tools_screen.dart`.
 - Explore now has a first tab body at `lib/features/explore/presentation/explore_screen.dart`.
 - Library now has a first empty-state tab body at `lib/features/library/presentation/library_screen.dart`.
+- Phase 9 QA/device readiness work is next; no emulator/device visual smoke has been completed yet.
 - There is no existing Reader, bookmark, saved-article, reading-progress, or local database module to surface yet.
 - `features/home` root does not exist yet; Dashboard still owns direct module/dev links plus logout/session clearing.
 
@@ -88,7 +89,8 @@ Current tests:
 
 Current phase:
 
-- Phase 8: Feature Expansion.
+- Phase 9: QA, Device Review, and Portfolio Readiness.
+- Phase 8 Feature Expansion is closed for the first tab-surface pass.
 - Phase 7 Networking Foundation is closed.
 - Phase 6 Riverpod Foundation is closed.
 - Phase 5 router migration is closed.
@@ -177,12 +179,13 @@ Completed stabilization tasks:
 - Library empty-state tab body slice was completed; Library now has a scroll-safe first tab body, focused widget coverage, and shell tab coverage without adding Reader, bookmarks, persistence, routes, or packages.
 - Home dashboard cleanup audit was completed; Dashboard remains the current Home tab body, `features/home` does not exist yet, direct feature/dev links and logout remain intentionally unchanged, and the first cleanup slice should stay small before any Home feature-root or persistence work.
 - Home dashboard first cleanup slice was completed; the no-op Dashboard app-bar filter action was removed while preserving Dashboard as the Home tab, direct route behavior, module links, greeting, and logout/session behavior.
+- Phase 8 checkpoint audit was completed; the five-tab shell has first useful tab surfaces, direct feature routes remain covered, no tab-owned route stacks exist yet, and larger feature expansion should wait until QA/device readiness is scoped.
 
 ## Recommended Next Work
 
 Current phase:
 
-- Phase 8 — Feature Expansion
+- Phase 9 — QA, Device Review, and Portfolio Readiness
 
 Task sizing note:
 
@@ -193,21 +196,20 @@ Task sizing note:
 
 ### Primary
 
-T76 - Phase 8 checkpoint audit
+T77 - Phase 9 QA/device readiness kickoff audit
 
 Reason:
 
-- Tools, Explore, Library, and Home/Dashboard have each received a first small Phase 8 slice.
-- A checkpoint is cheaper and safer than starting larger Home, Reader, RSS, Device Hub, or AI Lab work immediately.
-- The checkpoint should decide whether Phase 8 continues with another tiny feature slice or closes for QA/tooling.
+- Phase 8 now has first-pass Home, Explore, Tools, Library, and Settings tab surfaces.
+- No emulator/device visual smoke, screenshots, README/portfolio review, or release-readiness pass has been scoped yet.
+- A kickoff audit is cheaper and safer than starting screenshots, release work, or another feature module blindly.
 
 Scope:
 
-- Audit current Phase 8 tab surfaces: Home/Dashboard, Explore, Tools, Library, and Settings.
-- Re-check direct routes, feature roots, test coverage, layout-safety coverage, and deferred feature boundaries.
+- Audit current QA/device readiness: Flutter gates, Android debug build status, emulator/device smoke needs, screenshot/portfolio documentation needs, README state, and known release blockers.
 - Update planning docs only unless a concrete blocker is found.
-- Pick one next primary task or recommend closing/checkpointing Phase 8.
-- Do not add new routes, move Home to `features/home`, add persistence, introduce `ShellRoute`, redesign screens, or start Reader/RSS/Device Hub/AI Lab implementation in this audit.
+- Pick one small Phase 9 implementation/review slice.
+- Do not redesign screens, change app behavior, add packages, change Android toolchain/build files, add release signing, or start Reader/RSS/Device Hub/AI Lab implementation in this audit.
 
 Verification:
 
@@ -215,17 +217,17 @@ Verification:
 
 ### Alternatives
 
-T30 — Dependency/toolchain audit
-
-Choose this if package/build risk should be reviewed after adding Dio and removing `http`.
-
 Emulator/device UI smoke review
 
-Choose this if device confidence is more important than another planning checkpoint.
+Choose this if visual/device confidence is more important than scoping the broader Phase 9 plan first.
+
+T30 — Dependency/toolchain audit
+
+Choose this if package/build risk should be reviewed before QA/device work.
 
 Small next feature scoping audit
 
-Choose this if the checkpoint is skipped and the next concrete Phase 8 module needs scoping first.
+Choose this only if QA is deferred and the next concrete feature module needs scoping first.
 
 ### Do not start yet
 
@@ -242,27 +244,27 @@ Choose this if the checkpoint is skipped and the next concrete Phase 8 module ne
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
-- Wheel, Device Hub, AI Lab, RSS, Reader, bookmarks, Home recent modules, pinned-module persistence, or a `features/home` root before the Phase 8 checkpoint scopes the next feature-specific slice.
+- Wheel, Device Hub, AI Lab, RSS, Reader, bookmarks, Home recent modules, pinned-module persistence, or a `features/home` root before Phase 9 QA/device readiness is scoped or explicitly deferred.
 
 ### Phase guard
 
 Current phase:
 
-- Phase 8 — Feature Expansion.
+- Phase 9 — QA, Device Review, and Portfolio Readiness.
 
 Decision:
 
-- T75 completed the tiny Dashboard cleanup slice; checkpoint Phase 8 before broader expansion.
+- T76 closed the first Phase 8 tab-surface pass. Start Phase 9 with a QA/device readiness kickoff audit.
 
 Do not enter yet:
 
-- Larger Phase 8 feature expansion.
+- Larger Phase 9 implementation work.
 
 Reason:
 
-- Home is still Dashboard-owned; do not move it to `features/home`, add recent modules, or add pinned-module work before the checkpoint confirms the next Phase 8 direction.
-- `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during feature expansion planning.
-- Feature expansion should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, or visual redesign.
+- Phase 9 should start by scoping the useful QA/device slice instead of mixing visual smoke, screenshots, README polish, release checks, and tooling changes.
+- `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during QA planning.
+- QA/device readiness should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, or new feature modules.
 
 Exit criteria:
 
@@ -278,7 +280,8 @@ Exit criteria:
 - Done: Implemented the T73 Library empty-state tab body.
 - Done: Completed the T74 Home dashboard cleanup audit.
 - Done: Implemented the T75 Home dashboard first cleanup slice.
-- Remaining: Complete the T76 Phase 8 checkpoint audit before broader Phase 8 expansion.
+- Done: Completed the T76 Phase 8 checkpoint audit and closed the first tab-surface pass.
+- Remaining: Complete the T77 Phase 9 QA/device readiness kickoff audit before broader QA/device work.
 
 ## Verification Gates
 
