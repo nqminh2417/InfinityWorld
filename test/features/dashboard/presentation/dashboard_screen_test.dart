@@ -31,6 +31,7 @@ void main() {
     expect(find.byType(SafeArea), findsWidgets);
     expect(find.byType(ListView), findsOneWidget);
     expect(find.byType(ListTile), findsNWidgets(5));
+    expect(find.byIcon(Icons.filter_list), findsNothing);
     expect(find.text('Welcome back, Minh'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

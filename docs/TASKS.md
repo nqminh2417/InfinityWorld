@@ -26,7 +26,7 @@ Current architecture status:
 - Auth/Login presentation now lives under `lib/features/auth/presentation/`.
 - Auth session dependency injection now starts at `lib/features/auth/application/session_providers.dart`.
 - Local session/profile persistence now lives under `lib/features/auth/data/local_session_repository.dart` and uses `shared_preferences`.
-- Dashboard/Home now renders the existing Dashboard screen as the Home tab and consumes the persisted local display name through Riverpod.
+- Dashboard/Home now renders the existing Dashboard screen as the Home tab, consumes the persisted local display name through Riverpod, and no longer exposes the no-op app-bar filter action.
 - Profile now consumes the persisted local display name through Riverpod.
 - Settings now consumes the persisted local display name and app theme mode through Riverpod and exposes theme-mode controls.
 - BMI was the initial migration pilot and now lives under `lib/features/bmi/`.
@@ -49,7 +49,7 @@ Current architecture status:
 - Summertime Saga now uses Dio through `SmtsService` and `smtsServiceProvider`.
 - The direct `http` dependency has been removed.
 - Phase 7 networking foundation checkpoint is complete; broader retry/cache/offline/global error policy is deferred until a concrete feature needs it.
-- Phase 8 feature expansion kickoff audit is complete; Tools, Explore, and Library have first tab-body slices, and Home/Dashboard cleanup is the next small slice.
+- Phase 8 feature expansion kickoff audit is complete; Tools, Explore, Library, and Home/Dashboard now have first small tab-body cleanup/content slices.
 - Tools now has a first tab body at `lib/features/tools/presentation/tools_screen.dart`.
 - Explore now has a first tab body at `lib/features/explore/presentation/explore_screen.dart`.
 - Library now has a first empty-state tab body at `lib/features/library/presentation/library_screen.dart`.
@@ -68,7 +68,7 @@ Current tests:
 - BMI domain unit tests exist.
 - BMI presentation widget tests exist.
 - Chat route smoke test exists.
-- Dashboard presentation widget test exists for small-screen scroll safety and persisted local display-name rendering.
+- Dashboard presentation widget test exists for small-screen scroll safety, persisted local display-name rendering, and absence of the old no-op filter action.
 - Deterministic route smoke tests exist for Login, Main, Dashboard, Chat, Profile, Settings, BMI, Test, Fox, and Summertime Saga.
 - Test screen widget coverage exists for small-screen keyboard/scroll safety.
 - Fox API service and model parsing tests exist with fake Dio responses.
@@ -176,6 +176,7 @@ Completed stabilization tasks:
 - Library placeholder content audit was completed; Library has no existing local content module or persistence foundation to surface yet, so the next slice should be a static empty-state tab body rather than Reader/bookmark/database work.
 - Library empty-state tab body slice was completed; Library now has a scroll-safe first tab body, focused widget coverage, and shell tab coverage without adding Reader, bookmarks, persistence, routes, or packages.
 - Home dashboard cleanup audit was completed; Dashboard remains the current Home tab body, `features/home` does not exist yet, direct feature/dev links and logout remain intentionally unchanged, and the first cleanup slice should stay small before any Home feature-root or persistence work.
+- Home dashboard first cleanup slice was completed; the no-op Dashboard app-bar filter action was removed while preserving Dashboard as the Home tab, direct route behavior, module links, greeting, and logout/session behavior.
 
 ## Recommended Next Work
 
@@ -192,25 +193,25 @@ Task sizing note:
 
 ### Primary
 
-T75 - Home dashboard first cleanup slice
+T76 - Phase 8 checkpoint audit
 
 Reason:
 
-- T74 confirmed Home is still the existing Dashboard screen, not a scoped Home feature root.
-- The dashboard has a visible no-op filter action that can be cleaned up without changing routing, session, or feature behavior.
-- A tiny cleanup is more useful than checkpointing immediately, but broader Home redesign and persistence should wait.
+- Tools, Explore, Library, and Home/Dashboard have each received a first small Phase 8 slice.
+- A checkpoint is cheaper and safer than starting larger Home, Reader, RSS, Device Hub, or AI Lab work immediately.
+- The checkpoint should decide whether Phase 8 continues with another tiny feature slice or closes for QA/tooling.
 
 Scope:
 
-- Keep `DashboardScreen` as the Home tab for now; do not create `features/home` and do not remove the direct `/dashboard` route.
-- Remove the no-op Dashboard app-bar filter action.
-- Preserve existing dashboard module links, dev/test route access, Riverpod local greeting, logout/session clearing, `/main`, and direct route parity.
-- Update focused Dashboard/shell coverage only as needed.
-- Do not redesign Home, add recent modules, add pinned module persistence, add new routes, introduce `ShellRoute`, or change login/logout behavior in this slice.
+- Audit current Phase 8 tab surfaces: Home/Dashboard, Explore, Tools, Library, and Settings.
+- Re-check direct routes, feature roots, test coverage, layout-safety coverage, and deferred feature boundaries.
+- Update planning docs only unless a concrete blocker is found.
+- Pick one next primary task or recommend closing/checkpointing Phase 8.
+- Do not add new routes, move Home to `features/home`, add persistence, introduce `ShellRoute`, redesign screens, or start Reader/RSS/Device Hub/AI Lab implementation in this audit.
 
 Verification:
 
-- Screen/routing/startup gate from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Docs/audit gate from `docs/qa/IW_GIT_WORKFLOW.md`.
 
 ### Alternatives
 
@@ -220,11 +221,11 @@ Choose this if package/build risk should be reviewed after adding Dio and removi
 
 Emulator/device UI smoke review
 
-Choose this if visual/device confidence is more important than the tiny Home/Dashboard cleanup.
+Choose this if device confidence is more important than another planning checkpoint.
 
-T76 - Phase 8 checkpoint audit
+Small next feature scoping audit
 
-Choose this after the Home/Dashboard cleanup if tab-root basics should be checkpointed before more implementation.
+Choose this if the checkpoint is skipped and the next concrete Phase 8 module needs scoping first.
 
 ### Do not start yet
 
@@ -241,7 +242,7 @@ Choose this after the Home/Dashboard cleanup if tab-root basics should be checkp
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
-- Wheel, Device Hub, AI Lab, RSS, Reader, bookmarks, Home recent modules, pinned-module persistence, or a `features/home` root before the first Dashboard cleanup slice is complete and any later feature-specific slice is scoped.
+- Wheel, Device Hub, AI Lab, RSS, Reader, bookmarks, Home recent modules, pinned-module persistence, or a `features/home` root before the Phase 8 checkpoint scopes the next feature-specific slice.
 
 ### Phase guard
 
@@ -251,7 +252,7 @@ Current phase:
 
 Decision:
 
-- T74 audited Home/Dashboard and selected a tiny Dashboard cleanup slice before broader Phase 8 expansion.
+- T75 completed the tiny Dashboard cleanup slice; checkpoint Phase 8 before broader expansion.
 
 Do not enter yet:
 
@@ -259,7 +260,7 @@ Do not enter yet:
 
 Reason:
 
-- Home is still Dashboard-owned; the next cleanup should remove only the no-op visible action before `features/home` placement, recent modules, or pinned-module work.
+- Home is still Dashboard-owned; do not move it to `features/home`, add recent modules, or add pinned-module work before the checkpoint confirms the next Phase 8 direction.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during feature expansion planning.
 - Feature expansion should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, or visual redesign.
 
@@ -276,7 +277,8 @@ Exit criteria:
 - Done: Completed the T72 Library placeholder content audit.
 - Done: Implemented the T73 Library empty-state tab body.
 - Done: Completed the T74 Home dashboard cleanup audit.
-- Remaining: Complete the T75 Home dashboard first cleanup slice before broader Phase 8 expansion.
+- Done: Implemented the T75 Home dashboard first cleanup slice.
+- Remaining: Complete the T76 Phase 8 checkpoint audit before broader Phase 8 expansion.
 
 ## Verification Gates
 

@@ -45,12 +45,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final displayName = ref.watch(currentDisplayNameProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(icon: const Icon(Icons.filter_list), onPressed: () {}),
-        ],
-        title: const Text('Dashboard'),
-      ),
+      appBar: AppBar(title: const Text('Dashboard')),
       body: SafeArea(
         top: false,
         child: ListView(

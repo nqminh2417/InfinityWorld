@@ -569,7 +569,7 @@ Rules:
 
 ## Phase 8: Feature Expansion
 
-Status: current / Home dashboard first cleanup slice next.
+Status: current / Phase 8 checkpoint audit next.
 
 Kickoff:
 
@@ -612,7 +612,11 @@ Home/Dashboard cleanup audit:
 - Completed: audited Home/Dashboard before adding recent modules, pinned modules, richer Home summaries, new routes, or Home persistence.
 - Finding: Home still renders the existing `DashboardScreen`; no `features/home` root exists yet.
 - Finding: Dashboard already has focused coverage for scroll safety and persisted local greeting behavior, and route coverage still protects the direct `/dashboard` path.
-- Next slice: keep Dashboard as the Home tab and remove the no-op app-bar filter action before considering a `features/home` move, recent modules, pinned-module persistence, route cleanup, or visual redesign.
+- Completed: kept Dashboard as the Home tab and removed the no-op app-bar filter action before considering a `features/home` move, recent modules, pinned-module persistence, route cleanup, or visual redesign.
+
+Next audit:
+
+- Checkpoint Phase 8 tab-root basics before starting larger Home, Reader, RSS, Device Hub, AI Lab, persistence, route cleanup, or shell-routing work.
 
 Potential areas:
 
