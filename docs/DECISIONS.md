@@ -1,6 +1,6 @@
 # Infinity World Decisions
 
-Last updated: 2026-06-30
+Last updated: 2026-07-01
 
 This file records durable product, architecture, workflow, and safety decisions for Infinity World. Keep entries concise and update them when a decision changes.
 
@@ -193,6 +193,12 @@ T70 added a small Tools tab body that links to the existing BMI route. Wheel, De
 T71 added a small Explore tab body that links to the existing Fox and Summertime Saga routes. Explore must not load API data just to render the tab catalog; the existing feature screens remain responsible for network loading, error states, and retry behavior after navigation.
 
 Audit Library before adding Reader, bookmarks, saved articles, local database, imports/downloads, new packages, or persistence.
+
+### 2026-07-01: Library starts with an empty-state tab body
+
+The T72 audit found no existing Reader, bookmark, saved-article, reading-progress, or local database module to surface in Library.
+
+The next Library slice should add only a static empty-state tab body using existing design-system primitives. Do not add Reader, bookmarks, saved articles, Drift/database schema, imports/downloads, new packages, new routes, or persistence until a concrete local content feature is scoped.
 
 ### 2026-06-23: BMI is the current migration pilot
 

@@ -1,6 +1,6 @@
 # Infinity World Roadmap
 
-Last updated: 2026-06-30
+Last updated: 2026-07-01
 
 ## Purpose
 
@@ -550,7 +550,7 @@ First implementation slice:
 - Completed: migrated `FoxApiService` to the Dio-backed boundary while preserving behavior and fake-test coverage.
 - Completed: kept Summertime Saga on `http` until the pilot passed.
 
-Next implementation slice:
+Second implementation slice:
 
 - Completed: migrated `SmtsService` to the Dio-backed service path while preserving its configured URL, timeout/status/schema error handling, deterministic screen states, and fake-network tests.
 - Completed: removed the unused `http` dependency after no Dart imports remained.
@@ -569,7 +569,7 @@ Rules:
 
 ## Phase 8: Feature Expansion
 
-Status: current / kickoff audit next.
+Status: current / Library empty-state slice next.
 
 Kickoff:
 
@@ -592,14 +592,20 @@ First implementation slice:
 - Completed: preserved the current direct `/bmi` route, Dashboard access, `/main` startup behavior, and local bottom navigation.
 - Completed: kept Wheel, Device Hub, AI Lab, `ShellRoute`, new packages, `IwModuleCard`, and broad Home redesign out of scope.
 
-Next implementation slice:
+Second implementation slice:
 
 - Completed: added a small Explore tab body that lists existing Fox and Summertime Saga modules and navigates to their existing direct routes.
 - Completed: kept API loading out of the Explore tab body; network calls remain inside the existing feature screens after navigation.
 
 Next audit:
 
-- Audit Library before adding Reader, bookmarks, saved articles, local database, imports/downloads, or persistence.
+- Completed: audited Library before adding Reader, bookmarks, saved articles, local database, imports/downloads, or persistence.
+- Finding: Library is still an icon-only shell placeholder, and no Reader/bookmark/saved-article/reading-progress/local database module exists yet.
+
+Next implementation slice:
+
+- Selected: add a small Library empty-state tab body using existing design-system primitives.
+- Do not add Reader, bookmarks, saved articles, Drift/database schema, imports/downloads, new packages, new routes, or persistence in the empty-state slice.
 
 Potential areas:
 
