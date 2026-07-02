@@ -191,6 +191,7 @@ Completed stabilization tasks:
 - Phase 8 checkpoint audit was completed; the five-tab shell has first useful tab surfaces, direct feature routes remain covered, no tab-owned route stacks exist yet, and larger feature expansion should wait until QA/device readiness is scoped.
 - Phase 9 QA/device readiness kickoff audit was completed; automated Flutter gates pass, Android AVDs exist but are not running, README/portfolio docs are stale, and the next useful slice is an Android emulator visual smoke review.
 - Android emulator visual smoke review was completed on `Pixel_6_API_33`; startup/login, keyboard-open login, Home/Dashboard, a Dashboard BMI link, Explore, Tools, Library, and Settings theme controls rendered without a blocking layout failure, and one non-blocking Local profile status-bar contrast follow-up was recorded before portfolio screenshots.
+- Local profile status-bar contrast polish was completed; Login now owns a route-local light system overlay, the Pixel 6 emulator shows readable light/dark login status-bar icons, keyboard-open login still fits, and local profile submission still reaches Home.
 
 ## Recommended Next Work
 
@@ -207,34 +208,34 @@ Task sizing note:
 
 ### Primary
 
-T79 - Local profile status-bar contrast polish slice
+T80 - README current-state refresh
 
 Reason:
 
-- T78 found that the Local profile/login flow reaches the app and stays keyboard-usable on `Pixel_6_API_33`, but the image-backed light-mode start screen places dark status-bar icons over a dark teal area.
-- This is the only concrete visual follow-up from the first emulator smoke review, so fix or explicitly defer it before README screenshots or portfolio capture.
-- Keep the slice limited to Local profile/login status-bar contrast and preserve existing startup/session behavior.
+- T77 found `README.md` is stale against the roadmap, dependency set, and resolved risks.
+- T78 and T79 now provide Android runtime findings that the README can reference without guessing.
+- Keep this to current setup, commands, architecture direction, active features, known deferred risks, and Phase 9 status.
 
 Scope:
 
-- Adjust the Local profile/login status-bar overlay or background treatment so status-bar icons stay readable in light mode and remain correct in dark mode.
-- Preserve local profile submission, keyboard-safe form layout, session redirect behavior, and the Main shell.
-- Do not redesign the login screen, change broader theme tokens, add packages, change Android build/toolchain files, add release signing, or start README/portfolio polish in this slice.
+- Refresh `README.md` so it matches the current Flutter/Riverpod/go_router/Dio direction and the current Home/Explore/Tools/Library/Settings surfaces.
+- Include Windows-friendly setup and verification commands that match the repository workflow.
+- Mention current known deferrals without turning the README into a long backlog document.
+- Do not add screenshots, redesign the README, change app code, add packages, change Android build/toolchain files, or handle release signing in this slice.
 
 Verification:
 
-- Runtime/UI gate: run on `Pixel_6_API_33` or another available Android emulator; capture the Local profile light-mode screen and keyboard-open form.
-- Static/docs gate: `flutter analyze` if Dart code changes plus `git diff --check`.
+- Docs gate: `git diff --check`.
 
 ### Alternatives
 
-README current-state refresh
+Portfolio screenshot capture prep
 
-Choose this if the Local profile status-bar contrast issue is explicitly deferred and documentation accuracy is more important than screenshot readiness.
+Choose this only after the README reflects the current app state.
 
 T30 — Dependency/toolchain audit
 
-Choose this if package/build risk should be reviewed before the visual polish follow-up.
+Choose this if package/build risk should be reviewed before README polish.
 
 Small next feature scoping audit
 
@@ -255,7 +256,6 @@ Choose this only if QA/device work is deferred and the next concrete feature mod
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
-- Portfolio screenshots before resolving or explicitly deferring the Local profile status-bar contrast issue.
 - Wheel, Device Hub, AI Lab, RSS, Reader, bookmarks, Home recent modules, pinned-module persistence, or a `features/home` root before Android device visual confidence and README/portfolio readiness are addressed or explicitly deferred.
 
 ### Phase guard
@@ -266,7 +266,7 @@ Current phase:
 
 Decision:
 
-- T78 completed the first Android emulator visual smoke review. Resolve or explicitly defer the Local profile status-bar contrast follow-up before README screenshots, portfolio capture, or broader feature work.
+- T79 resolved the Local profile status-bar contrast follow-up from the first emulator smoke. Refresh the stale README before screenshots, portfolio capture, release-readiness work, or broader feature work.
 
 Do not enter yet:
 
@@ -274,7 +274,7 @@ Do not enter yet:
 
 Reason:
 
-- The first Android runtime pass found no blocking shell/tab layout issue, but it did find one concrete Local profile status-bar contrast polish risk.
+- Android runtime smoke and the one concrete Local profile visual follow-up are complete enough to update README/project-facing docs.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during QA planning.
 - QA/device readiness should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, or new feature modules.
 
@@ -295,7 +295,8 @@ Exit criteria:
 - Done: Completed the T76 Phase 8 checkpoint audit and closed the first tab-surface pass.
 - Done: Completed the T77 Phase 9 QA/device readiness kickoff audit.
 - Done: Completed the T78 Android emulator visual smoke review on `Pixel_6_API_33`.
-- Remaining: Complete the T79 Local profile status-bar contrast polish slice before README screenshots or portfolio capture.
+- Done: Completed the T79 Local profile status-bar contrast polish slice.
+- Remaining: Complete the T80 README current-state refresh before screenshots or portfolio capture.
 
 ## Verification Gates
 

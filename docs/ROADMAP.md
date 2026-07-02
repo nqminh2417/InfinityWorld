@@ -639,7 +639,7 @@ Rules:
 
 ## Phase 9: QA, Device Review, and Portfolio Readiness
 
-Status: current / Local profile status-bar contrast polish next.
+Status: current / README current-state refresh next.
 
 Goal:
 
@@ -669,9 +669,14 @@ First review slice:
 - Non-blocking visual finding: the Local profile light-mode start screen uses an image-backed edge-to-edge background with dark status-bar icons over a dark teal area.
 - Not covered by T78: `Pixel_4_API_30`, physical devices, landscape, large text, small 360px device profiles, release APK behavior, and live Fox/Summertime API flows.
 
+Status-bar polish slice:
+
+- Completed in T79: Login now owns a route-local light system overlay so status-bar icons stay readable over the image-backed Local profile screen.
+- `Pixel_6_API_33` runtime checks confirmed readable login status-bar icons in light and dark modes, keyboard-open login layout, and local profile submission to Home.
+
 Next slice:
 
-- Resolve or explicitly defer the Local profile status-bar contrast issue before README screenshots, portfolio capture, release signing, Android toolchain changes, or new feature work.
+- Refresh the stale README with the current app direction, setup/verification commands, active feature surfaces, and known deferred risks before screenshots, portfolio capture, release signing, Android toolchain changes, or new feature work.
 
 ## Separate Branch Work
 

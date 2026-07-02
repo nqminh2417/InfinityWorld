@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:infinity_world/app/bootstrap/startup_route_resolver.dart';
 import 'package:infinity_world/app/shell/main_screen.dart';
@@ -39,6 +40,24 @@ void main() {
     await tester.pumpWidget(_app(initialRoute));
 
     expect(find.byType(MainScreen), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('login screen keeps status bar icons readable over the image', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: LoginScreen())),
+    );
+
+    final overlay = tester.widget<AnnotatedRegion<SystemUiOverlayStyle>>(
+      find.byWidgetPredicate(
+        (widget) => widget is AnnotatedRegion<SystemUiOverlayStyle>,
+      ),
+    );
+
+    expect(overlay.value.statusBarIconBrightness, Brightness.light);
+    expect(overlay.value.statusBarBrightness, Brightness.dark);
     expect(tester.takeException(), isNull);
   });
 

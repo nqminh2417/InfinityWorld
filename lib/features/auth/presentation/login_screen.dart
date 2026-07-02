@@ -68,7 +68,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset('assets/images/login_background.jpg', fit: BoxFit.cover),
+          AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle.light,
+            child: Image.asset(
+              'assets/images/login_background.jpg',
+              fit: BoxFit.cover,
+            ),
+          ),
           SafeArea(
             child: LayoutBuilder(
               builder: (context, constraints) {
