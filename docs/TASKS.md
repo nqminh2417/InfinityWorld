@@ -192,6 +192,7 @@ Completed stabilization tasks:
 - Phase 9 QA/device readiness kickoff audit was completed; automated Flutter gates pass, Android AVDs exist but are not running, README/portfolio docs are stale, and the next useful slice is an Android emulator visual smoke review.
 - Android emulator visual smoke review was completed on `Pixel_6_API_33`; startup/login, keyboard-open login, Home/Dashboard, a Dashboard BMI link, Explore, Tools, Library, and Settings theme controls rendered without a blocking layout failure, and one non-blocking Local profile status-bar contrast follow-up was recorded before portfolio screenshots.
 - Local profile status-bar contrast polish was completed; Login now owns a route-local light system overlay, the Pixel 6 emulator shows readable light/dark login status-bar icons, keyboard-open login still fits, and local profile submission still reaches Home.
+- README current-state refresh was completed; the README now reflects the current Android-first Flutter stack, active app surfaces, setup and verification commands, Phase 9 runtime findings, and known deferrals without starting screenshots, release signing, or toolchain work.
 
 ## Recommended Next Work
 
@@ -208,38 +209,35 @@ Task sizing note:
 
 ### Primary
 
-T80 - README current-state refresh
+T81 - Portfolio screenshot capture prep
 
 Reason:
 
-- T77 found `README.md` is stale against the roadmap, dependency set, and resolved risks.
-- T78 and T79 now provide Android runtime findings that the README can reference without guessing.
-- Keep this to current setup, commands, architecture direction, active features, known deferred risks, and Phase 9 status.
+- README now reflects the current app state, and T78/T79 provide a known-good Pixel 6 emulator baseline.
+- Portfolio screenshots are the next useful Phase 9 step, but they should be prepared as a small capture pass rather than mixed with UI redesign.
+- Keep screenshot prep focused on current working screens and note any screen that is not ready for portfolio use.
 
 Scope:
 
-- Refresh `README.md` so it matches the current Flutter/Riverpod/go_router/Dio direction and the current Home/Explore/Tools/Library/Settings surfaces.
-- Include Windows-friendly setup and verification commands that match the repository workflow.
-- Mention current known deferrals without turning the README into a long backlog document.
-- Do not add screenshots, redesign the README, change app code, add packages, change Android build/toolchain files, or handle release signing in this slice.
+- Launch an existing Android emulator, preferably `Pixel_6_API_33`, and capture a small current-state screenshot set.
+- Cover Login/Local profile, Home/Dashboard, Explore, Tools, Library, Settings, and one safe module route such as BMI.
+- Decide where screenshot artifacts should live before committing any binary assets.
+- Do not redesign screens, change app code, add packages, change Android build/toolchain files, handle release signing, or broaden into full portfolio copywriting in this slice.
 
 Verification:
 
-- Docs gate: `git diff --check`.
+- Runtime/artifact gate: emulator capture evidence plus `git status --short`.
+- Docs gate if planning docs change: `git diff --check`.
 
 ### Alternatives
 
-Portfolio screenshot capture prep
-
-Choose this only after the README reflects the current app state.
-
 T30 — Dependency/toolchain audit
 
-Choose this if package/build risk should be reviewed before README polish.
+Choose this if package/build risk should be reviewed before screenshot work.
 
 Small next feature scoping audit
 
-Choose this only if QA/device work is deferred and the next concrete feature module needs scoping first.
+Choose this only if QA/device and portfolio work are deferred and the next concrete feature module needs scoping first.
 
 ### Do not start yet
 
@@ -266,7 +264,7 @@ Current phase:
 
 Decision:
 
-- T79 resolved the Local profile status-bar contrast follow-up from the first emulator smoke. Refresh the stale README before screenshots, portfolio capture, release-readiness work, or broader feature work.
+- T80 refreshed the stale README. Prepare a small portfolio screenshot capture pass before release-readiness work or broader feature work.
 
 Do not enter yet:
 
@@ -274,7 +272,7 @@ Do not enter yet:
 
 Reason:
 
-- Android runtime smoke and the one concrete Local profile visual follow-up are complete enough to update README/project-facing docs.
+- Android runtime smoke, the Local profile visual follow-up, and the README refresh are complete enough to prepare current-state screenshots.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during QA planning.
 - QA/device readiness should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, or new feature modules.
 
@@ -296,7 +294,8 @@ Exit criteria:
 - Done: Completed the T77 Phase 9 QA/device readiness kickoff audit.
 - Done: Completed the T78 Android emulator visual smoke review on `Pixel_6_API_33`.
 - Done: Completed the T79 Local profile status-bar contrast polish slice.
-- Remaining: Complete the T80 README current-state refresh before screenshots or portfolio capture.
+- Done: Completed the T80 README current-state refresh.
+- Remaining: Complete the T81 portfolio screenshot capture prep before release-readiness work or broader feature work.
 
 ## Verification Gates
 

@@ -639,7 +639,7 @@ Rules:
 
 ## Phase 9: QA, Device Review, and Portfolio Readiness
 
-Status: current / README current-state refresh next.
+Status: current / portfolio screenshot capture prep next.
 
 Goal:
 
@@ -676,7 +676,8 @@ Status-bar polish slice:
 
 Next slice:
 
-- Refresh the stale README with the current app direction, setup/verification commands, active feature surfaces, and known deferred risks before screenshots, portfolio capture, release signing, Android toolchain changes, or new feature work.
+- Completed in T80: README now reflects the current app direction, setup/verification commands, active feature surfaces, Phase 9 runtime findings, and known deferred risks.
+- Prepare a small current-state screenshot capture pass before release signing, Android toolchain changes, broad portfolio copywriting, or new feature work.
 
 ## Separate Branch Work
 

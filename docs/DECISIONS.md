@@ -218,6 +218,8 @@ T78 ran the debug APK on `Pixel_6_API_33` and covered clean-start Local profile 
 
 T79 resolved the Local profile light-mode status-bar contrast issue with a route-local system overlay on Login. README refresh can now proceed before screenshots, portfolio capture, release signing, Android toolchain changes, or new feature work.
 
+T80 refreshed the README against the current Flutter/Riverpod/go_router/Dio stack, active app surfaces, Phase 9 runtime findings, setup commands, and known deferrals. Current-state screenshot capture can proceed next, but release signing, Android toolchain changes, broad portfolio copywriting, and new feature work remain separate tasks.
+
 ### 2026-07-01: First Phase 9 slice is Android emulator visual smoke
 
 The T77 kickoff audit found that automated gates pass and the debug APK builds, but no Android emulator or physical Android device is currently running. Two Android AVDs are available locally: `Pixel_4_API_30` and `Pixel_6_API_33`.

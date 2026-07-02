@@ -1,375 +1,218 @@
 # InfinityWorld
 
-InfinityWorld is an Android-first, iOS-ready personal super-app built with Flutter.
+InfinityWorld is an Android-first, iOS-ready personal super-app and portfolio Flutter project. It is being built as a polished local-first hub for small tools, trackers, saved content, settings, and future device or AI modules.
 
-The project is designed as a polished modular personal hub that can grow over time with tools, trackers, reader features, RSS/news, AI utilities, and device integrations.
+The project favors small, verified slices over broad rewrites. Current work is in Phase 9: QA, device review, and portfolio readiness.
 
-The goal is not to add many features quickly. The goal is to build a clean, maintainable, visually consistent, and portfolio-quality Flutter application.
+## Current App State
 
-## Product Direction
+The app currently supports:
 
-InfinityWorld is a personal app made of multiple small and medium-sized modules.
+- Local profile login with persisted display name.
+- Startup routing that opens Login when no local session exists and Main when a local session exists.
+- Five-tab main shell: Home, Explore, Tools, Library, Settings.
+- Home/Dashboard with local greeting and direct module links.
+- Explore catalog entries for Random Fox and Summertime Saga.
+- Tools catalog entry for BMI Calculator.
+- Library empty state for future saved content and reader work.
+- Settings profile summary and persisted theme mode controls: System, Light, Dark.
+- Direct go_router routes for current legacy and feature screens.
 
-Planned module areas include:
+Android emulator smoke has been run on `Pixel_6_API_33`. The first runtime pass covered login, keyboard-open login, Home/Dashboard, a Dashboard BMI link, Explore, Tools, Library, Settings, and theme mode controls. The Local profile status-bar contrast follow-up from that pass has been fixed.
 
-* Tools
-* Trackers
-* RSS/news
-* Reader/library
-* AI utilities
-* Device/Bluetooth/audio utilities
-* Local profile and settings
+## Tech Stack
 
-The app is Android-first, but the architecture and UI direction should remain iOS-ready for future support.
+Current installed stack:
 
-## Current Status
+- Flutter 3.44.2 / Dart 3.12.2 in the current local environment.
+- Material 3.
+- Riverpod for app state, dependency wiring, theme mode, and local profile/session providers.
+- go_router for active routing.
+- Dio for feature networking.
+- shared_preferences for local profile/session and theme mode persistence.
+- Local Inter and Sora font assets.
 
-This project is being restructured and modernized.
+Not currently installed or active:
+
+- GetX.
+- Provider/BLoC for new app state.
+- direct `http` package calls.
+- Drift, Freezed, json_serializable.
+- Firebase, Supabase, or backend auth SDKs.
+- Bluetooth/audio packages.
+
+## Quick Start
+
+Use PowerShell from the repository root:
+
+```powershell
+flutter pub get
+flutter devices
+```
+
+For Android emulator work:
+
+```powershell
+flutter emulators
+flutter emulators --launch Pixel_6_API_33
+flutter devices
+flutter run -d emulator-5554
+```
+
+If your emulator id differs, use the id shown by `flutter devices`.
+
+For a quick host smoke when no Android target is running:
+
+```powershell
+flutter run -d windows
+```
+
+## Verification Commands
+
+Common checks:
+
+```powershell
+flutter analyze
+flutter test
+flutter build apk --debug
+git diff --check
+```
+
+Docs-only tasks normally require:
+
+```powershell
+git diff --check
+```
+
+Do not claim a command passed unless it was actually run.
+
+## Project Structure
+
+The app is moving toward the documented feature-first structure:
+
+```text
+lib/
+  app/
+    bootstrap/
+    router/
+    shell/
+    theme/
+  core/
+    config/
+    network/
+  design_system/
+    components/
+    tokens/
+  features/
+    auth/
+    bmi/
+    dashboard/
+    explore/
+    fox/
+    library/
+    settings/
+    summertime_saga/
+    tools/
+```
+
+Small modules stay simple. Larger modules can grow `data`, `domain`, `application`, and `presentation` layers only when the feature needs that structure.
+
+## Architecture Direction
 
 Current direction:
 
-```text
-Android-first
-iOS-ready
-Local-first
-Portfolio-ready
-Modular feature-first architecture
-Custom design system
-Light/dark mode support
-```
+- Android-first, iOS-ready.
+- Local-first profile/session and theme behavior.
+- Riverpod for new dependency and state boundaries.
+- go_router for routing.
+- Dio for new networking.
+- Feature-first modules.
+- Custom InfinityWorld design system with Midnight Violet light/dark themes.
+- Tests added around startup, routing, shell tabs, feature screens, services, and UI safety.
 
-Existing legacy code may still exist during migration. New code should follow the documented architecture and design direction.
-
-## Main Navigation
-
-The planned main app shell uses five bottom navigation tabs:
+Networking flow should stay:
 
 ```text
-Home | Explore | Tools | Library | Settings
+Widget -> Riverpod provider/controller -> service/repository -> Dio
 ```
 
-### Home
-
-Dashboard, pinned modules, recently used modules, quick actions, and personal summary cards.
-
-### Explore
-
-RSS/news, game updates, trackers, and discovered content.
-
-### Tools
-
-BMI, wheel/random picker, Device Hub, AI Lab, converters, and other utilities.
-
-### Library
-
-Reader, saved articles, bookmarks, and reading progress.
-
-### Settings
-
-Local profile, theme, permissions, app configuration, and app information.
+Do not call APIs from widget `build()` methods.
 
 ## Design Direction
 
-Default design system:
+Default style:
 
 ```text
 Midnight Violet Dashboard
 ```
 
-Design goals:
-
-* Android-first
-* iOS-ready
-* Modern dashboard feel
-* Futuristic but controlled
-* Light and dark mode support
-* Subtle neon accents
-* Clean typography
-* Portfolio-friendly polish
-
-The first design implementation should support:
+Typography:
 
 ```text
-Midnight Violet Light
-Midnight Violet Dark
+Sora for headings and important titles.
+Inter for body text, labels, inputs, buttons, and navigation.
 ```
 
-Future optional theme directions may include:
+Visual rules:
+
+- Support light and dark mode.
+- Keep neon accents subtle.
+- Avoid full cosmic, heavy glassmorphism, or heavy cyberpunk styling as the default.
+- Use design-system tokens/components before hard-coded styling.
+- Keep screens SafeArea-aware, scroll-safe, keyboard-safe where forms exist, and normal screens out of immersive/fullscreen mode.
+
+## Active Routes and Surfaces
+
+Current route constants include:
 
 ```text
-Neon Community Dark
-Vice Heat
+/login
+/main
+/dashboard
+/chat
+/profile
+/settings
+/smts_home
+/testscreen
+/fox
+/bmi
 ```
 
-## Typography
-
-Approved typography direction:
+The main shell currently owns these tabs:
 
 ```text
-Sora + Inter
+Home | Explore | Tools | Library | Settings
 ```
 
-Usage:
+`ShellRoute` or `StatefulShellRoute` is deferred until the tabs own real nested route stacks.
 
-* Sora: headings, hero text, important section titles
-* Inter: body text, labels, inputs, navigation, buttons, and dense UI
+## Known Deferrals
 
-## Tech Stack Direction
+These are separate follow-up tasks:
 
-Planned stack for new code:
+- Real backend authentication.
+- Screenshot capture and broader portfolio copywriting.
+- Release signing hardening.
+- Built-in Kotlin migration.
+- Android build/toolchain changes.
+- Device Hub, Bluetooth, audio, AI Lab, RSS, Reader, bookmarks, and saved-content persistence.
+- Full multi-style theme switching such as Neon Community or Vice Heat.
+- Broad shell-route migration.
 
-```text
-Flutter
-Riverpod
-go_router
-Dio
-Drift
-shared_preferences
-Freezed
-json_serializable
-```
-
-UI/design:
-
-```text
-Material 3
-Custom InfinityWorld Design System
-Inter + Sora
-SVG/vector-friendly assets
-```
-
-Future device/audio features may use packages such as:
-
-```text
-permission_handler
-flutter_blue_plus
-bluetooth_low_energy
-flutter_blue_classic
-just_audio
-audio_session
-audio_service
-```
-
-These should only be added when the related feature is actively implemented.
-
-## Architecture Direction
-
-InfinityWorld uses a feature-first modular architecture.
-
-Target structure:
-
-```text
-lib/
-  app/
-    app.dart
-    router/
-    theme/
-    bootstrap/
-    shell/
-
-  core/
-    config/
-    network/
-    database/
-    permissions/
-    errors/
-    logging/
-    utils/
-
-  design_system/
-    tokens/
-    components/
-    layout/
-    effects/
-
-  features/
-    auth/
-    home/
-    explore/
-    tools/
-    library/
-    settings/
-    bmi/
-    wheel/
-    summertime_saga/
-    news/
-    reader/
-    ai_lab/
-    device_hub/
-```
-
-Small features may stay simple. Larger features can use deeper layering:
-
-```text
-features/example/
-  data/
-  domain/
-  application/
-  presentation/
-```
-
-## State Management
-
-New code should use:
-
-```text
-Riverpod
-```
-
-Riverpod is used for:
-
-* App-level dependencies
-* Feature controllers
-* Async state
-* Theme state
-* Local session/profile state
-* Repository/service injection
-
-Legacy GetX code may still exist during migration, but new code should not expand GetX usage.
-
-## Routing
-
-New routing direction:
-
-```text
-go_router
-```
-
-Expected startup flow:
-
-```text
-Native Splash
-→ Flutter Bootstrap / Splash
-→ Check local session
-→ If previously logged in: Home
-→ If not logged in: Login / Local Profile
-```
-
-The initial login is a local/fake profile flow, not real backend authentication.
-
-## Local-First Direction
-
-The early app is local-first.
-
-Initial local state may include:
-
-* Local profile
-* Session flag
-* Theme preference
-* Recently used modules
-
-Structured persistence may be added later for:
-
-* Bookmarks
-* Saved articles
-* Reading progress
-* Tracker configuration
-* Known devices
-
-## Performance and App Size Direction
-
-The app should remain performance-aware and size-conscious.
-
-Rules:
-
-* Lazy-load features
-* Do not load all modules on Home startup
-* Do not call APIs from widget `build()` methods
-* Avoid unnecessary packages
-* Avoid heavy blur/glass effects
-* Use subtle glow only where useful
-* Keep font weights limited
-* Prefer SVG for simple vector assets
-* Prefer WebP for large raster assets where appropriate
+The debug APK currently builds, but Flutter still reports the known future Built-in Kotlin migration warning. Android release signing still uses debug signing and is not production-ready.
 
 ## Documentation
 
-Project decisions are documented in:
+Project source-of-truth docs:
 
-```text
-AGENTS.md
-docs/PROJECT_DIRECTION.md
-docs/ARCHITECTURE.md
-docs/DESIGN_SYSTEM.md
-docs/ROADMAP.md
-```
+- `AGENTS.md`
+- `docs/PROJECT_DIRECTION.md`
+- `docs/ARCHITECTURE.md`
+- `docs/DESIGN_SYSTEM.md`
+- `docs/ROADMAP.md`
+- `docs/TASKS.md`
+- `docs/DECISIONS.md`
+- `docs/qa/IW_GIT_WORKFLOW.md`
+- `docs/qa/IW_TASK_WORKFLOW.md`
 
-Before making significant changes, read the relevant documentation.
-
-## Roadmap Summary
-
-Recommended development order:
-
-```text
-Phase 0: Documentation baseline
-Phase 1: Stabilize existing app
-Phase 2: App bootstrap, splash, and local session
-Phase 3: Theme foundation and design tokens
-Phase 4: App shell and bottom navigation
-Phase 5: Routing migration to go_router
-Phase 6: Riverpod foundation
-Phase 7: Home dashboard
-Phase 8: BMI as first clean module
-Phase 9: Summertime Saga hardening
-Phase 10: Settings, profile, and appearance
-Phase 11: Explore and RSS/news foundation
-Phase 12: Library and Reader foundation
-Phase 13: Device Hub foundation
-Phase 14: AI Lab foundation
-Phase 15: App icon, branding, and splash polish
-Phase 16: Portfolio readiness
-```
-
-## Known Current Risks
-
-Initial review found several risks to address during stabilization:
-
-```text
-High:
-- Login screen may call setState() from build()
-- Android release manifest may be missing INTERNET permission
-- Summertime Saga flow may spin forever or crash on null/error states
-
-Medium:
-- Dev/Prod config is not fully meaningful yet
-- No test/ directory exists
-- pubspec.lock / Dart version mismatch may exist
-- Some controller/focus lifecycle leaks may exist
-- Android release signing is not production-ready
-
-Low:
-- Some routes/screens may be dead or incomplete
-- Settings screen may be unreachable
-- Some dependencies may be placed incorrectly
-```
-
-These should be fixed in small, focused tasks.
-
-## Development Notes
-
-Preferred verification commands:
-
-```bash
-flutter pub get
-flutter analyze
-flutter test
-flutter build apk --debug
-```
-
-Do not claim a command passed unless it was actually run.
-
-## Project Philosophy
-
-InfinityWorld should grow as a consistent personal platform, not as a collection of unrelated screens.
-
-Every new feature should answer:
-
-```text
-Does it fit one of the main tabs?
-Does it follow the InfinityWorld Design System?
-Can it be developed without breaking other modules?
-Does it keep the app useful, polished, and maintainable?
-Does it improve the portfolio value of the project?
-```
-
-Quality and consistency are more important than feature count.
+Before changing architecture, routing, theme, feature structure, or task priority, read the relevant docs and keep them aligned.
