@@ -212,6 +212,12 @@ The T76 checkpoint found that the first Phase 8 pass is complete enough for now:
 
 Start Phase 9 with a QA/device readiness kickoff audit. Do not start larger Home, Reader, RSS, Device Hub, AI Lab, persistence, route cleanup, release signing, screenshots, or Android toolchain work until the QA/device scope is audited or explicitly deferred.
 
+### 2026-07-02: First Android visual smoke found one Local profile polish follow-up
+
+T78 ran the debug APK on `Pixel_6_API_33` and covered clean-start Local profile login, keyboard-open login, Home/Dashboard, one Dashboard BMI route link, Explore, Tools, Library, and Settings theme controls. No blocking layout failure was observed in that emulator pass.
+
+Before README screenshots or portfolio capture, resolve or explicitly defer the Local profile light-mode status-bar contrast issue: the image-backed start screen places dark status-bar icons over a dark teal area. Keep the next slice scoped to this polish risk and avoid broader redesign, Android toolchain changes, release signing, or new feature work.
+
 ### 2026-07-01: First Phase 9 slice is Android emulator visual smoke
 
 The T77 kickoff audit found that automated gates pass and the debug APK builds, but no Android emulator or physical Android device is currently running. Two Android AVDs are available locally: `Pixel_4_API_30` and `Pixel_6_API_33`.

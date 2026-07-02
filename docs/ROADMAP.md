@@ -639,7 +639,7 @@ Rules:
 
 ## Phase 9: QA, Device Review, and Portfolio Readiness
 
-Status: current / Android emulator visual smoke review next.
+Status: current / Local profile status-bar contrast polish next.
 
 Goal:
 
@@ -662,9 +662,16 @@ Kickoff audit findings:
 
 First review slice:
 
-- Launch one existing Android emulator, preferably `Pixel_6_API_33`, and run the app.
-- Smoke-check startup/login, Main shell tabs, Dashboard links, Settings theme controls, and the first Explore/Tools/Library surfaces.
-- Record findings before screenshots, README polish, release signing, Android toolchain changes, or new feature work.
+- Completed in T78 on `Pixel_6_API_33` (`emulator-5554`, 1080x2400, density 420).
+- The debug APK built, installed, and launched as `com.nqm.infinityworld/.MainActivity`.
+- Clean-start Local profile login, keyboard-open login, Home/Dashboard, a Dashboard BMI link, Explore, Tools, Library, and Settings rendered without a blocking layout failure on this emulator.
+- Settings theme controls switched between System, Light, and Dark; Settings dark/light states kept status and navigation bars readable.
+- Non-blocking visual finding: the Local profile light-mode start screen uses an image-backed edge-to-edge background with dark status-bar icons over a dark teal area.
+- Not covered by T78: `Pixel_4_API_30`, physical devices, landscape, large text, small 360px device profiles, release APK behavior, and live Fox/Summertime API flows.
+
+Next slice:
+
+- Resolve or explicitly defer the Local profile status-bar contrast issue before README screenshots, portfolio capture, release signing, Android toolchain changes, or new feature work.
 
 ## Separate Branch Work
 

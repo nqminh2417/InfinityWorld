@@ -190,6 +190,7 @@ Completed stabilization tasks:
 - Home dashboard first cleanup slice was completed; the no-op Dashboard app-bar filter action was removed while preserving Dashboard as the Home tab, direct route behavior, module links, greeting, and logout/session behavior.
 - Phase 8 checkpoint audit was completed; the five-tab shell has first useful tab surfaces, direct feature routes remain covered, no tab-owned route stacks exist yet, and larger feature expansion should wait until QA/device readiness is scoped.
 - Phase 9 QA/device readiness kickoff audit was completed; automated Flutter gates pass, Android AVDs exist but are not running, README/portfolio docs are stale, and the next useful slice is an Android emulator visual smoke review.
+- Android emulator visual smoke review was completed on `Pixel_6_API_33`; startup/login, keyboard-open login, Home/Dashboard, a Dashboard BMI link, Explore, Tools, Library, and Settings theme controls rendered without a blocking layout failure, and one non-blocking Local profile status-bar contrast follow-up was recorded before portfolio screenshots.
 
 ## Recommended Next Work
 
@@ -206,34 +207,34 @@ Task sizing note:
 
 ### Primary
 
-T78 - Android emulator visual smoke review
+T79 - Local profile status-bar contrast polish slice
 
 Reason:
 
-- T77 found automated Flutter gates and the debug APK are healthy, but no Android runtime visual smoke has been completed.
-- Android AVDs are available locally, so a device smoke review is the smallest useful Phase 9 confidence step.
-- README/screenshots/portfolio polish should use device findings instead of guessing from widget tests.
+- T78 found that the Local profile/login flow reaches the app and stays keyboard-usable on `Pixel_6_API_33`, but the image-backed light-mode start screen places dark status-bar icons over a dark teal area.
+- This is the only concrete visual follow-up from the first emulator smoke review, so fix or explicitly defer it before README screenshots or portfolio capture.
+- Keep the slice limited to Local profile/login status-bar contrast and preserve existing startup/session behavior.
 
 Scope:
 
-- Launch one existing Android emulator, preferably `Pixel_6_API_33` unless unavailable.
-- Run the app on the emulator and smoke-check startup/login, Main shell tabs, Dashboard links, Settings theme controls, and current Explore/Tools/Library surfaces.
-- Record visual/layout issues, screenshots if cheap, and update planning docs with findings.
-- Do not fix UI issues, redesign screens, add packages, change Android build/toolchain files, add release signing, or start README/portfolio polish in this review slice unless a blocker prevents the smoke review.
+- Adjust the Local profile/login status-bar overlay or background treatment so status-bar icons stay readable in light mode and remain correct in dark mode.
+- Preserve local profile submission, keyboard-safe form layout, session redirect behavior, and the Main shell.
+- Do not redesign the login screen, change broader theme tokens, add packages, change Android build/toolchain files, add release signing, or start README/portfolio polish in this slice.
 
 Verification:
 
-- Review/docs gate: emulator run evidence plus `git diff --check` for any planning-doc updates.
+- Runtime/UI gate: run on `Pixel_6_API_33` or another available Android emulator; capture the Local profile light-mode screen and keyboard-open form.
+- Static/docs gate: `flutter analyze` if Dart code changes plus `git diff --check`.
 
 ### Alternatives
 
 README current-state refresh
 
-Choose this if documentation accuracy is more important than runtime visual confidence.
+Choose this if the Local profile status-bar contrast issue is explicitly deferred and documentation accuracy is more important than screenshot readiness.
 
 T30 — Dependency/toolchain audit
 
-Choose this if package/build risk should be reviewed before device smoke.
+Choose this if package/build risk should be reviewed before the visual polish follow-up.
 
 Small next feature scoping audit
 
@@ -254,6 +255,7 @@ Choose this only if QA/device work is deferred and the next concrete feature mod
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
+- Portfolio screenshots before resolving or explicitly deferring the Local profile status-bar contrast issue.
 - Wheel, Device Hub, AI Lab, RSS, Reader, bookmarks, Home recent modules, pinned-module persistence, or a `features/home` root before Android device visual confidence and README/portfolio readiness are addressed or explicitly deferred.
 
 ### Phase guard
@@ -264,7 +266,7 @@ Current phase:
 
 Decision:
 
-- T77 scoped Phase 9 QA/device readiness. Run Android emulator visual smoke before README/screenshots/portfolio polish or broader feature work.
+- T78 completed the first Android emulator visual smoke review. Resolve or explicitly defer the Local profile status-bar contrast follow-up before README screenshots, portfolio capture, or broader feature work.
 
 Do not enter yet:
 
@@ -272,7 +274,7 @@ Do not enter yet:
 
 Reason:
 
-- Android runtime visual confidence is the immediate gap; automated Flutter gates and debug APK build already pass.
+- The first Android runtime pass found no blocking shell/tab layout issue, but it did find one concrete Local profile status-bar contrast polish risk.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during QA planning.
 - QA/device readiness should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, or new feature modules.
 
@@ -292,7 +294,8 @@ Exit criteria:
 - Done: Implemented the T75 Home dashboard first cleanup slice.
 - Done: Completed the T76 Phase 8 checkpoint audit and closed the first tab-surface pass.
 - Done: Completed the T77 Phase 9 QA/device readiness kickoff audit.
-- Remaining: Complete the T78 Android emulator visual smoke review before broader QA/device work.
+- Done: Completed the T78 Android emulator visual smoke review on `Pixel_6_API_33`.
+- Remaining: Complete the T79 Local profile status-bar contrast polish slice before README screenshots or portfolio capture.
 
 ## Verification Gates
 
