@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/features/bmi/presentation/bmi_screen.dart';
+import 'package:infinity_world/features/clock/presentation/clock_screen.dart';
 import 'package:infinity_world/features/tools/presentation/tools_screen.dart';
 import 'package:infinity_world/main.dart';
 import 'package:infinity_world/routes/app_routes.dart';
@@ -33,8 +34,9 @@ void main() {
       findsOneWidget,
     );
     expect(find.byType(ListView), findsOneWidget);
-    expect(find.byType(IwCard), findsOneWidget);
+    expect(find.byType(IwCard), findsNWidgets(2));
     expect(find.text('BMI Calculator'), findsOneWidget);
+    expect(find.text('Clock'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -53,6 +55,24 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(BmiScreen), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Tools Clock card opens the Clock route', (tester) async {
+    await tester.pumpWidget(
+      ProviderScope(child: MainApp(initialRoute: AppRoutes.main)),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.handyman_rounded));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ToolsScreen), findsOneWidget);
+
+    await tester.tap(find.text('Clock'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ClockScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

@@ -9,4 +9,5 @@ class AppRoutes {
   static const String test = '/testscreen';
   static const String fox = '/fox';
   static const String bmi = '/bmi';
+  static const String clock = '/clock';
 }

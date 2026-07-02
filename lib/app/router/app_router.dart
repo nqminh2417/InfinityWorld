@@ -5,6 +5,7 @@ import 'package:infinity_world/app/shell/main_screen.dart';
 import 'package:infinity_world/features/auth/presentation/login_screen.dart';
 import 'package:infinity_world/features/bmi/presentation/bmi_screen.dart';
 import 'package:infinity_world/features/chat/presentation/chat_screen.dart';
+import 'package:infinity_world/features/clock/presentation/clock_screen.dart';
 import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:infinity_world/features/fox/application/fox_providers.dart';
 import 'package:infinity_world/features/fox/presentation/fox_random_screen.dart';
@@ -97,6 +98,12 @@ GoRouter createAppRouter({
         path: AppRoutes.bmi,
         builder: (BuildContext context, GoRouterState state) {
           return const BmiScreen();
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.clock,
+        builder: (BuildContext context, GoRouterState state) {
+          return const ClockScreen();
         },
       ),
     ],
