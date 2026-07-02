@@ -218,7 +218,9 @@ T78 ran the debug APK on `Pixel_6_API_33` and covered clean-start Local profile 
 
 T79 resolved the Local profile light-mode status-bar contrast issue with a route-local system overlay on Login. README refresh can now proceed before screenshots, portfolio capture, release signing, Android toolchain changes, or new feature work.
 
-T80 refreshed the README against the current Flutter/Riverpod/go_router/Dio stack, active app surfaces, Phase 9 runtime findings, setup commands, and known deferrals. Current-state screenshot capture can proceed next, but release signing, Android toolchain changes, broad portfolio copywriting, and new feature work remain separate tasks.
+T80 refreshed the README against the current Flutter/Riverpod/go_router/Dio stack, active app surfaces, Phase 9 runtime findings, setup commands, and known deferrals.
+
+T81 closed Phase 9 instead of starting portfolio screenshots. Portfolio screenshots and README screenshot assets are deferred until the app has several content-rich screens, Dashboard/Home has meaningful content, Explore/Tools/Library are no longer mostly placeholder surfaces, at least two or three safe module flows are useful enough to showcase, and visual theme/typography/spacing are stable enough for public screenshots. Start Phase 10 with an app content depth kickoff audit before screenshot capture, release signing, store packaging, full device matrix testing, or broad portfolio copywriting.
 
 ### 2026-07-01: First Phase 9 slice is Android emulator visual smoke
 

@@ -639,7 +639,7 @@ Rules:
 
 ## Phase 9: QA, Device Review, and Portfolio Readiness
 
-Status: current / portfolio screenshot capture prep next.
+Status: complete as of 2026-07-02.
 
 Goal:
 
@@ -674,10 +674,27 @@ Status-bar polish slice:
 - Completed in T79: Login now owns a route-local light system overlay so status-bar icons stay readable over the image-backed Local profile screen.
 - `Pixel_6_API_33` runtime checks confirmed readable login status-bar icons in light and dark modes, keyboard-open login layout, and local profile submission to Home.
 
-Next slice:
+Completion checkpoint:
 
 - Completed in T80: README now reflects the current app direction, setup/verification commands, active feature surfaces, Phase 9 runtime findings, and known deferred risks.
-- Prepare a small current-state screenshot capture pass before release signing, Android toolchain changes, broad portfolio copywriting, or new feature work.
+- Completed in T81: Phase 9 closed after recording QA/device evidence, Android AVD baseline, Pixel 6 emulator smoke findings, Local profile polish, README refresh, and known deferrals.
+- Portfolio screenshots and README screenshot assets are deferred until the app has several content-rich screens, Dashboard/Home has meaningful content, Explore/Tools/Library are no longer mostly placeholder surfaces, at least two or three safe module flows are useful enough to showcase, and visual theme/typography/spacing are stable enough for public screenshots.
+- Deferred after Phase 9: portfolio screenshots, screenshot assets in README, release signing, store packaging, full device matrix testing, richer public-facing app content, and portfolio copywriting.
+
+## Phase 10: App Content and Surface Depth
+
+Status: current / kickoff audit next.
+
+Goal:
+
+- Increase useful, content-rich app surfaces before public screenshots, release packaging, or broader portfolio polish.
+
+First slice:
+
+- Start with a Phase 10 app content depth kickoff audit.
+- Audit Home/Dashboard, Explore, Tools, Library, and existing direct module routes for the smallest useful content-depth opportunity.
+- Recommend one next implementation slice, such as richer Dashboard/Home content, an additional safe local tool, Library/Reader foundation, Explore/RSS foundation, or module-flow cleanup.
+- Do not implement the feature, capture screenshots, add packages, change Android build/toolchain files, start release signing, or begin portfolio copywriting in the kickoff audit.
 
 ## Separate Branch Work
 

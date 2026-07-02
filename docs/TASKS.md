@@ -1,6 +1,6 @@
 # Infinity World Active Tasks
 
-Last updated: 2026-07-01
+Last updated: 2026-07-02
 
 ## Current Status
 
@@ -53,7 +53,7 @@ Current architecture status:
 - Tools now has a first tab body at `lib/features/tools/presentation/tools_screen.dart`.
 - Explore now has a first tab body at `lib/features/explore/presentation/explore_screen.dart`.
 - Library now has a first empty-state tab body at `lib/features/library/presentation/library_screen.dart`.
-- Phase 9 QA/device readiness work is next; no emulator/device visual smoke has been completed yet.
+- Phase 9 QA/device readiness is complete; portfolio screenshots are deferred until the app has richer public-facing content.
 - There is no existing Reader, bookmark, saved-article, reading-progress, or local database module to surface yet.
 - `features/home` root does not exist yet; Dashboard still owns direct module/dev links plus logout/session clearing.
 
@@ -108,11 +108,13 @@ Android toolchain status:
 QA/device readiness status:
 
 - T77 refreshed current automated gates on Flutter 3.44.2 / Dart 3.12.2: `flutter analyze`, `flutter test`, and `flutter build apk --debug` passed.
-- `flutter devices` currently detects Windows, Chrome, and Edge only; no Android emulator or physical Android device is running.
+- `flutter devices` detected Windows, Chrome, and Edge during the kickoff audit before the Android emulator was launched.
 - `flutter emulators` lists available Android AVDs: `Pixel_4_API_30` and `Pixel_6_API_33`.
+- T78 completed a `Pixel_6_API_33` runtime visual smoke review covering startup/login, keyboard-open login, Home/Dashboard, a Dashboard BMI link, Explore, Tools, Library, Settings, and theme controls without a blocking layout failure.
+- T79 completed the Local profile status-bar contrast follow-up from that smoke review.
 - Android main manifest includes `INTERNET`; release signing still uses debug keys and remains non-production.
 - Debug APK builds, but Flutter reports the known future Built-in Kotlin migration warning.
-- `README.md` is stale against the current roadmap, dependency set, and resolved known risks.
+- T80 refreshed `README.md` against the current roadmap, dependency set, runtime findings, and known deferrals.
 
 Completed stabilization tasks:
 
@@ -193,12 +195,13 @@ Completed stabilization tasks:
 - Android emulator visual smoke review was completed on `Pixel_6_API_33`; startup/login, keyboard-open login, Home/Dashboard, a Dashboard BMI link, Explore, Tools, Library, and Settings theme controls rendered without a blocking layout failure, and one non-blocking Local profile status-bar contrast follow-up was recorded before portfolio screenshots.
 - Local profile status-bar contrast polish was completed; Login now owns a route-local light system overlay, the Pixel 6 emulator shows readable light/dark login status-bar icons, keyboard-open login still fits, and local profile submission still reaches Home.
 - README current-state refresh was completed; the README now reflects the current Android-first Flutter stack, active app surfaces, setup and verification commands, Phase 9 runtime findings, and known deferrals without starting screenshots, release signing, or toolchain work.
+- Phase 9 completion checkpoint was completed; automated gate evidence, Android AVD baseline, Pixel 6 emulator smoke findings, Local profile polish, and README refresh are recorded, while portfolio screenshots, screenshot assets, release signing, store packaging, full device matrix testing, richer app content, and portfolio copywriting are deferred.
 
 ## Recommended Next Work
 
 Current phase:
 
-- Phase 9 — QA, Device Review, and Portfolio Readiness
+- Phase 10 — App Content and Surface Depth
 
 Task sizing note:
 
@@ -209,35 +212,44 @@ Task sizing note:
 
 ### Primary
 
-T81 - Portfolio screenshot capture prep
+T82 - Phase 10 app content depth kickoff audit
 
 Reason:
 
-- README now reflects the current app state, and T78/T79 provide a known-good Pixel 6 emulator baseline.
-- Portfolio screenshots are the next useful Phase 9 step, but they should be prepared as a small capture pass rather than mixed with UI redesign.
-- Keep screenshot prep focused on current working screens and note any screen that is not ready for portfolio use.
+- Phase 9 closed the useful QA/device readiness loop and intentionally deferred portfolio screenshots.
+- The app still has limited public-facing content: Home is Dashboard-owned, Library is an empty state, and Explore/Tools only surface a few existing modules.
+- The next useful phase should choose one content or feature-depth slice before screenshots, release packaging, or more QA polish.
 
 Scope:
 
-- Launch an existing Android emulator, preferably `Pixel_6_API_33`, and capture a small current-state screenshot set.
-- Cover Login/Local profile, Home/Dashboard, Explore, Tools, Library, Settings, and one safe module route such as BMI.
-- Decide where screenshot artifacts should live before committing any binary assets.
-- Do not redesign screens, change app code, add packages, change Android build/toolchain files, handle release signing, or broaden into full portfolio copywriting in this slice.
+- Audit current Home/Dashboard, Explore, Tools, Library, and existing direct module routes for the smallest content-depth opportunity.
+- Recommend one next implementation slice that makes the app more useful or more content-rich without broad redesign.
+- Consider candidates such as richer Home/Dashboard content, an additional safe local tool, Library/Reader foundation, Explore/RSS foundation, or module-flow cleanup.
+- Do not implement the feature, capture screenshots, add packages, change Android build/toolchain files, start release signing, or begin portfolio copywriting in the audit slice.
 
 Verification:
 
-- Runtime/artifact gate: emulator capture evidence plus `git status --short`.
-- Docs gate if planning docs change: `git diff --check`.
+- Docs gate: `git diff --check`.
 
 ### Alternatives
 
 T30 — Dependency/toolchain audit
 
-Choose this if package/build risk should be reviewed before screenshot work.
+Choose this if package/build risk should be reviewed before the next content-depth phase.
 
-Small next feature scoping audit
+Portfolio screenshot capture prep
 
-Choose this only if QA/device and portfolio work are deferred and the next concrete feature module needs scoping first.
+Choose this only after the app has enough public-facing content to make screenshots useful.
+
+### Portfolio screenshot deferral
+
+Portfolio screenshots and README screenshot assets are deferred until:
+
+- The app has several content-rich screens.
+- Dashboard/Home has meaningful content beyond the current direct-link surface.
+- Explore, Tools, and Library are no longer mostly first-pass or placeholder surfaces.
+- At least two or three safe module flows are useful enough to showcase.
+- Visual theme, typography, and spacing are stable enough for public screenshots.
 
 ### Do not start yet
 
@@ -254,27 +266,28 @@ Choose this only if QA/device and portfolio work are deferred and the next concr
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
-- Wheel, Device Hub, AI Lab, RSS, Reader, bookmarks, Home recent modules, pinned-module persistence, or a `features/home` root before Android device visual confidence and README/portfolio readiness are addressed or explicitly deferred.
+- Portfolio screenshots, screenshot assets, release signing, store packaging, full device matrix testing, or broad portfolio copywriting before the screenshot entry criteria above are met and a dedicated task is assigned.
 
 ### Phase guard
 
 Current phase:
 
-- Phase 9 — QA, Device Review, and Portfolio Readiness.
+- Phase 10 — App Content and Surface Depth.
 
 Decision:
 
-- T80 refreshed the stale README. Prepare a small portfolio screenshot capture pass before release-readiness work or broader feature work.
+- T81 closed Phase 9 after recording the useful QA/device readiness work and known deferrals. Start Phase 10 with a small app-content kickoff audit before screenshots, release readiness, or broad feature work.
 
 Do not enter yet:
 
-- Larger Phase 9 polish or release-readiness work.
+- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, or broader feature implementation before the Phase 10 kickoff audit selects a small slice.
 
 Reason:
 
-- Android runtime smoke, the Local profile visual follow-up, and the README refresh are complete enough to prepare current-state screenshots.
+- Phase 9 completed the useful QA/device readiness loop: automated Flutter gates passed during the phase, Android AVDs are available, the Pixel 6 emulator visual smoke review found no blocking layout failure across the checked startup/tab/module flows, the Local profile status-bar contrast follow-up is complete, and README current-state docs are refreshed.
+- Portfolio screenshots would mostly capture limited or placeholder surfaces today, so they are deferred until the app has richer public-facing content and stable visual polish.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during QA planning.
-- QA/device readiness should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, or new feature modules.
+- App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
 Exit criteria:
 
@@ -295,7 +308,8 @@ Exit criteria:
 - Done: Completed the T78 Android emulator visual smoke review on `Pixel_6_API_33`.
 - Done: Completed the T79 Local profile status-bar contrast polish slice.
 - Done: Completed the T80 README current-state refresh.
-- Remaining: Complete the T81 portfolio screenshot capture prep before release-readiness work or broader feature work.
+- Done: Completed the T81 Phase 9 completion checkpoint and closed Phase 9.
+- Remaining: Complete the T82 Phase 10 app content depth kickoff audit before selecting a content-depth implementation slice or restarting screenshot work.
 
 ## Verification Gates
 
