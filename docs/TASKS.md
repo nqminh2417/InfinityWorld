@@ -59,6 +59,7 @@ Current architecture status:
 - Phase 10 kickoff audit confirmed Tools is the smallest low-risk content-depth surface for the next slice because it can add a useful local Clock tool without public APIs, persistence, screenshots, release work, broad redesign, or app architecture migration.
 - Clock now lives under `lib/features/clock/`, has a direct `/clock` route, and is linked from Tools beside BMI.
 - `timezone` is a direct dependency only for Clock's `America/Los_Angeles` DST-correct time conversion.
+- Clock now includes a responsive `CustomPainter` analog face with numbered hour markers and live local-time hands.
 
 Current tests:
 
@@ -83,7 +84,7 @@ Current tests:
 - Settings presentation widget test exists and covers persisted local display-name rendering, Appearance theme-mode summary, persisted theme-mode behavior, and theme-mode selection/persistence behavior.
 - Tools presentation widget coverage exists for small-screen scroll safety and BMI route navigation.
 - Clock domain coverage exists for `HH:mm:ss` formatting and California winter/summer DST offsets.
-- Clock presentation widget coverage exists for local/California digital time rows, once-per-second updates, scroll-safe layout, and ticker disposal.
+- Clock presentation widget coverage exists for local/California digital time rows, the analog clock widget, once-per-second updates, scroll-safe layout, and ticker disposal.
 - Tools presentation widget coverage exists for Clock route navigation.
 - Explore presentation widget coverage exists for small-screen scroll safety and fake-route navigation to Fox and Summertime Saga.
 - Library presentation widget coverage exists for small-screen scroll safety and empty-state rendering.
@@ -205,6 +206,7 @@ Completed stabilization tasks:
 - Phase 9 completion checkpoint was completed; automated gate evidence, Android AVD baseline, Pixel 6 emulator smoke findings, Local profile polish, and README refresh are recorded, while portfolio screenshots, screenshot assets, release signing, store packaging, full device matrix testing, richer app content, and portfolio copywriting are deferred.
 - Phase 10 app content depth kickoff audit was completed; Home/Dashboard, Explore, Tools, Library, and direct module routes were reviewed, and the next smallest useful implementation slice is a Tools Clock time display MVP.
 - Clock time display MVP was completed; Tools now opens a simple Clock screen with device local time and DST-correct California time updating once per second, while analog/canvas drawing remains deferred until a reference image is provided.
+- Clock analog/canvas face follow-up was completed; the Clock screen now draws a theme-compatible analog clock with `CustomPainter` while keeping the existing digital local and California rows.
 
 ## Recommended Next Work
 
@@ -221,39 +223,30 @@ Task sizing note:
 
 ### Primary
 
-T84 - Clock analog/canvas face follow-up
+T85 - Next local utility/content-depth audit
 
 Reason:
 
-- Builds on the completed Clock MVP without changing the app shell or adding public APIs.
-- Lets the visual clock face match a user-provided screenshot/image instead of inventing speculative styling.
-- Keeps portfolio screenshot work deferred until the Clock face and other content-rich surfaces are ready.
+- The Clock MVP and analog follow-up are complete.
+- Phase 10 should select the next smallest useful content-depth slice before implementation.
+- Keeps scope focused on small local app depth instead of public APIs, screenshots, release work, broad redesign, or architecture migration.
 
 Scope:
 
-- Wait for a user-provided reference screenshot/image.
-- Add an analog/canvas clock face to the existing Clock screen.
-- Keep the existing digital local and California rows.
-- Preserve the existing `/clock` route and Tools link.
-- Use existing app theme, typography, spacing, and layout-safety rules.
-
-Prerequisite:
-
-- Do not start implementation until the user provides the reference screenshot/image.
+- Review current Home/Dashboard, Explore, Tools, Library, and direct module routes after the Clock slice.
+- Identify the next smallest useful Phase 10 content-depth implementation slice.
+- Prefer a small local utility or content surface over external API work, screenshots, release work, persistence, or broad redesign.
 
 Out of scope:
 
-- No city list, alarm, stopwatch, countdown timer, SQLite/persistence, dashboard redesign, broad Tools redesign, screenshots/portfolio capture, Android build/toolchain changes, public API dependency, or Riverpod/go_router/Dio migration.
+- No implementation in the audit task unless a follow-up implementation task is assigned.
+- No screenshots/portfolio capture, Android build/toolchain changes, public API dependency, SQLite/persistence, dashboard redesign, broad Tools redesign, or Riverpod/go_router/Dio migration.
 
 Verification:
 
-- Dart/routing gate from `docs/qa/IW_GIT_WORKFLOW.md`: `dart format <changed Dart files>`, `flutter analyze`, `flutter test`, `flutter build apk --debug`, and `git diff --check`.
+- Audit/docs gate from `docs/qa/IW_GIT_WORKFLOW.md`: at minimum `git diff --check`.
 
 ### Alternatives
-
-T85 - Next local utility/content-depth audit
-
-Choose this if no clock-face reference image is ready and another small local Phase 10 slice should be selected.
 
 T30 — Dependency/toolchain audit
 
@@ -285,7 +278,6 @@ Portfolio screenshots and README screenshot assets are deferred until:
 - Real backend authentication.
 - More design-system components unless explicitly assigned.
 - Full UI redesign unless explicitly approved.
-- Analog/canvas clock drawing before the user provides a reference screenshot/image.
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
@@ -299,17 +291,17 @@ Current phase:
 
 Decision:
 
-- T83 completed the Clock time display MVP. The next Clock follow-up is analog/canvas drawing, but it must wait for a user-provided reference screenshot/image.
+- T84 completed the Clock analog/canvas follow-up. The next recommended task is an audit to select another small Phase 10 content-depth slice.
 
 Do not enter yet:
 
-- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, or broader feature implementation before the Clock face/reference-image decision or another small Phase 10 content slice is assigned.
+- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, or broader feature implementation before T85 selects the next small Phase 10 content slice or the user assigns a concrete alternative.
 
 Reason:
 
 - Phase 9 completed the useful QA/device readiness loop: automated Flutter gates passed during the phase, Android AVDs are available, the Pixel 6 emulator visual smoke review found no blocking layout failure across the checked startup/tab/module flows, the Local profile status-bar contrast follow-up is complete, and README current-state docs are refreshed.
 - Portfolio screenshots would mostly capture limited or placeholder surfaces today, so they are deferred until the app has richer public-facing content and stable visual polish.
-- The current Clock MVP added a small local Tools surface beside BMI without public APIs, persistence, dashboard redesign, shell routing, or portfolio screenshot work.
+- The current Clock tool adds a small local Tools surface beside BMI with digital time rows and a `CustomPainter` analog face, without public APIs, persistence, dashboard redesign, shell routing, image assets, or portfolio screenshot work.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -335,7 +327,8 @@ Exit criteria:
 - Done: Completed the T81 Phase 9 completion checkpoint and closed Phase 9.
 - Done: Completed the T82 Phase 10 app content depth kickoff audit and selected T83 as the next implementation slice.
 - Done: Implemented the T83 Clock time display MVP.
-- Remaining: Wait for a user-provided clock-face reference image before starting T84, or run T85 to select another small Phase 10 content-depth slice.
+- Done: Implemented the T84 Clock analog/canvas face follow-up.
+- Remaining: Run T85 to select another small Phase 10 content-depth slice, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 
