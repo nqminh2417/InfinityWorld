@@ -26,7 +26,7 @@ Current architecture status:
 - Auth/Login presentation now lives under `lib/features/auth/presentation/`.
 - Auth session dependency injection now starts at `lib/features/auth/application/session_providers.dart`.
 - Local session/profile persistence now lives under `lib/features/auth/data/local_session_repository.dart` and uses `shared_preferences`.
-- Dashboard/Home now renders the existing Dashboard screen as the Home tab, consumes the persisted local display name through Riverpod, and no longer exposes the no-op app-bar filter action.
+- Dashboard/Home now renders the existing Dashboard screen as the Home tab, consumes the persisted local display name through Riverpod, and surfaces refreshed quick actions for existing useful modules.
 - Profile now consumes the persisted local display name through Riverpod.
 - Settings now consumes the persisted local display name and app theme mode through Riverpod and exposes theme-mode controls.
 - BMI was the initial migration pilot and now lives under `lib/features/bmi/`.
@@ -63,6 +63,7 @@ Current architecture status:
 - T85 audited Home/Dashboard, Explore, Tools, Library, and direct module routes after the Clock slice; the next smallest useful local content-depth slice is a Tools random picker MVP.
 - Random Picker now lives under `lib/features/random_picker/`, has a direct `/random-picker` route, and is linked from Tools beside BMI and Clock.
 - T87 checkpoint confirmed Phase 10 should continue with a small Home/Dashboard quick-actions refresh before screenshots, Library/Reader foundation, or another new tool.
+- Home/Dashboard now surfaces BMI, Clock, Random Picker, Random Fox, and Summertime Saga as simple quick actions while keeping Dashboard ownership and direct routes stable.
 
 Current tests:
 
@@ -76,7 +77,7 @@ Current tests:
 - BMI domain unit tests exist.
 - BMI presentation widget tests exist.
 - Chat route smoke test exists.
-- Dashboard presentation widget test exists for small-screen scroll safety, persisted local display-name rendering, and absence of the old no-op filter action.
+- Dashboard presentation widget test exists for small-screen scroll safety, persisted local display-name rendering, absence of the old no-op filter action, refreshed quick-action labels, and a Home-to-Random Picker route tap.
 - Deterministic route smoke tests exist for Login, Main, Dashboard, Chat, Profile, Settings, BMI, Test, Fox, and Summertime Saga.
 - Test screen widget coverage exists for small-screen keyboard/scroll safety.
 - Fox API service and model parsing tests exist with fake Dio responses.
@@ -215,6 +216,7 @@ Completed stabilization tasks:
 - Next local utility/content-depth audit was completed; Tools remains the best low-risk Phase 10 surface, and a Random Picker MVP is the next smallest local utility slice.
 - Random Picker MVP was completed; Tools now opens a simple local picker that accepts one option per line, validates at least two choices, and selects a deterministic-testable random result without persistence or animation.
 - Phase 10 content-depth checkpoint audit was completed; Tools is now meaningfully useful with BMI, Clock, and Random Picker, while Home/Dashboard is still a bare legacy list and should receive the next small content-depth slice.
+- Home dashboard quick actions refresh was completed; Dashboard remains the Home tab body and now uses simple scroll-safe sections to surface BMI, Clock, Random Picker, Random Fox, Summertime Saga, the existing Test Screen link, and logout.
 
 ## Recommended Next Work
 
@@ -231,36 +233,29 @@ Task sizing note:
 
 ### Primary
 
-T88 - Home dashboard quick actions refresh
+T89 - Library/Reader foundation audit
 
 Reason:
 
-- Home is still the first tab and still renders the older bare Dashboard list.
-- Tools now has enough local utility depth to surface as useful Home quick actions.
-- This improves first-screen content depth without creating a Home feature root, persistence, public APIs, screenshots, release work, or broad redesign.
+- Tools and Home now have useful local content-depth surfaces.
+- Library is still the thinnest main tab because it remains a static empty-state surface.
+- A focused audit can choose the smallest Reader or saved-content foundation slice without prematurely adding persistence, routes, packages, screenshots, or broad redesign.
 
 Scope:
 
-- Keep the existing `DashboardScreen` as the Home tab body.
-- Refresh the Dashboard/Home body into simple scroll-safe sections using existing design-system components and tokens.
-- Surface existing useful modules as quick actions, especially BMI, Clock, Random Picker, Fox, and Summertime Saga.
-- Keep logout available.
-- Keep the direct route constants and existing route behavior stable.
-- Add or update focused Dashboard/Home widget coverage for the refreshed quick actions and small-screen scroll safety.
+- Review the current Library tab body, route table, planning docs, and any existing Reader/bookmark/saved-content code.
+- Identify the smallest useful Phase 10 Library/Reader content-depth implementation slice.
+- Update `docs/TASKS.md` with one next recommended task.
 
 Out of scope:
 
-- No new `features/home` root, Home persistence, recent-module tracking, pinned-module storage, SQLite/Drift, public API dependency, screenshot/portfolio capture, release work, Android build/toolchain changes, broad dashboard redesign, shell route migration, or Riverpod/go_router/Dio migration.
+- No Reader implementation, bookmarks, saved articles, reading progress, Drift/SQLite schema, persistence, imports/downloads, public API dependency, screenshot/portfolio capture, release work, Android build/toolchain changes, broad Library redesign, shell route migration, or Riverpod/go_router/Dio migration.
 
 Verification:
 
-- Dart/routing gate from `docs/qa/IW_GIT_WORKFLOW.md`: `dart format <changed Dart files>`, `flutter analyze`, `flutter test`, `flutter build apk --debug`, and `git diff --check`.
+- Audit/docs gate from `docs/qa/IW_GIT_WORKFLOW.md`: at minimum `git diff --check`.
 
 ### Alternatives
-
-T89 - Library/Reader foundation audit
-
-Choose this if the next content-depth step should move toward saved content or reading workflows instead of Home.
 
 T30 — Dependency/toolchain audit
 
@@ -306,11 +301,11 @@ Current phase:
 
 Decision:
 
-- T87 completed the Phase 10 content-depth checkpoint audit. The next recommended task is a small Home/Dashboard quick-actions refresh.
+- T88 completed the Home/Dashboard quick-actions refresh. The next recommended task is a Library/Reader foundation audit.
 
 Do not enter yet:
 
-- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, or broader feature implementation before the Home/Dashboard quick-actions refresh or a user-assigned concrete alternative.
+- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, or broader feature implementation before the Library/Reader foundation audit or a user-assigned concrete alternative.
 
 Reason:
 
@@ -320,6 +315,7 @@ Reason:
 - The T85 audit found Tools is still the smallest low-risk Phase 10 surface because it can add the documented Wheel/random-picker direction as a local MVP without public APIs, persistence, packages, or a broad redesign.
 - The Random Picker MVP adds that local tool without animated wheel/canvas work, saved lists, history, packages, persistence, or broader routing changes.
 - The T87 checkpoint found Tools is now meaningfully useful, but Home still presents a bare legacy Dashboard list and should surface existing useful modules before screenshots or a broader Home migration.
+- The T88 refresh gives Home a simple scroll-safe quick-actions surface while keeping Dashboard ownership, direct routes, logout, and the five-tab shell stable.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -349,7 +345,8 @@ Exit criteria:
 - Done: Completed the T85 next local utility/content-depth audit and selected T86 as the next implementation slice.
 - Done: Implemented the T86 Random Picker MVP.
 - Done: Completed the T87 Phase 10 content-depth checkpoint audit and selected T88 as the next implementation slice.
-- Remaining: Implement the T88 Home dashboard quick actions refresh, or follow a user-assigned concrete alternative.
+- Done: Implemented the T88 Home dashboard quick actions refresh.
+- Remaining: Run T89 Library/Reader foundation audit, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 
