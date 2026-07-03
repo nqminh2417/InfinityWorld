@@ -55,6 +55,7 @@ Current architecture status:
 - Library now has a first empty-state tab body at `lib/features/library/presentation/library_screen.dart`.
 - Phase 9 QA/device readiness is complete; portfolio screenshots are deferred until the app has richer public-facing content.
 - Reader exists as a local sample screen; there is still no bookmark, saved-article, reading-progress, or local database module yet.
+- T91 confirmed existing persistence is limited to small `shared_preferences` repositories for local session/profile and theme mode; no Drift/local database dependency is active.
 - `features/home` root does not exist yet; Dashboard still owns direct module/dev links plus logout/session clearing.
 - Phase 10 kickoff audit confirmed Tools is the smallest low-risk content-depth surface for the next slice because it can add a useful local Clock tool without public APIs, persistence, screenshots, release work, broad redesign, or app architecture migration.
 - Clock now lives under `lib/features/clock/`, has a direct `/clock` route, and is linked from Tools beside BMI.
@@ -66,6 +67,7 @@ Current architecture status:
 - Home/Dashboard now surfaces BMI, Clock, Random Picker, Random Fox, and Summertime Saga as simple quick actions while keeping Dashboard ownership and direct routes stable.
 - T89 confirmed Library still has only the empty-state tab body and no Reader/bookmark/saved-content route or module; the next smallest useful Library slice is a local Reader text screen MVP.
 - Reader now lives under `lib/features/reader/presentation/`, has a direct `/reader` route, and opens from Library as a built-in local text sample.
+- T91 confirmed the next smallest Library persistence slice should save only the built-in Reader sample state with the existing `shared_preferences` pattern before any Drift/schema/bookmark model work.
 
 Current tests:
 
@@ -99,6 +101,7 @@ Current tests:
 - Reader presentation widget coverage exists for scroll-safe local sample rendering.
 - Library presentation widget coverage exists for opening the Reader route.
 - Reader route smoke coverage exists.
+- No Library saved-content persistence coverage exists yet because T91 was audit-only.
 - No Home feature-root tests exist yet because the Home tab still uses the existing Dashboard screen.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
@@ -224,6 +227,7 @@ Completed stabilization tasks:
 - Home dashboard quick actions refresh was completed; Dashboard remains the Home tab body and now uses simple scroll-safe sections to surface BMI, Clock, Random Picker, Random Fox, Summertime Saga, the existing Test Screen link, and logout.
 - Library/Reader foundation audit was completed; no Reader, bookmark, saved-article, reading-progress, or local database code exists yet, so the next slice should add only a small local Reader text screen before persistence or import work.
 - Reader text screen MVP was completed; Library now opens a simple local Reader screen with one built-in sample, without persistence, imports, parser work, reader settings, fullscreen mode, or new packages.
+- Library saved-content persistence audit was completed; the smallest useful next slice is saving/removing the built-in Reader sample with the existing `shared_preferences` pattern, not adding Drift, generic bookmarks, saved articles, or reading-progress offsets yet.
 
 ## Recommended Next Work
 
@@ -240,33 +244,34 @@ Task sizing note:
 
 ### Primary
 
-T91 - Library saved-content persistence audit
+T92 - Reader saved sample MVP
 
 Reason:
 
-- Library now has a first Reader surface, but bookmarks, saved articles, reading progress, and storage design remain unscoped.
-- Persistence has broader blast radius than a static screen because it may involve Drift/SQLite, local models, repositories, and future reader progress semantics.
-- A focused audit should choose the smallest persistence or saved-content slice before adding storage code.
+- Library has a Reader surface, but only one built-in sample exists today.
+- A full bookmark/saved-article/progress schema would add storage shape before there is enough content to justify it.
+- Saving the built-in sample is the smallest useful persisted Library behavior and can reuse the existing `shared_preferences` pattern without new packages.
 
 Scope:
 
-- Review the current Reader screen, Library tab body, route table, storage dependencies, planning docs, and any existing local-storage patterns.
-- Decide whether the next Library slice should be bookmarks, reading progress, saved sample content, or no persistence yet.
-- Update `docs/TASKS.md` with one next recommended task.
+- Add a small Reader saved-state repository/provider for the built-in sample using `shared_preferences`.
+- Add a simple save/remove affordance on the Reader screen or Library card using existing theme/components.
+- Reflect saved/unsaved state in Library so the empty-state copy is no longer the only saved-content signal.
+- Add focused widget/provider coverage for saving, removing, and Library rendering.
 
 Out of scope:
 
-- No persistence implementation, Drift/SQLite schema, bookmarks, saved articles, reading-progress writes, imports/downloads, parser work, public API dependency, reader settings, font controls, screenshot/portfolio capture, release work, Android build/toolchain changes, broad Library redesign, shell route migration, or Riverpod/go_router/Dio migration.
+- No Drift/SQLite schema, generic bookmark model, saved articles, reading-progress offsets, scroll-position restore, imports/downloads, parser work, public API dependency, reader settings, font controls, screenshot/portfolio capture, release work, Android build/toolchain changes, broad Library redesign, shell route migration, or Riverpod/go_router/Dio migration.
 
 Verification:
 
-- Audit/docs gate from `docs/qa/IW_GIT_WORKFLOW.md`: at minimum `git diff --check`.
+- Dart/UI gate from `docs/qa/IW_GIT_WORKFLOW.md`: `dart format <changed Dart files>`, `flutter analyze`, `flutter test`, and `git diff --check`; run `flutter build apk --debug` if routing/build impact appears.
 
 ### Alternatives
 
-T92 - Phase 10 content-depth checkpoint audit
+T93 - Phase 10 content-depth checkpoint audit
 
-Choose this if the next decision should reassess Home, Explore, Tools, Library, and direct module routes before adding persistence.
+Choose this after the Reader saved sample MVP, or if the next decision should reassess Home, Explore, Tools, Library, and direct module routes before adding more persistence.
 
 T30 — Dependency/toolchain audit
 
@@ -299,6 +304,7 @@ Portfolio screenshots and README screenshot assets are deferred until:
 - More design-system components unless explicitly assigned.
 - Full UI redesign unless explicitly approved.
 - Animated random-picker wheel/canvas, weighted choices, saved choice lists, or picker history before a dedicated follow-up task is assigned.
+- Drift/SQLite reader storage, generic bookmarks, saved-article models, reading-progress offsets, or import/parser work before the Reader saved sample MVP or a user-assigned concrete alternative.
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
@@ -312,11 +318,11 @@ Current phase:
 
 Decision:
 
-- T90 completed the Reader text screen MVP. The next recommended task is a Library saved-content persistence audit.
+- T91 completed the Library saved-content persistence audit. The next recommended task is a Reader saved sample MVP.
 
 Do not enter yet:
 
-- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, persistence implementation, or broader feature implementation before the Library saved-content persistence audit or a user-assigned concrete alternative.
+- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, Drift/schema persistence, or broader feature implementation before the Reader saved sample MVP or a user-assigned concrete alternative.
 
 Reason:
 
@@ -329,6 +335,7 @@ Reason:
 - The T88 refresh gives Home a simple scroll-safe quick-actions surface while keeping Dashboard ownership, direct routes, logout, and the five-tab shell stable.
 - The T89 audit found Library still has no Reader/bookmark/saved-content route or module, so a single local Reader text screen is the smallest useful Library content-depth slice.
 - The T90 Reader MVP gives Library a real local reading surface; persistence and saved-content behavior should be audited before storage code is added.
+- The T91 audit found the app has no local database or multi-item Reader content yet, so one `shared_preferences`-backed saved state for the built-in sample is enough before Drift, generic bookmarks, saved articles, or reading-progress offsets.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -361,7 +368,8 @@ Exit criteria:
 - Done: Implemented the T88 Home dashboard quick actions refresh.
 - Done: Completed the T89 Library/Reader foundation audit and selected T90 as the next implementation slice.
 - Done: Implemented the T90 Reader text screen MVP.
-- Remaining: Run T91 Library saved-content persistence audit, or follow a user-assigned concrete alternative.
+- Done: Completed the T91 Library saved-content persistence audit and selected T92 as the next implementation slice.
+- Remaining: Implement T92 Reader saved sample MVP, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 
