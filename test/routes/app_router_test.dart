@@ -15,6 +15,7 @@ import 'package:infinity_world/features/fox/domain/fox_model.dart';
 import 'package:infinity_world/features/fox/presentation/fox_random_screen.dart';
 import 'package:infinity_world/features/profile/presentation/profile_screen.dart';
 import 'package:infinity_world/features/random_picker/presentation/random_picker_screen.dart';
+import 'package:infinity_world/features/reader/presentation/reader_screen.dart';
 import 'package:infinity_world/features/settings/presentation/settings_screen.dart';
 import 'package:infinity_world/features/summertime_saga/domain/smts_progress_model.dart';
 import 'package:infinity_world/features/summertime_saga/presentation/smts_home_screen.dart';
@@ -91,6 +92,13 @@ void main() {
     await tester.pumpWidget(_app(AppRoutes.randomPicker));
 
     expect(find.byType(RandomPickerScreen), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Reader route opens the Reader screen', (tester) async {
+    await tester.pumpWidget(_app(AppRoutes.reader));
+
+    expect(find.byType(ReaderScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
