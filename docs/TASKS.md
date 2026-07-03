@@ -60,6 +60,7 @@ Current architecture status:
 - Clock now lives under `lib/features/clock/`, has a direct `/clock` route, and is linked from Tools beside BMI.
 - `timezone` is a direct dependency only for Clock's `America/Los_Angeles` DST-correct time conversion.
 - Clock now includes a responsive `CustomPainter` analog face with numbered hour markers and live local-time hands.
+- T85 audited Home/Dashboard, Explore, Tools, Library, and direct module routes after the Clock slice; the next smallest useful local content-depth slice is a Tools random picker MVP.
 
 Current tests:
 
@@ -207,6 +208,7 @@ Completed stabilization tasks:
 - Phase 10 app content depth kickoff audit was completed; Home/Dashboard, Explore, Tools, Library, and direct module routes were reviewed, and the next smallest useful implementation slice is a Tools Clock time display MVP.
 - Clock time display MVP was completed; Tools now opens a simple Clock screen with device local time and DST-correct California time updating once per second, while analog/canvas drawing remains deferred until a reference image is provided.
 - Clock analog/canvas face follow-up was completed; the Clock screen now draws a theme-compatible analog clock with `CustomPainter` while keeping the existing digital local and California rows.
+- Next local utility/content-depth audit was completed; Tools remains the best low-risk Phase 10 surface, and a Random Picker MVP is the next smallest local utility slice.
 
 ## Recommended Next Work
 
@@ -223,28 +225,30 @@ Task sizing note:
 
 ### Primary
 
-T85 - Next local utility/content-depth audit
+T86 - Random Picker MVP
 
 Reason:
 
-- The Clock MVP and analog follow-up are complete.
-- Phase 10 should select the next smallest useful content-depth slice before implementation.
-- Keeps scope focused on small local app depth instead of public APIs, screenshots, release work, broad redesign, or architecture migration.
+- Adds another small useful local tool to make Tools more content-rich.
+- Fits the documented Wheel/random-picker direction without building a full animated wheel yet.
+- Avoids public APIs, persistence, screenshots, release work, new packages, and app-shell changes.
 
 Scope:
 
-- Review current Home/Dashboard, Explore, Tools, Library, and direct module routes after the Clock slice.
-- Identify the next smallest useful Phase 10 content-depth implementation slice.
-- Prefer a small local utility or content surface over external API work, screenshots, release work, persistence, or broad redesign.
+- Add a simple Random Picker tool using the existing feature/tool structure.
+- Let the user provide a small list of text options and pick one random result.
+- Add a Tools link/card/route to open the Random Picker screen.
+- Use existing app theme, typography, spacing, route style, and layout-safety rules.
+- Keep UI simple, scroll-safe, and keyboard-safe on common phone sizes.
+- Add focused widget coverage for rendering, validation, and deterministic picking where practical.
 
 Out of scope:
 
-- No implementation in the audit task unless a follow-up implementation task is assigned.
-- No screenshots/portfolio capture, Android build/toolchain changes, public API dependency, SQLite/persistence, dashboard redesign, broad Tools redesign, or Riverpod/go_router/Dio migration.
+- No animated spinning wheel, `CustomPainter` wheel face, weighted options, saved lists, history, SQLite/persistence, sounds, haptics, sharing, dashboard redesign, broad Tools redesign, screenshots/portfolio capture, Android build/toolchain changes, public API dependency, or Riverpod/go_router/Dio migration.
 
 Verification:
 
-- Audit/docs gate from `docs/qa/IW_GIT_WORKFLOW.md`: at minimum `git diff --check`.
+- Dart/routing gate from `docs/qa/IW_GIT_WORKFLOW.md`: `dart format <changed Dart files>`, `flutter analyze`, `flutter test`, `flutter build apk --debug`, and `git diff --check`.
 
 ### Alternatives
 
@@ -278,6 +282,7 @@ Portfolio screenshots and README screenshot assets are deferred until:
 - Real backend authentication.
 - More design-system components unless explicitly assigned.
 - Full UI redesign unless explicitly approved.
+- Animated random-picker wheel/canvas, weighted choices, saved choice lists, or picker history before the Random Picker MVP exists.
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
@@ -291,17 +296,18 @@ Current phase:
 
 Decision:
 
-- T84 completed the Clock analog/canvas follow-up. The next recommended task is an audit to select another small Phase 10 content-depth slice.
+- T85 completed the next local utility/content-depth audit. The next recommended task is a small Tools Random Picker MVP.
 
 Do not enter yet:
 
-- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, or broader feature implementation before T85 selects the next small Phase 10 content slice or the user assigns a concrete alternative.
+- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, or broader feature implementation before the Random Picker MVP or a user-assigned concrete alternative.
 
 Reason:
 
 - Phase 9 completed the useful QA/device readiness loop: automated Flutter gates passed during the phase, Android AVDs are available, the Pixel 6 emulator visual smoke review found no blocking layout failure across the checked startup/tab/module flows, the Local profile status-bar contrast follow-up is complete, and README current-state docs are refreshed.
 - Portfolio screenshots would mostly capture limited or placeholder surfaces today, so they are deferred until the app has richer public-facing content and stable visual polish.
 - The current Clock tool adds a small local Tools surface beside BMI with digital time rows and a `CustomPainter` analog face, without public APIs, persistence, dashboard redesign, shell routing, image assets, or portfolio screenshot work.
+- The T85 audit found Tools is still the smallest low-risk Phase 10 surface because it can add the documented Wheel/random-picker direction as a local MVP without public APIs, persistence, packages, or a broad redesign.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -328,7 +334,8 @@ Exit criteria:
 - Done: Completed the T82 Phase 10 app content depth kickoff audit and selected T83 as the next implementation slice.
 - Done: Implemented the T83 Clock time display MVP.
 - Done: Implemented the T84 Clock analog/canvas face follow-up.
-- Remaining: Run T85 to select another small Phase 10 content-depth slice, or follow a user-assigned concrete alternative.
+- Done: Completed the T85 next local utility/content-depth audit and selected T86 as the next implementation slice.
+- Remaining: Implement the T86 Random Picker MVP, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 
