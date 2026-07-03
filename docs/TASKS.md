@@ -1,6 +1,6 @@
 # Infinity World Active Tasks
 
-Last updated: 2026-07-03
+Last updated: 2026-07-04
 
 ## Current Status
 
@@ -62,6 +62,7 @@ Current architecture status:
 - Clock now includes a responsive `CustomPainter` analog face with numbered hour markers and live local-time hands.
 - T85 audited Home/Dashboard, Explore, Tools, Library, and direct module routes after the Clock slice; the next smallest useful local content-depth slice is a Tools random picker MVP.
 - Random Picker now lives under `lib/features/random_picker/`, has a direct `/random-picker` route, and is linked from Tools beside BMI and Clock.
+- T87 checkpoint confirmed Phase 10 should continue with a small Home/Dashboard quick-actions refresh before screenshots, Library/Reader foundation, or another new tool.
 
 Current tests:
 
@@ -213,6 +214,7 @@ Completed stabilization tasks:
 - Clock analog/canvas face follow-up was completed; the Clock screen now draws a theme-compatible analog clock with `CustomPainter` while keeping the existing digital local and California rows.
 - Next local utility/content-depth audit was completed; Tools remains the best low-risk Phase 10 surface, and a Random Picker MVP is the next smallest local utility slice.
 - Random Picker MVP was completed; Tools now opens a simple local picker that accepts one option per line, validates at least two choices, and selects a deterministic-testable random result without persistence or animation.
+- Phase 10 content-depth checkpoint audit was completed; Tools is now meaningfully useful with BMI, Clock, and Random Picker, while Home/Dashboard is still a bare legacy list and should receive the next small content-depth slice.
 
 ## Recommended Next Work
 
@@ -229,30 +231,36 @@ Task sizing note:
 
 ### Primary
 
-T87 - Phase 10 content-depth checkpoint audit
+T88 - Home dashboard quick actions refresh
 
 Reason:
 
-- Clock and Random Picker have added two useful local Tools surfaces after the Phase 10 kickoff.
-- The next step should reassess content depth before adding another module or starting screenshots.
-- Keeps screenshots, release work, persistence, public APIs, and broad redesign deferred until the checkpoint confirms they fit.
+- Home is still the first tab and still renders the older bare Dashboard list.
+- Tools now has enough local utility depth to surface as useful Home quick actions.
+- This improves first-screen content depth without creating a Home feature root, persistence, public APIs, screenshots, release work, or broad redesign.
 
 Scope:
 
-- Review Home/Dashboard, Explore, Tools, Library, and direct module routes after Clock and Random Picker.
-- Decide whether Phase 10 needs another small content slice, a Home/Dashboard depth slice, a Library/Reader foundation audit, or screenshot-prep criteria.
-- Update `docs/TASKS.md` with one next recommended task.
+- Keep the existing `DashboardScreen` as the Home tab body.
+- Refresh the Dashboard/Home body into simple scroll-safe sections using existing design-system components and tokens.
+- Surface existing useful modules as quick actions, especially BMI, Clock, Random Picker, Fox, and Summertime Saga.
+- Keep logout available.
+- Keep the direct route constants and existing route behavior stable.
+- Add or update focused Dashboard/Home widget coverage for the refreshed quick actions and small-screen scroll safety.
 
 Out of scope:
 
-- No implementation in the checkpoint task unless a follow-up implementation task is assigned.
-- No screenshots/portfolio capture, release work, Android build/toolchain changes, public API dependency, SQLite/persistence, dashboard redesign, broad Tools redesign, or Riverpod/go_router/Dio migration.
+- No new `features/home` root, Home persistence, recent-module tracking, pinned-module storage, SQLite/Drift, public API dependency, screenshot/portfolio capture, release work, Android build/toolchain changes, broad dashboard redesign, shell route migration, or Riverpod/go_router/Dio migration.
 
 Verification:
 
-- Audit/docs gate from `docs/qa/IW_GIT_WORKFLOW.md`: at minimum `git diff --check`.
+- Dart/routing gate from `docs/qa/IW_GIT_WORKFLOW.md`: `dart format <changed Dart files>`, `flutter analyze`, `flutter test`, `flutter build apk --debug`, and `git diff --check`.
 
 ### Alternatives
+
+T89 - Library/Reader foundation audit
+
+Choose this if the next content-depth step should move toward saved content or reading workflows instead of Home.
 
 T30 — Dependency/toolchain audit
 
@@ -298,11 +306,11 @@ Current phase:
 
 Decision:
 
-- T86 completed the Random Picker MVP. The next recommended task is a Phase 10 content-depth checkpoint audit.
+- T87 completed the Phase 10 content-depth checkpoint audit. The next recommended task is a small Home/Dashboard quick-actions refresh.
 
 Do not enter yet:
 
-- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, or broader feature implementation before T87 reassesses Phase 10 content depth or the user assigns a concrete alternative.
+- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, or broader feature implementation before the Home/Dashboard quick-actions refresh or a user-assigned concrete alternative.
 
 Reason:
 
@@ -311,6 +319,7 @@ Reason:
 - The current Clock tool adds a small local Tools surface beside BMI with digital time rows and a `CustomPainter` analog face, without public APIs, persistence, dashboard redesign, shell routing, image assets, or portfolio screenshot work.
 - The T85 audit found Tools is still the smallest low-risk Phase 10 surface because it can add the documented Wheel/random-picker direction as a local MVP without public APIs, persistence, packages, or a broad redesign.
 - The Random Picker MVP adds that local tool without animated wheel/canvas work, saved lists, history, packages, persistence, or broader routing changes.
+- The T87 checkpoint found Tools is now meaningfully useful, but Home still presents a bare legacy Dashboard list and should surface existing useful modules before screenshots or a broader Home migration.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -339,7 +348,8 @@ Exit criteria:
 - Done: Implemented the T84 Clock analog/canvas face follow-up.
 - Done: Completed the T85 next local utility/content-depth audit and selected T86 as the next implementation slice.
 - Done: Implemented the T86 Random Picker MVP.
-- Remaining: Run T87 to checkpoint Phase 10 content depth, or follow a user-assigned concrete alternative.
+- Done: Completed the T87 Phase 10 content-depth checkpoint audit and selected T88 as the next implementation slice.
+- Remaining: Implement the T88 Home dashboard quick actions refresh, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 
