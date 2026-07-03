@@ -10,4 +10,5 @@ class AppRoutes {
   static const String fox = '/fox';
   static const String bmi = '/bmi';
   static const String clock = '/clock';
+  static const String randomPicker = '/random-picker';
 }

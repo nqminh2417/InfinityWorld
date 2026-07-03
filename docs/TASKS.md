@@ -61,6 +61,7 @@ Current architecture status:
 - `timezone` is a direct dependency only for Clock's `America/Los_Angeles` DST-correct time conversion.
 - Clock now includes a responsive `CustomPainter` analog face with numbered hour markers and live local-time hands.
 - T85 audited Home/Dashboard, Explore, Tools, Library, and direct module routes after the Clock slice; the next smallest useful local content-depth slice is a Tools random picker MVP.
+- Random Picker now lives under `lib/features/random_picker/`, has a direct `/random-picker` route, and is linked from Tools beside BMI and Clock.
 
 Current tests:
 
@@ -87,6 +88,8 @@ Current tests:
 - Clock domain coverage exists for `HH:mm:ss` formatting and California winter/summer DST offsets.
 - Clock presentation widget coverage exists for local/California digital time rows, the analog clock widget, once-per-second updates, scroll-safe layout, and ticker disposal.
 - Tools presentation widget coverage exists for Clock route navigation.
+- Random Picker presentation widget coverage exists for scroll-safe rendering, validation, and deterministic picking.
+- Tools presentation widget coverage exists for Random Picker route navigation.
 - Explore presentation widget coverage exists for small-screen scroll safety and fake-route navigation to Fox and Summertime Saga.
 - Library presentation widget coverage exists for small-screen scroll safety and empty-state rendering.
 - No Home feature-root tests exist yet because the Home tab still uses the existing Dashboard screen.
@@ -209,6 +212,7 @@ Completed stabilization tasks:
 - Clock time display MVP was completed; Tools now opens a simple Clock screen with device local time and DST-correct California time updating once per second, while analog/canvas drawing remains deferred until a reference image is provided.
 - Clock analog/canvas face follow-up was completed; the Clock screen now draws a theme-compatible analog clock with `CustomPainter` while keeping the existing digital local and California rows.
 - Next local utility/content-depth audit was completed; Tools remains the best low-risk Phase 10 surface, and a Random Picker MVP is the next smallest local utility slice.
+- Random Picker MVP was completed; Tools now opens a simple local picker that accepts one option per line, validates at least two choices, and selects a deterministic-testable random result without persistence or animation.
 
 ## Recommended Next Work
 
@@ -225,30 +229,28 @@ Task sizing note:
 
 ### Primary
 
-T86 - Random Picker MVP
+T87 - Phase 10 content-depth checkpoint audit
 
 Reason:
 
-- Adds another small useful local tool to make Tools more content-rich.
-- Fits the documented Wheel/random-picker direction without building a full animated wheel yet.
-- Avoids public APIs, persistence, screenshots, release work, new packages, and app-shell changes.
+- Clock and Random Picker have added two useful local Tools surfaces after the Phase 10 kickoff.
+- The next step should reassess content depth before adding another module or starting screenshots.
+- Keeps screenshots, release work, persistence, public APIs, and broad redesign deferred until the checkpoint confirms they fit.
 
 Scope:
 
-- Add a simple Random Picker tool using the existing feature/tool structure.
-- Let the user provide a small list of text options and pick one random result.
-- Add a Tools link/card/route to open the Random Picker screen.
-- Use existing app theme, typography, spacing, route style, and layout-safety rules.
-- Keep UI simple, scroll-safe, and keyboard-safe on common phone sizes.
-- Add focused widget coverage for rendering, validation, and deterministic picking where practical.
+- Review Home/Dashboard, Explore, Tools, Library, and direct module routes after Clock and Random Picker.
+- Decide whether Phase 10 needs another small content slice, a Home/Dashboard depth slice, a Library/Reader foundation audit, or screenshot-prep criteria.
+- Update `docs/TASKS.md` with one next recommended task.
 
 Out of scope:
 
-- No animated spinning wheel, `CustomPainter` wheel face, weighted options, saved lists, history, SQLite/persistence, sounds, haptics, sharing, dashboard redesign, broad Tools redesign, screenshots/portfolio capture, Android build/toolchain changes, public API dependency, or Riverpod/go_router/Dio migration.
+- No implementation in the checkpoint task unless a follow-up implementation task is assigned.
+- No screenshots/portfolio capture, release work, Android build/toolchain changes, public API dependency, SQLite/persistence, dashboard redesign, broad Tools redesign, or Riverpod/go_router/Dio migration.
 
 Verification:
 
-- Dart/routing gate from `docs/qa/IW_GIT_WORKFLOW.md`: `dart format <changed Dart files>`, `flutter analyze`, `flutter test`, `flutter build apk --debug`, and `git diff --check`.
+- Audit/docs gate from `docs/qa/IW_GIT_WORKFLOW.md`: at minimum `git diff --check`.
 
 ### Alternatives
 
@@ -282,7 +284,7 @@ Portfolio screenshots and README screenshot assets are deferred until:
 - Real backend authentication.
 - More design-system components unless explicitly assigned.
 - Full UI redesign unless explicitly approved.
-- Animated random-picker wheel/canvas, weighted choices, saved choice lists, or picker history before the Random Picker MVP exists.
+- Animated random-picker wheel/canvas, weighted choices, saved choice lists, or picker history before a dedicated follow-up task is assigned.
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
@@ -296,11 +298,11 @@ Current phase:
 
 Decision:
 
-- T85 completed the next local utility/content-depth audit. The next recommended task is a small Tools Random Picker MVP.
+- T86 completed the Random Picker MVP. The next recommended task is a Phase 10 content-depth checkpoint audit.
 
 Do not enter yet:
 
-- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, or broader feature implementation before the Random Picker MVP or a user-assigned concrete alternative.
+- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, or broader feature implementation before T87 reassesses Phase 10 content depth or the user assigns a concrete alternative.
 
 Reason:
 
@@ -308,6 +310,7 @@ Reason:
 - Portfolio screenshots would mostly capture limited or placeholder surfaces today, so they are deferred until the app has richer public-facing content and stable visual polish.
 - The current Clock tool adds a small local Tools surface beside BMI with digital time rows and a `CustomPainter` analog face, without public APIs, persistence, dashboard redesign, shell routing, image assets, or portfolio screenshot work.
 - The T85 audit found Tools is still the smallest low-risk Phase 10 surface because it can add the documented Wheel/random-picker direction as a local MVP without public APIs, persistence, packages, or a broad redesign.
+- The Random Picker MVP adds that local tool without animated wheel/canvas work, saved lists, history, packages, persistence, or broader routing changes.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -335,7 +338,8 @@ Exit criteria:
 - Done: Implemented the T83 Clock time display MVP.
 - Done: Implemented the T84 Clock analog/canvas face follow-up.
 - Done: Completed the T85 next local utility/content-depth audit and selected T86 as the next implementation slice.
-- Remaining: Implement the T86 Random Picker MVP, or follow a user-assigned concrete alternative.
+- Done: Implemented the T86 Random Picker MVP.
+- Remaining: Run T87 to checkpoint Phase 10 content depth, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 

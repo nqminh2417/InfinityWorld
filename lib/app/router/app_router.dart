@@ -10,6 +10,7 @@ import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.
 import 'package:infinity_world/features/fox/application/fox_providers.dart';
 import 'package:infinity_world/features/fox/presentation/fox_random_screen.dart';
 import 'package:infinity_world/features/profile/presentation/profile_screen.dart';
+import 'package:infinity_world/features/random_picker/presentation/random_picker_screen.dart';
 import 'package:infinity_world/features/settings/presentation/settings_screen.dart';
 import 'package:infinity_world/features/summertime_saga/application/smts_providers.dart';
 import 'package:infinity_world/features/summertime_saga/presentation/smts_home_screen.dart';
@@ -104,6 +105,12 @@ GoRouter createAppRouter({
         path: AppRoutes.clock,
         builder: (BuildContext context, GoRouterState state) {
           return const ClockScreen();
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.randomPicker,
+        builder: (BuildContext context, GoRouterState state) {
+          return const RandomPickerScreen();
         },
       ),
     ],
