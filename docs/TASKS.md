@@ -70,6 +70,7 @@ Current architecture status:
 - T91 confirmed the next smallest Library persistence slice should save only the built-in Reader sample state with the existing `shared_preferences` pattern before any Drift/schema/bookmark model work.
 - Reader saved-sample state now lives under `lib/features/reader/application/`, uses `shared_preferences`, and is consumed by Reader and Library.
 - T93 checkpoint confirmed Phase 10 should continue with a small Explore content refresh before screenshots or deeper Reader persistence because Explore remains the thinnest main tab surface after the Tools, Home/Dashboard, and Library updates.
+- Explore now has richer static Fox / Summertime Saga module cards while keeping live network work inside the destination screens.
 
 Current tests:
 
@@ -107,6 +108,7 @@ Current tests:
 - Reader presentation widget coverage exists for saving and removing the built-in sample.
 - Library presentation widget coverage exists for saved and unsaved Reader sample states.
 - No new app tests were added for T93 because it was an audit/docs-only checkpoint.
+- Explore presentation widget coverage now verifies the refreshed static content, small-screen scrolling, and existing Fox / Summertime Saga route taps.
 - No Home feature-root tests exist yet because the Home tab still uses the existing Dashboard screen.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
@@ -235,6 +237,7 @@ Completed stabilization tasks:
 - Library saved-content persistence audit was completed; the smallest useful next slice is saving/removing the built-in Reader sample with the existing `shared_preferences` pattern, not adding Drift, generic bookmarks, saved articles, or reading-progress offsets yet.
 - Reader saved sample MVP was completed; the built-in sample can now be saved/removed through Reader and reflected in Library using `shared_preferences`, without Drift, generic bookmarks, saved articles, imports, or progress offsets.
 - T93 Phase 10 content-depth checkpoint audit was completed; Tools now has three useful local utilities, Home/Dashboard surfaces those modules as quick actions, and Library has a persisted Reader sample signal. Explore is now the best next small content-depth surface because it still has only two simple module launch cards.
+- Explore content cards refresh was completed; Explore now has richer entry cards for Random Fox and Summertime Saga, without loading API data from the tab, adding routes, adding packages, changing persistence, or redesigning the shell.
 
 ## Recommended Next Work
 
@@ -251,35 +254,33 @@ Task sizing note:
 
 ### Primary
 
-T94 - Explore content cards refresh
+T95 - Reader next-step audit
 
 Reason:
 
-- Explore is now the thinnest main tab surface after the Phase 10 Tools, Home/Dashboard, and Library slices.
-- A small static content refresh can make existing Fox and Summertime Saga entry points more scannable without loading API data from the tab.
-- This keeps scope smaller than RSS/news foundation, deeper Reader persistence, screenshots, release work, or a broader tab redesign.
+- Phase 10 now has useful content-depth slices across Tools, Home/Dashboard, Explore, and Library.
+- Library/Reader has only one built-in sample with saved/unsaved state, so the next Reader move should be audited before adding progress, bookmarks, settings, or more content.
+- An audit keeps scope smaller than implementing deeper persistence, starting screenshots, or adding RSS/news/API work.
 
 Scope:
 
-- Refresh `lib/features/explore/presentation/explore_screen.dart` with higher-signal cards or lightweight static content for the existing Fox and Summertime Saga modules.
-- Keep the Explore tab network-free; existing feature screens should still load data only after navigation.
-- Preserve current routes, shell behavior, and direct module screens.
-- Update focused Explore widget coverage for the refreshed content and existing route taps.
+- Review current Library, Reader, saved-sample provider, tests, and direct `/reader` route.
+- Decide the smallest useful Reader follow-up or confirm that screenshots/readiness prep should come first.
+- Update `docs/TASKS.md` with exactly one next recommended task.
 
 Out of scope:
 
-- No RSS/news foundation, new public API work, live network loading from the Explore tab, new routes, new packages, persistence, screenshot capture, release work, Android build/toolchain changes, broad redesign, shell route migration, or Riverpod/go_router/Dio migration.
+- No feature implementation, Drift/SQLite schema, generic bookmark model, saved articles, imports/downloads, parser work, reader settings implementation, reading-progress persistence, screenshot capture, release work, Android build/toolchain changes, broad redesign, shell route migration, or Riverpod/go_router/Dio migration.
 
 Verification:
 
-- Dart/UI gate from `docs/qa/IW_GIT_WORKFLOW.md`: `dart format <changed Dart files>`, `flutter analyze`, `flutter test`, and `git diff --check`.
-- Run `flutter build apk --debug` only if the implementation changes routing, startup, or build-impacting code.
+- Audit/docs gate from `docs/qa/IW_GIT_WORKFLOW.md`: at minimum `git diff --check`.
 
 ### Alternatives
 
-T95 - Reader next-step audit
+Portfolio screenshot readiness audit
 
-Choose this if Library/Reader should continue immediately with reading progress, more sample content, bookmark semantics, or reader settings before reassessing broader Phase 10.
+Choose this if the user wants to check whether the refreshed Phase 10 surfaces are now ready for screenshot prep before another Reader slice.
 
 T30 — Dependency/toolchain audit
 
@@ -287,7 +288,7 @@ Choose this if package/build risk should be reviewed before the next content-dep
 
 Portfolio screenshot capture prep
 
-Choose this only after Explore is no longer a thin first-pass tab and the app has enough public-facing content to make screenshots useful.
+Choose this only after a readiness audit confirms the app has enough public-facing content to make screenshots useful.
 
 ### Portfolio screenshot deferral
 
@@ -312,8 +313,8 @@ Portfolio screenshots and README screenshot assets are deferred until:
 - More design-system components unless explicitly assigned.
 - Full UI redesign unless explicitly approved.
 - Animated random-picker wheel/canvas, weighted choices, saved choice lists, or picker history before a dedicated follow-up task is assigned.
-- Drift/SQLite reader storage, generic bookmarks, saved-article models, reading-progress offsets, or import/parser work before an assigned Reader follow-up task.
-- RSS/news foundation, public API expansion, or Explore live-network loading before the small Explore content refresh is complete or explicitly replaced.
+- Drift/SQLite reader storage, generic bookmarks, saved-article models, reading-progress offsets, reader settings implementation, or import/parser work before the Reader next-step audit or a user-assigned concrete alternative.
+- RSS/news foundation, public API expansion, or Explore live-network loading before a dedicated Explore/RSS task is assigned.
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
@@ -327,11 +328,11 @@ Current phase:
 
 Decision:
 
-- T93 completed the Phase 10 content-depth checkpoint audit. The next recommended task is T94 - Explore content cards refresh.
+- T94 completed the Explore content cards refresh. The next recommended task is T95 - Reader next-step audit.
 
 Do not enter yet:
 
-- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, Drift/schema persistence, RSS/news/API expansion, or broader feature implementation before the small Explore refresh or a user-assigned concrete alternative.
+- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, Drift/schema persistence, RSS/news/API expansion, or broader feature implementation before the Reader next-step audit or a user-assigned concrete alternative.
 
 Reason:
 
@@ -347,6 +348,7 @@ Reason:
 - The T91 audit found the app has no local database or multi-item Reader content yet, so one `shared_preferences`-backed saved state for the built-in sample is enough before Drift, generic bookmarks, saved articles, or reading-progress offsets.
 - The T92 saved sample MVP gave Library a first persisted content signal, which made T93 the right checkpoint before adding more Reader or content-depth implementation.
 - The T93 checkpoint found Tools, Home/Dashboard, and Library now have useful Phase 10 content-depth slices, while Explore still only offers two simple launch cards. A small Explore refresh is the least risky next content-depth step before screenshots, RSS/news, or deeper Reader persistence.
+- The T94 Explore refresh gives the Explore tab richer static content without moving network work into the tab, so the next content-depth decision can return to Reader/Library before deeper persistence or screenshot prep.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -382,7 +384,8 @@ Exit criteria:
 - Done: Completed the T91 Library saved-content persistence audit and selected T92 as the next implementation slice.
 - Done: Implemented the T92 Reader saved sample MVP.
 - Done: Completed the T93 Phase 10 content-depth checkpoint audit and selected T94 as the next implementation slice.
-- Remaining: Run T94 Explore content cards refresh, or follow a user-assigned concrete alternative.
+- Done: Implemented the T94 Explore content cards refresh.
+- Remaining: Run T95 Reader next-step audit, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 

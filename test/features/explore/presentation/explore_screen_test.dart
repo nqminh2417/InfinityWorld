@@ -20,9 +20,19 @@ void main() {
       findsOneWidget,
     );
     expect(find.byType(ListView), findsOneWidget);
-    expect(find.byType(IwCard), findsNWidgets(2));
+    expect(find.byType(IwCard), findsWidgets);
+    expect(find.text('Discovery modules'), findsOneWidget);
+    expect(find.text('Highlights'), findsOneWidget);
     expect(find.text('Random Fox'), findsOneWidget);
+    expect(find.text('Image discovery'), findsOneWidget);
+    expect(find.text('External API'), findsOneWidget);
+
+    await tester.scrollUntilVisible(find.text('Summertime Saga'), 120);
+
     expect(find.text('Summertime Saga'), findsOneWidget);
+    expect(find.text('Progress tracker'), findsOneWidget);
+    expect(find.text('Tracker'), findsOneWidget);
+    expect(find.text('Loads after open'), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 
@@ -31,6 +41,7 @@ void main() {
   ) async {
     await tester.pumpWidget(_exploreApp());
 
+    await tester.ensureVisible(find.text('Random Fox'));
     await tester.tap(find.text('Random Fox'));
     await tester.pumpAndSettle();
 
@@ -43,6 +54,7 @@ void main() {
   ) async {
     await tester.pumpWidget(_exploreApp());
 
+    await tester.ensureVisible(find.text('Summertime Saga'));
     await tester.tap(find.text('Summertime Saga'));
     await tester.pumpAndSettle();
 
