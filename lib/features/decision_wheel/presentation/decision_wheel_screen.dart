@@ -12,6 +12,14 @@ typedef DecisionWheelShuffleOptions =
 
 const _spinDuration = Duration(milliseconds: 1600);
 const _segmentStartAngle = -math.pi / 2;
+const _decisionWheelPalette = [
+  Color(0xFF2F6FEF),
+  Color(0xFFE71D36),
+  Color(0xFFF7C62F),
+  Color(0xFF16A34A),
+  Color(0xFF6B5BFF),
+  Color(0xFF4CC2FF),
+];
 
 int _systemPickIndex(int optionCount) => math.Random().nextInt(optionCount);
 
@@ -237,121 +245,125 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
         _selectedIndex != null && _selectedIndex! < options.length
             ? _selectedIndex
             : null;
-    final pointerColor = _segmentColor(
+    final pointerColor = decisionWheelSegmentColor(
       _isSpinning ? activeIndex ?? 0 : selectedIndex ?? activeIndex ?? 0,
+      options.length,
     );
 
     return Scaffold(
       appBar: AppBar(title: const Text('Decision Wheel')),
       body: SafeArea(
         top: false,
-        child: SingleChildScrollView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          padding: const EdgeInsets.all(IwSpacing.screenPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Spin a decision',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: IwSpacing.space8),
-              Text(
-                'Add one option per line, then spin the wheel locally.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: IwColors.textSecondary(brightness),
-                ),
-              ),
-              const SizedBox(height: IwSpacing.space16),
-              Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 430),
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: DecisionWheelFace(
-                      options: options,
-                      rotationTurns: _rotationTurns,
-                      pointerColor: pointerColor,
-                      activeIndex: activeIndex,
-                      selectedIndex: selectedIndex,
-                      onSpin: _spin,
-                      enabled: !_isSpinning,
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              padding: const EdgeInsets.all(IwSpacing.screenPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Spin a decision',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: IwSpacing.space8),
+                  Text(
+                    'Add one option per line, then spin the wheel locally.',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: IwColors.textSecondary(brightness),
                     ),
                   ),
-                ),
-              ),
-              if (_selectedOption != null && selectedIndex != null) ...[
-                const SizedBox(height: IwSpacing.space16),
-                _DecisionResultCard(
-                  option: _selectedOption!,
-                  color: _segmentColor(selectedIndex),
-                  onCancel: _cancelResult,
-                  onRemove: _removeSelectedOption,
-                ),
-              ],
-              const SizedBox(height: IwSpacing.space16),
-              IwCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      'Entries',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: IwSpacing.space8),
-                    Wrap(
-                      spacing: IwSpacing.space8,
-                      runSpacing: IwSpacing.space8,
-                      children: [
-                        OutlinedButton.icon(
-                          onPressed: _isSpinning ? null : _shuffleEntries,
-                          icon: const Icon(Icons.shuffle_rounded),
-                          label: const Text('Shuffle'),
+                  const SizedBox(height: IwSpacing.space16),
+                  Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 430),
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: DecisionWheelFace(
+                          options: options,
+                          rotationTurns: _rotationTurns,
+                          pointerColor: pointerColor,
+                          activeIndex: activeIndex,
+                          selectedIndex: selectedIndex,
+                          onSpin: _spin,
+                          enabled: !_isSpinning,
                         ),
-                        OutlinedButton.icon(
-                          onPressed: _isSpinning ? null : _sortEntries,
-                          icon: const Icon(Icons.sort_by_alpha_rounded),
-                          label: const Text('Sort'),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: IwSpacing.space16),
+                  IwCard(
+                    key: const ValueKey('decision-wheel-entries-card'),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Entries',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(height: IwSpacing.space8),
+                        Wrap(
+                          spacing: IwSpacing.space8,
+                          runSpacing: IwSpacing.space8,
+                          children: [
+                            OutlinedButton.icon(
+                              onPressed: _isSpinning ? null : _shuffleEntries,
+                              icon: const Icon(Icons.shuffle_rounded),
+                              label: const Text('Shuffle'),
+                            ),
+                            OutlinedButton.icon(
+                              onPressed: _isSpinning ? null : _sortEntries,
+                              icon: const Icon(Icons.sort_by_alpha_rounded),
+                              label: const Text('Sort'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: IwSpacing.space12),
+                        TextField(
+                          controller: _optionsController,
+                          enabled: !_isSpinning,
+                          minLines: 5,
+                          maxLines: 8,
+                          keyboardType: TextInputType.multiline,
+                          textInputAction: TextInputAction.newline,
+                          decoration: InputDecoration(
+                            alignLabelWithHint: true,
+                            border: const OutlineInputBorder(),
+                            errorText: _errorText,
+                            hintText: 'Movie\nPizza\nStudy',
+                            labelText: 'One entry per line',
+                          ),
+                          onChanged: (_) {
+                            setState(() {
+                              _selectedOption = null;
+                              _selectedIndex = null;
+                              _errorText = null;
+                            });
+                          },
                         ),
                       ],
                     ),
-                    const SizedBox(height: IwSpacing.space12),
-                    TextField(
-                      controller: _optionsController,
-                      enabled: !_isSpinning,
-                      minLines: 5,
-                      maxLines: 8,
-                      keyboardType: TextInputType.multiline,
-                      textInputAction: TextInputAction.newline,
-                      decoration: InputDecoration(
-                        alignLabelWithHint: true,
-                        border: const OutlineInputBorder(),
-                        errorText: _errorText,
-                        hintText: 'Movie\nPizza\nStudy',
-                        labelText: 'One entry per line',
-                      ),
-                      onChanged: (_) {
-                        setState(() {
-                          _selectedOption = null;
-                          _selectedIndex = null;
-                          _errorText = null;
-                        });
-                      },
-                    ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+            if (_selectedOption != null && selectedIndex != null)
+              Positioned(
+                left: IwSpacing.screenPadding,
+                right: IwSpacing.screenPadding,
+                top: IwSpacing.space16,
+                child: _DecisionResultCard(
+                  key: const ValueKey('decision-wheel-result-overlay'),
+                  option: _selectedOption!,
+                  color: decisionWheelSegmentColor(
+                    selectedIndex,
+                    options.length,
+                  ),
+                  onCancel: _cancelResult,
+                  onRemove: _removeSelectedOption,
                 ),
               ),
-              const SizedBox(height: IwSpacing.space16),
-              SizedBox(
-                height: 52,
-                child: ElevatedButton.icon(
-                  onPressed: _isSpinning ? null : _spin,
-                  icon: const Icon(Icons.casino_rounded),
-                  label: Text(_isSpinning ? 'Spinning...' : 'Spin'),
-                ),
-              ),
-            ],
-          ),
+          ],
         ),
       ),
     );
@@ -380,23 +392,42 @@ class DecisionWheelFace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: 'Spin decision wheel',
-      child: GestureDetector(
-        onTap: enabled ? onSpin : null,
-        child: CustomPaint(
-          painter: DecisionWheelPainter(
-            options: options,
-            rotationTurns: rotationTurns,
-            pointerColor: pointerColor,
-            activeIndex: activeIndex,
-            selectedIndex: selectedIndex,
-            brightness: Theme.of(context).brightness,
-            textStyle: Theme.of(context).textTheme.labelLarge,
-          ),
-        ),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final side = math.min(constraints.maxWidth, constraints.maxHeight);
+        final centerTargetSize =
+            math.max(72.0, side * 0.24).clamp(72.0, 116.0).toDouble();
+
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            CustomPaint(
+              painter: DecisionWheelPainter(
+                options: options,
+                rotationTurns: rotationTurns,
+                pointerColor: pointerColor,
+                activeIndex: activeIndex,
+                selectedIndex: selectedIndex,
+                brightness: Theme.of(context).brightness,
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+            ),
+            Center(
+              child: Semantics(
+                button: true,
+                label: 'Spin decision wheel',
+                enabled: enabled,
+                child: GestureDetector(
+                  key: const ValueKey('decision-wheel-center-spin-button'),
+                  behavior: HitTestBehavior.opaque,
+                  onTap: enabled ? onSpin : null,
+                  child: SizedBox.square(dimension: centerTargetSize),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -459,8 +490,9 @@ class DecisionWheelPainter extends CustomPainter {
     for (var index = 0; index < options.length; index += 1) {
       final isSelected = selectedIndex == index;
       final isActive = activeIndex == index;
-      fillPaint.color = _segmentColor(
+      fillPaint.color = decisionWheelSegmentColor(
         index,
+        options.length,
       ).withValues(alpha: selectedIndex != null && !isSelected ? 0.38 : 0.96);
       canvas.drawArc(
         rect,
@@ -502,8 +534,8 @@ class DecisionWheelPainter extends CustomPainter {
 
     canvas.drawCircle(center, radius, borderPaint);
     _paintSegmentLabels(canvas, center, radius, segmentAngle, rotationRadians);
-    _paintPointer(canvas, center, radius);
     _paintCenter(canvas, center, radius);
+    _paintPointer(canvas, center, radius);
   }
 
   void _paintSegmentLabels(
@@ -521,7 +553,9 @@ class DecisionWheelPainter extends CustomPainter {
       final angle =
           _segmentStartAngle + rotationRadians + segmentAngle * (index + 0.5);
       final textColor =
-          ThemeData.estimateBrightnessForColor(_segmentColor(index)) ==
+          ThemeData.estimateBrightnessForColor(
+                    decisionWheelSegmentColor(index, options.length),
+                  ) ==
                   Brightness.dark
               ? Colors.white
               : const Color(0xFF101827);
@@ -554,15 +588,21 @@ class DecisionWheelPainter extends CustomPainter {
         Paint()
           ..color = pointerColor
           ..style = PaintingStyle.fill;
+    final outlinePaint =
+        Paint()
+          ..color = Colors.white.withValues(alpha: 0.88)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.5;
     final pointerPath =
         Path()
-          ..moveTo(center.dx + radius - 10, center.dy)
-          ..lineTo(center.dx + radius + 18, center.dy - 16)
-          ..lineTo(center.dx + radius + 18, center.dy + 16)
+          ..moveTo(center.dx + radius - 3, center.dy)
+          ..lineTo(center.dx + radius + 26, center.dy - 17)
+          ..lineTo(center.dx + radius + 26, center.dy + 17)
           ..close();
 
-    canvas.drawShadow(pointerPath, Colors.black, 3, true);
+    canvas.drawShadow(pointerPath, Colors.black, 5, true);
     canvas.drawPath(pointerPath, pointerPaint);
+    canvas.drawPath(pointerPath, outlinePaint);
   }
 
   void _paintCenter(Canvas canvas, Offset center, double radius) {
@@ -637,6 +677,7 @@ class _DecisionResultCard extends StatelessWidget {
   final VoidCallback onRemove;
 
   const _DecisionResultCard({
+    super.key,
     required this.option,
     required this.color,
     required this.onCancel,
@@ -719,15 +760,15 @@ class _DecisionResultCard extends StatelessWidget {
   }
 }
 
-Color _segmentColor(int index) {
-  const referencePalette = [
-    Color(0xFF2F6FEF),
-    Color(0xFFE71D36),
-    Color(0xFFF7C62F),
-    Color(0xFF16A34A),
-    Color(0xFF6B5BFF),
-    Color(0xFF4CC2FF),
-  ];
+Color decisionWheelSegmentColor(int index, int optionCount) {
+  if (optionCount <= 0) {
+    return _decisionWheelPalette.first;
+  }
 
-  return referencePalette[index % referencePalette.length];
+  final paletteIndex = index % _decisionWheelPalette.length;
+  if (optionCount > 1 && index == optionCount - 1 && paletteIndex == 0) {
+    return _decisionWheelPalette[1];
+  }
+
+  return _decisionWheelPalette[paletteIndex];
 }

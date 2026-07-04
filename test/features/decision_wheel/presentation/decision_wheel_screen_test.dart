@@ -25,10 +25,11 @@ void main() {
     expect(find.text('Spin a decision'), findsOneWidget);
     expect(find.text('Shuffle'), findsOneWidget);
     expect(find.text('Sort'), findsOneWidget);
+    expect(find.widgetWithText(ElevatedButton, 'Spin'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Decision Wheel shows the selected option after spinning', (
+  testWidgets('Decision Wheel center spin shows result overlay', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -36,10 +37,23 @@ void main() {
     );
 
     await tester.enterText(find.byType(TextField), 'Alpha\nBeta\nGamma');
-    await tester.ensureVisible(find.text('Spin'));
-    await tester.tap(find.text('Spin'));
+    final spinButton = find.byKey(
+      const ValueKey('decision-wheel-center-spin-button'),
+    );
+    await tester.ensureVisible(spinButton);
+    await tester.pump();
+    await tester.tap(spinButton);
     await tester.pumpAndSettle();
 
+    expect(
+      find.byKey(const ValueKey('decision-wheel-result-overlay')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('decision-wheel-entries-card')),
+      findsOneWidget,
+    );
+    expect(find.text('Entries'), findsOneWidget);
     expect(find.text('Selected option'), findsOneWidget);
     expect(find.text('Beta'), findsOneWidget);
     expect(find.text('Cancel'), findsOneWidget);
@@ -55,8 +69,12 @@ void main() {
     );
 
     await tester.enterText(find.byType(TextField), 'Alpha\nBeta\nGamma');
-    await tester.ensureVisible(find.text('Spin'));
-    await tester.tap(find.text('Spin'));
+    final spinButton = find.byKey(
+      const ValueKey('decision-wheel-center-spin-button'),
+    );
+    await tester.ensureVisible(spinButton);
+    await tester.pump();
+    await tester.tap(spinButton);
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Remove'));
@@ -101,12 +119,34 @@ void main() {
     );
 
     await tester.enterText(find.byType(TextField), 'Only one');
-    await tester.ensureVisible(find.text('Spin'));
-    await tester.tap(find.text('Spin'));
+    final spinButton = find.byKey(
+      const ValueKey('decision-wheel-center-spin-button'),
+    );
+    await tester.ensureVisible(spinButton);
+    await tester.pump();
+    await tester.tap(spinButton);
     await tester.pump();
 
     expect(find.text('Add at least two options.'), findsOneWidget);
     expect(find.text('Selected option'), findsNothing);
     expect(tester.takeException(), isNull);
+  });
+
+  test('Decision Wheel segment colors avoid adjacent duplicates', () {
+    for (final optionCount in [2, 3, 6, 7, 8, 12, 13, 19]) {
+      final colors = List.generate(
+        optionCount,
+        (index) => decisionWheelSegmentColor(index, optionCount),
+      );
+
+      for (var index = 0; index < colors.length; index += 1) {
+        final nextColor = colors[(index + 1) % colors.length];
+        expect(
+          colors[index],
+          isNot(nextColor),
+          reason: 'optionCount=$optionCount index=$index',
+        );
+      }
+    }
   });
 }
