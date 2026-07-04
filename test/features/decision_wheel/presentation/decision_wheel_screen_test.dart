@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:infinity_world/features/decision_wheel/presentation/decision_wheel_screen.dart';
 
@@ -176,6 +177,61 @@ void main() {
     expect(find.text('Beta'), findsOneWidget);
     expect(find.text('Clear history'), findsOneWidget);
     expect(find.text('Close'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Decision Wheel history item copies selected option', (
+    tester,
+  ) async {
+    final clipboardCalls = <MethodCall>[];
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    messenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+      clipboardCalls.add(call);
+      return null;
+    });
+    addTearDown(() {
+      messenger.setMockMethodCallHandler(SystemChannels.platform, null);
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(home: DecisionWheelScreen(pickIndex: (_) => 1)),
+    );
+
+    await tester.enterText(find.byType(TextField), 'Alpha\nBeta\nGamma');
+    final spinButton = find.byKey(
+      const ValueKey('decision-wheel-center-spin-button'),
+    );
+    await tester.ensureVisible(spinButton);
+    await tester.pump();
+    await tester.tap(spinButton);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    final historyButton = find.widgetWithText(OutlinedButton, 'History');
+    await tester.ensureVisible(historyButton);
+    await tester.pump();
+    await tester.tap(historyButton);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Beta'), findsOneWidget);
+    expect(find.text('Spin #1'), findsOneWidget);
+
+    final copyButton = find.byTooltip('Copy result');
+    expect(copyButton, findsOneWidget);
+    await tester.tap(copyButton);
+    await tester.pump();
+
+    expect(
+      clipboardCalls.any(
+        (call) =>
+            call.method == 'Clipboard.setData' &&
+            (call.arguments as Map<Object?, Object?>)['text'] == 'Beta',
+      ),
+      isTrue,
+    );
+    expect(find.text('Copied to clipboard'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

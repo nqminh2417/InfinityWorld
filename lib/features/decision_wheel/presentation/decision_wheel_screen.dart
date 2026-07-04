@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/design_system/tokens/iw_colors.dart';
 import 'package:infinity_world/design_system/tokens/iw_radius.dart';
@@ -14,7 +15,7 @@ const _spinDuration = Duration(milliseconds: 1600);
 const _segmentStartAngle = -math.pi / 2;
 const _historySheetMaxScreenFraction = 0.55;
 const _historyVisibleItemLimit = 5;
-const _historyItemHeight = 31.0;
+const _historyItemHeight = 37.0;
 const _decisionWheelPalette = [
   Color(0xFF2F6FEF),
   Color(0xFFE71D36),
@@ -287,7 +288,7 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                     IwSpacing.cardPadding,
                     0,
                     IwSpacing.cardPadding,
-                    IwSpacing.cardPadding,
+                    IwSpacing.space4,
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -306,7 +307,7 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                           ),
                         ],
                       ),
-                      const SizedBox(height: IwSpacing.space12),
+                      const SizedBox(height: IwSpacing.space4),
                       if (history.isEmpty)
                         Padding(
                           padding: const EdgeInsets.symmetric(
@@ -337,7 +338,7 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                                   children: [
                                     Container(
                                       width: 12,
-                                      height: 20,
+                                      height: 28,
                                       decoration: BoxDecoration(
                                         color: entry.color,
                                         borderRadius: BorderRadius.circular(
@@ -346,26 +347,51 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                                       ),
                                     ),
                                     const SizedBox(width: IwSpacing.space12),
-                                    Text(
-                                      'Spin #${entry.order}',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.labelSmall?.copyWith(
-                                        color: IwColors.textSecondary(
-                                          brightness,
-                                        ),
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            entry.option,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style:
+                                                Theme.of(
+                                                  context,
+                                                ).textTheme.titleSmall,
+                                          ),
+                                          Text(
+                                            'Spin #${entry.order}',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.labelSmall?.copyWith(
+                                              color: IwColors.textSecondary(
+                                                brightness,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    const SizedBox(width: IwSpacing.space8),
-                                    Expanded(
-                                      child: Text(
-                                        entry.option,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style:
-                                            Theme.of(
-                                              context,
-                                            ).textTheme.titleSmall,
+                                    IconButton(
+                                      tooltip: 'Copy result',
+                                      constraints: const BoxConstraints(
+                                        minWidth: 36,
+                                        minHeight: 36,
+                                      ),
+                                      padding: EdgeInsets.zero,
+                                      iconSize: 18,
+                                      onPressed: () {
+                                        _copyHistoryOption(
+                                          context,
+                                          entry.option,
+                                        );
+                                      },
+                                      icon: const Icon(
+                                        Icons.content_copy_rounded,
                                       ),
                                     ),
                                   ],
@@ -374,7 +400,7 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                             },
                           ),
                         ),
-                      const SizedBox(height: IwSpacing.space12),
+                      const SizedBox(height: IwSpacing.space4),
                       Wrap(
                         alignment: WrapAlignment.end,
                         spacing: IwSpacing.space8,
@@ -408,6 +434,22 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
         );
       },
     );
+  }
+
+  Future<void> _copyHistoryOption(BuildContext context, String option) async {
+    await Clipboard.setData(ClipboardData(text: option));
+    if (!context.mounted) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(
+          content: Text('Copied to clipboard'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
   }
 
   void _clearWheelState() {
