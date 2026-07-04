@@ -6,6 +6,7 @@ import 'package:infinity_world/features/auth/presentation/login_screen.dart';
 import 'package:infinity_world/features/bmi/presentation/bmi_screen.dart';
 import 'package:infinity_world/features/chat/presentation/chat_screen.dart';
 import 'package:infinity_world/features/clock/presentation/clock_screen.dart';
+import 'package:infinity_world/features/decision_wheel/presentation/decision_wheel_screen.dart';
 import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:infinity_world/features/fox/application/fox_providers.dart';
 import 'package:infinity_world/features/fox/presentation/fox_random_screen.dart';
@@ -113,6 +114,12 @@ GoRouter createAppRouter({
         path: AppRoutes.randomPicker,
         builder: (BuildContext context, GoRouterState state) {
           return const RandomPickerScreen();
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.decisionWheel,
+        builder: (BuildContext context, GoRouterState state) {
+          return const DecisionWheelScreen();
         },
       ),
       GoRoute(

@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/features/bmi/presentation/bmi_screen.dart';
 import 'package:infinity_world/features/clock/presentation/clock_screen.dart';
+import 'package:infinity_world/features/decision_wheel/presentation/decision_wheel_screen.dart';
 import 'package:infinity_world/features/random_picker/presentation/random_picker_screen.dart';
 import 'package:infinity_world/features/tools/presentation/tools_screen.dart';
 import 'package:infinity_world/features/unit_converter/presentation/unit_converter_screen.dart';
@@ -40,6 +41,8 @@ void main() {
     expect(find.text('BMI Calculator'), findsOneWidget);
     expect(find.text('Clock'), findsOneWidget);
     expect(find.text('Random Picker'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Decision Wheel'), 120);
+    expect(find.text('Decision Wheel'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Unit Converter'), 120);
     expect(find.text('Unit Converter'), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -115,11 +118,32 @@ void main() {
 
     expect(find.byType(ToolsScreen), findsOneWidget);
 
-    await tester.ensureVisible(find.text('Unit Converter'));
+    await tester.scrollUntilVisible(find.text('Unit Converter'), 120);
     await tester.tap(find.text('Unit Converter'));
     await tester.pumpAndSettle();
 
     expect(find.byType(UnitConverterScreen), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Tools Decision Wheel card opens the Decision Wheel route', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(child: MainApp(initialRoute: AppRoutes.main)),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.handyman_rounded));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ToolsScreen), findsOneWidget);
+
+    await tester.scrollUntilVisible(find.text('Decision Wheel'), 120);
+    await tester.tap(find.text('Decision Wheel'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(DecisionWheelScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

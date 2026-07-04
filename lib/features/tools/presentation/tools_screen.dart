@@ -140,6 +140,42 @@ class ToolsScreen extends StatelessWidget {
             ),
             const SizedBox(height: IwSpacing.space12),
             IwCard(
+              onTap: () => context.push(AppRoutes.decisionWheel),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.casino_rounded,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(width: IwSpacing.space12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Decision Wheel',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(height: IwSpacing.space4),
+                        Text(
+                          'Spin a simple wheel to choose from local options.',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium?.copyWith(
+                            color: IwColors.textSecondary(brightness),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: IwSpacing.space12),
+                  const Icon(Icons.chevron_right_rounded),
+                ],
+              ),
+            ),
+            const SizedBox(height: IwSpacing.space12),
+            IwCard(
               onTap: () => context.push(AppRoutes.unitConverter),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

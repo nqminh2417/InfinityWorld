@@ -9,6 +9,7 @@ import 'package:infinity_world/features/auth/presentation/login_screen.dart';
 import 'package:infinity_world/features/bmi/presentation/bmi_screen.dart';
 import 'package:infinity_world/features/chat/presentation/chat_screen.dart';
 import 'package:infinity_world/features/clock/presentation/clock_screen.dart';
+import 'package:infinity_world/features/decision_wheel/presentation/decision_wheel_screen.dart';
 import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:infinity_world/features/fox/data/fox_api_service.dart';
 import 'package:infinity_world/features/fox/domain/fox_model.dart';
@@ -102,6 +103,15 @@ void main() {
     await tester.pumpWidget(_app(AppRoutes.unitConverter));
 
     expect(find.byType(UnitConverterScreen), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Decision Wheel route opens the Decision Wheel screen', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app(AppRoutes.decisionWheel));
+
+    expect(find.byType(DecisionWheelScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

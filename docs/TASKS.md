@@ -75,6 +75,7 @@ Current architecture status:
 - Reader now has screen-local text comfort controls for the built-in sample, without persistence, routes, packages, Drift, bookmarks, imports, or a settings model.
 - T97 expanded the Phase 10 backlog direction: active Phase 10 recommendations should focus on feature/content implementation, not screenshot, portfolio, release, or employer-showcase readiness.
 - Unit Converter now lives under `lib/features/unit_converter/`, has a direct `/unit-converter` route, and is linked from Tools beside BMI, Clock, and Random Picker.
+- Decision Wheel now lives under `lib/features/decision_wheel/`, has a direct `/decision-wheel` route, and is linked from Tools beside the other local utilities.
 
 Current tests:
 
@@ -89,7 +90,7 @@ Current tests:
 - BMI presentation widget tests exist.
 - Chat route smoke test exists.
 - Dashboard presentation widget test exists for small-screen scroll safety, persisted local display-name rendering, absence of the old no-op filter action, refreshed quick-action labels, and a Home-to-Random Picker route tap.
-- Deterministic route smoke tests exist for Login, Main, Dashboard, Chat, Profile, Settings, BMI, Clock, Random Picker, Unit Converter, Reader, Test, Fox, and Summertime Saga.
+- Deterministic route smoke tests exist for Login, Main, Dashboard, Chat, Profile, Settings, BMI, Clock, Random Picker, Unit Converter, Decision Wheel, Reader, Test, Fox, and Summertime Saga.
 - Test screen widget coverage exists for small-screen keyboard/scroll safety.
 - Fox API service and model parsing tests exist with fake Dio responses.
 - Fox screen loading/error/retry widget tests exist, avoid real network, and include small-screen scroll-safety coverage.
@@ -106,6 +107,8 @@ Current tests:
 - Unit Converter domain coverage exists for length and weight conversions plus result formatting.
 - Unit Converter presentation widget coverage exists for scroll-safe rendering, validation, and length conversion behavior.
 - Tools presentation widget coverage exists for Unit Converter route navigation.
+- Decision Wheel presentation widget coverage exists for scroll-safe rendering, validation, deterministic picking, and the local wheel surface.
+- Tools presentation widget coverage exists for Decision Wheel route navigation.
 - Explore presentation widget coverage exists for small-screen scroll safety and fake-route navigation to Fox and Summertime Saga.
 - Library presentation widget coverage exists for small-screen scroll safety and empty-state rendering.
 - Reader presentation widget coverage exists for scroll-safe local sample rendering.
@@ -268,26 +271,26 @@ Task sizing note:
 
 ### Primary
 
-T99 - Decision Wheel local tool MVP
+T100 - Reader/Library content-depth slice
 
 Reason:
 
-- Adds a more visual local Tools utility while Phase 10 is actively building app content.
-- Keeps the next slice local and package-free, without public APIs, persistence, screenshots, or release work.
-- Builds on the existing Random Picker direction without adding saved lists, weighted choices, history, or advanced animation in the MVP.
+- Deepens the Library/Reader surface after the recent Tools utility run.
+- Keeps the next slice local and content-focused, without public APIs, imports, Drift, bookmarks, reading-progress persistence, screenshots, or release work.
+- Builds on the existing Reader sample, saved-sample signal, and text comfort controls without turning it into a full content model yet.
 
 Scope:
 
-- Add a Decision Wheel screen/tool using the existing project feature/tool route/card pattern.
-- Accept a small local list of options, validate at least two choices, and show one selected result.
-- Include a simple wheel-style decision surface if it stays small and local; otherwise keep the MVP to the smallest useful visual picker.
-- Add a Tools link/card/route to open the Decision Wheel screen.
+- Add a small built-in Reader sample catalog or shelf using existing Reader/Library feature structure.
+- Surface 2-3 local reading samples or content cards from Library.
+- Let the user open a selected local sample in the Reader using a small route key or similarly narrow local mechanism.
+- Preserve the existing saved-sample behavior unless the task explicitly scopes a generic saved-content model.
 - Use existing app theme, typography, spacing, and route style; keep the UI simple, clean, and scroll-safe.
-- Add focused tests for picker behavior and the Tools route/card path.
+- Add focused tests for Library content rendering, selected Reader sample rendering, and route behavior.
 
 Out of scope:
 
-- No public API, new packages, SQLite/persistence, saved option lists, weighted choices, picker history, advanced animation/physics, broad Tools redesign, dashboard redesign, screenshots, portfolio/showcase prep, release work, Android build/toolchain changes, shell route migration, or Riverpod/go_router/Dio migration.
+- No public API, new packages, SQLite/Drift, import/parser work, generic bookmarks, saved-article models, reading-progress offsets, persisted reader settings, broad Library redesign, dashboard redesign, screenshots, portfolio/showcase prep, release work, Android build/toolchain changes, shell route migration, or Riverpod/go_router/Dio migration.
 
 Verification:
 
@@ -296,10 +299,6 @@ Verification:
 
 ### Alternatives
 
-T100 - Reader/Library content-depth slice
-
-Choose this if the user wants more Reader/Library content before another Tools utility; keep Drift, imports, generic bookmarks, and reading-progress offsets out until a dedicated persistence/model task.
-
 Dashboard quick actions/content cards refresh
 
 Choose this if the user wants Home to surface more current modules or content cards before adding another standalone tool.
@@ -307,6 +306,10 @@ Choose this if the user wants Home to surface more current modules or content ca
 Explore/RSS foundation audit
 
 Choose this if the user wants to evaluate public content/API expansion after the current local-utility run.
+
+Another local utility/content-depth audit
+
+Choose this if the user wants to continue Tools utility growth after Decision Wheel before returning to Reader/Library.
 
 ### Portfolio / screenshot / showcase deferral policy
 
@@ -342,7 +345,7 @@ Current phase:
 
 Decision:
 
-- T98 completed the Unit Converter local tool MVP. The next recommended task is T99 - Decision Wheel local tool MVP.
+- T99 completed the Decision Wheel local tool MVP. The next recommended task is T100 - Reader/Library content-depth slice.
 
 Do not enter yet:
 
@@ -368,6 +371,8 @@ Reason:
 - The T96 Reader controls make the current Reader sample more useful without new storage or routing.
 - The T98 Unit Converter MVP adds another practical local Tool without public APIs, packages, persistence, currency/rates, conversion history, or dashboard redesign.
 - Decision Wheel is the next smallest useful Phase 10 implementation slice because it adds a more visual local utility while staying package-free and smaller than Reader storage, RSS/API expansion, or broad dashboard work.
+- The T99 Decision Wheel MVP adds a local visual picker with focused tests and no packages, persistence, screenshots, portfolio work, or broad Tools redesign.
+- Reader/Library is the next smallest useful content-depth slice because it can add more built-in local reading content without committing to Drift, imports, generic bookmarks, or reading-progress persistence.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -408,7 +413,8 @@ Exit criteria:
 - Done: Implemented the T96 Reader text comfort controls MVP.
 - Done: Completed the T97 Phase 10 feature backlog expansion and deferred portfolio/screenshot/showcase work until explicitly requested.
 - Done: Implemented the T98 Unit Converter local tool MVP.
-- Remaining: Implement T99 Decision Wheel local tool MVP, or follow a user-assigned concrete alternative.
+- Done: Implemented the T99 Decision Wheel local tool MVP.
+- Remaining: Implement T100 Reader/Library content-depth slice, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 
