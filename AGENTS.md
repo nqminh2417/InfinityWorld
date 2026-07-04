@@ -554,6 +554,25 @@ Project rules:
 - Do not claim UI is visually safe only because `flutter analyze` passes.
 - For UI changes, report which layout-safety checks were considered and what was not verified.
 
+## 21.1 Error Handling and UI Feedback
+
+Flutter error handling and feedback UI tasks in InfinityWorld must apply `flutter-error-handling`, `flutter-ui-feedback`, and the layout-safety rules above when relevant.
+
+Project rules:
+
+- Screens must distinguish loading, success, empty, and error states.
+- Do not use `null` alone to represent loading, error, or empty.
+- Do not catch unknown errors and return `null`, `[]`, `false`, or silent success.
+- API-driven screens such as Summertime Saga, Fox API, News, Library, AI Lab, and Device Hub should show a visible error state with Retry when recovery is reasonable.
+- Forms such as Login, BMI, Profile, and Settings should use inline validation and action loading where relevant.
+- Use `lib/design_system` tokens/components for feedback UI when available.
+- Keep feedback variants consistent: success, info, warning, error, empty, and loading.
+- Use text plus icon/color; do not rely on color alone.
+- SnackBars are for short action feedback.
+- Dialogs are only for destructive confirmation, required user decisions, permission/settings flows, or blocking account/session issues.
+- Do not trigger SnackBars, dialogs, bottom sheets, or navigation side effects directly from `build()`.
+- Feedback UI must also follow `flutter-ui-layout-safety`.
+
 ## 22. Git Workflow
 
 Follow the repo-specific workflow in:
