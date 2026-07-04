@@ -216,6 +216,9 @@ void main() {
   testWidgets('Decision Wheel long history sheet caps and scrolls list', (
     tester,
   ) async {
+    await tester.binding.setSurfaceSize(const Size(360, 640));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
     var nextPick = -1;
     await tester.pumpWidget(
       MaterialApp(
@@ -253,8 +256,7 @@ void main() {
         tester
             .getSize(find.byKey(const ValueKey('decision-wheel-history-sheet')))
             .height;
-    expect(longSheetHeight, greaterThan(320));
-    expect(longSheetHeight, lessThanOrEqualTo(480));
+    expect(longSheetHeight, lessThanOrEqualTo(352));
     expect(find.byType(ListView), findsOneWidget);
     expect(find.text('Spin #8'), findsOneWidget);
     expect(find.text('Clear history'), findsOneWidget);
@@ -264,6 +266,58 @@ void main() {
     await tester.pump();
 
     expect(find.text('Spin #1'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Decision Wheel history sheet wraps up to five items', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(360, 640));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    var nextPick = -1;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: DecisionWheelScreen(
+          pickIndex: (optionCount) {
+            nextPick = (nextPick + 1) % optionCount;
+            return nextPick;
+          },
+        ),
+      ),
+    );
+    await tester.pump();
+
+    await tester.enterText(find.byType(TextField), 'Alpha\nBeta');
+    final spinButton = find.byKey(
+      const ValueKey('decision-wheel-center-spin-button'),
+    );
+
+    for (var spin = 0; spin < 5; spin += 1) {
+      await tester.ensureVisible(spinButton);
+      await tester.pump();
+      await tester.tap(spinButton);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+    }
+
+    final historyButton = find.widgetWithText(OutlinedButton, 'History');
+    await tester.ensureVisible(historyButton);
+    await tester.pump();
+    await tester.tap(historyButton);
+    await tester.pumpAndSettle();
+
+    final fiveItemSheetHeight =
+        tester
+            .getSize(find.byKey(const ValueKey('decision-wheel-history-sheet')))
+            .height;
+    expect(fiveItemSheetHeight, lessThan(352));
+    expect(find.byType(ListView), findsOneWidget);
+    expect(find.text('Spin #5'), findsOneWidget);
+    expect(find.text('Spin #1'), findsOneWidget);
+    expect(find.text('Clear history'), findsOneWidget);
+    expect(find.text('Close'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

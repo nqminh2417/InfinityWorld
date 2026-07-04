@@ -12,6 +12,9 @@ typedef DecisionWheelShuffleOptions =
 
 const _spinDuration = Duration(milliseconds: 1600);
 const _segmentStartAngle = -math.pi / 2;
+const _historySheetMaxScreenFraction = 0.55;
+const _historyVisibleItemLimit = 5;
+const _historyItemHeight = 31.0;
 const _decisionWheelPalette = [
   Color(0xFF2F6FEF),
   Color(0xFFE71D36),
@@ -261,10 +264,17 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
           builder: (context, setSheetState) {
             final brightness = Theme.of(context).brightness;
             final history = _history.reversed.toList(growable: false);
-            final maxSheetHeight = MediaQuery.sizeOf(context).height * 0.72;
-            final maxListHeight = math.max(0.0, maxSheetHeight - 168);
+            final maxSheetHeight =
+                MediaQuery.sizeOf(context).height *
+                _historySheetMaxScreenFraction;
+            final maxListHeight = math.max(0.0, maxSheetHeight - 108);
+            final visibleItemCount = math.min(
+              history.length,
+              _historyVisibleItemLimit,
+            );
             final historyListHeight = math.min(
-              history.length * 72.0 + math.max(0, history.length - 1),
+              visibleItemCount * _historyItemHeight +
+                  math.max(0, visibleItemCount - 1),
               maxListHeight,
             );
 
@@ -312,23 +322,54 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                           child: ListView.separated(
                             itemCount: history.length,
                             separatorBuilder:
-                                (_, _) => const Divider(height: 1),
+                                (_, _) => Divider(
+                                  height: 1,
+                                  thickness: 0.5,
+                                  color: IwColors.border(
+                                    brightness,
+                                  ).withValues(alpha: 0.5),
+                                ),
                             itemBuilder: (context, index) {
                               final entry = history[index];
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                leading: Container(
-                                  width: 12,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: entry.color,
-                                    borderRadius: BorderRadius.circular(
-                                      IwRadius.radiusFull,
+                              return SizedBox(
+                                height: _historyItemHeight,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 12,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: entry.color,
+                                        borderRadius: BorderRadius.circular(
+                                          IwRadius.radiusFull,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    const SizedBox(width: IwSpacing.space12),
+                                    Text(
+                                      'Spin #${entry.order}',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.labelSmall?.copyWith(
+                                        color: IwColors.textSecondary(
+                                          brightness,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: IwSpacing.space8),
+                                    Expanded(
+                                      child: Text(
+                                        entry.option,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style:
+                                            Theme.of(
+                                              context,
+                                            ).textTheme.titleSmall,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                title: Text(entry.option),
-                                subtitle: Text('Spin #${entry.order}'),
                               );
                             },
                           ),
