@@ -261,11 +261,17 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
           builder: (context, setSheetState) {
             final brightness = Theme.of(context).brightness;
             final history = _history.reversed.toList(growable: false);
+            final maxSheetHeight = MediaQuery.sizeOf(context).height * 0.72;
+            final maxListHeight = math.max(0.0, maxSheetHeight - 168);
+            final historyListHeight = math.min(
+              history.length * 72.0 + math.max(0, history.length - 1),
+              maxListHeight,
+            );
 
             return SafeArea(
-              child: SizedBox(
+              child: ConstrainedBox(
                 key: const ValueKey('decision-wheel-history-sheet'),
-                height: MediaQuery.sizeOf(context).height * 0.55,
+                constraints: BoxConstraints(maxHeight: maxSheetHeight),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(
                     IwSpacing.cardPadding,
@@ -274,6 +280,7 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                     IwSpacing.cardPadding,
                   ),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Row(
@@ -290,36 +297,42 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                         ],
                       ),
                       const SizedBox(height: IwSpacing.space12),
-                      Expanded(
-                        child:
-                            history.isEmpty
-                                ? _DecisionHistoryEmptyState(
-                                  brightness: brightness,
-                                )
-                                : ListView.separated(
-                                  itemCount: history.length,
-                                  separatorBuilder:
-                                      (_, _) => const Divider(height: 1),
-                                  itemBuilder: (context, index) {
-                                    final entry = history[index];
-                                    return ListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      leading: Container(
-                                        width: 12,
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                          color: entry.color,
-                                          borderRadius: BorderRadius.circular(
-                                            IwRadius.radiusFull,
-                                          ),
-                                        ),
-                                      ),
-                                      title: Text(entry.option),
-                                      subtitle: Text('Spin #${entry.order}'),
-                                    );
-                                  },
+                      if (history.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: IwSpacing.space12,
+                          ),
+                          child: _DecisionHistoryEmptyState(
+                            brightness: brightness,
+                          ),
+                        )
+                      else
+                        SizedBox(
+                          height: historyListHeight,
+                          child: ListView.separated(
+                            itemCount: history.length,
+                            separatorBuilder:
+                                (_, _) => const Divider(height: 1),
+                            itemBuilder: (context, index) {
+                              final entry = history[index];
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: Container(
+                                  width: 12,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: entry.color,
+                                    borderRadius: BorderRadius.circular(
+                                      IwRadius.radiusFull,
+                                    ),
+                                  ),
                                 ),
-                      ),
+                                title: Text(entry.option),
+                                subtitle: Text('Spin #${entry.order}'),
+                              );
+                            },
+                          ),
+                        ),
                       const SizedBox(height: IwSpacing.space12),
                       Wrap(
                         alignment: WrapAlignment.end,

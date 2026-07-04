@@ -75,7 +75,7 @@ Current architecture status:
 - Reader now has screen-local text comfort controls for the built-in sample, without persistence, routes, packages, Drift, bookmarks, imports, or a settings model.
 - T97 expanded the Phase 10 backlog direction: active Phase 10 recommendations should focus on feature/content implementation, not screenshot, portfolio, release, or employer-showcase readiness.
 - Unit Converter now lives under `lib/features/unit_converter/`, has a direct `/unit-converter` route, and is linked from Tools beside BMI, Clock, and Random Picker.
-- Decision Wheel now lives under `lib/features/decision_wheel/`, has a direct `/decision-wheel` route, is linked from Tools beside the other local utilities, and has a large animated `CustomPainter` wheel with center spin, shuffle/sort entries, a modal selected-result dialog, in-memory session history, remove-selected-result actions, semicolon-aware entry parsing, clearer pointer layering, and adjacent-safe repeating segment colors.
+- Decision Wheel now lives under `lib/features/decision_wheel/`, has a direct `/decision-wheel` route, is linked from Tools beside the other local utilities, and has a large animated `CustomPainter` wheel with center spin, shuffle/sort entries, a modal selected-result dialog, adaptive in-memory session history bottom sheet, remove-selected-result actions, semicolon-aware entry parsing, clearer pointer layering, and adjacent-safe repeating segment colors.
 
 Current tests:
 
@@ -107,7 +107,7 @@ Current tests:
 - Unit Converter domain coverage exists for length and weight conversions plus result formatting.
 - Unit Converter presentation widget coverage exists for scroll-safe rendering, validation, and length conversion behavior.
 - Tools presentation widget coverage exists for Unit Converter route navigation.
-- Decision Wheel presentation widget coverage exists for scroll-safe rendering, center spin, modal result dialog behavior, background interaction blocking, Cancel/Remove behavior, in-memory session history display/clear behavior, semicolon-aware parsing, validation, animated deterministic picking, shuffle/sort actions, adjacent-safe segment colors, and the local wheel surface.
+- Decision Wheel presentation widget coverage exists for scroll-safe rendering, center spin, modal result dialog behavior, background interaction blocking, Cancel/Remove behavior, in-memory session history display/clear behavior, adaptive compact/max-height history sheet behavior, semicolon-aware parsing, validation, animated deterministic picking, shuffle/sort actions, adjacent-safe segment colors, and the local wheel surface.
 - Tools presentation widget coverage exists for Decision Wheel route navigation.
 - Explore presentation widget coverage exists for small-screen scroll safety and fake-route navigation to Fox and Summertime Saga.
 - Library presentation widget coverage exists for small-screen scroll safety and empty-state rendering.
@@ -271,7 +271,7 @@ Task sizing note:
 
 ### Primary
 
-T104 - Reader/Library content-depth slice
+T105 - Reader/Library content-depth slice
 
 Reason:
 
@@ -345,7 +345,7 @@ Current phase:
 
 Decision:
 
-- T103 added in-memory Decision Wheel session history. The next recommended task is T104 - Reader/Library content-depth slice.
+- T104 refined the Decision Wheel History bottom sheet with content-wrapping height and max-height list scrolling. The next recommended task is T105 - Reader/Library content-depth slice.
 
 Do not enter yet:
 
@@ -376,6 +376,7 @@ Reason:
 - The T101 Decision Wheel layout/result overlay refinement removes the redundant bottom Spin button, keeps center spin as the primary action, floats the selected-result card above the content, improves pointer layering, and prevents adjacent duplicate segment colors while preserving the existing route and feature structure.
 - The T102 Decision Wheel result/input refinement replaces the floating result overlay with a blocking modal dialog, keeps Cancel/Remove behavior scoped to the selected entry, and supports mixed line/semicolon entry parsing without changing routes, persistence, packages, or the wheel painter style.
 - The T103 Decision Wheel history slice keeps prior spin results in screen-local memory only, exposes them through a History bottom sheet, and supports clearing that session list without adding persistence or a permanent main-screen section.
+- The T104 Decision Wheel history-sheet refinement keeps the modal history design but makes empty/short history wrap compactly and long history scroll within a capped sheet.
 - Reader/Library is the next smallest useful content-depth slice because it can add more built-in local reading content without committing to Drift, imports, generic bookmarks, or reading-progress persistence.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
@@ -422,7 +423,8 @@ Exit criteria:
 - Done: Implemented the T101 Decision Wheel layout/result overlay refinement.
 - Done: Implemented the T102 Decision Wheel result modal and entries input refinement.
 - Done: Implemented the T103 Decision Wheel in-memory session history slice.
-- Remaining: Implement T104 Reader/Library content-depth slice, or follow a user-assigned concrete alternative.
+- Done: Implemented the T104 Decision Wheel history bottom sheet height refinement.
+- Remaining: Implement T105 Reader/Library content-depth slice, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 

@@ -162,7 +162,10 @@ void main() {
 
     await tester.tap(find.text('Cancel'));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(OutlinedButton, 'History'));
+    final historyButton = find.widgetWithText(OutlinedButton, 'History');
+    await tester.ensureVisible(historyButton);
+    await tester.pump();
+    await tester.tap(historyButton);
     await tester.pumpAndSettle();
 
     expect(
@@ -173,6 +176,94 @@ void main() {
     expect(find.text('Beta'), findsOneWidget);
     expect(find.text('Clear history'), findsOneWidget);
     expect(find.text('Close'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Decision Wheel empty history sheet wraps compact content', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(360, 640));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      MaterialApp(home: DecisionWheelScreen(pickIndex: (_) => 1)),
+    );
+    await tester.pump();
+
+    final historyButton = find.widgetWithText(OutlinedButton, 'History');
+    await tester.ensureVisible(historyButton);
+    await tester.pump();
+    await tester.tap(historyButton);
+    await tester.pumpAndSettle();
+
+    final sheetSize = tester.getSize(
+      find.byKey(const ValueKey('decision-wheel-history-sheet')),
+    );
+    expect(sheetSize.height, lessThan(320));
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('decision-wheel-history-sheet')),
+        matching: find.text('History'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('No spins yet'), findsOneWidget);
+    expect(find.text('Clear history'), findsOneWidget);
+    expect(find.text('Close'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Decision Wheel long history sheet caps and scrolls list', (
+    tester,
+  ) async {
+    var nextPick = -1;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: DecisionWheelScreen(
+          pickIndex: (optionCount) {
+            nextPick = (nextPick + 1) % optionCount;
+            return nextPick;
+          },
+        ),
+      ),
+    );
+    await tester.pump();
+
+    await tester.enterText(find.byType(TextField), 'Alpha\nBeta');
+    final spinButton = find.byKey(
+      const ValueKey('decision-wheel-center-spin-button'),
+    );
+
+    for (var spin = 0; spin < 8; spin += 1) {
+      await tester.ensureVisible(spinButton);
+      await tester.pump();
+      await tester.tap(spinButton);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+    }
+
+    final historyButton = find.widgetWithText(OutlinedButton, 'History');
+    await tester.ensureVisible(historyButton);
+    await tester.pump();
+    await tester.tap(historyButton);
+    await tester.pumpAndSettle();
+
+    final longSheetHeight =
+        tester
+            .getSize(find.byKey(const ValueKey('decision-wheel-history-sheet')))
+            .height;
+    expect(longSheetHeight, greaterThan(320));
+    expect(longSheetHeight, lessThanOrEqualTo(480));
+    expect(find.byType(ListView), findsOneWidget);
+    expect(find.text('Spin #8'), findsOneWidget);
+    expect(find.text('Clear history'), findsOneWidget);
+    expect(find.text('Close'), findsOneWidget);
+
+    await tester.drag(find.byType(ListView), const Offset(0, -300));
+    await tester.pump();
+
+    expect(find.text('Spin #1'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
