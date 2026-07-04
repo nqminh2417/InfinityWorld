@@ -11,17 +11,35 @@ const _readerSampleParagraphs = <String>[
   'The reader will grow later when the Library earns persistence, bookmarks, and progress. For now, this sample proves the surface can hold text with the same care as the rest of the app.',
 ];
 
-class ReaderScreen extends ConsumerWidget {
+enum _ReaderTextSize {
+  small('Small', 15),
+  comfort('Comfort', 17),
+  large('Large', 20);
+
+  const _ReaderTextSize(this.label, this.fontSize);
+
+  final String label;
+  final double fontSize;
+}
+
+class ReaderScreen extends ConsumerStatefulWidget {
   const ReaderScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ReaderScreen> createState() => _ReaderScreenState();
+}
+
+class _ReaderScreenState extends ConsumerState<ReaderScreen> {
+  _ReaderTextSize _textSize = _ReaderTextSize.comfort;
+
+  @override
+  Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final secondaryText = IwColors.textSecondary(brightness);
     final savedSample = ref.watch(readerSavedSampleProvider);
     final bodyStyle = Theme.of(
       context,
-    ).textTheme.bodyLarge?.copyWith(height: 1.55);
+    ).textTheme.bodyLarge?.copyWith(fontSize: _textSize.fontSize, height: 1.55);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Reader')),
@@ -40,6 +58,25 @@ class ReaderScreen extends ConsumerWidget {
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(color: secondaryText),
+            ),
+            const SizedBox(height: IwSpacing.space16),
+            Text('Text size', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: IwSpacing.space8),
+            SegmentedButton<_ReaderTextSize>(
+              showSelectedIcon: false,
+              segments: [
+                for (final value in _ReaderTextSize.values)
+                  ButtonSegment<_ReaderTextSize>(
+                    value: value,
+                    label: Text(value.label),
+                  ),
+              ],
+              selected: {_textSize},
+              onSelectionChanged: (selection) {
+                setState(() {
+                  _textSize = selection.first;
+                });
+              },
             ),
             const SizedBox(height: IwSpacing.space16),
             savedSample.when(

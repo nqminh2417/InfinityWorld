@@ -66,4 +66,24 @@ void main() {
     expect(await ReaderSavedSampleRepository().isSampleSaved(), isFalse);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('Reader screen changes local sample text size', (tester) async {
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: ReaderScreen())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Text size'), findsOneWidget);
+
+    final paragraphFinder = find.textContaining('first door opened quietly');
+    Text paragraph = tester.widget(paragraphFinder);
+    expect(paragraph.style?.fontSize, 17);
+
+    await tester.tap(find.text('Large'));
+    await tester.pump();
+
+    paragraph = tester.widget(paragraphFinder);
+    expect(paragraph.style?.fontSize, 20);
+    expect(tester.takeException(), isNull);
+  });
 }

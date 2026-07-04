@@ -72,6 +72,7 @@ Current architecture status:
 - T93 checkpoint confirmed Phase 10 should continue with a small Explore content refresh before screenshots or deeper Reader persistence because Explore remains the thinnest main tab surface after the Tools, Home/Dashboard, and Library updates.
 - Explore now has richer static Fox / Summertime Saga module cards while keeping live network work inside the destination screens.
 - T95 confirmed the next smallest Reader slice should add local text comfort controls inside the existing Reader screen before bookmarks, reading-progress persistence, imports, or Drift/schema work.
+- Reader now has screen-local text comfort controls for the built-in sample, without persistence, routes, packages, Drift, bookmarks, imports, or a settings model.
 
 Current tests:
 
@@ -111,6 +112,7 @@ Current tests:
 - No new app tests were added for T93 because it was an audit/docs-only checkpoint.
 - Explore presentation widget coverage now verifies the refreshed static content, small-screen scrolling, and existing Fox / Summertime Saga route taps.
 - No new app tests were added for T95 because it was an audit/docs-only checkpoint.
+- Reader presentation widget coverage now verifies the screen-local text-size controls while preserving the existing sample and saved-sample behavior.
 - No Home feature-root tests exist yet because the Home tab still uses the existing Dashboard screen.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
@@ -241,6 +243,7 @@ Completed stabilization tasks:
 - T93 Phase 10 content-depth checkpoint audit was completed; Tools now has three useful local utilities, Home/Dashboard surfaces those modules as quick actions, and Library has a persisted Reader sample signal. Explore is now the best next small content-depth surface because it still has only two simple module launch cards.
 - Explore content cards refresh was completed; Explore now has richer entry cards for Random Fox and Summertime Saga, without loading API data from the tab, adding routes, adding packages, changing persistence, or redesigning the shell.
 - Reader next-step audit was completed; the current Reader path is still one built-in sample plus one saved boolean, so local text comfort controls are the smallest useful Reader follow-up before persistence or data-model work.
+- Reader text comfort controls MVP was completed; the Reader sample now offers screen-local Small / Comfort / Large text sizing while keeping save/remove state, Library reflection, routing, persistence, and data model unchanged.
 
 ## Recommended Next Work
 
@@ -257,40 +260,37 @@ Task sizing note:
 
 ### Primary
 
-T96 - Reader text comfort controls MVP
+T97 - Portfolio screenshot readiness audit
 
 Reason:
 
-- Reader already has a local sample, save/remove state, Library reflection, route coverage, and focused widget tests.
-- Text-size controls add a real reader affordance without adding persistence, routes, packages, Drift, bookmarks, imports, or a settings model.
-- This is smaller than reading-progress persistence and more directly useful than another audit before screenshot readiness.
+- Phase 10 has now added useful content depth across Tools, Home/Dashboard, Explore, Library, and Reader.
+- A readiness audit can decide whether screenshot prep is finally justified before another Reader/storage or RSS/API slice.
+- This keeps scope smaller than screenshot capture, release work, deeper persistence, or broad visual redesign.
 
 Scope:
 
-- Add simple in-screen text comfort controls to `lib/features/reader/presentation/reader_screen.dart`.
-- Let the current Reader sample body switch between a small set of local text-size options.
-- Keep the setting screen-local only; no persistence and no cross-screen settings model.
-- Preserve the existing sample text, save/remove behavior, Library saved-state reflection, and `/reader` route.
-- Update focused Reader widget coverage for the controls and existing saved-sample behavior.
+- Review current Home/Dashboard, Explore, Tools, Library, Reader, and safe module flows against the screenshot deferral criteria.
+- Decide whether the next task should start screenshot prep or continue Phase 10 content depth.
+- Update `docs/TASKS.md` with exactly one next recommended task.
 
 Out of scope:
 
-- No Drift/SQLite schema, generic bookmark model, saved articles, imports/downloads, parser work, persisted reader settings, reading-progress persistence, fullscreen/immersive reader mode, screenshot capture, release work, Android build/toolchain changes, broad redesign, shell route migration, or Riverpod/go_router/Dio migration.
+- No screenshot capture, screenshot assets, README screenshot insertion, release work, Android build/toolchain changes, feature implementation, Drift/SQLite schema, bookmarks, saved articles, imports/downloads, parser work, shell route migration, or Riverpod/go_router/Dio migration.
 
 Verification:
 
-- Dart/UI gate from `docs/qa/IW_GIT_WORKFLOW.md`: `dart format <changed Dart files>`, `flutter analyze`, `flutter test`, and `git diff --check`.
-- Run `flutter build apk --debug` only if the implementation changes routing, startup, or build-impacting code.
+- Audit/docs gate from `docs/qa/IW_GIT_WORKFLOW.md`: at minimum `git diff --check`.
 
 ### Alternatives
 
-Portfolio screenshot readiness audit
-
-Choose this if the user wants to check whether the refreshed Phase 10 surfaces are now ready for screenshot prep before another Reader UI slice.
-
 Reader persistence/model audit
 
-Choose this if the user wants saved articles, bookmarks, reading-progress offsets, or multi-item Reader content before any local Reader UI polish.
+Choose this if the user wants saved articles, bookmarks, reading-progress offsets, or multi-item Reader content before screenshot readiness.
+
+Explore/RSS foundation audit
+
+Choose this if the user wants to evaluate public content/API expansion before screenshot readiness.
 
 T30 — Dependency/toolchain audit
 
@@ -334,11 +334,11 @@ Current phase:
 
 Decision:
 
-- T95 completed the Reader next-step audit. The next recommended task is T96 - Reader text comfort controls MVP.
+- T96 completed the Reader text comfort controls MVP. The next recommended task is T97 - Portfolio screenshot readiness audit.
 
 Do not enter yet:
 
-- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, Drift/schema persistence, RSS/news/API expansion, or broader feature implementation before the Reader text comfort controls slice or a user-assigned concrete alternative.
+- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, Drift/schema persistence, RSS/news/API expansion, or broader feature implementation before the screenshot readiness audit or a user-assigned concrete alternative.
 
 Reason:
 
@@ -356,6 +356,7 @@ Reason:
 - The T93 checkpoint found Tools, Home/Dashboard, and Library now have useful Phase 10 content-depth slices, while Explore still only offers two simple launch cards. A small Explore refresh is the least risky next content-depth step before screenshots, RSS/news, or deeper Reader persistence.
 - The T94 Explore refresh gives the Explore tab richer static content without moving network work into the tab, so the next content-depth decision can return to Reader/Library before deeper persistence or screenshot prep.
 - The T95 audit found Reader still has only one built-in sample and one saved boolean. Local text comfort controls are the smallest useful Reader follow-up because they improve the current reading surface without creating a storage model, import path, route hierarchy, or persisted settings contract.
+- The T96 Reader controls make the current Reader sample more useful without new storage or routing. The next decision should audit screenshot readiness before starting screenshot capture or adding another content-depth slice.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -393,7 +394,8 @@ Exit criteria:
 - Done: Completed the T93 Phase 10 content-depth checkpoint audit and selected T94 as the next implementation slice.
 - Done: Implemented the T94 Explore content cards refresh.
 - Done: Completed the T95 Reader next-step audit and selected T96 as the next implementation slice.
-- Remaining: Run T96 Reader text comfort controls MVP, or follow a user-assigned concrete alternative.
+- Done: Implemented the T96 Reader text comfort controls MVP.
+- Remaining: Run T97 Portfolio screenshot readiness audit, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 
