@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/design_system/tokens/iw_colors.dart';
 import 'package:infinity_world/design_system/tokens/iw_spacing.dart';
+import 'package:infinity_world/features/reader/application/reader_saved_sample_provider.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 
-class LibraryScreen extends StatelessWidget {
+class LibraryScreen extends ConsumerWidget {
   const LibraryScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final brightness = Theme.of(context).brightness;
+    final isSampleSaved = ref
+        .watch(readerSavedSampleProvider)
+        .when(
+          data: (value) => value,
+          error: (_, __) => false,
+          loading: () => false,
+        );
 
     return Scaffold(
       appBar: AppBar(title: const Text('Library')),
@@ -51,7 +60,9 @@ class LibraryScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: IwSpacing.space4),
                         Text(
-                          'Open a built-in local reading sample.',
+                          isSampleSaved
+                              ? 'Saved locally. Continue the built-in sample.'
+                              : 'Open and save the built-in local sample.',
                           style: Theme.of(
                             context,
                           ).textTheme.bodyMedium?.copyWith(
@@ -84,12 +95,16 @@ class LibraryScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'No saved content yet',
+                          isSampleSaved
+                              ? '1 saved sample'
+                              : 'No saved content yet',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(height: IwSpacing.space4),
                         Text(
-                          'Saved reads and progress will appear here.',
+                          isSampleSaved
+                              ? 'The First Door is saved locally.'
+                              : 'Saved reads and progress will appear here.',
                           style: Theme.of(
                             context,
                           ).textTheme.bodyMedium?.copyWith(

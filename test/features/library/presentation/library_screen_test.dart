@@ -3,17 +3,31 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/features/library/presentation/library_screen.dart';
+import 'package:infinity_world/features/reader/application/reader_saved_sample_provider.dart';
 import 'package:infinity_world/features/reader/presentation/reader_screen.dart';
 import 'package:infinity_world/main.dart';
 import 'package:infinity_world/routes/app_routes.dart';
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
 void main() {
+  setUp(() {
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
+  });
+
+  tearDown(() {
+    SharedPreferencesAsyncPlatform.instance = null;
+  });
+
   testWidgets('Library screen is scroll-safe on small screens', (tester) async {
     await tester.binding.setSurfaceSize(const Size(360, 640));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    await tester.pumpWidget(const MaterialApp(home: LibraryScreen()));
-    await tester.pump();
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: LibraryScreen())),
+    );
+    await tester.pumpAndSettle();
 
     expect(
       find.byWidgetPredicate(
@@ -25,7 +39,30 @@ void main() {
     expect(find.byType(IwCard), findsNWidgets(2));
     expect(find.text('Saved content'), findsOneWidget);
     expect(find.text('Sample Reader'), findsOneWidget);
+    expect(
+      find.text('Open and save the built-in local sample.'),
+      findsOneWidget,
+    );
     expect(find.text('No saved content yet'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Library screen reflects a saved reader sample', (tester) async {
+    await ReaderSavedSampleRepository().saveSample();
+
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: LibraryScreen())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sample Reader'), findsOneWidget);
+    expect(
+      find.text('Saved locally. Continue the built-in sample.'),
+      findsOneWidget,
+    );
+    expect(find.text('1 saved sample'), findsOneWidget);
+    expect(find.text('The First Door is saved locally.'), findsOneWidget);
+    expect(find.text('No saved content yet'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
