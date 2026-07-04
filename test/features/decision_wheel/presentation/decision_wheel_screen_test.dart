@@ -26,12 +26,18 @@ void main() {
     expect(find.text('Shuffle'), findsOneWidget);
     expect(find.text('Sort'), findsOneWidget);
     expect(find.widgetWithText(ElevatedButton, 'Spin'), findsNothing);
+
+    final longEntries = List.generate(
+      24,
+      (index) => 'Option $index',
+    ).join('\n');
+    await tester.enterText(find.byType(TextField), longEntries);
+    await tester.pump();
+
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Decision Wheel center spin shows result overlay', (
-    tester,
-  ) async {
+  testWidgets('Decision Wheel center spin shows result dialog', (tester) async {
     await tester.pumpWidget(
       MaterialApp(home: DecisionWheelScreen(pickIndex: (_) => 1)),
     );
@@ -46,7 +52,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.byKey(const ValueKey('decision-wheel-result-overlay')),
+      find.byKey(const ValueKey('decision-wheel-result-dialog')),
       findsOneWidget,
     );
     expect(
@@ -61,7 +67,34 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Decision Wheel remove deletes the selected option', (
+  testWidgets('Decision Wheel result dialog blocks background interaction', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(home: DecisionWheelScreen(pickIndex: (_) => 1)),
+    );
+
+    await tester.enterText(find.byType(TextField), 'Gamma\nAlpha\nBeta');
+    final spinButton = find.byKey(
+      const ValueKey('decision-wheel-center-spin-button'),
+    );
+    await tester.ensureVisible(spinButton);
+    await tester.pump();
+    await tester.tap(spinButton);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AlertDialog), findsOneWidget);
+
+    await tester.tap(find.text('Sort'), warnIfMissed: false);
+    await tester.pump();
+
+    final field = tester.widget<TextField>(find.byType(TextField));
+    expect(field.controller?.text, 'Gamma\nAlpha\nBeta');
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Decision Wheel cancel closes dialog without changing entries', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -77,12 +110,62 @@ void main() {
     await tester.tap(spinButton);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Remove'));
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+
+    final field = tester.widget<TextField>(find.byType(TextField));
+    expect(field.controller?.text, 'Alpha\nBeta\nGamma');
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Decision Wheel remove deletes the selected option', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(home: DecisionWheelScreen(pickIndex: (_) => 1)),
+    );
+
+    await tester.enterText(find.byType(TextField), 'Alpha; Beta ; Gamma');
+    final spinButton = find.byKey(
+      const ValueKey('decision-wheel-center-spin-button'),
+    );
+    await tester.ensureVisible(spinButton);
     await tester.pump();
+    await tester.tap(spinButton);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Remove'));
+    await tester.pumpAndSettle();
 
     final field = tester.widget<TextField>(find.byType(TextField));
     expect(field.controller?.text, 'Alpha\nGamma');
     expect(find.text('Selected option'), findsNothing);
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Decision Wheel parses mixed lines and semicolons', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(home: DecisionWheelScreen(pickIndex: (_) => 3)),
+    );
+
+    await tester.enterText(
+      find.byType(TextField),
+      'Alpha; Beta\nGamma; ; Delta',
+    );
+    final spinButton = find.byKey(
+      const ValueKey('decision-wheel-center-spin-button'),
+    );
+    await tester.ensureVisible(spinButton);
+    await tester.pump();
+    await tester.tap(spinButton);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.text('Delta'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
