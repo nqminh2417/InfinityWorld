@@ -75,7 +75,7 @@ Current architecture status:
 - Reader now has screen-local text comfort controls for the built-in sample, without persistence, routes, packages, Drift, bookmarks, imports, or a settings model.
 - T97 expanded the Phase 10 backlog direction: active Phase 10 recommendations should focus on feature/content implementation, not screenshot, portfolio, release, or employer-showcase readiness.
 - Unit Converter now lives under `lib/features/unit_converter/`, has a direct `/unit-converter` route, and is linked from Tools beside BMI, Clock, and Random Picker.
-- Decision Wheel now lives under `lib/features/decision_wheel/`, has a direct `/decision-wheel` route, and is linked from Tools beside the other local utilities.
+- Decision Wheel now lives under `lib/features/decision_wheel/`, has a direct `/decision-wheel` route, is linked from Tools beside the other local utilities, and has a larger animated `CustomPainter` wheel with shuffle/sort entries and remove-selected-result actions.
 
 Current tests:
 
@@ -107,7 +107,7 @@ Current tests:
 - Unit Converter domain coverage exists for length and weight conversions plus result formatting.
 - Unit Converter presentation widget coverage exists for scroll-safe rendering, validation, and length conversion behavior.
 - Tools presentation widget coverage exists for Unit Converter route navigation.
-- Decision Wheel presentation widget coverage exists for scroll-safe rendering, validation, deterministic picking, and the local wheel surface.
+- Decision Wheel presentation widget coverage exists for scroll-safe rendering, validation, animated deterministic picking, remove-selected behavior, shuffle/sort actions, and the local wheel surface.
 - Tools presentation widget coverage exists for Decision Wheel route navigation.
 - Explore presentation widget coverage exists for small-screen scroll safety and fake-route navigation to Fox and Summertime Saga.
 - Library presentation widget coverage exists for small-screen scroll safety and empty-state rendering.
@@ -271,7 +271,7 @@ Task sizing note:
 
 ### Primary
 
-T100 - Reader/Library content-depth slice
+T101 - Reader/Library content-depth slice
 
 Reason:
 
@@ -345,7 +345,7 @@ Current phase:
 
 Decision:
 
-- T99 completed the Decision Wheel local tool MVP. The next recommended task is T100 - Reader/Library content-depth slice.
+- T100 refined the Decision Wheel UI/UX with a larger animated wheel. The next recommended task is T101 - Reader/Library content-depth slice.
 
 Do not enter yet:
 
@@ -372,6 +372,7 @@ Reason:
 - The T98 Unit Converter MVP adds another practical local Tool without public APIs, packages, persistence, currency/rates, conversion history, or dashboard redesign.
 - Decision Wheel is the next smallest useful Phase 10 implementation slice because it adds a more visual local utility while staying package-free and smaller than Reader storage, RSS/API expansion, or broad dashboard work.
 - The T99 Decision Wheel MVP adds a local visual picker with focused tests and no packages, persistence, screenshots, portfolio work, or broad Tools redesign.
+- The T100 Decision Wheel refinement makes that local utility feel more polished with a larger animated wheel, reference-inspired segment colors, entry shuffle/sort actions, and remove-selected behavior without adding packages or persistence.
 - Reader/Library is the next smallest useful content-depth slice because it can add more built-in local reading content without committing to Drift, imports, generic bookmarks, or reading-progress persistence.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
@@ -414,7 +415,8 @@ Exit criteria:
 - Done: Completed the T97 Phase 10 feature backlog expansion and deferred portfolio/screenshot/showcase work until explicitly requested.
 - Done: Implemented the T98 Unit Converter local tool MVP.
 - Done: Implemented the T99 Decision Wheel local tool MVP.
-- Remaining: Implement T100 Reader/Library content-depth slice, or follow a user-assigned concrete alternative.
+- Done: Implemented the T100 Decision Wheel UI/UX refinement.
+- Remaining: Implement T101 Reader/Library content-depth slice, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 
