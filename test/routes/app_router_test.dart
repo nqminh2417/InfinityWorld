@@ -20,6 +20,7 @@ import 'package:infinity_world/features/settings/presentation/settings_screen.da
 import 'package:infinity_world/features/summertime_saga/domain/smts_progress_model.dart';
 import 'package:infinity_world/features/summertime_saga/presentation/smts_home_screen.dart';
 import 'package:infinity_world/features/test/presentation/test_screen.dart';
+import 'package:infinity_world/features/unit_converter/presentation/unit_converter_screen.dart';
 import 'package:infinity_world/main.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 
@@ -92,6 +93,15 @@ void main() {
     await tester.pumpWidget(_app(AppRoutes.randomPicker));
 
     expect(find.byType(RandomPickerScreen), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Unit Converter route opens the Unit Converter screen', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app(AppRoutes.unitConverter));
+
+    expect(find.byType(UnitConverterScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

@@ -138,6 +138,42 @@ class ToolsScreen extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(height: IwSpacing.space12),
+            IwCard(
+              onTap: () => context.push(AppRoutes.unitConverter),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.straighten_rounded,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(width: IwSpacing.space12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Unit Converter',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(height: IwSpacing.space4),
+                        Text(
+                          'Convert common length and weight units locally.',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium?.copyWith(
+                            color: IwColors.textSecondary(brightness),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: IwSpacing.space12),
+                  const Icon(Icons.chevron_right_rounded),
+                ],
+              ),
+            ),
           ],
         ),
       ),

@@ -74,6 +74,7 @@ Current architecture status:
 - T95 confirmed the next smallest Reader slice should add local text comfort controls inside the existing Reader screen before bookmarks, reading-progress persistence, imports, or Drift/schema work.
 - Reader now has screen-local text comfort controls for the built-in sample, without persistence, routes, packages, Drift, bookmarks, imports, or a settings model.
 - T97 expanded the Phase 10 backlog direction: active Phase 10 recommendations should focus on feature/content implementation, not screenshot, portfolio, release, or employer-showcase readiness.
+- Unit Converter now lives under `lib/features/unit_converter/`, has a direct `/unit-converter` route, and is linked from Tools beside BMI, Clock, and Random Picker.
 
 Current tests:
 
@@ -88,7 +89,7 @@ Current tests:
 - BMI presentation widget tests exist.
 - Chat route smoke test exists.
 - Dashboard presentation widget test exists for small-screen scroll safety, persisted local display-name rendering, absence of the old no-op filter action, refreshed quick-action labels, and a Home-to-Random Picker route tap.
-- Deterministic route smoke tests exist for Login, Main, Dashboard, Chat, Profile, Settings, BMI, Test, Fox, and Summertime Saga.
+- Deterministic route smoke tests exist for Login, Main, Dashboard, Chat, Profile, Settings, BMI, Clock, Random Picker, Unit Converter, Reader, Test, Fox, and Summertime Saga.
 - Test screen widget coverage exists for small-screen keyboard/scroll safety.
 - Fox API service and model parsing tests exist with fake Dio responses.
 - Fox screen loading/error/retry widget tests exist, avoid real network, and include small-screen scroll-safety coverage.
@@ -102,6 +103,9 @@ Current tests:
 - Tools presentation widget coverage exists for Clock route navigation.
 - Random Picker presentation widget coverage exists for scroll-safe rendering, validation, and deterministic picking.
 - Tools presentation widget coverage exists for Random Picker route navigation.
+- Unit Converter domain coverage exists for length and weight conversions plus result formatting.
+- Unit Converter presentation widget coverage exists for scroll-safe rendering, validation, and length conversion behavior.
+- Tools presentation widget coverage exists for Unit Converter route navigation.
 - Explore presentation widget coverage exists for small-screen scroll safety and fake-route navigation to Fox and Summertime Saga.
 - Library presentation widget coverage exists for small-screen scroll safety and empty-state rendering.
 - Reader presentation widget coverage exists for scroll-safe local sample rendering.
@@ -247,6 +251,7 @@ Completed stabilization tasks:
 - Reader next-step audit was completed; the current Reader path is still one built-in sample plus one saved boolean, so local text comfort controls are the smallest useful Reader follow-up before persistence or data-model work.
 - Reader text comfort controls MVP was completed; the Reader sample now offers screen-local Small / Comfort / Large text sizing while keeping save/remove state, Library reflection, routing, persistence, and data model unchanged.
 - Phase 10 feature backlog expansion was completed; portfolio, screenshot, release presentation, and employer-showcase work are deferred until explicitly requested, and the next recommended content-depth slice is the Unit Converter local tool MVP.
+- Unit Converter local tool MVP was completed; Tools now opens a simple local converter for length and weight units, without packages, APIs, persistence, currency/rates, conversion history, or dashboard redesign.
 
 ## Recommended Next Work
 
@@ -263,25 +268,26 @@ Task sizing note:
 
 ### Primary
 
-T98 - Unit Converter local tool MVP
+T99 - Decision Wheel local tool MVP
 
 Reason:
 
-- Adds another useful local Tools module while Phase 10 is actively building app content.
-- Uses local conversion logic and screen state only; no public API, new package, or persistence dependency is needed.
-- Gives the app a practical utility that is distinct from Clock and Random Picker, while staying smaller than Reader storage, RSS/API expansion, or broad dashboard redesign.
+- Adds a more visual local Tools utility while Phase 10 is actively building app content.
+- Keeps the next slice local and package-free, without public APIs, persistence, screenshots, or release work.
+- Builds on the existing Random Picker direction without adding saved lists, weighted choices, history, or advanced animation in the MVP.
 
 Scope:
 
-- Add a Unit Converter screen/tool using the existing project feature/tool route/card pattern.
-- Support a small initial set of common local conversions, such as length and weight, with temperature only if it stays simple.
-- Add a Tools link/card/route to open the Unit Converter screen.
+- Add a Decision Wheel screen/tool using the existing project feature/tool route/card pattern.
+- Accept a small local list of options, validate at least two choices, and show one selected result.
+- Include a simple wheel-style decision surface if it stays small and local; otherwise keep the MVP to the smallest useful visual picker.
+- Add a Tools link/card/route to open the Decision Wheel screen.
 - Use existing app theme, typography, spacing, and route style; keep the UI simple, clean, and scroll-safe.
-- Add focused tests for conversion behavior and the Tools route/card path.
+- Add focused tests for picker behavior and the Tools route/card path.
 
 Out of scope:
 
-- No public API, currency/rate conversion, new packages, SQLite/persistence, conversion history, custom unit definitions, broad Tools redesign, dashboard redesign, screenshots, portfolio/showcase prep, release work, Android build/toolchain changes, shell route migration, or Riverpod/go_router/Dio migration.
+- No public API, new packages, SQLite/persistence, saved option lists, weighted choices, picker history, advanced animation/physics, broad Tools redesign, dashboard redesign, screenshots, portfolio/showcase prep, release work, Android build/toolchain changes, shell route migration, or Riverpod/go_router/Dio migration.
 
 Verification:
 
@@ -290,10 +296,6 @@ Verification:
 
 ### Alternatives
 
-T99 - Decision Wheel local tool MVP
-
-Choose this if the user wants a more visual local picker follow-up to Random Picker; keep saved lists, weighted choices, history, and advanced animation out of the MVP unless explicitly scoped.
-
 T100 - Reader/Library content-depth slice
 
 Choose this if the user wants more Reader/Library content before another Tools utility; keep Drift, imports, generic bookmarks, and reading-progress offsets out until a dedicated persistence/model task.
@@ -301,6 +303,10 @@ Choose this if the user wants more Reader/Library content before another Tools u
 Dashboard quick actions/content cards refresh
 
 Choose this if the user wants Home to surface more current modules or content cards before adding another standalone tool.
+
+Explore/RSS foundation audit
+
+Choose this if the user wants to evaluate public content/API expansion after the current local-utility run.
 
 ### Portfolio / screenshot / showcase deferral policy
 
@@ -320,7 +326,7 @@ Resume this work only when the user explicitly asks for release, CH Play, portfo
 - Real backend authentication.
 - More design-system components unless explicitly assigned.
 - Full UI redesign unless explicitly approved.
-- Animated random-picker wheel/canvas, weighted choices, saved choice lists, or picker history before a dedicated follow-up task is assigned.
+- Saved picker lists, weighted choices, picker history, or advanced wheel animation/physics before a dedicated follow-up task is assigned.
 - Drift/SQLite reader storage, generic bookmarks, saved-article models, reading-progress offsets, persisted reader settings, or import/parser work before a dedicated Reader persistence/model task is assigned.
 - RSS/news foundation, public API expansion, or Explore live-network loading before a dedicated Explore/RSS task is assigned.
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
@@ -336,7 +342,7 @@ Current phase:
 
 Decision:
 
-- T97 completed the Phase 10 feature backlog expansion. The next recommended task is T98 - Unit Converter local tool MVP.
+- T98 completed the Unit Converter local tool MVP. The next recommended task is T99 - Decision Wheel local tool MVP.
 
 Do not enter yet:
 
@@ -360,7 +366,8 @@ Reason:
 - The T94 Explore refresh gives the Explore tab richer static content without moving network work into the tab, so the next content-depth decision can return to Reader/Library before deeper persistence or screenshot prep.
 - The T95 audit found Reader still has only one built-in sample and one saved boolean. Local text comfort controls are the smallest useful Reader follow-up because they improve the current reading surface without creating a storage model, import path, route hierarchy, or persisted settings contract.
 - The T96 Reader controls make the current Reader sample more useful without new storage or routing.
-- Unit Converter is the next smallest useful Phase 10 implementation slice because it is a practical local Tool, needs no public API or persistence, and is more distinct from Random Picker than a Decision Wheel MVP.
+- The T98 Unit Converter MVP adds another practical local Tool without public APIs, packages, persistence, currency/rates, conversion history, or dashboard redesign.
+- Decision Wheel is the next smallest useful Phase 10 implementation slice because it adds a more visual local utility while staying package-free and smaller than Reader storage, RSS/API expansion, or broad dashboard work.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -400,7 +407,8 @@ Exit criteria:
 - Done: Completed the T95 Reader next-step audit and selected T96 as the next implementation slice.
 - Done: Implemented the T96 Reader text comfort controls MVP.
 - Done: Completed the T97 Phase 10 feature backlog expansion and deferred portfolio/screenshot/showcase work until explicitly requested.
-- Remaining: Implement T98 Unit Converter local tool MVP, or follow a user-assigned concrete alternative.
+- Done: Implemented the T98 Unit Converter local tool MVP.
+- Remaining: Implement T99 Decision Wheel local tool MVP, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 

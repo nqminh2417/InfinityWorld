@@ -6,6 +6,7 @@ import 'package:infinity_world/features/bmi/presentation/bmi_screen.dart';
 import 'package:infinity_world/features/clock/presentation/clock_screen.dart';
 import 'package:infinity_world/features/random_picker/presentation/random_picker_screen.dart';
 import 'package:infinity_world/features/tools/presentation/tools_screen.dart';
+import 'package:infinity_world/features/unit_converter/presentation/unit_converter_screen.dart';
 import 'package:infinity_world/main.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
@@ -35,10 +36,12 @@ void main() {
       findsOneWidget,
     );
     expect(find.byType(ListView), findsOneWidget);
-    expect(find.byType(IwCard), findsNWidgets(3));
+    expect(find.byType(IwCard), findsWidgets);
     expect(find.text('BMI Calculator'), findsOneWidget);
     expect(find.text('Clock'), findsOneWidget);
     expect(find.text('Random Picker'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Unit Converter'), 120);
+    expect(find.text('Unit Converter'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -96,6 +99,27 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(RandomPickerScreen), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Tools Unit Converter card opens the Unit Converter route', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(child: MainApp(initialRoute: AppRoutes.main)),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.handyman_rounded));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ToolsScreen), findsOneWidget);
+
+    await tester.ensureVisible(find.text('Unit Converter'));
+    await tester.tap(find.text('Unit Converter'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(UnitConverterScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }
