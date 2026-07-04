@@ -1,27 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/get_navigation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:infinity_world/app/bootstrap/startup_route_resolver.dart';
+import 'package:infinity_world/app/router/app_router.dart';
+import 'package:infinity_world/app/theme/app_theme.dart';
+import 'package:infinity_world/app/theme/app_theme_mode_provider.dart';
 import 'package:infinity_world/core/config/constants.dart';
-
-import 'package:infinity_world/routes/app_pages.dart';
 import 'package:infinity_world/routes/app_routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final initialRoute = await resolveStartupRoute();
 
-  runApp(const MainApp());
+  runApp(ProviderScope(child: MainApp(initialRoute: initialRoute)));
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MainApp extends ConsumerWidget {
+  MainApp({super.key, this.initialRoute = AppRoutes.login})
+    : router = createAppRouter(initialLocation: initialRoute);
+
+  final String initialRoute;
+  final GoRouter router;
 
   @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref
+        .watch(appThemeModeProvider)
+        .when(
+          data: (value) => value,
+          error: (_, __) => ThemeMode.system,
+          loading: () => ThemeMode.system,
+        );
+
+    return MaterialApp.router(
       title: Cfg.appName,
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.login, // Màn hình mặc định khi khởi động
-      getPages: AppPages.pages, // Danh sách các route
-      theme: ThemeData(primarySwatch: Colors.blue),
+      routerConfig: router,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: themeMode,
     );
   }
 }

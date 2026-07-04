@@ -1,0 +1,289 @@
+# Infinity World Decisions
+
+Last updated: 2026-07-01
+
+This file records durable product, architecture, workflow, and safety decisions for Infinity World. Keep entries concise and update them when a decision changes.
+
+## Accepted Decisions
+
+### 2026-06-23: Work directly on `home/devbyMinh-current`
+
+Codex should continue scoped repository work directly on branch `home/devbyMinh-current`.
+
+### 2026-06-23: Auto commit and push after passing gates
+
+Codex may automatically create a local commit and push after each scoped task when the required verification gates pass and the task only stages related files.
+
+Source of truth:
+
+- `docs/qa/IW_GIT_WORKFLOW.md`
+
+### 2026-06-23: Do not auto merge or rewrite history
+
+Codex must not auto merge branches, force-push, or rewrite history unless the user explicitly requests it. If a pushed commit needs adjustment, use a follow-up fix commit by default.
+
+### 2026-06-23: New and migrated features live under `lib/features/<feature>/`
+
+New feature work and gradually migrated legacy screens should move toward:
+
+```text
+lib/features/<feature>/
+```
+
+Small features may stay simple. Larger features may use `data/`, `domain/`, `application/`, and `presentation/` subfolders when needed.
+
+### 2026-06-23: Do not expand GetX during the transitional migration phase
+
+GetX was kept during early transitional work. Active routing now uses go_router, and remaining GetX code is limited to inactive cleanup scope.
+
+Do not expand GetX for new architecture work.
+
+### 2026-06-23: Do not introduce target libraries before their phase
+
+Riverpod, go_router, Dio, Drift, Bluetooth/audio packages, and backend SDKs should be introduced only by scoped tasks that require them.
+
+### 2026-06-27: First local session bootstrap slice keeps GetX
+
+The first Phase 4 implementation should preserve the current GetX router and `GetMaterialApp`.
+
+Use `shared_preferences` for the initial local session flag, add a small bootstrap resolver before `runApp`, and update the existing login/logout actions to save and clear that flag.
+
+Do not introduce Riverpod, go_router, Dio, real backend auth, or a broad auth redesign in this slice.
+
+### 2026-06-28: Close Phase 4 before router migration
+
+Phase 4 is closed with local session/profile startup behavior implemented on the existing GetX app.
+
+Start Phase 5 with a router migration kickoff audit before adding go_router or changing production routes. The first router implementation must preserve startup/session/login/logout behavior, keep important screens reachable, and avoid mixing in Riverpod, Dio, real backend authentication, or shell redesign.
+
+### 2026-06-28: First go_router slice is root parity only
+
+The first go_router implementation should add the package, introduce a small `lib/app/router/` configuration, preserve existing `AppRoutes` path strings, and replace root `GetMaterialApp` with `MaterialApp.router`.
+
+It should map the existing route table, replace the current production GetX navigation calls, and keep `MainScreen` unchanged. Do not introduce `ShellRoute`, redesign the bottom navigation, remove GetX, add Riverpod, add Dio, or change real authentication in the first router slice.
+
+### 2026-06-28: Shell ownership moved before shell redesign
+
+The audited `MainScreen` is a thin legacy shell wrapper for Dashboard, Chat, and Profile. T39 moved that ownership to `lib/app/shell/main_screen.dart` while preserving current tabs and `/main` behavior.
+
+Do not combine future shell work with unrelated Riverpod, Dio, GetX cleanup, or visual redesign work. The five target tabs and any later `ShellRoute`/deep-link work should remain scoped separately.
+
+### 2026-06-28: GetX cleanup removed only inactive routing
+
+The T40 audit found no active GetX navigation calls. Remaining Dart GetX usage was limited to inactive `lib/routes/app_pages.dart`, and the `get` dependency existed only for that file.
+
+T41 deleted `lib/routes/app_pages.dart` and removed `get`, but kept `lib/routes/app_routes.dart` as the shared route path contract for go_router and startup/session code.
+
+### 2026-06-29: Live-network route smoke tests should use router builder overrides
+
+The T42 audit found that Fox and Summertime Saga already expose deterministic screen seams: `FoxRandomScreen(service: ...)` and `SmtsHomeScreen(loadProgress: ..., logoUrl: ...)`.
+
+Do not wait for Dio, Riverpod, or a networking migration just to smoke-test their go_router paths. The next implementation should add the smallest test-only seam at the router factory level so route tests can override those two builders with fake loaders while production routes keep the current default constructors.
+
+### 2026-06-29: First five-tab shell slice should stay local to `MainScreen`
+
+The T44 audit found that `MainScreen` is still a local-state bottom-navigation shell and the target root feature folders for Home, Explore, Tools, and Library do not exist yet.
+
+The first five-tab implementation should update `MainScreen` to the target Home / Explore / Tools / Library / Settings labels without introducing `ShellRoute`, Riverpod, Dio, new route paths, or live-network tab roots. Keep `/main` as the startup shell route, keep direct route parity for existing feature routes, and preserve current Dashboard access from the first tab until richer Home/Tools/Explore roots are scoped.
+
+### 2026-06-29: Defer `ShellRoute` until real tab routes or tab stacks exist
+
+The T46 audit found no current need for `ShellRoute` or tab-specific paths. The app is Android-first, `/main` remains the local session shell entry point, the five-tab shell is local state, Explore/Tools/Library are placeholders, and important feature screens already have direct go_router routes.
+
+The official go_router docs describe URL-based navigation and deep linking through `GoRoute`, while shell APIs are for nested/multiple Navigator layouts. `StatefulShellRoute` is the better future fit if InfinityWorld needs separate tab navigation stacks or state preservation per branch.
+
+Do not implement `ShellRoute`, `StatefulShellRoute`, `/home`, `/explore`, `/tools`, or `/library` until real tab root screens and at least one tab-owned child route/back-stack need exist. The next router task should be a Phase 5 checkpoint audit, not another routing implementation slice.
+
+### 2026-06-29: Close Phase 5 before Riverpod foundation
+
+The T47 checkpoint found that Phase 5 routing goals are complete enough to close: active routing is go_router-only, startup/session parity is preserved through `/main`, direct route smoke tests cover the active route table including fake-network Fox and Summertime Saga routes, `MainScreen` owns the local five-tab shell, and `ShellRoute` is intentionally deferred.
+
+Start Phase 6 with a Riverpod foundation kickoff audit before adding Riverpod or rewriting state. Do not combine Riverpod introduction with Dio, real backend auth, shell-route work, feature expansion, or visual redesign.
+
+### 2026-06-29: First Riverpod slice is root/session provider only
+
+The T48 audit scoped the first Riverpod implementation to root `ProviderScope` setup and one `LocalSessionRepository` provider seam.
+
+T49 added `flutter_riverpod`, kept `/main` and active go_router routes unchanged, updated Login/Dashboard/startup-session tests for provider overrides, and avoided migrating BMI, Fox, Summertime Saga, Settings, theme preferences, Dio, real auth, shell routes, or feature roots.
+
+### 2026-06-29: Second Riverpod slice is Profile display name
+
+The T50 audit selected Profile local display-name consumption as the second Riverpod slice.
+
+T51 added a read-only current display-name provider backed by the existing local session repository, converted Profile to show the persisted local display name when available, and kept Profile layout, routes, Settings, theme preferences, shell tab state, BMI form state, network features, Dio, and real auth out of scope.
+
+### 2026-06-29: Third Riverpod slice is Settings profile summary
+
+The T52 audit selected Settings read-only profile summary as the third Riverpod slice.
+
+T53 converted Settings to consume the existing `currentDisplayNameProvider` and show the persisted local display name in a small read-only summary, while keeping profile editing, avatar selection, theme preferences, root `ThemeMode`, Settings redesign, shell tab state, BMI/Login form state, network features, Dio, `ShellRoute`, and real auth out of scope.
+
+### 2026-06-29: Fourth Riverpod slice is Dashboard local greeting
+
+The T54 audit selected Dashboard/Home read-only greeting as the fourth Riverpod slice.
+
+T55 showed the persisted local display name in a small Dashboard/Home greeting by reusing `currentDisplayNameProvider`, while keeping routes, `/main`, shell tab state, module navigation, logout behavior, profile editing, theme preferences, root `ThemeMode`, network features, Dio, `ShellRoute`, real auth, and visual redesign out of scope.
+
+### 2026-06-29: Fifth Riverpod slice is root theme mode provider foundation
+
+The T56 audit selected root theme mode provider foundation as the fifth Riverpod slice.
+
+T57 introduced a small app-level theme-mode provider consumed by `MainApp`, keeping the runtime default at `ThemeMode.system` and preserving routes, `/main`, startup/session behavior, and the five-tab shell. Settings theme controls, persisted theme preference semantics, theme style switching, Neon/Vice themes, shell tab state, form state, network features, Dio, `ShellRoute`, real auth, and visual redesign stay out of scope.
+
+### 2026-06-29: Sixth Riverpod slice is Settings Appearance theme-mode summary
+
+The T58 audit selected Settings Appearance read-only theme-mode summary as the sixth Riverpod slice, and T59 implemented it.
+
+Settings now has a small read-only Appearance summary that consumes `appThemeModeProvider` and displays the current theme mode label while keeping the runtime default at `ThemeMode.system`. Settings theme controls, persisted theme preference semantics, theme style switching, Settings redesign, shell tab state, form state, network features, Dio, `ShellRoute`, real auth, and visual redesign stay out of scope.
+
+### 2026-06-29: Seventh Riverpod slice is theme-mode persistence foundation
+
+The T60 audit selected app theme-mode persistence foundation as the seventh Riverpod slice, and T61 implemented it.
+
+The app theme-mode provider is now Riverpod-managed and backed by `shared_preferences`, while preserving `ThemeMode.system` when no valid stored value exists. Existing root app and Settings read-only consumption continue to work through the same provider. Interactive Settings theme controls, theme style switching, Neon/Vice themes, visual redesign, shell tab state, form state, network features, Dio, `ShellRoute`, real auth, and new feature roots stay out of scope.
+
+### 2026-06-29: Eighth Riverpod slice is Settings theme-mode controls
+
+T62 added compact Settings Appearance controls for selecting System, Light, or Dark through the persisted `appThemeModeProvider` controller. The existing Settings layout, route behavior, local session flow, and five-tab shell stay stable. Theme style switching, Neon/Vice themes, visual redesign, shell state, form state, network features, Dio, `ShellRoute`, real auth, and new feature roots stay out of scope.
+
+### 2026-06-30: Checkpoint Phase 6 before adding another Riverpod consumer
+
+The T63 audit found no remaining low-risk local shared-state consumer worth migrating immediately. Main shell tab index and Login/BMI/Test form state should stay local for now. Fox and Summertime Saga async state should wait for Phase 7 networking/Dio ownership. The next task should checkpoint Riverpod foundation before any further Riverpod implementation slice or Phase 7 work.
+
+### 2026-06-30: Close Riverpod foundation before networking foundation
+
+The T64 checkpoint found Phase 6 complete enough for current local session/profile/theme preferences: root `ProviderScope`, local session repository injection, display-name consumption, persisted theme mode, Settings controls, and focused coverage are in place. Do not add another Riverpod-only implementation slice without a concrete shared-state need. Start Phase 7 with a networking foundation kickoff audit before adding Dio or migrating API-backed features.
+
+### 2026-06-30: First networking slice is Dio foundation plus Fox pilot
+
+The T65 audit found two direct `http` feature services: Fox and Summertime Saga. Both already have fake-network seams and deterministic route smoke coverage, and Dio is not installed yet.
+
+The first Phase 7 implementation should add Dio only as part of a used vertical slice: a smallest shared Dio client/provider boundary plus a Fox service migration. Fox is the smaller pilot because its service contract and tests are narrower. Summertime Saga remains the follow-up after the Dio client/test seam is proven.
+
+Do not add unused networking scaffolding, migrate both services at once, introduce global retry/cache/offline policy, change routing, add real auth, or redesign UI in the first networking slice.
+
+### 2026-06-30: Keep the Dio foundation small after the Fox pilot
+
+T66 added `dio`, `lib/core/network/dio_provider.dart`, and a Fox service provider, then migrated `FoxApiService` to the Dio-backed path.
+
+The shared networking foundation should remain just the Dio client/provider boundary for now. Do not add `ApiResult`, global retry, cache, offline persistence, interceptors, auth headers, or shared error UI until a concrete feature needs them.
+
+The next networking slice should migrate Summertime Saga to the same boundary while preserving its existing service and screen behavior.
+
+### 2026-06-30: Complete current direct HTTP migration before broader network policy
+
+T67 migrated `SmtsService` to the Dio-backed path, added a Summertime Saga service provider, kept screen and route loader seams deterministic, and removed the unused `http` dependency after no Dart imports remained.
+
+Both current API-backed features now use Dio-backed services. The next Phase 7 task should be a checkpoint audit, not retry/cache/offline/global error policy, unless a concrete blocker appears.
+
+### 2026-06-30: Close networking foundation before feature expansion
+
+The T68 checkpoint confirmed that the shared Dio factory/provider boundary exists, Fox and Summertime Saga both use Dio-backed service paths, direct `http` imports and dependency entries are gone, fake-network tests remain in place, and Android release internet permission is present.
+
+Close Phase 7. Do not add retry/cache/offline/global error policy until a concrete feature needs it. Start Phase 8 with a feature expansion kickoff audit before implementing another feature slice.
+
+### 2026-06-30: First Phase 8 slice is Tools BMI catalog
+
+The T69 kickoff audit found that `/main` already has the target five bottom tabs, but Explore, Tools, and Library are still placeholder tab bodies. BMI is the smallest existing local utility module that fits a target tab.
+
+T70 added a small Tools tab body that links to the existing BMI route. Wheel, Device Hub, AI Lab, new route paths, `ShellRoute`, new packages, persistence, networking, `IwModuleCard`, and broad Home redesign remain out of scope for this first Phase 8 slice.
+
+### 2026-06-30: Explore catalog stays static
+
+T71 added a small Explore tab body that links to the existing Fox and Summertime Saga routes. Explore must not load API data just to render the tab catalog; the existing feature screens remain responsible for network loading, error states, and retry behavior after navigation.
+
+Audit Library before adding Reader, bookmarks, saved articles, local database, imports/downloads, new packages, or persistence.
+
+### 2026-07-01: Library starts with an empty-state tab body
+
+The T72 audit found no existing Reader, bookmark, saved-article, reading-progress, or local database module to surface in Library.
+
+T73 added only a static empty-state tab body using existing design-system primitives. Do not add Reader, bookmarks, saved articles, Drift/database schema, imports/downloads, new packages, new routes, or persistence until a concrete local content feature is scoped.
+
+### 2026-07-01: Home stays Dashboard-owned for first cleanup
+
+The T74 audit confirmed that Home still renders the existing `DashboardScreen`, no `features/home` root exists yet, and the direct Dashboard route plus Dashboard widget coverage already protect the current behavior.
+
+The next slice should keep Dashboard as the Home tab and remove only the no-op app-bar filter action. Do not move Home into a new feature root, add recent modules, add pinned-module persistence, remove direct routes, introduce `ShellRoute`, change logout/session behavior, or redesign Home until a later scoped task.
+
+### 2026-07-01: Close Phase 8 first tab-surface pass before QA
+
+The T76 checkpoint found that the first Phase 8 pass is complete enough for now: Home/Dashboard, Explore, Tools, Library, and Settings all have useful tab surfaces or existing bodies, direct feature routes remain covered, and no tab owns a nested route stack that would justify `ShellRoute`.
+
+Start Phase 9 with a QA/device readiness kickoff audit. Do not start larger Home, Reader, RSS, Device Hub, AI Lab, persistence, route cleanup, release signing, screenshots, or Android toolchain work until the QA/device scope is audited or explicitly deferred.
+
+### 2026-07-02: First Android visual smoke found one Local profile polish follow-up
+
+T78 ran the debug APK on `Pixel_6_API_33` and covered clean-start Local profile login, keyboard-open login, Home/Dashboard, one Dashboard BMI route link, Explore, Tools, Library, and Settings theme controls. No blocking layout failure was observed in that emulator pass.
+
+T79 resolved the Local profile light-mode status-bar contrast issue with a route-local system overlay on Login. README refresh can now proceed before screenshots, portfolio capture, release signing, Android toolchain changes, or new feature work.
+
+T80 refreshed the README against the current Flutter/Riverpod/go_router/Dio stack, active app surfaces, Phase 9 runtime findings, setup commands, and known deferrals.
+
+T81 closed Phase 9 instead of starting portfolio screenshots. Portfolio screenshots and README screenshot assets are deferred until the app has several content-rich screens, Dashboard/Home has meaningful content, Explore/Tools/Library are no longer mostly placeholder surfaces, at least two or three safe module flows are useful enough to showcase, and visual theme/typography/spacing are stable enough for public screenshots. Start Phase 10 with an app content depth kickoff audit before screenshot capture, release signing, store packaging, full device matrix testing, or broad portfolio copywriting.
+
+### 2026-07-01: First Phase 9 slice is Android emulator visual smoke
+
+The T77 kickoff audit found that automated gates pass and the debug APK builds, but no Android emulator or physical Android device is currently running. Two Android AVDs are available locally: `Pixel_4_API_30` and `Pixel_6_API_33`.
+
+Start Phase 9 with a small Android emulator visual smoke review, preferably on `Pixel_6_API_33`. Defer README/portfolio polish, screenshots, release signing, Built-in Kotlin migration, Android toolchain changes, and new feature work until after the first runtime visual findings are recorded or explicitly deferred.
+
+### 2026-06-23: BMI is the current migration pilot
+
+BMI is the first small feature used to prove gradual migration:
+
+- Domain logic lives under `lib/features/bmi/domain/`.
+- Presentation lives under `lib/features/bmi/presentation/`.
+- Active go_router routing opens the BMI screen. The inactive legacy GetX route table has been removed.
+
+### 2026-06-23: Apply Flutter UI layout safety rules for UI work
+
+Flutter UI work must apply the global `flutter-ui-layout-safety` skill and the repo policies:
+
+- `docs/design/IW_LAYOUT_SAFETY.md`
+- `docs/design/IW_SYSTEM_UI_POLICY.md`
+
+### 2026-06-23: Fullscreen and immersive mode are restricted
+
+Normal screens must keep system bars usable and content visible. Fullscreen or immersive mode is limited to reader, media preview, image/video viewer, camera/scanner, game-like screens, or explicitly approved screens.
+
+### 2026-06-23: Android toolchain/build-system work is separate
+
+Gradle, Android Gradle Plugin, Kotlin, signing, package identity, and other Android build-system changes should use a separate branch/task unless explicitly approved.
+
+### 2026-06-23: Android toolchain upgrade pulled forward for Flutter 3.44.2
+
+The Android toolchain upgrade was explicitly approved on `home/devbyMinh-current` to reduce Flutter 3.44.2 future compatibility warnings.
+
+Selected versions:
+
+- Gradle wrapper: 8.14.5
+- Android Gradle Plugin: 8.11.1
+- Kotlin Gradle Plugin: 2.2.20
+- Java/Kotlin target: 17
+
+AGP 9.x and Built-in Kotlin migration remain deferred follow-up work unless a future build requires them.
+
+### 2026-06-23: Emulator/device UI review is a later QA phase
+
+Device or emulator UI review is important for polish, but it is not required for every small current task. Code-level UI safety still applies to UI changes.
+
+### 2026-06-23: User-assigned tasks can override the backlog recommendation
+
+`docs/TASKS.md` is guidance, not a hard lock. If the user assigns a different scoped task, Codex should follow the user's task and update planning docs only when the task changes priority, phase, backlog, or durable decisions.
+
+Source of truth:
+
+- `docs/qa/IW_TASK_WORKFLOW.md`
+
+### 2026-06-23: Task results use a standard concise report
+
+After every completed or blocked task, Codex should return the standard `Task Result` report with status, summary, changed files, verification, commit/push details, planning-doc status, unverified areas, and one advisory recommended next task.
+
+Source of truth:
+
+- `docs/qa/IW_TASK_WORKFLOW.md`
+
+## Superseded or Revisit Later
+
+No decisions are currently superseded.

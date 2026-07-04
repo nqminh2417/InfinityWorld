@@ -58,7 +58,10 @@ class _FloatingLabelTextFieldState extends State<FloatingLabelTextField> {
         style: const TextStyle(fontSize: 16.0),
         decoration: InputDecoration(
           // isDense: true,
-          contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 0,
+            horizontal: 8,
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
             borderSide: const BorderSide(color: Colors.grey),
@@ -67,15 +70,15 @@ class _FloatingLabelTextFieldState extends State<FloatingLabelTextField> {
             borderRadius: BorderRadius.circular(8.0),
             borderSide: const BorderSide(color: Colors.blue),
           ),
-          floatingLabelStyle: TextStyle(color: _isFocused ? Colors.blue : Colors.grey),
+          floatingLabelStyle: TextStyle(
+            color: _isFocused ? Colors.blue : Colors.grey,
+          ),
           labelText: widget.label,
           // You can customize other properties of the input field here
         ),
         readOnly: widget.readOnly,
         onTapOutside: (event) {
-          setState(() {
-            FocusScope.of(context).requestFocus(FocusNode());
-          });
+          FocusScope.of(context).unfocus();
         },
       ),
     );
