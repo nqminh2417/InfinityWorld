@@ -25,6 +25,7 @@ void main() {
     expect(find.text('Spin a decision'), findsOneWidget);
     expect(find.text('Shuffle'), findsOneWidget);
     expect(find.text('Sort'), findsOneWidget);
+    expect(find.text('History'), findsOneWidget);
     expect(find.widgetWithText(ElevatedButton, 'Spin'), findsNothing);
 
     final longEntries = List.generate(
@@ -142,6 +143,88 @@ void main() {
     expect(field.controller?.text, 'Alpha\nGamma');
     expect(find.text('Selected option'), findsNothing);
     expect(find.byType(AlertDialog), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Decision Wheel history shows completed spins', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(home: DecisionWheelScreen(pickIndex: (_) => 1)),
+    );
+
+    await tester.enterText(find.byType(TextField), 'Alpha\nBeta\nGamma');
+    final spinButton = find.byKey(
+      const ValueKey('decision-wheel-center-spin-button'),
+    );
+    await tester.ensureVisible(spinButton);
+    await tester.pump();
+    await tester.tap(spinButton);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(OutlinedButton, 'History'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('decision-wheel-history-sheet')),
+      findsOneWidget,
+    );
+    expect(find.text('Spin #1'), findsOneWidget);
+    expect(find.text('Beta'), findsOneWidget);
+    expect(find.text('Clear history'), findsOneWidget);
+    expect(find.text('Close'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Decision Wheel clear history empties the list', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(home: DecisionWheelScreen(pickIndex: (_) => 1)),
+    );
+
+    await tester.enterText(find.byType(TextField), 'Alpha\nBeta\nGamma');
+    final spinButton = find.byKey(
+      const ValueKey('decision-wheel-center-spin-button'),
+    );
+    await tester.ensureVisible(spinButton);
+    await tester.pump();
+    await tester.tap(spinButton);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(OutlinedButton, 'History'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Clear history'));
+    await tester.pump();
+
+    expect(find.text('No spins yet'), findsOneWidget);
+    expect(find.text('Beta'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Decision Wheel remove keeps past history item', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(home: DecisionWheelScreen(pickIndex: (_) => 1)),
+    );
+
+    await tester.enterText(find.byType(TextField), 'Alpha\nBeta\nGamma');
+    final spinButton = find.byKey(
+      const ValueKey('decision-wheel-center-spin-button'),
+    );
+    await tester.ensureVisible(spinButton);
+    await tester.pump();
+    await tester.tap(spinButton);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Remove'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(OutlinedButton, 'History'));
+    await tester.pumpAndSettle();
+
+    final field = tester.widget<TextField>(find.byType(TextField));
+    expect(field.controller?.text, 'Alpha\nGamma');
+    expect(find.text('Spin #1'), findsOneWidget);
+    expect(find.text('Beta'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

@@ -23,6 +23,18 @@ const _decisionWheelPalette = [
 
 enum _DecisionResultAction { cancel, remove }
 
+class _DecisionWheelHistoryEntry {
+  final int order;
+  final String option;
+  final Color color;
+
+  const _DecisionWheelHistoryEntry({
+    required this.order,
+    required this.option,
+    required this.color,
+  });
+}
+
 int _systemPickIndex(int optionCount) => math.Random().nextInt(optionCount);
 
 List<String> _systemShuffleOptions(List<String> options) {
@@ -52,7 +64,9 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
   Animation<double>? _spinAnimation;
   double _rotationTurns = 0;
   int? _selectedIndex;
+  int _nextHistoryOrder = 1;
   String? _errorText;
+  final List<_DecisionWheelHistoryEntry> _history = [];
 
   bool get _isSpinning => _spinController.isAnimating;
 
@@ -118,6 +132,14 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
       setState(() {
         _rotationTurns = targetTurns;
         _selectedIndex = selectedIndex;
+        _history.add(
+          _DecisionWheelHistoryEntry(
+            order: _nextHistoryOrder,
+            option: options[selectedIndex],
+            color: decisionWheelSegmentColor(selectedIndex, options.length),
+          ),
+        );
+        _nextHistoryOrder += 1;
       });
       _showSelectedOptionDialog(options, selectedIndex);
     });
@@ -216,6 +238,122 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
 
     _setOptionsText(sorted);
     _clearWheelState();
+  }
+
+  void _clearHistory() {
+    setState(() {
+      _history.clear();
+      _nextHistoryOrder = 1;
+    });
+  }
+
+  void _showHistorySheet() {
+    if (_isSpinning) {
+      return;
+    }
+
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            final brightness = Theme.of(context).brightness;
+            final history = _history.reversed.toList(growable: false);
+
+            return SafeArea(
+              child: SizedBox(
+                key: const ValueKey('decision-wheel-history-sheet'),
+                height: MediaQuery.sizeOf(context).height * 0.55,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    IwSpacing.cardPadding,
+                    0,
+                    IwSpacing.cardPadding,
+                    IwSpacing.cardPadding,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.history_rounded,
+                            color: IwColors.secondary(brightness),
+                          ),
+                          const SizedBox(width: IwSpacing.space8),
+                          Text(
+                            'History',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: IwSpacing.space12),
+                      Expanded(
+                        child:
+                            history.isEmpty
+                                ? _DecisionHistoryEmptyState(
+                                  brightness: brightness,
+                                )
+                                : ListView.separated(
+                                  itemCount: history.length,
+                                  separatorBuilder:
+                                      (_, _) => const Divider(height: 1),
+                                  itemBuilder: (context, index) {
+                                    final entry = history[index];
+                                    return ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      leading: Container(
+                                        width: 12,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color: entry.color,
+                                          borderRadius: BorderRadius.circular(
+                                            IwRadius.radiusFull,
+                                          ),
+                                        ),
+                                      ),
+                                      title: Text(entry.option),
+                                      subtitle: Text('Spin #${entry.order}'),
+                                    );
+                                  },
+                                ),
+                      ),
+                      const SizedBox(height: IwSpacing.space12),
+                      Wrap(
+                        alignment: WrapAlignment.end,
+                        spacing: IwSpacing.space8,
+                        runSpacing: IwSpacing.space8,
+                        children: [
+                          TextButton.icon(
+                            onPressed:
+                                history.isEmpty
+                                    ? null
+                                    : () {
+                                      _clearHistory();
+                                      setSheetState(() {});
+                                    },
+                            icon: const Icon(Icons.delete_sweep_rounded),
+                            label: const Text('Clear history'),
+                          ),
+                          FilledButton(
+                            onPressed: () {
+                              Navigator.of(sheetContext).pop();
+                            },
+                            child: const Text('Close'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   void _clearWheelState() {
@@ -344,6 +482,11 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                           onPressed: _isSpinning ? null : _sortEntries,
                           icon: const Icon(Icons.sort_by_alpha_rounded),
                           label: const Text('Sort'),
+                        ),
+                        OutlinedButton.icon(
+                          onPressed: _isSpinning ? null : _showHistorySheet,
+                          icon: const Icon(Icons.history_rounded),
+                          label: const Text('History'),
                         ),
                       ],
                     ),
@@ -681,6 +824,37 @@ class DecisionWheelPainter extends CustomPainter {
         oldDelegate.selectedIndex != selectedIndex ||
         oldDelegate.brightness != brightness ||
         oldDelegate.textStyle != textStyle;
+  }
+}
+
+class _DecisionHistoryEmptyState extends StatelessWidget {
+  final Brightness brightness;
+
+  const _DecisionHistoryEmptyState({required this.brightness});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.history_toggle_off_rounded,
+            color: IwColors.textSecondary(brightness),
+          ),
+          const SizedBox(height: IwSpacing.space8),
+          Text('No spins yet', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: IwSpacing.space4),
+          Text(
+            'Completed spins will appear here.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: IwColors.textSecondary(brightness),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
   }
 }
 
