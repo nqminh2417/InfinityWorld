@@ -53,7 +53,7 @@ Current architecture status:
 - Tools now has a first tab body at `lib/features/tools/presentation/tools_screen.dart`.
 - Explore now has a first tab body at `lib/features/explore/presentation/explore_screen.dart`.
 - Library now has a first empty-state tab body at `lib/features/library/presentation/library_screen.dart`.
-- Phase 9 QA/device readiness is complete; portfolio screenshots are deferred until the app has richer public-facing content.
+- Phase 9 QA/device readiness is complete; portfolio, screenshot, release presentation, and employer-showcase work are deferred until explicitly requested.
 - Reader exists as a local sample screen; there is still no bookmark, saved-article, reading-progress, or local database module yet.
 - T91 confirmed existing persistence is limited to small `shared_preferences` repositories for local session/profile and theme mode; no Drift/local database dependency is active.
 - `features/home` root does not exist yet; Dashboard still owns direct module/dev links plus logout/session clearing.
@@ -73,6 +73,7 @@ Current architecture status:
 - Explore now has richer static Fox / Summertime Saga module cards while keeping live network work inside the destination screens.
 - T95 confirmed the next smallest Reader slice should add local text comfort controls inside the existing Reader screen before bookmarks, reading-progress persistence, imports, or Drift/schema work.
 - Reader now has screen-local text comfort controls for the built-in sample, without persistence, routes, packages, Drift, bookmarks, imports, or a settings model.
+- T97 expanded the Phase 10 backlog direction: active Phase 10 recommendations should focus on feature/content implementation, not screenshot, portfolio, release, or employer-showcase readiness.
 
 Current tests:
 
@@ -113,6 +114,7 @@ Current tests:
 - Explore presentation widget coverage now verifies the refreshed static content, small-screen scrolling, and existing Fox / Summertime Saga route taps.
 - No new app tests were added for T95 because it was an audit/docs-only checkpoint.
 - Reader presentation widget coverage now verifies the screen-local text-size controls while preserving the existing sample and saved-sample behavior.
+- No new app tests were added for T97 because it is a docs-only backlog expansion.
 - No Home feature-root tests exist yet because the Home tab still uses the existing Dashboard screen.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
@@ -244,6 +246,7 @@ Completed stabilization tasks:
 - Explore content cards refresh was completed; Explore now has richer entry cards for Random Fox and Summertime Saga, without loading API data from the tab, adding routes, adding packages, changing persistence, or redesigning the shell.
 - Reader next-step audit was completed; the current Reader path is still one built-in sample plus one saved boolean, so local text comfort controls are the smallest useful Reader follow-up before persistence or data-model work.
 - Reader text comfort controls MVP was completed; the Reader sample now offers screen-local Small / Comfort / Large text sizing while keeping save/remove state, Library reflection, routing, persistence, and data model unchanged.
+- Phase 10 feature backlog expansion was completed; portfolio, screenshot, release presentation, and employer-showcase work are deferred until explicitly requested, and the next recommended content-depth slice is the Unit Converter local tool MVP.
 
 ## Recommended Next Work
 
@@ -260,51 +263,50 @@ Task sizing note:
 
 ### Primary
 
-T97 - Portfolio screenshot readiness audit
+T98 - Unit Converter local tool MVP
 
 Reason:
 
-- Phase 10 has now added useful content depth across Tools, Home/Dashboard, Explore, Library, and Reader.
-- A readiness audit can decide whether screenshot prep is finally justified before another Reader/storage or RSS/API slice.
-- This keeps scope smaller than screenshot capture, release work, deeper persistence, or broad visual redesign.
+- Adds another useful local Tools module while Phase 10 is actively building app content.
+- Uses local conversion logic and screen state only; no public API, new package, or persistence dependency is needed.
+- Gives the app a practical utility that is distinct from Clock and Random Picker, while staying smaller than Reader storage, RSS/API expansion, or broad dashboard redesign.
 
 Scope:
 
-- Review current Home/Dashboard, Explore, Tools, Library, Reader, and safe module flows against the screenshot deferral criteria.
-- Decide whether the next task should start screenshot prep or continue Phase 10 content depth.
-- Update `docs/TASKS.md` with exactly one next recommended task.
+- Add a Unit Converter screen/tool using the existing project feature/tool route/card pattern.
+- Support a small initial set of common local conversions, such as length and weight, with temperature only if it stays simple.
+- Add a Tools link/card/route to open the Unit Converter screen.
+- Use existing app theme, typography, spacing, and route style; keep the UI simple, clean, and scroll-safe.
+- Add focused tests for conversion behavior and the Tools route/card path.
 
 Out of scope:
 
-- No screenshot capture, screenshot assets, README screenshot insertion, release work, Android build/toolchain changes, feature implementation, Drift/SQLite schema, bookmarks, saved articles, imports/downloads, parser work, shell route migration, or Riverpod/go_router/Dio migration.
+- No public API, currency/rate conversion, new packages, SQLite/persistence, conversion history, custom unit definitions, broad Tools redesign, dashboard redesign, screenshots, portfolio/showcase prep, release work, Android build/toolchain changes, shell route migration, or Riverpod/go_router/Dio migration.
 
 Verification:
 
-- Audit/docs gate from `docs/qa/IW_GIT_WORKFLOW.md`: at minimum `git diff --check`.
+- Dart/UI gate from `docs/qa/IW_GIT_WORKFLOW.md`: `dart format` for changed Dart files, `flutter analyze`, `flutter test`, and `git diff --check`.
+- Run `flutter build apk --debug` if the implementation adds or changes app routing/startup/build-impacting code.
 
 ### Alternatives
 
-Reader persistence/model audit
+T99 - Decision Wheel local tool MVP
 
-Choose this if the user wants saved articles, bookmarks, reading-progress offsets, or multi-item Reader content before screenshot readiness.
+Choose this if the user wants a more visual local picker follow-up to Random Picker; keep saved lists, weighted choices, history, and advanced animation out of the MVP unless explicitly scoped.
 
-Explore/RSS foundation audit
+T100 - Reader/Library content-depth slice
 
-Choose this if the user wants to evaluate public content/API expansion before screenshot readiness.
+Choose this if the user wants more Reader/Library content before another Tools utility; keep Drift, imports, generic bookmarks, and reading-progress offsets out until a dedicated persistence/model task.
 
-T30 — Dependency/toolchain audit
+Dashboard quick actions/content cards refresh
 
-Choose this if package/build risk should be reviewed before the next content-depth phase.
+Choose this if the user wants Home to surface more current modules or content cards before adding another standalone tool.
 
-### Portfolio screenshot deferral
+### Portfolio / screenshot / showcase deferral policy
 
-Portfolio screenshots and README screenshot assets are deferred until:
+Portfolio screenshots, screenshot capture, README screenshot assets, CH Play release presentation, release signing/store packaging, employer/recruiter showcase prep, and portfolio copywriting are deferred while Phase 10 feature/content building is active.
 
-- The app has several content-rich screens.
-- Dashboard/Home has meaningful content beyond the current direct-link surface.
-- Explore, Tools, and Library are no longer mostly first-pass or placeholder surfaces.
-- At least two or three safe module flows are useful enough to showcase.
-- Visual theme, typography, and spacing are stable enough for public screenshots.
+Resume this work only when the user explicitly asks for release, CH Play, portfolio, screenshots, employer/recruiter showcase, or public presentation work.
 
 ### Do not start yet
 
@@ -324,7 +326,7 @@ Portfolio screenshots and README screenshot assets are deferred until:
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
 - Riverpod/go_router migration inside Summertime Saga networking follow-up tasks unless explicitly scoped.
-- Portfolio screenshots, screenshot assets, release signing, store packaging, full device matrix testing, or broad portfolio copywriting before the screenshot entry criteria above are met and a dedicated task is assigned.
+- Portfolio screenshots, screenshot capture/assets, README screenshots, CH Play release presentation, release signing/store packaging, full device matrix testing, employer/recruiter showcase prep, or portfolio copywriting unless the user explicitly asks for release/showcase work.
 
 ### Phase guard
 
@@ -334,16 +336,17 @@ Current phase:
 
 Decision:
 
-- T96 completed the Reader text comfort controls MVP. The next recommended task is T97 - Portfolio screenshot readiness audit.
+- T97 completed the Phase 10 feature backlog expansion. The next recommended task is T98 - Unit Converter local tool MVP.
 
 Do not enter yet:
 
-- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, Drift/schema persistence, RSS/news/API expansion, or broader feature implementation before the screenshot readiness audit or a user-assigned concrete alternative.
+- Screenshot capture, release-readiness work, release signing, store packaging, full device matrix testing, CH Play presentation, employer/recruiter showcase prep, or portfolio copywriting unless the user explicitly asks for release/showcase work.
+- Drift/schema persistence, RSS/news/API expansion, shell routing, or broad dashboard redesign before a dedicated task is assigned.
 
 Reason:
 
 - Phase 9 completed the useful QA/device readiness loop: automated Flutter gates passed during the phase, Android AVDs are available, the Pixel 6 emulator visual smoke review found no blocking layout failure across the checked startup/tab/module flows, the Local profile status-bar contrast follow-up is complete, and README current-state docs are refreshed.
-- Portfolio screenshots would mostly capture limited or placeholder surfaces today, so they are deferred until the app has richer public-facing content and stable visual polish.
+- The user explicitly redirected Phase 10 away from portfolio/screenshot readiness during active content building, so release/showcase work is deferred until explicitly requested.
 - The current Clock tool adds a small local Tools surface beside BMI with digital time rows and a `CustomPainter` analog face, without public APIs, persistence, dashboard redesign, shell routing, image assets, or portfolio screenshot work.
 - The T85 audit found Tools is still the smallest low-risk Phase 10 surface because it can add the documented Wheel/random-picker direction as a local MVP without public APIs, persistence, packages, or a broad redesign.
 - The Random Picker MVP adds that local tool without animated wheel/canvas work, saved lists, history, packages, persistence, or broader routing changes.
@@ -356,7 +359,8 @@ Reason:
 - The T93 checkpoint found Tools, Home/Dashboard, and Library now have useful Phase 10 content-depth slices, while Explore still only offers two simple launch cards. A small Explore refresh is the least risky next content-depth step before screenshots, RSS/news, or deeper Reader persistence.
 - The T94 Explore refresh gives the Explore tab richer static content without moving network work into the tab, so the next content-depth decision can return to Reader/Library before deeper persistence or screenshot prep.
 - The T95 audit found Reader still has only one built-in sample and one saved boolean. Local text comfort controls are the smallest useful Reader follow-up because they improve the current reading surface without creating a storage model, import path, route hierarchy, or persisted settings contract.
-- The T96 Reader controls make the current Reader sample more useful without new storage or routing. The next decision should audit screenshot readiness before starting screenshot capture or adding another content-depth slice.
+- The T96 Reader controls make the current Reader sample more useful without new storage or routing.
+- Unit Converter is the next smallest useful Phase 10 implementation slice because it is a practical local Tool, needs no public API or persistence, and is more distinct from Random Picker than a Decision Wheel MVP.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -395,7 +399,8 @@ Exit criteria:
 - Done: Implemented the T94 Explore content cards refresh.
 - Done: Completed the T95 Reader next-step audit and selected T96 as the next implementation slice.
 - Done: Implemented the T96 Reader text comfort controls MVP.
-- Remaining: Run T97 Portfolio screenshot readiness audit, or follow a user-assigned concrete alternative.
+- Done: Completed the T97 Phase 10 feature backlog expansion and deferred portfolio/screenshot/showcase work until explicitly requested.
+- Remaining: Implement T98 Unit Converter local tool MVP, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 
