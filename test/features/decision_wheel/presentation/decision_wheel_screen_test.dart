@@ -374,7 +374,7 @@ void main() {
             .getSize(find.byKey(const ValueKey('decision-wheel-history-sheet')))
             .height;
     expect(find.text('Spin #6'), findsOneWidget);
-    expect(sheetHeight, greaterThan(420));
+    expect(sheetHeight, greaterThan(440));
     expect(sheetHeight, lessThan(520));
     expect(find.byType(ListView), findsOneWidget);
     expect(find.text('Clear history'), findsOneWidget);

@@ -16,7 +16,7 @@ const _segmentStartAngle = -math.pi / 2;
 const _historySheetMaxScreenFraction = 0.61;
 // ponytail: reserve current header/actions/padding height; measure it if this sheet gains more chrome.
 const _historySheetFixedContentHeight = 148.0;
-const _historyItemHeight = 46.0;
+const _historyItemHeight = 50.0;
 const _decisionWheelPalette = [
   Color(0xFF2F6FEF),
   Color(0xFFE71D36),
@@ -359,16 +359,21 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                                             entry.option,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style:
-                                                Theme.of(
-                                                  context,
-                                                ).textTheme.titleSmall,
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.titleSmall?.copyWith(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w700,
+                                              height: 1.1,
+                                            ),
                                           ),
+                                          const SizedBox(height: 2),
                                           Text(
                                             'Spin #${entry.order}',
                                             style: Theme.of(
                                               context,
                                             ).textTheme.labelSmall?.copyWith(
+                                              height: 1.15,
                                               color: IwColors.textSecondary(
                                                 brightness,
                                               ),
