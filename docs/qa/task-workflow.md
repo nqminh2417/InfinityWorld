@@ -4,13 +4,13 @@
 
 This workflow explains how Codex should use the living planning docs when the user assigns work.
 
-`docs/TASKS.md` is the active backlog and can recommend the next task, but it is guidance, not a hard lock.
+`docs/tasks.md` is the active backlog and can recommend the next task, but it is guidance, not a hard lock.
 
 ## User Task Takes Priority
 
-If the user assigns a task different from the Recommended next task in `docs/TASKS.md`, follow the user's assigned task.
+If the user assigns a task different from the Recommended next task in `docs/tasks.md`, follow the user's assigned task.
 
-Do not ignore the user's task just because `docs/TASKS.md` recommends another next step.
+Do not ignore the user's task just because `docs/tasks.md` recommends another next step.
 
 ## Planning Impact Check
 
@@ -24,9 +24,9 @@ Before implementing a task that differs from the current Recommended next task, 
 
 If it does, update the relevant planning docs in the same commit:
 
-- `docs/TASKS.md`
-- `docs/ROADMAP.md`
-- `docs/DECISIONS.md`
+- `docs/tasks.md`
+- `docs/roadmap.md`
+- `docs/decisions.md`
 
 If the task is an independent small task that does not affect priority, phase, backlog, or durable decisions, no roadmap or backlog update is required.
 
@@ -34,13 +34,13 @@ If the task is an independent small task that does not affect priority, phase, b
 
 Do not update planning docs for trivial implementation details, narrow bug fixes, formatting-only changes, or small follow-up fixes unless they materially change project direction, phase, or task order.
 
-Keep detailed planning state in `docs/TASKS.md`. Do not expand final chat output with alternative task lists, deferred work, or phase rationale.
+Keep detailed planning state in `docs/tasks.md`. Do not expand final chat output with alternative task lists, deferred work, or phase rationale.
 
 ## Roadmap Update Policy
 
-Do not update `docs/ROADMAP.md` for every small task.
+Do not update `docs/roadmap.md` for every small task.
 
-Update `docs/ROADMAP.md` only when:
+Update `docs/roadmap.md` only when:
 
 - a phase starts
 - a phase completes
@@ -48,7 +48,7 @@ Update `docs/ROADMAP.md` only when:
 - architecture direction changes
 - a checkpoint materially changes the roadmap
 
-For normal feature placement, small UI fixes, narrow tests, and local bug fixes, update `docs/TASKS.md` only when the active backlog or primary recommendation changes.
+For normal feature placement, small UI fixes, narrow tests, and local bug fixes, update `docs/tasks.md` only when the active backlog or primary recommendation changes.
 
 Examples that usually do not need planning doc updates:
 
@@ -92,7 +92,7 @@ Default sizing:
 - Simple/static screen: one placement task is usually enough.
 - Medium screen: one task is preferred; split only if layout, state, or routing risk is concrete.
 - API/live-network screen: two to three tasks may be justified.
-- Four or more tasks for one screen require an explicit reason in `docs/TASKS.md`.
+- Four or more tasks for one screen require an explicit reason in `docs/tasks.md`.
 
 UI layout-safety:
 
@@ -144,7 +144,7 @@ Unverified:
 Recommended next work:
 - Primary: <Task ID> — <task title>
 - Phase: Phase N — <phase name>
-- Planning details: see `docs/TASKS.md` for alternatives, deferred work, and phase guard.
+- Planning details: see `docs/tasks.md` for alternatives, deferred work, and phase guard.
 
 Skipped:
 - <optional skipped work, if any>
@@ -156,9 +156,9 @@ Keep the report short. Do not paste full command logs unless a failure needs dia
 
 Every task result must include exactly one advisory primary next task and the phase that task belongs to.
 
-Use the `Recommended Next Work` section in `docs/TASKS.md` as the source of truth. If the user later assigns a different task, follow the user task and apply the planning impact check above.
+Use the `Recommended Next Work` section in `docs/tasks.md` as the source of truth. If the user later assigns a different task, follow the user task and apply the planning impact check above.
 
-`docs/TASKS.md` must keep this structure:
+`docs/tasks.md` must keep this structure:
 
 - Current phase
 - Primary recommendation with exactly one next task
@@ -166,9 +166,9 @@ Use the `Recommended Next Work` section in `docs/TASKS.md` as the source of trut
 - Do not start yet
 - Phase guard
 
-Do not duplicate the alternatives, deferred work, or phase guard in final chat output. Link to `docs/TASKS.md` instead.
+Do not duplicate the alternatives, deferred work, or phase guard in final chat output. Link to `docs/tasks.md` instead.
 
-If there is no clear actionable next task in `docs/TASKS.md`, do not invent implementation work. Recommend planning, audit, grooming, or review work instead.
+If there is no clear actionable next task in `docs/tasks.md`, do not invent implementation work. Recommend planning, audit, grooming, or review work instead.
 
 Preferred fallback recommendations, in order:
 
@@ -186,7 +186,7 @@ The recommendation is advisory only and must not start implementation until the 
 
 Use the verification gate for the actual change type from:
 
-- `docs/qa/IW_GIT_WORKFLOW.md`
+- `docs/qa/git-workflow.md`
 
 Docs-only workflow updates require:
 

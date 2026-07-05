@@ -16,7 +16,7 @@ Codex may automatically create a local commit and push after each scoped task wh
 
 Source of truth:
 
-- `docs/qa/IW_GIT_WORKFLOW.md`
+- `docs/qa/git-workflow.md`
 
 ### 2026-06-23: Do not auto merge or rewrite history
 
@@ -240,8 +240,8 @@ BMI is the first small feature used to prove gradual migration:
 
 Flutter UI work must apply the global `flutter-ui-layout-safety` skill and the repo policies:
 
-- `docs/design/IW_LAYOUT_SAFETY.md`
-- `docs/design/IW_SYSTEM_UI_POLICY.md`
+- `docs/design/layout-safety.md`
+- `docs/design/system-ui-policy.md`
 
 ### 2026-06-23: Fullscreen and immersive mode are restricted
 
@@ -270,11 +270,11 @@ Device or emulator UI review is important for polish, but it is not required for
 
 ### 2026-06-23: User-assigned tasks can override the backlog recommendation
 
-`docs/TASKS.md` is guidance, not a hard lock. If the user assigns a different scoped task, Codex should follow the user's task and update planning docs only when the task changes priority, phase, backlog, or durable decisions.
+`docs/tasks.md` is guidance, not a hard lock. If the user assigns a different scoped task, Codex should follow the user's task and update planning docs only when the task changes priority, phase, backlog, or durable decisions.
 
 Source of truth:
 
-- `docs/qa/IW_TASK_WORKFLOW.md`
+- `docs/qa/task-workflow.md`
 
 ### 2026-06-23: Task results use a standard concise report
 
@@ -282,7 +282,7 @@ After every completed or blocked task, Codex should return the standard `Task Re
 
 Source of truth:
 
-- `docs/qa/IW_TASK_WORKFLOW.md`
+- `docs/qa/task-workflow.md`
 
 ## Superseded or Revisit Later
 

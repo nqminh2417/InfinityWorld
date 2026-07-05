@@ -8,14 +8,14 @@ This roadmap is the living development plan for Infinity World. It follows a Med
 
 Related planning docs:
 
-- `docs/ARCHITECTURE.md` describes the target direction.
-- `docs/TASKS.md` tracks the active backlog and next tasks.
-- `docs/DECISIONS.md` records durable project decisions.
-- `docs/qa/IW_GIT_WORKFLOW.md` defines commit, push, and verification rules.
+- `docs/architecture.md` describes the target direction.
+- `docs/tasks.md` tracks the active backlog and next tasks.
+- `docs/decisions.md` records durable project decisions.
+- `docs/qa/git-workflow.md` defines commit, push, and verification rules.
 
 ## Current Reality
 
-The current app is transitional. The target architecture in `docs/ARCHITECTURE.md` is not fully implemented yet.
+The current app is transitional. The target architecture in `docs/architecture.md` is not fully implemented yet.
 
 Current structure:
 
@@ -76,7 +76,7 @@ go_router is active for the root route table. Riverpod foundation is complete fo
 
 ## Target Direction
 
-Use `docs/ARCHITECTURE.md` as the target direction:
+Use `docs/architecture.md` as the target direction:
 
 - Feature-first structure under `lib/features/<feature>/`.
 - App composition under `lib/app/`.
@@ -112,14 +112,14 @@ Goal:
 Primary docs:
 
 - `AGENTS.md`
-- `docs/ROADMAP.md`
-- `docs/TASKS.md`
-- `docs/DECISIONS.md`
-- `docs/ARCHITECTURE.md`
-- `docs/DESIGN_SYSTEM.md`
-- `docs/design/IW_LAYOUT_SAFETY.md`
-- `docs/design/IW_SYSTEM_UI_POLICY.md`
-- `docs/qa/IW_GIT_WORKFLOW.md`
+- `docs/roadmap.md`
+- `docs/tasks.md`
+- `docs/decisions.md`
+- `docs/architecture.md`
+- `docs/design-system.md`
+- `docs/design/layout-safety.md`
+- `docs/design/system-ui-policy.md`
+- `docs/qa/git-workflow.md`
 
 Task boundary:
 
@@ -174,7 +174,7 @@ Not part of Phase 2:
 
 Verification:
 
-- Screen move/routing/startup gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Screen move/routing/startup gates from `docs/qa/git-workflow.md`.
 
 ## Phase 3: Design System Foundation
 
@@ -649,7 +649,7 @@ Notes:
 
 - Start with a QA/device readiness audit before running screenshots, release checks, or broad device review.
 - Emulator/device UI review is important for UI polish, but it is not required for every current small task.
-- UI tasks must still follow `docs/design/IW_LAYOUT_SAFETY.md` and `docs/design/IW_SYSTEM_UI_POLICY.md`.
+- UI tasks must still follow `docs/design/layout-safety.md` and `docs/design/system-ui-policy.md`.
 
 Kickoff audit findings:
 
@@ -720,5 +720,5 @@ For every scoped task:
 - Read relevant planning docs.
 - Keep the change small.
 - Verify with the gate matching the change type.
-- Update `docs/TASKS.md`, `docs/DECISIONS.md`, or this roadmap when scope, phase, or direction changes.
-- Commit and push only according to `docs/qa/IW_GIT_WORKFLOW.md`.
+- Update `docs/tasks.md`, `docs/decisions.md`, or this roadmap when scope, phase, or direction changes.
+- Commit and push only according to `docs/qa/git-workflow.md`.

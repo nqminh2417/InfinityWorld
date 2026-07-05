@@ -8,7 +8,7 @@ Current branch workflow:
 
 - Active branch: `home/devbyMinh-current`
 - Codex may auto commit and push scoped tasks after gates pass.
-- Git workflow source: `docs/qa/IW_GIT_WORKFLOW.md`
+- Git workflow source: `docs/qa/git-workflow.md`
 
 Current architecture status:
 
@@ -37,9 +37,9 @@ Current architecture status:
 - Settings presentation now lives under `lib/features/settings/presentation/`.
 - Summertime Saga now lives under `lib/features/summertime_saga/`.
 - Test presentation now lives under `lib/features/test/presentation/`.
-- Fox hardening plan exists at `docs/features/FOX_HARDENING_PLAN.md`.
-- Summertime Saga hardening plan exists at `docs/features/SUMMERTIME_SAGA_HARDENING_PLAN.md`.
-- Phase 2 migration map exists at `docs/PHASE2_MIGRATION_MAP.md`.
+- Fox hardening plan exists at `docs/features/fox-hardening-plan.md`.
+- Summertime Saga hardening plan exists at `docs/features/summer-time-saga-hardening-plan.md`.
+- Phase 2 migration map exists at `docs/archive/phase2-migration-map.md`.
 - `shared_preferences` is active for the first local session flag and display name.
 - go_router is active for root routing.
 - Riverpod foundation is complete for current local session/profile/theme preferences.
@@ -294,7 +294,7 @@ Out of scope:
 
 Verification:
 
-- Dart/UI gate from `docs/qa/IW_GIT_WORKFLOW.md`: `dart format` for changed Dart files, `flutter analyze`, `flutter test`, and `git diff --check`.
+- Dart/UI gate from `docs/qa/git-workflow.md`: `dart format` for changed Dart files, `flutter analyze`, `flutter test`, and `git diff --check`.
 - Run `flutter build apk --debug` if the implementation adds or changes app routing/startup/build-impacting code.
 
 ### Alternatives
@@ -442,7 +442,7 @@ Exit criteria:
 
 ## Verification Gates
 
-Use `docs/qa/IW_GIT_WORKFLOW.md` as the source of truth.
+Use `docs/qa/git-workflow.md` as the source of truth.
 
 Quick reference:
 

@@ -25,10 +25,10 @@ Do not optimize early work for desktop or web unless the task explicitly asks fo
 Before making architecture, routing, theme, or feature-structure decisions, read these documents:
 
 ```text
-docs/PROJECT_DIRECTION.md
-docs/ARCHITECTURE.md
-docs/DESIGN_SYSTEM.md
-docs/ROADMAP.md
+docs/project-direction.md
+docs/architecture.md
+docs/design-system.md
+docs/roadmap.md
 ```
 
 If one of these files does not exist yet, do not invent conflicting decisions. Follow the decisions already documented in the existing files and ask/report what is missing.
@@ -505,10 +505,10 @@ Remaining risks
 When a task changes architecture, routing, theme, or project direction, update the relevant docs:
 
 ```text
-docs/PROJECT_DIRECTION.md
-docs/ARCHITECTURE.md
-docs/DESIGN_SYSTEM.md
-docs/ROADMAP.md
+docs/project-direction.md
+docs/architecture.md
+docs/design-system.md
+docs/roadmap.md
 ```
 
 Do not let implementation drift away from documented decisions.
@@ -538,8 +538,8 @@ Quality and consistency are more important than feature count.
 
 Flutter UI tasks in InfinityWorld must apply the global `flutter-ui-layout-safety` skill and follow:
 
-- `docs/design/IW_LAYOUT_SAFETY.md`
-- `docs/design/IW_SYSTEM_UI_POLICY.md`
+- `docs/design/layout-safety.md`
+- `docs/design/system-ui-policy.md`
 
 Project rules:
 
@@ -577,7 +577,7 @@ Project rules:
 
 Follow the repo-specific workflow in:
 
-- `docs/qa/IW_GIT_WORKFLOW.md`
+- `docs/qa/git-workflow.md`
 
 Codex may auto commit and auto push completed scoped tasks only on branch `home/devbyMinh-current` after the required verification gates pass.
 
@@ -594,19 +594,19 @@ Do not continue on another branch, work on unrelated dirty changes, push protect
 
 Keep the planning docs aligned when scope, phase, architecture direction, workflow, or durable product decisions change:
 
-- `docs/ROADMAP.md`
-- `docs/TASKS.md`
-- `docs/DECISIONS.md`
-- `docs/qa/IW_TASK_WORKFLOW.md`
+- `docs/roadmap.md`
+- `docs/tasks.md`
+- `docs/decisions.md`
+- `docs/qa/task-workflow.md`
 
-Treat `docs/ARCHITECTURE.md` as the target direction, not a claim that the current `lib/` structure is already migrated. Use `docs/TASKS.md` as the active backlog when deciding the next small task.
+Treat `docs/architecture.md` as the target direction, not a claim that the current `lib/` structure is already migrated. Use `docs/tasks.md` as the active backlog when deciding the next small task.
 
-`docs/TASKS.md` is guidance, not a hard lock. If the user assigns a different task, follow the user's task and apply `docs/qa/IW_TASK_WORKFLOW.md`: update planning docs only when the task changes priority, phase, backlog, or durable decisions, and report whether planning docs were updated.
+`docs/tasks.md` is guidance, not a hard lock. If the user assigns a different task, follow the user's task and apply `docs/qa/task-workflow.md`: update planning docs only when the task changes priority, phase, backlog, or durable decisions, and report whether planning docs were updated.
 
 ## 24. Standard Task Result Reporting
 
 After every completed or blocked task, return the compact `Task Result` format defined in:
 
-- `docs/qa/IW_TASK_WORKFLOW.md`
+- `docs/qa/task-workflow.md`
 
-Always include the current phase. Keep detailed planning state in `docs/TASKS.md`, not in final chat output. Final output should include one primary next task, the phase that next task belongs to, and a pointer to `docs/TASKS.md` for alternatives, deferred work, and the phase guard.
+Always include the current phase. Keep detailed planning state in `docs/tasks.md`, not in final chat output. Final output should include one primary next task, the phase that next task belongs to, and a pointer to `docs/tasks.md` for alternatives, deferred work, and the phase guard.

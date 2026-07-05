@@ -206,13 +206,13 @@ The debug APK currently builds, but Flutter still reports the known future Built
 Project source-of-truth docs:
 
 - `AGENTS.md`
-- `docs/PROJECT_DIRECTION.md`
-- `docs/ARCHITECTURE.md`
-- `docs/DESIGN_SYSTEM.md`
-- `docs/ROADMAP.md`
-- `docs/TASKS.md`
-- `docs/DECISIONS.md`
-- `docs/qa/IW_GIT_WORKFLOW.md`
-- `docs/qa/IW_TASK_WORKFLOW.md`
+- `docs/project-direction.md`
+- `docs/architecture.md`
+- `docs/design-system.md`
+- `docs/roadmap.md`
+- `docs/tasks.md`
+- `docs/decisions.md`
+- `docs/qa/git-workflow.md`
+- `docs/qa/task-workflow.md`
 
 Before changing architecture, routing, theme, feature structure, or task priority, read the relevant docs and keep them aligned.
