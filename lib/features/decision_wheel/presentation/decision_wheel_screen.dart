@@ -14,7 +14,8 @@ typedef DecisionWheelShuffleOptions =
 const _spinDuration = Duration(milliseconds: 1600);
 const _segmentStartAngle = -math.pi / 2;
 const _historySheetMaxScreenFraction = 0.55;
-const _historyVisibleItemLimit = 5;
+// ponytail: reserve current header/actions/padding height; measure it if this sheet gains more chrome.
+const _historySheetFixedContentHeight = 160.0;
 const _historyItemHeight = 37.0;
 const _decisionWheelPalette = [
   Color(0xFF2F6FEF),
@@ -256,6 +257,8 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
       return;
     }
 
+    final screenHeight = MediaQuery.sizeOf(context).height;
+
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -266,16 +269,14 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
             final brightness = Theme.of(context).brightness;
             final history = _history.reversed.toList(growable: false);
             final maxSheetHeight =
-                MediaQuery.sizeOf(context).height *
-                _historySheetMaxScreenFraction;
-            final maxListHeight = math.max(0.0, maxSheetHeight - 108);
-            final visibleItemCount = math.min(
-              history.length,
-              _historyVisibleItemLimit,
+                screenHeight * _historySheetMaxScreenFraction;
+            final maxListHeight = math.max(
+              0.0,
+              maxSheetHeight - _historySheetFixedContentHeight,
             );
             final historyListHeight = math.min(
-              visibleItemCount * _historyItemHeight +
-                  math.max(0, visibleItemCount - 1),
+              history.length * _historyItemHeight +
+                  math.max(0, history.length - 1),
               maxListHeight,
             );
 

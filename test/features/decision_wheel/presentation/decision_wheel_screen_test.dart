@@ -325,11 +325,15 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Decision Wheel history sheet wraps up to five items', (
+  testWidgets('Decision Wheel history sheet grows with short history', (
     tester,
   ) async {
-    await tester.binding.setSurfaceSize(const Size(360, 640));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
+    tester.view.physicalSize = const Size(360, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
 
     var nextPick = -1;
     await tester.pumpWidget(
@@ -349,7 +353,7 @@ void main() {
       const ValueKey('decision-wheel-center-spin-button'),
     );
 
-    for (var spin = 0; spin < 5; spin += 1) {
+    for (var spin = 0; spin < 6; spin += 1) {
       await tester.ensureVisible(spinButton);
       await tester.pump();
       await tester.tap(spinButton);
@@ -364,14 +368,14 @@ void main() {
     await tester.tap(historyButton);
     await tester.pumpAndSettle();
 
-    final fiveItemSheetHeight =
+    final sheetHeight =
         tester
             .getSize(find.byKey(const ValueKey('decision-wheel-history-sheet')))
             .height;
-    expect(fiveItemSheetHeight, lessThan(352));
+    expect(find.text('Spin #6'), findsOneWidget);
+    expect(sheetHeight, greaterThan(330));
+    expect(sheetHeight, lessThanOrEqualTo(440));
     expect(find.byType(ListView), findsOneWidget);
-    expect(find.text('Spin #5'), findsOneWidget);
-    expect(find.text('Spin #1'), findsOneWidget);
     expect(find.text('Clear history'), findsOneWidget);
     expect(find.text('Close'), findsOneWidget);
     expect(tester.takeException(), isNull);
