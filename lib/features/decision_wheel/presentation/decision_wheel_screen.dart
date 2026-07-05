@@ -13,10 +13,10 @@ typedef DecisionWheelShuffleOptions =
 
 const _spinDuration = Duration(milliseconds: 1600);
 const _segmentStartAngle = -math.pi / 2;
-const _historySheetMaxScreenFraction = 0.55;
+const _historySheetMaxScreenFraction = 0.61;
 // ponytail: reserve current header/actions/padding height; measure it if this sheet gains more chrome.
-const _historySheetFixedContentHeight = 160.0;
-const _historyItemHeight = 37.0;
+const _historySheetFixedContentHeight = 148.0;
+const _historyItemHeight = 46.0;
 const _decisionWheelPalette = [
   Color(0xFF2F6FEF),
   Color(0xFFE71D36),
@@ -308,7 +308,7 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                           ),
                         ],
                       ),
-                      const SizedBox(height: IwSpacing.space4),
+                      const SizedBox(height: IwSpacing.space12),
                       if (history.isEmpty)
                         Padding(
                           padding: const EdgeInsets.symmetric(
@@ -326,10 +326,10 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                             separatorBuilder:
                                 (_, _) => Divider(
                                   height: 1,
-                                  thickness: 0.5,
+                                  thickness: 0.6,
                                   color: IwColors.border(
                                     brightness,
-                                  ).withValues(alpha: 0.5),
+                                  ).withValues(alpha: 0.6),
                                 ),
                             itemBuilder: (context, index) {
                               final entry = history[index];
@@ -339,7 +339,7 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                                   children: [
                                     Container(
                                       width: 12,
-                                      height: 28,
+                                      height: 32,
                                       decoration: BoxDecoration(
                                         color: entry.color,
                                         borderRadius: BorderRadius.circular(
@@ -380,11 +380,11 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                                     IconButton(
                                       tooltip: 'Copy result',
                                       constraints: const BoxConstraints(
-                                        minWidth: 36,
-                                        minHeight: 36,
+                                        minWidth: 40,
+                                        minHeight: 40,
                                       ),
                                       padding: EdgeInsets.zero,
-                                      iconSize: 18,
+                                      iconSize: 20,
                                       onPressed: () {
                                         _copyHistoryOption(
                                           context,
