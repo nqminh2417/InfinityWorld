@@ -39,6 +39,36 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('Decision Wheel compact phone layout keeps controls visible', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(360, 720));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      MaterialApp(home: DecisionWheelScreen(pickIndex: (_) => 1)),
+    );
+    await tester.pump();
+
+    final bodyScrollable = tester.state<ScrollableState>(
+      find
+          .descendant(
+            of: find.byType(SingleChildScrollView),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+
+    expect(bodyScrollable.position.maxScrollExtent, lessThan(1));
+    expect(find.byType(DecisionWheelFace), findsOneWidget);
+    expect(find.text('Entries'), findsOneWidget);
+    expect(find.byType(TextField), findsOneWidget);
+    expect(find.text('Shuffle'), findsOneWidget);
+    expect(find.text('Sort'), findsOneWidget);
+    expect(find.text('History'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Decision Wheel center spin shows result dialog', (tester) async {
     await tester.pumpWidget(
       MaterialApp(home: DecisionWheelScreen(pickIndex: (_) => 1)),
@@ -58,7 +88,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.byKey(const ValueKey('decision-wheel-entries-card')),
+      find.byKey(const ValueKey('decision-wheel-entries-section')),
       findsOneWidget,
     );
     expect(find.text('Entries'), findsOneWidget);

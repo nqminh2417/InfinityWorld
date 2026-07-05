@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/design_system/tokens/iw_colors.dart';
 import 'package:infinity_world/design_system/tokens/iw_radius.dart';
 import 'package:infinity_world/design_system/tokens/iw_spacing.dart';
@@ -509,7 +508,9 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
 
   @override
   Widget build(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
+    final isShortPhone = MediaQuery.sizeOf(context).height < 760;
+    // ponytail: local breakpoint for this dense tool screen; promote to a token only if more screens need it.
+    final wheelMaxWidth = isShortPhone ? 300.0 : 430.0;
     final options = _parseOptions(_optionsController.text);
     final activeIndex = _activeSegmentIndex(options.length);
     final selectedIndex =
@@ -527,7 +528,12 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
         top: false,
         child: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          padding: const EdgeInsets.all(IwSpacing.screenPadding),
+          padding: const EdgeInsets.fromLTRB(
+            IwSpacing.screenPadding,
+            IwSpacing.space12,
+            IwSpacing.screenPadding,
+            IwSpacing.space12,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -536,16 +542,9 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: IwSpacing.space8),
-              Text(
-                'Add one option per line, then spin the wheel locally.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: IwColors.textSecondary(brightness),
-                ),
-              ),
-              const SizedBox(height: IwSpacing.space16),
               Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 430),
+                  constraints: BoxConstraints(maxWidth: wheelMaxWidth),
                   child: AspectRatio(
                     aspectRatio: 1,
                     child: DecisionWheelFace(
@@ -560,66 +559,64 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                   ),
                 ),
               ),
-              const SizedBox(height: IwSpacing.space16),
-              IwCard(
-                key: const ValueKey('decision-wheel-entries-card'),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      'Entries',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: IwSpacing.space8),
-                    Wrap(
-                      spacing: IwSpacing.space8,
-                      runSpacing: IwSpacing.space8,
-                      children: [
-                        OutlinedButton.icon(
-                          onPressed: _isSpinning ? null : _shuffleEntries,
-                          icon: const Icon(Icons.shuffle_rounded),
-                          label: const Text('Shuffle'),
-                        ),
-                        OutlinedButton.icon(
-                          onPressed: _isSpinning ? null : _sortEntries,
-                          icon: const Icon(Icons.sort_by_alpha_rounded),
-                          label: const Text('Sort'),
-                        ),
-                        OutlinedButton.icon(
-                          onPressed: _isSpinning ? null : _showHistorySheet,
-                          icon: const Icon(Icons.history_rounded),
-                          label: const Text('History'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: IwSpacing.space12),
-                    TextField(
-                      controller: _optionsController,
-                      enabled: !_isSpinning,
-                      minLines: 4,
-                      maxLines: 6,
-                      scrollPadding: const EdgeInsets.only(
-                        bottom: IwSpacing.space32,
+              const SizedBox(height: IwSpacing.space8),
+              Column(
+                key: const ValueKey('decision-wheel-entries-section'),
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Entries',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: IwSpacing.space6),
+                  Wrap(
+                    spacing: IwSpacing.space8,
+                    runSpacing: IwSpacing.space6,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: _isSpinning ? null : _shuffleEntries,
+                        icon: const Icon(Icons.shuffle_rounded),
+                        label: const Text('Shuffle'),
                       ),
-                      scrollPhysics: const ClampingScrollPhysics(),
-                      keyboardType: TextInputType.multiline,
-                      textInputAction: TextInputAction.newline,
-                      decoration: InputDecoration(
-                        alignLabelWithHint: true,
-                        border: const OutlineInputBorder(),
-                        errorText: _errorText,
-                        hintText: 'Movie\nPizza\nStudy or Movie; Pizza; Study',
-                        labelText: 'One entry per line or semicolon',
+                      OutlinedButton.icon(
+                        onPressed: _isSpinning ? null : _sortEntries,
+                        icon: const Icon(Icons.sort_by_alpha_rounded),
+                        label: const Text('Sort'),
                       ),
-                      onChanged: (_) {
-                        setState(() {
-                          _selectedIndex = null;
-                          _errorText = null;
-                        });
-                      },
+                      OutlinedButton.icon(
+                        onPressed: _isSpinning ? null : _showHistorySheet,
+                        icon: const Icon(Icons.history_rounded),
+                        label: const Text('History'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: IwSpacing.space8),
+                  TextField(
+                    controller: _optionsController,
+                    enabled: !_isSpinning,
+                    minLines: 3,
+                    maxLines: 4,
+                    scrollPadding: const EdgeInsets.only(
+                      bottom: IwSpacing.space32,
                     ),
-                  ],
-                ),
+                    scrollPhysics: const ClampingScrollPhysics(),
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
+                    decoration: InputDecoration(
+                      alignLabelWithHint: true,
+                      border: const OutlineInputBorder(),
+                      errorText: _errorText,
+                      hintText: 'Movie\nPizza\nStudy or Movie; Pizza; Study',
+                      labelText: 'One entry per line or semicolon',
+                    ),
+                    onChanged: (_) {
+                      setState(() {
+                        _selectedIndex = null;
+                        _errorText = null;
+                      });
+                    },
+                  ),
+                ],
               ),
             ],
           ),
