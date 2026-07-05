@@ -68,6 +68,7 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
   Animation<double>? _spinAnimation;
   double _rotationTurns = 0;
   int? _selectedIndex;
+  int _entryMultiplier = 1;
   int _nextHistoryOrder = 1;
   String? _errorText;
   final List<_DecisionWheelHistoryEntry> _history = [];
@@ -102,9 +103,10 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
       return;
     }
 
-    final options = _parseOptions(_optionsController.text);
+    final rawOptions = _parseOptions(_optionsController.text);
+    final wheelOptions = _wheelOptionsFor(rawOptions);
 
-    if (options.length < 2) {
+    if (rawOptions.length < 2) {
       setState(() {
         _selectedIndex = null;
         _errorText = 'Add at least two options.';
@@ -112,9 +114,9 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
       return;
     }
 
-    final rawIndex = widget.pickIndex(options.length);
-    final selectedIndex = rawIndex.clamp(0, options.length - 1).toInt();
-    final targetTurns = _targetTurnsFor(options.length, selectedIndex);
+    final rawIndex = widget.pickIndex(wheelOptions.length);
+    final selectedIndex = rawIndex.clamp(0, wheelOptions.length - 1).toInt();
+    final targetTurns = _targetTurnsFor(wheelOptions.length, selectedIndex);
 
     _spinAnimation = Tween<double>(
       begin: _rotationTurns,
@@ -139,13 +141,16 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
         _history.add(
           _DecisionWheelHistoryEntry(
             order: _nextHistoryOrder,
-            option: options[selectedIndex],
-            color: decisionWheelSegmentColor(selectedIndex, options.length),
+            option: wheelOptions[selectedIndex],
+            color: decisionWheelSegmentColor(
+              selectedIndex,
+              wheelOptions.length,
+            ),
           ),
         );
         _nextHistoryOrder += 1;
       });
-      _showSelectedOptionDialog(options, selectedIndex);
+      _showSelectedOptionDialog(wheelOptions, selectedIndex);
     });
   }
 
@@ -200,12 +205,13 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
     }
 
     final options = _parseOptions(_optionsController.text);
-    if (_selectedIndex! >= options.length) {
+    if (options.isEmpty) {
       _cancelResult();
       return;
     }
 
-    final updatedOptions = List<String>.of(options)..removeAt(_selectedIndex!);
+    final rawIndex = _selectedIndex! % options.length;
+    final updatedOptions = List<String>.of(options)..removeAt(rawIndex);
     _setOptionsText(updatedOptions);
 
     setState(() {
@@ -248,6 +254,18 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
     setState(() {
       _history.clear();
       _nextHistoryOrder = 1;
+    });
+  }
+
+  void _setEntryMultiplier(int multiplier) {
+    if (_isSpinning || _entryMultiplier == multiplier) {
+      return;
+    }
+
+    setState(() {
+      _entryMultiplier = multiplier;
+      _selectedIndex = null;
+      _errorText = null;
     });
   }
 
@@ -498,6 +516,12 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
         .toList(growable: false);
   }
 
+  List<String> _wheelOptionsFor(List<String> options) {
+    return [
+      for (var round = 0; round < _entryMultiplier; round += 1) ...options,
+    ];
+  }
+
   void _setOptionsText(List<String> options) {
     final text = options.join('\n');
     _optionsController.value = TextEditingValue(
@@ -508,18 +532,20 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
     final isShortPhone = MediaQuery.sizeOf(context).height < 760;
     // ponytail: local breakpoint for this dense tool screen; promote to a token only if more screens need it.
-    final wheelMaxWidth = isShortPhone ? 300.0 : 430.0;
-    final options = _parseOptions(_optionsController.text);
-    final activeIndex = _activeSegmentIndex(options.length);
+    final wheelMaxWidth = isShortPhone ? 290.0 : 430.0;
+    final rawOptions = _parseOptions(_optionsController.text);
+    final wheelOptions = _wheelOptionsFor(rawOptions);
+    final activeIndex = _activeSegmentIndex(wheelOptions.length);
     final selectedIndex =
-        _selectedIndex != null && _selectedIndex! < options.length
+        _selectedIndex != null && _selectedIndex! < wheelOptions.length
             ? _selectedIndex
             : null;
     final pointerColor = decisionWheelSegmentColor(
       _isSpinning ? activeIndex ?? 0 : selectedIndex ?? activeIndex ?? 0,
-      options.length,
+      wheelOptions.length,
     );
 
     return Scaffold(
@@ -548,7 +574,7 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                   child: AspectRatio(
                     aspectRatio: 1,
                     child: DecisionWheelFace(
-                      options: options,
+                      options: wheelOptions,
                       rotationTurns: _rotationTurns,
                       pointerColor: pointerColor,
                       activeIndex: activeIndex,
@@ -564,9 +590,46 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                 key: const ValueKey('decision-wheel-entries-section'),
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    'Entries',
-                    style: Theme.of(context).textTheme.titleMedium,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Entries',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 132,
+                        child: ToggleButtons(
+                          key: const ValueKey(
+                            'decision-wheel-multiplier-toggle',
+                          ),
+                          isSelected: [
+                            _entryMultiplier == 1,
+                            _entryMultiplier == 2,
+                            _entryMultiplier == 3,
+                          ],
+                          onPressed:
+                              _isSpinning
+                                  ? null
+                                  : (index) {
+                                    _setEntryMultiplier(index + 1);
+                                  },
+                          borderRadius: BorderRadius.circular(
+                            IwRadius.radiusFull,
+                          ),
+                          constraints: const BoxConstraints.tightFor(
+                            width: 42,
+                            height: 32,
+                          ),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          color: IwColors.textSecondary(brightness),
+                          selectedColor: Colors.white,
+                          fillColor: IwColors.primary,
+                          children: const [Text('x1'), Text('x2'), Text('x3')],
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: IwSpacing.space6),
                   Wrap(

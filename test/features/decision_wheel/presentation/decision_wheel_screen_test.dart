@@ -69,6 +69,100 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets(
+    'Decision Wheel multiplier defaults to x1 and distributes copies',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(home: DecisionWheelScreen(pickIndex: (_) => 0)),
+      );
+
+      await tester.enterText(find.byType(TextField), 'Alpha\nBeta\nGamma');
+      await tester.pump();
+
+      ToggleButtons modeToggle() => tester.widget<ToggleButtons>(
+        find.byKey(const ValueKey('decision-wheel-multiplier-toggle')),
+      );
+      void setMultiplier(int multiplier) {
+        modeToggle().onPressed?.call(multiplier - 1);
+      }
+
+      var face = tester.widget<DecisionWheelFace>(
+        find.byType(DecisionWheelFace),
+      );
+      expect(modeToggle().isSelected, [true, false, false]);
+      expect(face.options, ['Alpha', 'Beta', 'Gamma']);
+
+      setMultiplier(2);
+      await tester.pump();
+
+      var field = tester.widget<TextField>(find.byType(TextField));
+      face = tester.widget<DecisionWheelFace>(find.byType(DecisionWheelFace));
+      expect(modeToggle().isSelected, [false, true, false]);
+      expect(field.controller?.text, 'Alpha\nBeta\nGamma');
+      expect(face.options, [
+        'Alpha',
+        'Beta',
+        'Gamma',
+        'Alpha',
+        'Beta',
+        'Gamma',
+      ]);
+
+      setMultiplier(3);
+      await tester.pump();
+
+      field = tester.widget<TextField>(find.byType(TextField));
+      face = tester.widget<DecisionWheelFace>(find.byType(DecisionWheelFace));
+      expect(modeToggle().isSelected, [false, false, true]);
+      expect(field.controller?.text, 'Alpha\nBeta\nGamma');
+      expect(face.options, [
+        'Alpha',
+        'Beta',
+        'Gamma',
+        'Alpha',
+        'Beta',
+        'Gamma',
+        'Alpha',
+        'Beta',
+        'Gamma',
+      ]);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('Decision Wheel multiplier remove deletes the raw entry', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(home: DecisionWheelScreen(pickIndex: (_) => 4)),
+    );
+
+    await tester.enterText(find.byType(TextField), 'Alpha\nBeta\nGamma');
+    final modeToggle = tester.widget<ToggleButtons>(
+      find.byKey(const ValueKey('decision-wheel-multiplier-toggle')),
+    );
+    modeToggle.onPressed?.call(1);
+    await tester.pump();
+
+    final spinButton = find.byKey(
+      const ValueKey('decision-wheel-center-spin-button'),
+    );
+    await tester.ensureVisible(spinButton);
+    await tester.pump();
+    await tester.tap(spinButton);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Beta'), findsOneWidget);
+
+    await tester.tap(find.text('Remove'));
+    await tester.pumpAndSettle();
+
+    final field = tester.widget<TextField>(find.byType(TextField));
+    expect(field.controller?.text, 'Alpha\nGamma');
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Decision Wheel center spin shows result dialog', (tester) async {
     await tester.pumpWidget(
       MaterialApp(home: DecisionWheelScreen(pickIndex: (_) => 1)),
@@ -499,19 +593,31 @@ void main() {
     );
 
     await tester.enterText(find.byType(TextField), 'Gamma\nAlpha\nBeta');
+    tester
+        .widget<ToggleButtons>(
+          find.byKey(const ValueKey('decision-wheel-multiplier-toggle')),
+        )
+        .onPressed
+        ?.call(1);
+    await tester.pump();
+
     await tester.ensureVisible(find.text('Sort'));
     await tester.tap(find.text('Sort'));
     await tester.pump();
 
     var field = tester.widget<TextField>(find.byType(TextField));
+    var face = tester.widget<DecisionWheelFace>(find.byType(DecisionWheelFace));
     expect(field.controller?.text, 'Alpha\nBeta\nGamma');
+    expect(face.options, ['Alpha', 'Beta', 'Gamma', 'Alpha', 'Beta', 'Gamma']);
 
     await tester.ensureVisible(find.text('Shuffle'));
     await tester.tap(find.text('Shuffle'));
     await tester.pump();
 
     field = tester.widget<TextField>(find.byType(TextField));
+    face = tester.widget<DecisionWheelFace>(find.byType(DecisionWheelFace));
     expect(field.controller?.text, 'Gamma\nBeta\nAlpha');
+    expect(face.options, ['Gamma', 'Beta', 'Alpha', 'Gamma', 'Beta', 'Alpha']);
     expect(tester.takeException(), isNull);
   });
 
@@ -535,7 +641,7 @@ void main() {
   });
 
   test('Decision Wheel segment colors avoid adjacent duplicates', () {
-    for (final optionCount in [2, 3, 6, 7, 8, 12, 13, 19]) {
+    for (final optionCount in [2, 3, 6, 7, 8, 9, 12, 13, 14, 19, 21]) {
       final colors = List.generate(
         optionCount,
         (index) => decisionWheelSegmentColor(index, optionCount),

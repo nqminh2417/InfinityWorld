@@ -75,7 +75,7 @@ Current architecture status:
 - Reader now has screen-local text comfort controls for the built-in sample, without persistence, routes, packages, Drift, bookmarks, imports, or a settings model.
 - T97 expanded the Phase 10 backlog direction: active Phase 10 recommendations should focus on feature/content implementation, not screenshot, portfolio, release, or employer-showcase readiness.
 - Unit Converter now lives under `lib/features/unit_converter/`, has a direct `/unit-converter` route, and is linked from Tools beside BMI, Clock, and Random Picker.
-- Decision Wheel now lives under `lib/features/decision_wheel/`, has a direct `/decision-wheel` route, is linked from Tools beside the other local utilities, and has a large animated `CustomPainter` wheel with center spin, shuffle/sort entries, compact mobile layout, a modal selected-result dialog, roomier/readability-tuned screen-capped in-memory session history bottom sheet with per-item copy, remove-selected-result actions, semicolon-aware entry parsing, clearer pointer layering, and adjacent-safe repeating segment colors.
+- Decision Wheel now lives under `lib/features/decision_wheel/`, has a direct `/decision-wheel` route, is linked from Tools beside the other local utilities, and has a large animated `CustomPainter` wheel with center spin, shuffle/sort entries, compact mobile layout, x1/x2/x3 multiplier mode, a modal selected-result dialog, roomier/readability-tuned screen-capped in-memory session history bottom sheet with per-item copy, remove-selected-result actions, semicolon-aware entry parsing, clearer pointer layering, and adjacent-safe repeating segment colors.
 
 Current tests:
 
@@ -107,7 +107,7 @@ Current tests:
 - Unit Converter domain coverage exists for length and weight conversions plus result formatting.
 - Unit Converter presentation widget coverage exists for scroll-safe rendering, validation, and length conversion behavior.
 - Tools presentation widget coverage exists for Unit Converter route navigation.
-- Decision Wheel presentation widget coverage exists for scroll-safe rendering, compact phone-size closed-keyboard layout, center spin, modal result dialog behavior, background interaction blocking, Cancel/Remove behavior, in-memory session history display/clear/copy behavior, content-wrapping history sheet growth with screen-based 60-62% max-height scrolling and readability-tuned roomier rows, semicolon-aware parsing, validation, animated deterministic picking, shuffle/sort actions, adjacent-safe segment colors, and the local wheel surface.
+- Decision Wheel presentation widget coverage exists for scroll-safe rendering, compact phone-size closed-keyboard layout, x1/x2/x3 multiplier behavior, center spin, modal result dialog behavior, background interaction blocking, Cancel/Remove behavior, in-memory session history display/clear/copy behavior, content-wrapping history sheet growth with screen-based 60-62% max-height scrolling and readability-tuned roomier rows, semicolon-aware parsing, validation, animated deterministic picking, shuffle/sort actions, adjacent-safe segment colors, and the local wheel surface.
 - Tools presentation widget coverage exists for Decision Wheel route navigation.
 - Explore presentation widget coverage exists for small-screen scroll safety and fake-route navigation to Fox and Summertime Saga.
 - Library presentation widget coverage exists for small-screen scroll safety and empty-state rendering.
@@ -271,7 +271,7 @@ Task sizing note:
 
 ### Primary
 
-T111 - Reader/Library content-depth slice
+T112 - Reader/Library content-depth slice
 
 Reason:
 
@@ -345,7 +345,7 @@ Current phase:
 
 Decision:
 
-- T110 compacted the Decision Wheel mobile layout so the wheel, actions, and entries editor fit better on phone-size screens while preserving wheel behavior, result dialog, and history behavior. The next recommended task is T111 - Reader/Library content-depth slice.
+- T111 added x1/x2/x3 multiplier mode to Decision Wheel while preserving raw entry text, compact layout, wheel style, result dialog, history, Shuffle, and Sort behavior. The next recommended task is T112 - Reader/Library content-depth slice.
 
 Do not enter yet:
 
@@ -383,7 +383,8 @@ Reason:
 - The T108 Decision Wheel history height/spacing tune keeps screen-based max-height behavior while increasing the cap to about 61%, improving header spacing, and making rows less cramped with subtle dividers.
 - The T109 Decision Wheel history row readability tune improves the two-line row spacing and selected-item prominence without changing the max-height behavior, copy action, persistence, or broader sheet design.
 - The T110 Decision Wheel compact mobile layout removes extra vertical chrome, keeps the wheel as the hero element, and bounds the entries editor without adding x2/duplicate mode, persistence, packages, or new wheel logic.
-- T111 Reader/Library is the next smallest useful content-depth slice because it can add more built-in local reading content without committing to Drift, imports, generic bookmarks, or reading-progress persistence.
+- The T111 Decision Wheel multiplier mode adds x1/x2/x3 segment generation with distributed duplicates while leaving the raw entries text unchanged and removing selected items from the raw entry list.
+- T112 Reader/Library is the next smallest useful content-depth slice because it can add more built-in local reading content without committing to Drift, imports, generic bookmarks, or reading-progress persistence.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -436,7 +437,8 @@ Exit criteria:
 - Done: Implemented the T108 Decision Wheel history sheet height and item spacing refinement.
 - Done: Implemented the T109 Decision Wheel history item readability refinement.
 - Done: Implemented the T110 Decision Wheel compact mobile layout refinement.
-- Remaining: Implement T111 Reader/Library content-depth slice, or follow a user-assigned concrete alternative.
+- Done: Implemented the T111 Decision Wheel multiplier mode.
+- Remaining: Implement T112 Reader/Library content-depth slice, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 
