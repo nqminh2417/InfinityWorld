@@ -122,6 +122,15 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('Reader route opens a selected local sample', (tester) async {
+    await tester.pumpWidget(_app('${AppRoutes.reader}?sample=focus-reset'));
+
+    expect(find.byType(ReaderScreen), findsOneWidget);
+    expect(find.text('Focus Reset'), findsOneWidget);
+    expect(find.textContaining('Close the noisy loops'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('test route opens the existing test screen', (tester) async {
     await tester.pumpWidget(_app(AppRoutes.test));
 

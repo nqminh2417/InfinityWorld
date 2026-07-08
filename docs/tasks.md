@@ -1,6 +1,6 @@
 # Infinity World Active Tasks
 
-Last updated: 2026-07-05
+Last updated: 2026-07-08
 
 ## Current Status
 
@@ -54,7 +54,7 @@ Current architecture status:
 - Explore now has a first tab body at `lib/features/explore/presentation/explore_screen.dart`.
 - Library now has a first empty-state tab body at `lib/features/library/presentation/library_screen.dart`.
 - Phase 9 QA/device readiness is complete; portfolio, screenshot, release presentation, and employer-showcase work are deferred until explicitly requested.
-- Reader exists as a local sample screen; there is still no bookmark, saved-article, reading-progress, or local database module yet.
+- Reader exists as a local sample screen with a small built-in sample catalog; there is still no bookmark, saved-article, reading-progress, or local database module yet.
 - T91 confirmed existing persistence is limited to small `shared_preferences` repositories for local session/profile and theme mode; no Drift/local database dependency is active.
 - `features/home` root does not exist yet; Dashboard still owns direct module/dev links plus logout/session clearing.
 - Phase 10 kickoff audit confirmed Tools is the smallest low-risk content-depth surface for the next slice because it can add a useful local Clock tool without public APIs, persistence, screenshots, release work, broad redesign, or app architecture migration.
@@ -72,10 +72,11 @@ Current architecture status:
 - T93 checkpoint confirmed Phase 10 should continue with a small Explore content refresh before screenshots or deeper Reader persistence because Explore remains the thinnest main tab surface after the Tools, Home/Dashboard, and Library updates.
 - Explore now has richer static Fox / Summertime Saga module cards while keeping live network work inside the destination screens.
 - T95 confirmed the next smallest Reader slice should add local text comfort controls inside the existing Reader screen before bookmarks, reading-progress persistence, imports, or Drift/schema work.
-- Reader now has screen-local text comfort controls for the built-in sample, without persistence, routes, packages, Drift, bookmarks, imports, or a settings model.
+- Reader now has screen-local text comfort controls for local samples, without persisted reader settings, packages, Drift, bookmarks, imports, or a settings model.
 - T97 expanded the Phase 10 backlog direction: active Phase 10 recommendations should focus on feature/content implementation, not screenshot, portfolio, release, or employer-showcase readiness.
 - Unit Converter now lives under `lib/features/unit_converter/`, has a direct `/unit-converter` route, and is linked from Tools beside BMI, Clock, and Random Picker.
 - Decision Wheel now lives under `lib/features/decision_wheel/`, has a direct `/decision-wheel` route, is linked from Tools beside the other local utilities, and has a large animated `CustomPainter` wheel with center spin, shuffle/sort entries, compact mobile layout, x1/x2/x3 multiplier mode, a modal selected-result dialog, roomier/readability-tuned screen-capped in-memory session history bottom sheet with per-item copy, remove-selected-result actions, semicolon-aware entry parsing, clearer pointer layering, and adjacent-safe repeating segment colors.
+- Reader/Library now has a three-item built-in local sample catalog; Library opens selected Reader samples through a narrow route query key while existing saved state remains limited to The First Door.
 
 Current tests:
 
@@ -110,10 +111,10 @@ Current tests:
 - Decision Wheel presentation widget coverage exists for scroll-safe rendering, compact phone-size closed-keyboard layout, x1/x2/x3 multiplier behavior, center spin, modal result dialog behavior, background interaction blocking, Cancel/Remove behavior, in-memory session history display/clear/copy behavior, content-wrapping history sheet growth with screen-based 60-62% max-height scrolling and readability-tuned roomier rows, semicolon-aware parsing, validation, animated deterministic picking, shuffle/sort actions, adjacent-safe segment colors, and the local wheel surface.
 - Tools presentation widget coverage exists for Decision Wheel route navigation.
 - Explore presentation widget coverage exists for small-screen scroll safety and fake-route navigation to Fox and Summertime Saga.
-- Library presentation widget coverage exists for small-screen scroll safety and empty-state rendering.
+- Library presentation widget coverage exists for small-screen scroll safety and local sample catalog rendering.
 - Reader presentation widget coverage exists for scroll-safe local sample rendering.
-- Library presentation widget coverage exists for opening the Reader route.
-- Reader route smoke coverage exists.
+- Library presentation widget coverage exists for opening a selected Reader sample route.
+- Reader route smoke coverage exists, including selected local sample query behavior.
 - Reader saved-sample provider coverage exists for default, save, and remove behavior.
 - Reader presentation widget coverage exists for saving and removing the built-in sample.
 - Library presentation widget coverage exists for saved and unsaved Reader sample states.
@@ -121,6 +122,7 @@ Current tests:
 - Explore presentation widget coverage now verifies the refreshed static content, small-screen scrolling, and existing Fox / Summertime Saga route taps.
 - No new app tests were added for T95 because it was an audit/docs-only checkpoint.
 - Reader presentation widget coverage now verifies the screen-local text-size controls while preserving the existing sample and saved-sample behavior.
+- Library and route coverage now verify selected local Reader sample rendering from the built-in catalog.
 - No new app tests were added for T97 because it is a docs-only backlog expansion.
 - No Home feature-root tests exist yet because the Home tab still uses the existing Dashboard screen.
 - Profile route smoke test exists.
@@ -271,22 +273,22 @@ Task sizing note:
 
 ### Primary
 
-T112 - Reader/Library content-depth slice
+T113 - Reader save selected local samples MVP
 
 Reason:
 
-- Deepens the Library/Reader surface after the recent Tools utility run.
-- Keeps the next slice local and content-focused, without public APIs, imports, Drift, bookmarks, reading-progress persistence, screenshots, or release work.
-- Builds on the existing Reader sample, saved-sample signal, and text comfort controls without turning it into a full content model yet.
+- Makes the new Reader/Library local sample catalog more useful by allowing any built-in sample to be saved or removed.
+- Stays local and small by extending the existing `shared_preferences` Reader saved-sample path instead of adding Drift, bookmarks, saved articles, imports, or reading-progress persistence.
+- Keeps Phase 10 focused on app usefulness/content depth instead of screenshots, portfolio, release, or broad redesign work.
 
 Scope:
 
-- Add a small built-in Reader sample catalog or shelf using existing Reader/Library feature structure.
-- Surface 2-3 local reading samples or content cards from Library.
-- Let the user open a selected local sample in the Reader using a small route key or similarly narrow local mechanism.
-- Preserve the existing saved-sample behavior unless the task explicitly scopes a generic saved-content model.
-- Use existing app theme, typography, spacing, and route style; keep the UI simple, clean, and scroll-safe.
-- Add focused tests for Library content rendering, selected Reader sample rendering, and route behavior.
+- Replace the current single saved-sample boolean behavior with a small saved local sample ID set or list.
+- Preserve backward compatibility for the existing saved The First Door state if practical.
+- Let Reader save/remove the currently selected built-in local sample.
+- Reflect saved local samples from Library with a clear saved count and saved-card states.
+- Keep the current Reader sample catalog, text comfort controls, selected-sample route behavior, and Library structure.
+- Add focused tests for saving/removing selected local samples, Library saved-state rendering, and any migration/fallback behavior.
 
 Out of scope:
 
@@ -295,21 +297,21 @@ Out of scope:
 Verification:
 
 - Dart/UI gate from `docs/qa/git-workflow.md`: `dart format` for changed Dart files, `flutter analyze`, `flutter test`, and `git diff --check`.
-- Run `flutter build apk --debug` if the implementation adds or changes app routing/startup/build-impacting code.
+- Run `flutter build apk --debug` only if the implementation adds or changes app routing/startup/build-impacting code.
 
 ### Alternatives
 
-Dashboard quick actions/content cards refresh
+Reader/Library next-step audit
 
-Choose this if the user wants Home to surface more current modules or content cards before adding another standalone tool.
+Choose this if the user wants to plan the Reader storage model before changing saved-sample persistence.
 
 Explore/RSS foundation audit
 
 Choose this if the user wants to evaluate public content/API expansion after the current local-utility run.
 
-Another local utility/content-depth audit
+Dashboard quick actions/content cards refresh
 
-Choose this if the user wants to continue Tools utility growth after Decision Wheel before returning to Reader/Library.
+Choose this if the user wants Home to surface more current modules or content cards before more Reader/Library work.
 
 ### Portfolio / screenshot / showcase deferral policy
 
@@ -345,7 +347,7 @@ Current phase:
 
 Decision:
 
-- T111 added x1/x2/x3 multiplier mode to Decision Wheel while preserving raw entry text, compact layout, wheel style, result dialog, history, Shuffle, and Sort behavior. The next recommended task is T112 - Reader/Library content-depth slice.
+- T112 added a three-item built-in Reader sample catalog, Library sample cards, and selected-sample Reader route behavior while keeping saved state limited to The First Door. The next recommended task is T113 - Reader save selected local samples MVP.
 
 Do not enter yet:
 
@@ -384,7 +386,8 @@ Reason:
 - The T109 Decision Wheel history row readability tune improves the two-line row spacing and selected-item prominence without changing the max-height behavior, copy action, persistence, or broader sheet design.
 - The T110 Decision Wheel compact mobile layout removes extra vertical chrome, keeps the wheel as the hero element, and bounds the entries editor without adding x2/duplicate mode, persistence, packages, or new wheel logic.
 - The T111 Decision Wheel multiplier mode adds x1/x2/x3 segment generation with distributed duplicates while leaving the raw entries text unchanged and removing selected items from the raw entry list.
-- T112 Reader/Library is the next smallest useful content-depth slice because it can add more built-in local reading content without committing to Drift, imports, generic bookmarks, or reading-progress persistence.
+- The T112 Reader/Library content-depth slice adds more built-in local reading content without committing to Drift, imports, generic bookmarks, or reading-progress persistence.
+- T113 Reader save selected local samples is the next smallest useful content-depth slice because it can make the new sample catalog saveable with the existing `shared_preferences` direction before any generic bookmark, saved-article, Drift, import, or progress model work.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -438,7 +441,8 @@ Exit criteria:
 - Done: Implemented the T109 Decision Wheel history item readability refinement.
 - Done: Implemented the T110 Decision Wheel compact mobile layout refinement.
 - Done: Implemented the T111 Decision Wheel multiplier mode.
-- Remaining: Implement T112 Reader/Library content-depth slice, or follow a user-assigned concrete alternative.
+- Done: Implemented the T112 Reader/Library content-depth slice.
+- Remaining: Implement T113 Reader save selected local samples MVP, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 

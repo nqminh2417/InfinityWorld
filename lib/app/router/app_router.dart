@@ -131,7 +131,7 @@ GoRouter createAppRouter({
       GoRoute(
         path: AppRoutes.reader,
         builder: (BuildContext context, GoRouterState state) {
-          return const ReaderScreen();
+          return ReaderScreen(sampleId: state.uri.queryParameters['sample']);
         },
       ),
     ],

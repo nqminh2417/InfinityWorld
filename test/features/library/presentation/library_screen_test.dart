@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:infinity_world/design_system/components/iw_card.dart';
+import 'package:infinity_world/design_system/tokens/iw_spacing.dart';
 import 'package:infinity_world/features/library/presentation/library_screen.dart';
 import 'package:infinity_world/features/reader/application/reader_saved_sample_provider.dart';
 import 'package:infinity_world/features/reader/presentation/reader_screen.dart';
@@ -36,9 +37,16 @@ void main() {
       findsOneWidget,
     );
     expect(find.byType(ListView), findsOneWidget);
-    expect(find.byType(IwCard), findsNWidgets(2));
+    expect(find.byType(IwCard), findsWidgets);
     expect(find.text('Saved content'), findsOneWidget);
-    expect(find.text('Sample Reader'), findsOneWidget);
+    expect(find.text('Local samples'), findsOneWidget);
+    expect(find.text('The First Door'), findsOneWidget);
+    expect(find.text('Focus Reset'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Night Market Notes'),
+      IwSpacing.space64,
+    );
+    expect(find.text('Night Market Notes'), findsOneWidget);
     expect(
       find.text('Open and save the built-in local sample.'),
       findsOneWidget,
@@ -55,7 +63,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Sample Reader'), findsOneWidget);
+    expect(find.text('The First Door'), findsOneWidget);
     expect(
       find.text('Saved locally. Continue the built-in sample.'),
       findsOneWidget,
@@ -66,7 +74,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Library Reader card opens the Reader route', (tester) async {
+  testWidgets('Library sample card opens the selected Reader route', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       ProviderScope(child: MainApp(initialRoute: AppRoutes.main)),
     );
@@ -77,10 +87,12 @@ void main() {
 
     expect(find.byType(LibraryScreen), findsOneWidget);
 
-    await tester.tap(find.text('Sample Reader'));
+    await tester.tap(find.text('Focus Reset'));
     await tester.pumpAndSettle();
 
     expect(find.byType(ReaderScreen), findsOneWidget);
+    expect(find.text('Focus Reset'), findsOneWidget);
+    expect(find.textContaining('Close the noisy loops'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

@@ -4,12 +4,7 @@ import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/design_system/tokens/iw_colors.dart';
 import 'package:infinity_world/design_system/tokens/iw_spacing.dart';
 import 'package:infinity_world/features/reader/application/reader_saved_sample_provider.dart';
-
-const _readerSampleParagraphs = <String>[
-  'InfinityWorld sample: the first door opened quietly, not with a flash, but with the small certainty that a useful place had finally found its shape.',
-  'Inside was a calm room of notes, stories, and saved ideas. Nothing asked to be synced, imported, ranked, or organized yet. It only needed to be readable.',
-  'The reader will grow later when the Library earns persistence, bookmarks, and progress. For now, this sample proves the surface can hold text with the same care as the rest of the app.',
-];
+import 'package:infinity_world/features/reader/domain/reader_sample.dart';
 
 enum _ReaderTextSize {
   small('Small', 15),
@@ -23,7 +18,9 @@ enum _ReaderTextSize {
 }
 
 class ReaderScreen extends ConsumerStatefulWidget {
-  const ReaderScreen({super.key});
+  const ReaderScreen({super.key, this.sampleId});
+
+  final String? sampleId;
 
   @override
   ConsumerState<ReaderScreen> createState() => _ReaderScreenState();
@@ -34,9 +31,11 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final sample = readerSampleById(widget.sampleId);
     final brightness = Theme.of(context).brightness;
     final secondaryText = IwColors.textSecondary(brightness);
-    final savedSample = ref.watch(readerSavedSampleProvider);
+    final savedSample =
+        sample.canBeSaved ? ref.watch(readerSavedSampleProvider) : null;
     final bodyStyle = Theme.of(
       context,
     ).textTheme.bodyLarge?.copyWith(fontSize: _textSize.fontSize, height: 1.55);
@@ -48,13 +47,10 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
         child: ListView(
           padding: const EdgeInsets.all(IwSpacing.screenPadding),
           children: [
-            Text(
-              'The First Door',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+            Text(sample.title, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: IwSpacing.space8),
             Text(
-              'Local reading sample',
+              sample.subtitle,
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(color: secondaryText),
@@ -79,46 +75,54 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
               },
             ),
             const SizedBox(height: IwSpacing.space16),
-            savedSample.when(
-              data:
-                  (isSaved) => _ReaderSavedSampleAction(
-                    isSaved: isSaved,
-                    onPressed: () async {
-                      final controller = ref.read(
-                        readerSavedSampleProvider.notifier,
-                      );
-                      if (isSaved) {
-                        await controller.removeSample();
-                      } else {
-                        await controller.saveSample();
-                      }
-                    },
-                  ),
-              error:
-                  (_, __) => Text(
-                    'Saved state unavailable',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyMedium?.copyWith(color: secondaryText),
-                  ),
-              loading:
-                  () => OutlinedButton.icon(
-                    onPressed: null,
-                    icon: const Icon(Icons.bookmark_outline_rounded),
-                    label: const Text('Loading saved state'),
-                  ),
-            ),
+            if (sample.canBeSaved)
+              savedSample!.when(
+                data:
+                    (isSaved) => _ReaderSavedSampleAction(
+                      isSaved: isSaved,
+                      onPressed: () async {
+                        final controller = ref.read(
+                          readerSavedSampleProvider.notifier,
+                        );
+                        if (isSaved) {
+                          await controller.removeSample();
+                        } else {
+                          await controller.saveSample();
+                        }
+                      },
+                    ),
+                error:
+                    (_, __) => Text(
+                      'Saved state unavailable',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: secondaryText),
+                    ),
+                loading:
+                    () => OutlinedButton.icon(
+                      onPressed: null,
+                      icon: const Icon(Icons.bookmark_outline_rounded),
+                      label: const Text('Loading saved state'),
+                    ),
+              )
+            else
+              Text(
+                'Local sample',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: secondaryText),
+              ),
             const SizedBox(height: IwSpacing.space16),
             IwCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'InfinityWorld sample',
+                    sample.sectionTitle,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: IwSpacing.space12),
-                  for (final paragraph in _readerSampleParagraphs) ...[
+                  for (final paragraph in sample.paragraphs) ...[
                     Text(paragraph, style: bodyStyle),
                     const SizedBox(height: IwSpacing.space16),
                   ],
