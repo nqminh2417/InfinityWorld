@@ -21,6 +21,13 @@ class LibraryScreen extends ConsumerWidget {
           error: (_, __) => <String>{},
           loading: () => <String>{},
         );
+    final finishedSampleIds = ref
+        .watch(readerFinishedSampleProvider)
+        .when(
+          data: (value) => value,
+          error: (_, __) => <String>{},
+          loading: () => <String>{},
+        );
     final savedSamples = [
       for (final sample in readerSampleCatalog)
         if (savedSampleIds.contains(sample.id)) sample,
@@ -99,6 +106,7 @@ class LibraryScreen extends ConsumerWidget {
               _ReaderSampleCard(
                 sample: lastOpenedSample,
                 isSaved: savedSampleIds.contains(lastOpenedSample.id),
+                isFinished: finishedSampleIds.contains(lastOpenedSample.id),
                 description: 'Last opened local sample.',
               ),
             ],
@@ -110,7 +118,11 @@ class LibraryScreen extends ConsumerWidget {
               ),
               const SizedBox(height: IwSpacing.space12),
               for (final sample in savedSamples) ...[
-                _ReaderSampleCard(sample: sample, isSaved: true),
+                _ReaderSampleCard(
+                  sample: sample,
+                  isSaved: true,
+                  isFinished: finishedSampleIds.contains(sample.id),
+                ),
                 const SizedBox(height: IwSpacing.space12),
               ],
             ],
@@ -124,6 +136,7 @@ class LibraryScreen extends ConsumerWidget {
               _ReaderSampleCard(
                 sample: sample,
                 isSaved: savedSampleIds.contains(sample.id),
+                isFinished: finishedSampleIds.contains(sample.id),
               ),
               const SizedBox(height: IwSpacing.space12),
             ],
@@ -138,19 +151,23 @@ class _ReaderSampleCard extends StatelessWidget {
   const _ReaderSampleCard({
     required this.sample,
     required this.isSaved,
+    required this.isFinished,
     this.description,
   });
 
   final ReaderSample sample;
   final bool isSaved;
+  final bool isFinished;
   final String? description;
 
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final sampleDescription =
+    final baseDescription =
         description ??
         (isSaved ? 'Saved locally. Continue this sample.' : sample.description);
+    final sampleDescription =
+        isFinished ? '$baseDescription Finished locally.' : baseDescription;
 
     return IwCard(
       onTap: () => context.push(_readerSampleRoute(sample.id)),

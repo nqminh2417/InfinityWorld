@@ -58,6 +58,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     final brightness = Theme.of(context).brightness;
     final secondaryText = IwColors.textSecondary(brightness);
     final savedSampleIds = ref.watch(readerSavedSampleProvider);
+    final finishedSampleIds = ref.watch(readerFinishedSampleProvider);
     final bodyStyle = Theme.of(
       context,
     ).textTheme.bodyLarge?.copyWith(fontSize: _textSize.fontSize, height: 1.55);
@@ -127,6 +128,36 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
                   ),
             ),
             const SizedBox(height: IwSpacing.space16),
+            finishedSampleIds.when(
+              data:
+                  (finishedIds) => _ReaderFinishedSampleAction(
+                    isFinished: finishedIds.contains(sample.id),
+                    onPressed: () async {
+                      final controller = ref.read(
+                        readerFinishedSampleProvider.notifier,
+                      );
+                      if (finishedIds.contains(sample.id)) {
+                        await controller.markUnfinished(sample.id);
+                      } else {
+                        await controller.markFinished(sample.id);
+                      }
+                    },
+                  ),
+              error:
+                  (_, __) => Text(
+                    'Progress state unavailable',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: secondaryText),
+                  ),
+              loading:
+                  () => OutlinedButton.icon(
+                    onPressed: null,
+                    icon: const Icon(Icons.task_alt_rounded),
+                    label: const Text('Loading progress state'),
+                  ),
+            ),
+            const SizedBox(height: IwSpacing.space16),
             IwCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,6 +177,47 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ReaderFinishedSampleAction extends StatelessWidget {
+  const _ReaderFinishedSampleAction({
+    required this.isFinished,
+    required this.onPressed,
+  });
+
+  final bool isFinished;
+  final Future<void> Function() onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final secondaryText = IwColors.textSecondary(brightness);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          isFinished ? 'Finished sample' : 'Not finished yet',
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: secondaryText),
+        ),
+        const SizedBox(height: IwSpacing.space8),
+        if (isFinished)
+          OutlinedButton.icon(
+            onPressed: onPressed,
+            icon: const Icon(Icons.undo_rounded),
+            label: const Text('Mark unfinished'),
+          )
+        else
+          OutlinedButton.icon(
+            onPressed: onPressed,
+            icon: const Icon(Icons.task_alt_rounded),
+            label: const Text('Mark finished'),
+          ),
+      ],
     );
   }
 }

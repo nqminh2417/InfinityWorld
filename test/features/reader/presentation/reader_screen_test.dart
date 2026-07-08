@@ -101,6 +101,40 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('Reader screen marks and unmarks the selected local sample', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(home: ReaderScreen(sampleId: 'focus-reset')),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Focus Reset'), findsOneWidget);
+    expect(find.text('Mark finished'), findsOneWidget);
+
+    await tester.tap(find.text('Mark finished'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Finished sample'), findsOneWidget);
+    expect(find.text('Mark unfinished'), findsOneWidget);
+    expect(
+      await ReaderFinishedSampleRepository().isSampleFinished('focus-reset'),
+      isTrue,
+    );
+
+    await tester.tap(find.text('Mark unfinished'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Mark finished'), findsOneWidget);
+    expect(
+      await ReaderFinishedSampleRepository().isSampleFinished('focus-reset'),
+      isFalse,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets(
     'Reader screen records the selected local sample as last opened',
     (tester) async {

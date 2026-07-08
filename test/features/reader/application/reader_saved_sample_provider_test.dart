@@ -115,4 +115,78 @@ void main() {
       expect(await repository.loadLastOpenedSampleId(), isNull);
     },
   );
+
+  test(
+    'reader finished sample provider defaults to no finished samples',
+    () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      expect(
+        await container.read(readerFinishedSampleProvider.future),
+        isEmpty,
+      );
+    },
+  );
+
+  test(
+    'reader finished sample provider persists selected sample ids',
+    () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      await container.read(readerFinishedSampleProvider.future);
+      await container
+          .read(readerFinishedSampleProvider.notifier)
+          .markFinished('focus-reset');
+
+      expect(await container.read(readerFinishedSampleProvider.future), {
+        'focus-reset',
+      });
+      expect(
+        await ReaderFinishedSampleRepository().isSampleFinished('focus-reset'),
+        isTrue,
+      );
+      expect(
+        await ReaderFinishedSampleRepository().isSampleFinished(),
+        isFalse,
+      );
+
+      await container
+          .read(readerFinishedSampleProvider.notifier)
+          .markFinished();
+
+      expect(await container.read(readerFinishedSampleProvider.future), {
+        'first-door',
+        'focus-reset',
+      });
+
+      await container
+          .read(readerFinishedSampleProvider.notifier)
+          .markUnfinished('focus-reset');
+
+      expect(await container.read(readerFinishedSampleProvider.future), {
+        'first-door',
+      });
+      expect(
+        await ReaderFinishedSampleRepository().isSampleFinished('focus-reset'),
+        isFalse,
+      );
+      expect(await ReaderFinishedSampleRepository().isSampleFinished(), isTrue);
+    },
+  );
+
+  test(
+    'reader finished sample repository ignores unknown persisted sample ids',
+    () async {
+      await SharedPreferencesAsync().setStringList(
+        ReaderFinishedSampleRepository.finishedSampleIdsKey,
+        ['unknown-sample', 'focus-reset'],
+      );
+
+      expect(await ReaderFinishedSampleRepository().loadFinishedSampleIds(), {
+        'focus-reset',
+      });
+    },
+  );
 }

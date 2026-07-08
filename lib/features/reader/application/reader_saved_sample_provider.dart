@@ -22,6 +22,16 @@ final readerLastOpenedSampleProvider =
       ReaderLastOpenedSampleController.new,
     );
 
+final readerFinishedSampleRepositoryProvider =
+    Provider<ReaderFinishedSampleRepository>((ref) {
+      return ReaderFinishedSampleRepository();
+    });
+
+final readerFinishedSampleProvider =
+    AsyncNotifierProvider<ReaderFinishedSampleController, Set<String>>(
+      ReaderFinishedSampleController.new,
+    );
+
 class ReaderSavedSampleController extends AsyncNotifier<Set<String>> {
   @override
   Future<Set<String>> build() {
@@ -89,6 +99,81 @@ class ReaderSavedSampleRepository {
     final sortedIds = sampleIds.toList()..sort();
     await _preferences.setStringList(savedSampleIdsKey, sortedIds);
     await _preferences.remove(legacySavedSampleKey);
+  }
+}
+
+class ReaderFinishedSampleController extends AsyncNotifier<Set<String>> {
+  @override
+  Future<Set<String>> build() {
+    return ref
+        .watch(readerFinishedSampleRepositoryProvider)
+        .loadFinishedSampleIds();
+  }
+
+  Future<void> markFinished([String sampleId = defaultReaderSampleId]) async {
+    final finishedIds = await ref
+        .read(readerFinishedSampleRepositoryProvider)
+        .markFinished(sampleId);
+    state = AsyncData(finishedIds);
+  }
+
+  Future<void> markUnfinished([String sampleId = defaultReaderSampleId]) async {
+    final finishedIds = await ref
+        .read(readerFinishedSampleRepositoryProvider)
+        .markUnfinished(sampleId);
+    state = AsyncData(finishedIds);
+  }
+}
+
+class ReaderFinishedSampleRepository {
+  ReaderFinishedSampleRepository({SharedPreferencesAsync? preferences})
+    : _preferences = preferences ?? SharedPreferencesAsync();
+
+  static const String finishedSampleIdsKey = 'iw_reader_finished_sample_ids';
+
+  final SharedPreferencesAsync _preferences;
+
+  Future<Set<String>> loadFinishedSampleIds() async {
+    final finishedIds =
+        await _preferences.getStringList(finishedSampleIdsKey) ?? <String>[];
+    return finishedIds.where(_isKnownSampleId).toSet();
+  }
+
+  Future<bool> isSampleFinished([
+    String sampleId = defaultReaderSampleId,
+  ]) async {
+    return (await loadFinishedSampleIds()).contains(sampleId);
+  }
+
+  Future<Set<String>> markFinished([
+    String sampleId = defaultReaderSampleId,
+  ]) async {
+    final finishedIds = await loadFinishedSampleIds();
+    if (!_isKnownSampleId(sampleId)) {
+      return finishedIds;
+    }
+
+    final nextIds = {...finishedIds, sampleId};
+    await _saveFinishedSampleIds(nextIds);
+    return nextIds;
+  }
+
+  Future<Set<String>> markUnfinished([
+    String sampleId = defaultReaderSampleId,
+  ]) async {
+    final finishedIds = await loadFinishedSampleIds();
+    final nextIds = {...finishedIds}..remove(sampleId);
+    await _saveFinishedSampleIds(nextIds);
+    return nextIds;
+  }
+
+  Future<void> _saveFinishedSampleIds(Set<String> sampleIds) async {
+    final sortedIds = sampleIds.toList()..sort();
+    await _preferences.setStringList(finishedSampleIdsKey, sortedIds);
+  }
+
+  bool _isKnownSampleId(String sampleId) {
+    return readerSampleCatalog.any((sample) => sample.id == sampleId);
   }
 }
 

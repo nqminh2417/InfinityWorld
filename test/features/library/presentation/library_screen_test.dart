@@ -74,6 +74,42 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('Library screen reflects a finished local sample', (
+    tester,
+  ) async {
+    await ReaderFinishedSampleRepository().markFinished('focus-reset');
+
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: LibraryScreen())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.textContaining(
+        'A calm reset for clearing mental tabs before the next task. Finished locally.',
+      ),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Library saved shelf reflects a finished sample', (tester) async {
+    await ReaderSavedSampleRepository().saveSample('focus-reset');
+    await ReaderFinishedSampleRepository().markFinished('focus-reset');
+
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: LibraryScreen())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Saved samples'), findsOneWidget);
+    expect(
+      find.text('Saved locally. Continue this sample. Finished locally.'),
+      findsNWidgets(2),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Library screen reflects multiple saved local samples', (
     tester,
   ) async {
@@ -111,6 +147,27 @@ void main() {
     expect(find.text('Continue reading'), findsOneWidget);
     expect(find.text('Focus Reset'), findsWidgets);
     expect(find.text('Last opened local sample.'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Library continue reading card reflects a finished sample', (
+    tester,
+  ) async {
+    await ReaderLastOpenedSampleRepository().saveLastOpenedSampleId(
+      'night-market-notes',
+    );
+    await ReaderFinishedSampleRepository().markFinished('night-market-notes');
+
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: LibraryScreen())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Continue reading'), findsOneWidget);
+    expect(
+      find.text('Last opened local sample. Finished locally.'),
+      findsOneWidget,
+    );
     expect(tester.takeException(), isNull);
   });
 
