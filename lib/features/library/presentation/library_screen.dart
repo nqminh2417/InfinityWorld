@@ -26,6 +26,15 @@ class LibraryScreen extends ConsumerWidget {
         if (savedSampleIds.contains(sample.id)) sample,
     ];
     final savedCount = savedSamples.length;
+    final lastOpenedSample = ref
+        .watch(readerLastOpenedSampleProvider)
+        .when(
+          data:
+              (sampleId) =>
+                  sampleId == null ? null : readerSampleById(sampleId),
+          error: (_, __) => null,
+          loading: () => null,
+        );
 
     return Scaffold(
       appBar: AppBar(title: const Text('Library')),
@@ -80,6 +89,19 @@ class LibraryScreen extends ConsumerWidget {
                 ],
               ),
             ),
+            if (lastOpenedSample != null) ...[
+              const SizedBox(height: IwSpacing.space20),
+              Text(
+                'Continue reading',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: IwSpacing.space12),
+              _ReaderSampleCard(
+                sample: lastOpenedSample,
+                isSaved: savedSampleIds.contains(lastOpenedSample.id),
+                description: 'Last opened local sample.',
+              ),
+            ],
             if (savedSamples.isNotEmpty) ...[
               const SizedBox(height: IwSpacing.space20),
               Text(
@@ -113,16 +135,22 @@ class LibraryScreen extends ConsumerWidget {
 }
 
 class _ReaderSampleCard extends StatelessWidget {
-  const _ReaderSampleCard({required this.sample, required this.isSaved});
+  const _ReaderSampleCard({
+    required this.sample,
+    required this.isSaved,
+    this.description,
+  });
 
   final ReaderSample sample;
   final bool isSaved;
+  final String? description;
 
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final sampleDescription =
-        isSaved ? 'Saved locally. Continue this sample.' : sample.description;
+        description ??
+        (isSaved ? 'Saved locally. Continue this sample.' : sample.description);
 
     return IwCard(
       onTap: () => context.push(_readerSampleRoute(sample.id)),

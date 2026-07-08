@@ -101,6 +101,24 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets(
+    'Reader screen records the selected local sample as last opened',
+    (tester) async {
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(home: ReaderScreen(sampleId: 'focus-reset')),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        await ReaderLastOpenedSampleRepository().loadLastOpenedSampleId(),
+        'focus-reset',
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('Reader screen changes local sample text size', (tester) async {
     await tester.pumpWidget(
       const ProviderScope(child: MaterialApp(home: ReaderScreen())),

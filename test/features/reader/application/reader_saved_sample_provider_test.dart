@@ -75,4 +75,44 @@ void main() {
       expect(await ReaderSavedSampleRepository().isSampleSaved(), isTrue);
     },
   );
+
+  test('reader last opened sample provider defaults to no sample', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    expect(await container.read(readerLastOpenedSampleProvider.future), isNull);
+  });
+
+  test(
+    'reader last opened sample provider persists selected sample id',
+    () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      await container.read(readerLastOpenedSampleProvider.future);
+      await container
+          .read(readerLastOpenedSampleProvider.notifier)
+          .recordSample('focus-reset');
+
+      expect(
+        await container.read(readerLastOpenedSampleProvider.future),
+        'focus-reset',
+      );
+      expect(
+        await ReaderLastOpenedSampleRepository().loadLastOpenedSampleId(),
+        'focus-reset',
+      );
+    },
+  );
+
+  test(
+    'reader last opened sample repository ignores unknown sample ids',
+    () async {
+      final repository = ReaderLastOpenedSampleRepository();
+
+      await repository.saveLastOpenedSampleId('unknown-sample');
+
+      expect(await repository.loadLastOpenedSampleId(), isNull);
+    },
+  );
 }

@@ -12,6 +12,16 @@ final readerSavedSampleProvider =
       ReaderSavedSampleController.new,
     );
 
+final readerLastOpenedSampleRepositoryProvider =
+    Provider<ReaderLastOpenedSampleRepository>((ref) {
+      return ReaderLastOpenedSampleRepository();
+    });
+
+final readerLastOpenedSampleProvider =
+    AsyncNotifierProvider<ReaderLastOpenedSampleController, String?>(
+      ReaderLastOpenedSampleController.new,
+    );
+
 class ReaderSavedSampleController extends AsyncNotifier<Set<String>> {
   @override
   Future<Set<String>> build() {
@@ -79,5 +89,51 @@ class ReaderSavedSampleRepository {
     final sortedIds = sampleIds.toList()..sort();
     await _preferences.setStringList(savedSampleIdsKey, sortedIds);
     await _preferences.remove(legacySavedSampleKey);
+  }
+}
+
+class ReaderLastOpenedSampleController extends AsyncNotifier<String?> {
+  @override
+  Future<String?> build() {
+    return ref
+        .watch(readerLastOpenedSampleRepositoryProvider)
+        .loadLastOpenedSampleId();
+  }
+
+  Future<void> recordSample(String sampleId) async {
+    await ref
+        .read(readerLastOpenedSampleRepositoryProvider)
+        .saveLastOpenedSampleId(sampleId);
+    state = AsyncData(sampleId);
+  }
+}
+
+class ReaderLastOpenedSampleRepository {
+  ReaderLastOpenedSampleRepository({SharedPreferencesAsync? preferences})
+    : _preferences = preferences ?? SharedPreferencesAsync();
+
+  static const String lastOpenedSampleIdKey = 'iw_reader_last_opened_sample_id';
+
+  final SharedPreferencesAsync _preferences;
+
+  Future<String?> loadLastOpenedSampleId() async {
+    final sampleId = await _preferences.getString(lastOpenedSampleIdKey);
+    if (_isKnownSampleId(sampleId)) {
+      return sampleId;
+    }
+
+    return null;
+  }
+
+  Future<void> saveLastOpenedSampleId(String sampleId) async {
+    if (!_isKnownSampleId(sampleId)) {
+      return;
+    }
+
+    await _preferences.setString(lastOpenedSampleIdKey, sampleId);
+  }
+
+  bool _isKnownSampleId(String? sampleId) {
+    return readerSampleCatalog.any((sample) => sample.id == sampleId);
   }
 }

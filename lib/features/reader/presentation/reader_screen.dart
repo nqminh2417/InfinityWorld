@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinity_world/design_system/components/iw_card.dart';
@@ -28,6 +30,27 @@ class ReaderScreen extends ConsumerStatefulWidget {
 
 class _ReaderScreenState extends ConsumerState<ReaderScreen> {
   _ReaderTextSize _textSize = _ReaderTextSize.comfort;
+
+  @override
+  void initState() {
+    super.initState();
+    _recordOpenedSample();
+  }
+
+  @override
+  void didUpdateWidget(covariant ReaderScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.sampleId != widget.sampleId) {
+      _recordOpenedSample();
+    }
+  }
+
+  void _recordOpenedSample() {
+    final sample = readerSampleById(widget.sampleId);
+    unawaited(
+      ref.read(readerLastOpenedSampleProvider.notifier).recordSample(sample.id),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

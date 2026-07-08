@@ -39,6 +39,7 @@ void main() {
     expect(find.byType(ListView), findsOneWidget);
     expect(find.byType(IwCard), findsWidgets);
     expect(find.text('Saved content'), findsOneWidget);
+    expect(find.text('Continue reading'), findsNothing);
     expect(find.text('Saved samples'), findsNothing);
     expect(find.text('Local samples'), findsOneWidget);
     expect(find.text('The First Door'), findsOneWidget);
@@ -95,6 +96,24 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('Library screen shows the last opened sample card', (
+    tester,
+  ) async {
+    await ReaderLastOpenedSampleRepository().saveLastOpenedSampleId(
+      'focus-reset',
+    );
+
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: LibraryScreen())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Continue reading'), findsOneWidget);
+    expect(find.text('Focus Reset'), findsWidgets);
+    expect(find.text('Last opened local sample.'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Library saved sample shelf opens the selected Reader route', (
     tester,
   ) async {
@@ -116,6 +135,32 @@ void main() {
     expect(find.byType(ReaderScreen), findsOneWidget);
     expect(find.text('Focus Reset'), findsOneWidget);
     expect(find.textContaining('Close the noisy loops'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Library continue reading card opens the selected Reader route', (
+    tester,
+  ) async {
+    await ReaderLastOpenedSampleRepository().saveLastOpenedSampleId(
+      'night-market-notes',
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(child: MainApp(initialRoute: AppRoutes.main)),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.local_library_rounded));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Continue reading'), findsOneWidget);
+
+    await tester.tap(find.text('Night Market Notes').first);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ReaderScreen), findsOneWidget);
+    expect(find.text('Night Market Notes'), findsOneWidget);
+    expect(find.textContaining('The night market opened'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
