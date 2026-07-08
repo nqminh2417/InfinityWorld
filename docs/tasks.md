@@ -82,6 +82,7 @@ Current architecture status:
 - Reader now records the last opened built-in local sample ID and Library shows a compact Continue reading card for that sample, without reading-progress offsets or a history list.
 - T117 audited Reader/Library progress and bookmark options and selected a finished-sample marker as the next smallest useful Reader progress slice before scroll offsets, bookmarks, history, or Drift.
 - Reader now stores finished built-in sample IDs with the existing `shared_preferences`/Riverpod pattern and reflects finished state in Reader actions plus Library sample cards.
+- T119 audited Reader bookmark options and selected a single paragraph bookmark per built-in sample because a sample-level bookmark would duplicate saved samples, while multiple bookmarks, notes, highlights, and scroll offsets are larger storage-model work.
 
 Current tests:
 
@@ -126,6 +127,7 @@ Current tests:
 - Reader finished-sample provider coverage exists for default, selected-ID mark/unmark, and unknown persisted ID filtering.
 - Reader presentation widget coverage verifies marking/unmarking a selected local sample as finished.
 - Library presentation widget coverage verifies finished local samples in the Local samples catalog, Saved samples shelf, and Continue reading card.
+- No new app tests were added for T119 because it is a docs-only bookmark model audit.
 - No new app tests were added for T93 because it was an audit/docs-only checkpoint.
 - Explore presentation widget coverage now verifies the refreshed static content, small-screen scrolling, and existing Fox / Summertime Saga route taps.
 - No new app tests were added for T95 because it was an audit/docs-only checkpoint.
@@ -282,38 +284,40 @@ Task sizing note:
 
 ### Primary
 
-T119 - Reader bookmark model audit
+T120 - Reader single paragraph bookmark MVP
 
 Reason:
 
-- Reader/Library now has saved samples, Continue reading, and a simple finished marker, but bookmark semantics are still undefined.
-- Bookmarks need a clear storage and UI model before implementation because they can mean one bookmark per sample, multiple paragraph markers, scroll offsets, or a richer saved-content model.
-- A short audit keeps the next Reader step narrow before adding bookmark persistence, scroll offsets, reading percentages, notes, highlights, or Drift.
+- Reader/Library already has sample-level Save, Continue reading, and Finished state, so a sample-level bookmark would be redundant.
+- Current built-in samples are paragraph-based, which makes one bookmarkable paragraph per sample the smallest useful bookmark behavior.
+- A single bookmark slot per built-in sample can stay on the existing `shared_preferences`/Riverpod path before multiple bookmarks, notes, highlights, scroll offsets, or Drift are justified.
 
 Scope:
 
-- Audit the current Reader catalog, Reader screen layout, Library cards, route query behavior, `shared_preferences` keys, and focused coverage for bookmark readiness.
-- Decide whether a bookmark slice can remain simple and `shared_preferences`-backed for built-in samples or should wait for a broader Reader storage model.
-- Recommend exactly one smallest next Reader/Library content-depth task.
-- Keep saved samples, finished samples, last-opened behavior, selected-sample routing, and text-size controls unchanged.
+- Add one persisted paragraph bookmark slot per built-in Reader sample using the existing `shared_preferences`/Riverpod direction.
+- Validate persisted bookmark entries against `readerSampleCatalog` sample IDs and paragraph indexes.
+- Add compact Reader controls to bookmark/unbookmark a paragraph; choosing another paragraph in the same sample should replace the previous bookmark for that sample.
+- Reflect bookmark state in Library sample cards where practical.
+- Preserve saved sample behavior, finished state, last-opened behavior, selected-sample route query behavior, text-size controls, Library shelves, and existing route structure.
+- Add/update focused provider, Reader widget, Library widget, and route-adjacent tests where practical.
 
 Out of scope:
 
-- No feature implementation, public API, new packages, SQLite/Drift, import/parser work, saved-article models, bookmark persistence, scroll-position persistence, reading-progress offsets, reading percentage, reading history list, notes, highlights, persisted reader settings, broad Library redesign, dashboard redesign, screenshots, portfolio/showcase prep, release work, Android build/toolchain changes, shell route migration, or Riverpod/go_router/Dio migration.
+- No public API, new packages, SQLite/Drift, import/parser work, saved-article models, multiple bookmarks per sample, bookmark shelf/list, scroll-position persistence, reading-progress offsets, reading percentage, reading history list, notes, highlights, persisted reader settings, broad Library redesign, dashboard redesign, screenshots, portfolio/showcase prep, release work, Android build/toolchain changes, shell route migration, or Riverpod/go_router/Dio migration.
 
 Verification:
 
-- Docs/audit gate from `docs/qa/git-workflow.md`: at minimum `git diff --check`.
+- Dart/UI gate from `docs/qa/git-workflow.md`: `dart format`, `flutter analyze`, `flutter test`, and `git diff --check`.
 
 ### Alternatives
-
-Reader single bookmark MVP
-
-Choose this only if the user already wants the smallest possible built-in-sample bookmark implementation without another audit.
 
 Reader scroll-position persistence audit
 
 Choose this if the user wants automatic position restore, percentage, or offset tracking before bookmark work.
+
+Library bookmark shelf audit
+
+Choose this if the user wants a separate Library bookmark list before implementing deeper Reader bookmark behavior.
 
 Explore/RSS foundation audit
 
@@ -338,7 +342,7 @@ Resume this work only when the user explicitly asks for release, CH Play, portfo
 - More design-system components unless explicitly assigned.
 - Full UI redesign unless explicitly approved.
 - Saved picker lists, weighted choices, picker history, or advanced wheel animation/physics before a dedicated follow-up task is assigned.
-- Drift/SQLite reader storage, generic bookmarks, saved-article models, reading-progress offsets, persisted reader settings, or import/parser work before a dedicated Reader persistence/model task is assigned.
+- Drift/SQLite reader storage, generic bookmarks, saved-article models, multiple bookmarks per sample, reading-progress offsets, persisted reader settings, or import/parser work before a dedicated Reader persistence/model task is assigned.
 - RSS/news foundation, public API expansion, or Explore live-network loading before a dedicated Explore/RSS task is assigned.
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
@@ -353,7 +357,7 @@ Current phase:
 
 Decision:
 
-- T118 implemented a simple finished-sample marker after saved samples and Continue reading. The next recommended task is T119 - Reader bookmark model audit.
+- T119 audited bookmark model options after saved samples, Continue reading, and finished markers. The next recommended task is T120 - Reader single paragraph bookmark MVP.
 
 Do not enter yet:
 
@@ -399,6 +403,7 @@ Reason:
 - The T116 Reader continue-reading card adds one local handoff without creating progress offsets, bookmark models, reading history, or Drift storage. The next Reader step should be audited before adding more persistence semantics.
 - The T117 Reader progress/bookmark audit found a finished-sample marker is the smallest useful progress step because it adds a real per-sample progress signal without scroll offsets, percentages, bookmarks, history, imports, or a database schema.
 - The T118 finished marker adds that per-sample progress signal with `shared_preferences`/Riverpod and Library card reflection, so bookmark semantics should be audited before adding a new Reader storage behavior.
+- The T119 bookmark model audit found sample-level bookmarks would duplicate saved samples, and selected one paragraph bookmark per built-in sample as the smallest useful bookmark behavior before multiple bookmarks, notes, highlights, scroll offsets, or Drift.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -459,7 +464,8 @@ Exit criteria:
 - Done: Implemented the T116 Reader continue-reading card MVP.
 - Done: Completed the T117 Reader progress/bookmark next-step audit and selected T118 as the next implementation slice.
 - Done: Implemented the T118 Reader finished sample marker MVP.
-- Remaining: Complete T119 Reader bookmark model audit, or follow a user-assigned concrete alternative.
+- Done: Completed the T119 Reader bookmark model audit and selected T120 as the next implementation slice.
+- Remaining: Implement T120 Reader single paragraph bookmark MVP, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 
