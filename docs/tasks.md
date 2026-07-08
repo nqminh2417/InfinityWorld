@@ -80,6 +80,7 @@ Current architecture status:
 - T114 audited the current Reader/Library surface and selected a Library saved-samples shelf as the next smallest useful content-depth slice because it reuses existing saved IDs and Reader routes without new storage, progress tracking, imports, or broad redesign.
 - Library now shows a compact Saved samples shelf when local Reader samples are saved, while keeping the saved count summary and full Local samples catalog.
 - Reader now records the last opened built-in local sample ID and Library shows a compact Continue reading card for that sample, without reading-progress offsets or a history list.
+- T117 audited Reader/Library progress and bookmark options and selected a finished-sample marker as the next smallest useful Reader progress slice before scroll offsets, bookmarks, history, or Drift.
 
 Current tests:
 
@@ -127,6 +128,7 @@ Current tests:
 - Reader presentation widget coverage now verifies the screen-local text-size controls while preserving the existing sample and saved-sample behavior.
 - Library and route coverage now verify selected local Reader sample rendering from the built-in catalog.
 - No new app tests were added for T97 because it is a docs-only backlog expansion.
+- No new app tests were added for T117 because it is a docs-only Reader progress/bookmark audit.
 - No Home feature-root tests exist yet because the Home tab still uses the existing Dashboard screen.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
@@ -276,41 +278,40 @@ Task sizing note:
 
 ### Primary
 
-T117 - Reader progress/bookmark next-step audit
+T118 - Reader finished sample marker MVP
 
 Reason:
 
-- Reader/Library now has a local sample catalog, saved sample IDs, a saved shelf, and a Continue reading handoff.
-- The next Reader depth step should be selected deliberately before adding progress offsets, bookmarks, history, or a broader storage model.
-- Keeps Phase 10 focused on useful app depth while avoiding premature Drift, imports, generic saved articles, or a full Reader persistence redesign.
+- Reader/Library now has saved samples and a Continue reading handoff, but no per-sample completion/progress signal.
+- A finished/unfinished marker is the smallest useful progress slice because it can use a simple saved local sample ID list without scroll offsets, percentages, or a database schema.
+- Keeps bookmarks, scroll-position persistence, reading history, imports, generic saved articles, and Drift deferred until a real Reader storage model is justified.
 
 Scope:
 
-- Audit current Reader/Library state, `shared_preferences` keys, route query behavior, saved shelf, Continue reading card, and focused coverage.
-- Recommend exactly one next Reader implementation slice.
-- Prefer a small local slice such as a minimal progress marker or single bookmark only if it can stay clearly scoped.
-- Decide whether the next slice should remain `shared_preferences`-simple or wait for a dedicated Reader storage model.
-- Keep portfolio screenshots and release/showcase work deferred.
-- Do not implement a feature in this audit task.
+- Add a simple per-sample finished state for built-in Reader samples using the existing `shared_preferences`/Riverpod direction.
+- Add a Reader action to mark the current local sample finished or unfinished.
+- Reflect finished state in Library sample cards, including saved shelf and Continue reading where practical.
+- Validate persisted finished IDs against `readerSampleCatalog`.
+- Preserve saved sample behavior, last-opened behavior, selected-sample route query behavior, text-size controls, Library shelves, and existing route structure.
+- Add/update focused provider, Reader widget, Library widget, and route-adjacent tests where practical.
 
 Out of scope:
 
-- No public API, new packages, SQLite/Drift, import/parser work, generic bookmarks, saved-article models, reading-progress offsets, reading percentage, reading history list, persisted reader settings, broad Library redesign, dashboard redesign, screenshots, portfolio/showcase prep, release work, Android build/toolchain changes, shell route migration, or Riverpod/go_router/Dio migration.
+- No public API, new packages, SQLite/Drift, import/parser work, generic bookmarks, saved-article models, scroll-position persistence, reading-progress offsets, reading percentage, reading history list, notes, highlights, persisted reader settings, broad Library redesign, dashboard redesign, screenshots, portfolio/showcase prep, release work, Android build/toolchain changes, shell route migration, or Riverpod/go_router/Dio migration.
 
 Verification:
 
-- Docs/audit gate from `docs/qa/git-workflow.md`: at minimum `git diff --check`.
-- Run lightweight Flutter checks only if the audit changes Dart code or needs fresh app evidence.
+- Dart/UI gate from `docs/qa/git-workflow.md`: `dart format`, `flutter analyze`, `flutter test`, and `git diff --check`.
 
 ### Alternatives
-
-Reader minimal progress marker MVP
-
-Choose this if the audit confirms one simple per-sample progress signal is enough before a Reader storage model.
 
 Reader bookmark model audit
 
 Choose this if the user wants to plan bookmarks before adding more Reader storage behavior.
+
+Reader scroll-position persistence audit
+
+Choose this if the user wants automatic position restore, percentage, or offset tracking instead of a simple finished marker.
 
 Explore/RSS foundation audit
 
@@ -350,7 +351,7 @@ Current phase:
 
 Decision:
 
-- T116 implemented a local Continue reading handoff by recording the last opened built-in Reader sample ID and showing it in Library. The next recommended task is T117 - Reader progress/bookmark next-step audit.
+- T117 audited Reader progress/bookmark options after saved samples and Continue reading. The next recommended task is T118 - Reader finished sample marker MVP.
 
 Do not enter yet:
 
@@ -394,6 +395,7 @@ Reason:
 - The T114 Reader/Library next-step audit found Library currently exposes saved sample state only through a count/summary and saved labels inside the full local catalog. A Library saved-samples shelf is the smallest useful next slice because it makes saved local content directly actionable while reusing existing saved IDs and Reader route behavior.
 - The T115 Library saved samples shelf makes saved local samples directly actionable without adding storage models, imports, or progress offsets. A small Continue reading card is the next useful Reader/Library handoff before any full progress, bookmark, or database design.
 - The T116 Reader continue-reading card adds one local handoff without creating progress offsets, bookmark models, reading history, or Drift storage. The next Reader step should be audited before adding more persistence semantics.
+- The T117 Reader progress/bookmark audit found a finished-sample marker is the smallest useful progress step because it adds a real per-sample progress signal without scroll offsets, percentages, bookmarks, history, imports, or a database schema.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -452,7 +454,8 @@ Exit criteria:
 - Done: Completed the T114 Reader/Library next-step audit and selected T115 as the next implementation slice.
 - Done: Implemented the T115 Library saved samples shelf MVP.
 - Done: Implemented the T116 Reader continue-reading card MVP.
-- Remaining: Complete T117 Reader progress/bookmark next-step audit, or follow a user-assigned concrete alternative.
+- Done: Completed the T117 Reader progress/bookmark next-step audit and selected T118 as the next implementation slice.
+- Remaining: Implement T118 Reader finished sample marker MVP, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 
