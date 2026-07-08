@@ -189,4 +189,81 @@ void main() {
       });
     },
   );
+
+  test('reader paragraph bookmark provider defaults to no bookmarks', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    expect(
+      await container.read(readerParagraphBookmarkProvider.future),
+      isEmpty,
+    );
+  });
+
+  test(
+    'reader paragraph bookmark provider persists one slot per sample',
+    () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      await container.read(readerParagraphBookmarkProvider.future);
+      await container
+          .read(readerParagraphBookmarkProvider.notifier)
+          .bookmarkParagraph('focus-reset', 1);
+
+      expect(await container.read(readerParagraphBookmarkProvider.future), {
+        'focus-reset': 1,
+      });
+      expect(
+        await ReaderParagraphBookmarkRepository().loadBookmarkForSample(
+          'focus-reset',
+        ),
+        1,
+      );
+
+      await container
+          .read(readerParagraphBookmarkProvider.notifier)
+          .bookmarkParagraph('focus-reset', 2);
+
+      expect(await container.read(readerParagraphBookmarkProvider.future), {
+        'focus-reset': 2,
+      });
+
+      await container
+          .read(readerParagraphBookmarkProvider.notifier)
+          .removeBookmark('focus-reset');
+
+      expect(
+        await container.read(readerParagraphBookmarkProvider.future),
+        isNot(contains('focus-reset')),
+      );
+      expect(
+        await ReaderParagraphBookmarkRepository().loadBookmarkForSample(
+          'focus-reset',
+        ),
+        isNull,
+      );
+    },
+  );
+
+  test(
+    'reader paragraph bookmark repository ignores invalid persisted entries',
+    () async {
+      await SharedPreferencesAsync().setStringList(
+        ReaderParagraphBookmarkRepository.paragraphBookmarkKey,
+        [
+          'unknown-sample:0',
+          'focus-reset:99',
+          'focus-reset:1',
+          'broken',
+          'first-door:not-number',
+        ],
+      );
+
+      expect(
+        await ReaderParagraphBookmarkRepository().loadParagraphBookmarks(),
+        {'focus-reset': 1},
+      );
+    },
+  );
 }

@@ -28,6 +28,13 @@ class LibraryScreen extends ConsumerWidget {
           error: (_, __) => <String>{},
           loading: () => <String>{},
         );
+    final paragraphBookmarks = ref
+        .watch(readerParagraphBookmarkProvider)
+        .when(
+          data: (value) => value,
+          error: (_, __) => <String, int>{},
+          loading: () => <String, int>{},
+        );
     final savedSamples = [
       for (final sample in readerSampleCatalog)
         if (savedSampleIds.contains(sample.id)) sample,
@@ -107,6 +114,8 @@ class LibraryScreen extends ConsumerWidget {
                 sample: lastOpenedSample,
                 isSaved: savedSampleIds.contains(lastOpenedSample.id),
                 isFinished: finishedSampleIds.contains(lastOpenedSample.id),
+                bookmarkedParagraphIndex:
+                    paragraphBookmarks[lastOpenedSample.id],
                 description: 'Last opened local sample.',
               ),
             ],
@@ -122,6 +131,7 @@ class LibraryScreen extends ConsumerWidget {
                   sample: sample,
                   isSaved: true,
                   isFinished: finishedSampleIds.contains(sample.id),
+                  bookmarkedParagraphIndex: paragraphBookmarks[sample.id],
                 ),
                 const SizedBox(height: IwSpacing.space12),
               ],
@@ -137,6 +147,7 @@ class LibraryScreen extends ConsumerWidget {
                 sample: sample,
                 isSaved: savedSampleIds.contains(sample.id),
                 isFinished: finishedSampleIds.contains(sample.id),
+                bookmarkedParagraphIndex: paragraphBookmarks[sample.id],
               ),
               const SizedBox(height: IwSpacing.space12),
             ],
@@ -153,12 +164,14 @@ class _ReaderSampleCard extends StatelessWidget {
     required this.isSaved,
     required this.isFinished,
     this.description,
+    this.bookmarkedParagraphIndex,
   });
 
   final ReaderSample sample;
   final bool isSaved;
   final bool isFinished;
   final String? description;
+  final int? bookmarkedParagraphIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -166,8 +179,14 @@ class _ReaderSampleCard extends StatelessWidget {
     final baseDescription =
         description ??
         (isSaved ? 'Saved locally. Continue this sample.' : sample.description);
+    final bookmarkDescription =
+        bookmarkedParagraphIndex == null
+            ? baseDescription
+            : '$baseDescription Bookmarked paragraph ${bookmarkedParagraphIndex! + 1}.';
     final sampleDescription =
-        isFinished ? '$baseDescription Finished locally.' : baseDescription;
+        isFinished
+            ? '$bookmarkDescription Finished locally.'
+            : bookmarkDescription;
 
     return IwCard(
       onTap: () => context.push(_readerSampleRoute(sample.id)),

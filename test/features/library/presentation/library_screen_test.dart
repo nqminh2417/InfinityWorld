@@ -110,6 +110,28 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('Library sample cards reflect paragraph bookmarks', (
+    tester,
+  ) async {
+    await ReaderSavedSampleRepository().saveSample('focus-reset');
+    await ReaderParagraphBookmarkRepository().bookmarkParagraph(
+      'focus-reset',
+      1,
+    );
+
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: LibraryScreen())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Saved samples'), findsOneWidget);
+    expect(
+      find.text('Saved locally. Continue this sample. Bookmarked paragraph 2.'),
+      findsNWidgets(2),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Library screen reflects multiple saved local samples', (
     tester,
   ) async {
@@ -166,6 +188,30 @@ void main() {
     expect(find.text('Continue reading'), findsOneWidget);
     expect(
       find.text('Last opened local sample. Finished locally.'),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Library continue reading card reflects a paragraph bookmark', (
+    tester,
+  ) async {
+    await ReaderLastOpenedSampleRepository().saveLastOpenedSampleId(
+      'night-market-notes',
+    );
+    await ReaderParagraphBookmarkRepository().bookmarkParagraph(
+      'night-market-notes',
+      2,
+    );
+
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: LibraryScreen())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Continue reading'), findsOneWidget);
+    expect(
+      find.text('Last opened local sample. Bookmarked paragraph 3.'),
       findsOneWidget,
     );
     expect(tester.takeException(), isNull);

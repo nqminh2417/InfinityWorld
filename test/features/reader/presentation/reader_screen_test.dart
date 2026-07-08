@@ -172,4 +172,60 @@ void main() {
     expect(paragraph.style?.fontSize, 20);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('Reader screen stores one paragraph bookmark per sample', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 760));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(home: ReaderScreen(sampleId: 'focus-reset')),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(find.text('Bookmark paragraph 2'), 240);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Bookmark paragraph 2'));
+    await tester.pumpAndSettle();
+
+    expect(
+      await ReaderParagraphBookmarkRepository().loadBookmarkForSample(
+        'focus-reset',
+      ),
+      1,
+    );
+    expect(find.text('Bookmarked paragraph 2'), findsOneWidget);
+    expect(find.text('Remove bookmark'), findsOneWidget);
+
+    await tester.scrollUntilVisible(find.text('Bookmark paragraph 3'), 240);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Bookmark paragraph 3'));
+    await tester.pumpAndSettle();
+
+    expect(
+      await ReaderParagraphBookmarkRepository().loadBookmarkForSample(
+        'focus-reset',
+      ),
+      2,
+    );
+    expect(find.text('Bookmarked paragraph 2'), findsNothing);
+    expect(find.text('Bookmarked paragraph 3'), findsOneWidget);
+
+    await tester.scrollUntilVisible(find.text('Remove bookmark'), -240);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Remove bookmark'));
+    await tester.pumpAndSettle();
+
+    expect(
+      await ReaderParagraphBookmarkRepository().loadBookmarkForSample(
+        'focus-reset',
+      ),
+      isNull,
+    );
+    expect(find.text('Bookmarked paragraph 3'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
 }

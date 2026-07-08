@@ -32,6 +32,16 @@ final readerFinishedSampleProvider =
       ReaderFinishedSampleController.new,
     );
 
+final readerParagraphBookmarkRepositoryProvider =
+    Provider<ReaderParagraphBookmarkRepository>((ref) {
+      return ReaderParagraphBookmarkRepository();
+    });
+
+final readerParagraphBookmarkProvider =
+    AsyncNotifierProvider<ReaderParagraphBookmarkController, Map<String, int>>(
+      ReaderParagraphBookmarkController.new,
+    );
+
 class ReaderSavedSampleController extends AsyncNotifier<Set<String>> {
   @override
   Future<Set<String>> build() {
@@ -174,6 +184,106 @@ class ReaderFinishedSampleRepository {
 
   bool _isKnownSampleId(String sampleId) {
     return readerSampleCatalog.any((sample) => sample.id == sampleId);
+  }
+}
+
+class ReaderParagraphBookmarkController
+    extends AsyncNotifier<Map<String, int>> {
+  @override
+  Future<Map<String, int>> build() {
+    return ref
+        .watch(readerParagraphBookmarkRepositoryProvider)
+        .loadParagraphBookmarks();
+  }
+
+  Future<void> bookmarkParagraph(String sampleId, int paragraphIndex) async {
+    final bookmarks = await ref
+        .read(readerParagraphBookmarkRepositoryProvider)
+        .bookmarkParagraph(sampleId, paragraphIndex);
+    state = AsyncData(bookmarks);
+  }
+
+  Future<void> removeBookmark(String sampleId) async {
+    final bookmarks = await ref
+        .read(readerParagraphBookmarkRepositoryProvider)
+        .removeBookmark(sampleId);
+    state = AsyncData(bookmarks);
+  }
+}
+
+class ReaderParagraphBookmarkRepository {
+  ReaderParagraphBookmarkRepository({SharedPreferencesAsync? preferences})
+    : _preferences = preferences ?? SharedPreferencesAsync();
+
+  static const String paragraphBookmarkKey = 'iw_reader_paragraph_bookmarks';
+
+  final SharedPreferencesAsync _preferences;
+
+  Future<Map<String, int>> loadParagraphBookmarks() async {
+    final values =
+        await _preferences.getStringList(paragraphBookmarkKey) ?? <String>[];
+    final bookmarks = <String, int>{};
+
+    for (final value in values) {
+      final separator = value.lastIndexOf(':');
+      if (separator <= 0 || separator == value.length - 1) {
+        continue;
+      }
+
+      final sampleId = value.substring(0, separator);
+      final paragraphIndex = int.tryParse(value.substring(separator + 1));
+      if (paragraphIndex == null ||
+          !_isValidBookmark(sampleId, paragraphIndex)) {
+        continue;
+      }
+
+      bookmarks[sampleId] = paragraphIndex;
+    }
+
+    return bookmarks;
+  }
+
+  Future<int?> loadBookmarkForSample(String sampleId) async {
+    return (await loadParagraphBookmarks())[sampleId];
+  }
+
+  Future<Map<String, int>> bookmarkParagraph(
+    String sampleId,
+    int paragraphIndex,
+  ) async {
+    final bookmarks = await loadParagraphBookmarks();
+    if (!_isValidBookmark(sampleId, paragraphIndex)) {
+      return bookmarks;
+    }
+
+    final nextBookmarks = {...bookmarks, sampleId: paragraphIndex};
+    await _saveParagraphBookmarks(nextBookmarks);
+    return nextBookmarks;
+  }
+
+  Future<Map<String, int>> removeBookmark(String sampleId) async {
+    final bookmarks = await loadParagraphBookmarks();
+    final nextBookmarks = {...bookmarks}..remove(sampleId);
+    await _saveParagraphBookmarks(nextBookmarks);
+    return nextBookmarks;
+  }
+
+  Future<void> _saveParagraphBookmarks(Map<String, int> bookmarks) async {
+    final sortedEntries =
+        bookmarks.entries.toList()..sort((a, b) => a.key.compareTo(b.key));
+    await _preferences.setStringList(paragraphBookmarkKey, [
+      for (final entry in sortedEntries) '${entry.key}:${entry.value}',
+    ]);
+  }
+
+  bool _isValidBookmark(String sampleId, int paragraphIndex) {
+    for (final sample in readerSampleCatalog) {
+      if (sample.id == sampleId) {
+        return paragraphIndex >= 0 && paragraphIndex < sample.paragraphs.length;
+      }
+    }
+
+    return false;
   }
 }
 

@@ -59,6 +59,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     final secondaryText = IwColors.textSecondary(brightness);
     final savedSampleIds = ref.watch(readerSavedSampleProvider);
     final finishedSampleIds = ref.watch(readerFinishedSampleProvider);
+    final paragraphBookmarks = ref.watch(readerParagraphBookmarkProvider);
     final bodyStyle = Theme.of(
       context,
     ).textTheme.bodyLarge?.copyWith(fontSize: _textSize.fontSize, height: 1.55);
@@ -158,25 +159,144 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
                   ),
             ),
             const SizedBox(height: IwSpacing.space16),
-            IwCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    sample.sectionTitle,
-                    style: Theme.of(context).textTheme.titleMedium,
+            paragraphBookmarks.when(
+              data:
+                  (bookmarks) => _ReaderContentCard(
+                    sample: sample,
+                    bodyStyle: bodyStyle,
+                    bookmarkedParagraphIndex: bookmarks[sample.id],
+                    onBookmarkPressed: (paragraphIndex) async {
+                      final controller = ref.read(
+                        readerParagraphBookmarkProvider.notifier,
+                      );
+                      if (bookmarks[sample.id] == paragraphIndex) {
+                        await controller.removeBookmark(sample.id);
+                      } else {
+                        await controller.bookmarkParagraph(
+                          sample.id,
+                          paragraphIndex,
+                        );
+                      }
+                    },
                   ),
-                  const SizedBox(height: IwSpacing.space12),
-                  for (final paragraph in sample.paragraphs) ...[
-                    Text(paragraph, style: bodyStyle),
-                    const SizedBox(height: IwSpacing.space16),
-                  ],
-                ],
-              ),
+              error:
+                  (_, __) => _ReaderContentCard(
+                    sample: sample,
+                    bodyStyle: bodyStyle,
+                    bookmarkStateLabel: 'Bookmark state unavailable',
+                  ),
+              loading:
+                  () => _ReaderContentCard(
+                    sample: sample,
+                    bodyStyle: bodyStyle,
+                    bookmarkStateLabel: 'Loading bookmarks',
+                  ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ReaderContentCard extends StatelessWidget {
+  const _ReaderContentCard({
+    required this.sample,
+    required this.bodyStyle,
+    this.bookmarkedParagraphIndex,
+    this.onBookmarkPressed,
+    this.bookmarkStateLabel,
+  });
+
+  final ReaderSample sample;
+  final TextStyle? bodyStyle;
+  final int? bookmarkedParagraphIndex;
+  final Future<void> Function(int paragraphIndex)? onBookmarkPressed;
+  final String? bookmarkStateLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final secondaryText = IwColors.textSecondary(brightness);
+
+    return IwCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            sample.sectionTitle,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          if (bookmarkStateLabel != null) ...[
+            const SizedBox(height: IwSpacing.space4),
+            Text(
+              bookmarkStateLabel!,
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: secondaryText),
+            ),
+          ],
+          const SizedBox(height: IwSpacing.space12),
+          for (final paragraphEntry in sample.paragraphs.asMap().entries) ...[
+            Text(paragraphEntry.value, style: bodyStyle),
+            const SizedBox(height: IwSpacing.space8),
+            _ReaderParagraphBookmarkAction(
+              paragraphNumber: paragraphEntry.key + 1,
+              isBookmarked: bookmarkedParagraphIndex == paragraphEntry.key,
+              onPressed:
+                  onBookmarkPressed == null
+                      ? null
+                      : () => onBookmarkPressed!(paragraphEntry.key),
+            ),
+            const SizedBox(height: IwSpacing.space16),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _ReaderParagraphBookmarkAction extends StatelessWidget {
+  const _ReaderParagraphBookmarkAction({
+    required this.paragraphNumber,
+    required this.isBookmarked,
+    required this.onPressed,
+  });
+
+  final int paragraphNumber;
+  final bool isBookmarked;
+  final Future<void> Function()? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final secondaryText = IwColors.textSecondary(brightness);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (isBookmarked) ...[
+          Text(
+            'Bookmarked paragraph $paragraphNumber',
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: secondaryText),
+          ),
+          const SizedBox(height: IwSpacing.space4),
+        ],
+        if (isBookmarked)
+          OutlinedButton.icon(
+            onPressed: onPressed,
+            icon: const Icon(Icons.bookmark_remove_rounded),
+            label: const Text('Remove bookmark'),
+          )
+        else
+          TextButton.icon(
+            onPressed: onPressed,
+            icon: const Icon(Icons.bookmark_add_outlined),
+            label: Text('Bookmark paragraph $paragraphNumber'),
+          ),
+      ],
     );
   }
 }
