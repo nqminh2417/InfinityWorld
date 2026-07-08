@@ -77,6 +77,7 @@ Current architecture status:
 - Unit Converter now lives under `lib/features/unit_converter/`, has a direct `/unit-converter` route, and is linked from Tools beside BMI, Clock, and Random Picker.
 - Decision Wheel now lives under `lib/features/decision_wheel/`, has a direct `/decision-wheel` route, is linked from Tools beside the other local utilities, and has a large animated `CustomPainter` wheel with center spin, shuffle/sort entries, compact mobile layout, x1/x2/x3 multiplier mode, a modal selected-result dialog, roomier/readability-tuned screen-capped in-memory session history bottom sheet with per-item copy, remove-selected-result actions, semicolon-aware entry parsing, clearer pointer layering, and adjacent-safe repeating segment colors.
 - Reader/Library now has a three-item built-in local sample catalog; Library opens selected Reader samples through a narrow route query key, and any built-in local sample can be saved or removed.
+- T114 audited the current Reader/Library surface and selected a Library saved-samples shelf as the next smallest useful content-depth slice because it reuses existing saved IDs and Reader routes without new storage, progress tracking, imports, or broad redesign.
 
 Current tests:
 
@@ -273,21 +274,22 @@ Task sizing note:
 
 ### Primary
 
-T114 - Reader/Library next-step audit
+T115 - Library saved samples shelf MVP
 
 Reason:
 
-- T113 changed the Reader saved-state shape from one boolean to saved local sample IDs, so the next Reader/Library step should be selected deliberately.
-- Keeps Phase 10 moving on useful content depth without prematurely adding Drift, generic bookmarks, imports, saved articles, or reading-progress persistence.
-- Lets the next implementation slice stay small, local, and tied to the current Reader/Library surface.
+- Current Library only summarizes saved local samples in one status card; saved items are not grouped as their own actionable surface yet.
+- Reuses the existing `readerSampleCatalog`, saved sample IDs, and selected Reader route query, so it is a small Phase 10 content-depth implementation slice.
+- Keeps Reader progress, bookmarks, imports, Drift, generic saved articles, and broader Library redesign deferred until there is a clear persistence/model need.
 
 Scope:
 
-- Audit current Reader catalog, selected-sample route behavior, saved sample IDs, Library saved count/card states, and focused coverage.
-- Recommend exactly one next Reader/Library implementation slice.
-- Prefer a small local content-depth slice such as a saved-samples shelf, continue-reading card, or minimal progress marker only if it fits the existing `shared_preferences` direction.
-- Keep portfolio screenshots and release/showcase work deferred.
-- Do not implement a feature in this audit task.
+- Add a compact Saved samples section/shelf to Library when one or more local samples are saved.
+- Show saved local sample cards that open the selected Reader sample route.
+- Keep the existing Local samples catalog below the saved shelf.
+- Preserve the existing saved count summary and saved/unsaved local sample card states unless a tiny wording cleanup is needed.
+- Reuse existing app theme, typography, spacing, `IwCard`, saved-sample provider, and route style.
+- Add/update focused Library widget tests for empty saved state, saved shelf rendering, and selected sample navigation where practical.
 
 Out of scope:
 
@@ -295,18 +297,17 @@ Out of scope:
 
 Verification:
 
-- Docs/audit gate from `docs/qa/git-workflow.md`: at minimum `git diff --check`.
-- Run lightweight Flutter checks only if the audit changes Dart code or needs fresh app evidence.
+- Dart/UI gate from `docs/qa/git-workflow.md`: `dart format`, `flutter analyze`, `flutter test`, and `git diff --check`.
 
 ### Alternatives
-
-Reader saved samples shelf MVP
-
-Choose this if the user wants saved local samples grouped more explicitly in Library before adding progress/bookmark behavior.
 
 Reader continue-reading card MVP
 
 Choose this if the user wants one small Library/Reader handoff for the last opened or recently saved local sample.
+
+Reader minimal progress marker audit
+
+Choose this if the user wants to evaluate whether progress should stay `shared_preferences`-simple or wait for a real Reader storage model.
 
 Explore/RSS foundation audit
 
@@ -346,7 +347,7 @@ Current phase:
 
 Decision:
 
-- T113 replaced the single Reader saved-sample boolean with saved built-in sample IDs, lets Reader save/remove the selected local sample, reflects saved counts/card states in Library, and preserves the legacy The First Door boolean fallback. The next recommended task is T114 - Reader/Library next-step audit.
+- T114 audited the post-T113 Reader/Library surface: three built-in local samples, selected Reader query routing, saved sample IDs, Library saved count/card states, and focused Reader/Library/router coverage. The next recommended task is T115 - Library saved samples shelf MVP.
 
 Do not enter yet:
 
@@ -387,7 +388,7 @@ Reason:
 - The T111 Decision Wheel multiplier mode adds x1/x2/x3 segment generation with distributed duplicates while leaving the raw entries text unchanged and removing selected items from the raw entry list.
 - The T112 Reader/Library content-depth slice adds more built-in local reading content without committing to Drift, imports, generic bookmarks, or reading-progress persistence.
 - The T113 Reader save selected local samples slice makes the new sample catalog saveable with the existing `shared_preferences` direction before any generic bookmark, saved-article, Drift, import, or progress model work.
-- T114 Reader/Library next-step audit is the next smallest useful step because the Reader/Library surface now has a local catalog plus saved ID state, and the next implementation should be chosen before adding progress, bookmark, import, or broader storage behavior.
+- The T114 Reader/Library next-step audit found Library currently exposes saved sample state only through a count/summary and saved labels inside the full local catalog. A Library saved-samples shelf is the smallest useful next slice because it makes saved local content directly actionable while reusing existing saved IDs and Reader route behavior.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -443,7 +444,8 @@ Exit criteria:
 - Done: Implemented the T111 Decision Wheel multiplier mode.
 - Done: Implemented the T112 Reader/Library content-depth slice.
 - Done: Implemented the T113 Reader save selected local samples MVP.
-- Remaining: Complete T114 Reader/Library next-step audit, or follow a user-assigned concrete alternative.
+- Done: Completed the T114 Reader/Library next-step audit and selected T115 as the next implementation slice.
+- Remaining: Implement T115 Library saved samples shelf MVP, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 
