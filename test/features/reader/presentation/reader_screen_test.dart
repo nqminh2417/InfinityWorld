@@ -67,6 +67,40 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('Reader screen saves and removes the selected local sample', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(home: ReaderScreen(sampleId: 'focus-reset')),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Focus Reset'), findsOneWidget);
+    expect(find.text('Save sample'), findsOneWidget);
+
+    await tester.tap(find.text('Save sample'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Saved sample'), findsOneWidget);
+    expect(find.text('Remove saved sample'), findsOneWidget);
+    expect(
+      await ReaderSavedSampleRepository().isSampleSaved('focus-reset'),
+      isTrue,
+    );
+
+    await tester.tap(find.text('Remove saved sample'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Save sample'), findsOneWidget);
+    expect(
+      await ReaderSavedSampleRepository().isSampleSaved('focus-reset'),
+      isFalse,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Reader screen changes local sample text size', (tester) async {
     await tester.pumpWidget(
       const ProviderScope(child: MaterialApp(home: ReaderScreen())),

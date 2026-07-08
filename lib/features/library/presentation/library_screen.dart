@@ -14,13 +14,14 @@ class LibraryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final brightness = Theme.of(context).brightness;
-    final isSampleSaved = ref
+    final savedSampleIds = ref
         .watch(readerSavedSampleProvider)
         .when(
           data: (value) => value,
-          error: (_, __) => false,
-          loading: () => false,
+          error: (_, __) => <String>{},
+          loading: () => <String>{},
         );
+    final savedCount = savedSampleIds.length;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Library')),
@@ -55,16 +56,14 @@ class LibraryScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          isSampleSaved
-                              ? '1 saved sample'
-                              : 'No saved content yet',
+                          savedCount == 0
+                              ? 'No saved content yet'
+                              : '$savedCount saved sample${savedCount == 1 ? '' : 's'}',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(height: IwSpacing.space4),
                         Text(
-                          isSampleSaved
-                              ? 'The First Door is saved locally.'
-                              : 'Saved reads and progress will appear here.',
+                          _savedContentSummary(savedSampleIds),
                           style: Theme.of(
                             context,
                           ).textTheme.bodyMedium?.copyWith(
@@ -86,7 +85,7 @@ class LibraryScreen extends ConsumerWidget {
             for (final sample in readerSampleCatalog) ...[
               _ReaderSampleCard(
                 sample: sample,
-                isSaved: sample.canBeSaved && isSampleSaved,
+                isSaved: savedSampleIds.contains(sample.id),
               ),
               const SizedBox(height: IwSpacing.space12),
             ],
@@ -107,9 +106,7 @@ class _ReaderSampleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final sampleDescription =
-        isSaved
-            ? 'Saved locally. Continue the built-in sample.'
-            : sample.description;
+        isSaved ? 'Saved locally. Continue this sample.' : sample.description;
 
     return IwCard(
       onTap: () => context.push(_readerSampleRoute(sample.id)),
@@ -148,6 +145,17 @@ class _ReaderSampleCard extends StatelessWidget {
       ),
     );
   }
+}
+
+String _savedContentSummary(Set<String> savedSampleIds) {
+  if (savedSampleIds.isEmpty) {
+    return 'Saved reads and progress will appear here.';
+  }
+  if (savedSampleIds.length == 1) {
+    return '${readerSampleById(savedSampleIds.first).title} is saved locally.';
+  }
+
+  return 'Saved local samples are ready to continue.';
 }
 
 String _readerSampleRoute(String sampleId) {

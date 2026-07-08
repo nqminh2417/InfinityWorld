@@ -6,7 +6,6 @@ class ReaderSample {
     required this.description,
     required this.sectionTitle,
     required this.paragraphs,
-    this.canBeSaved = false,
   });
 
   final String id;
@@ -15,17 +14,17 @@ class ReaderSample {
   final String description;
   final String sectionTitle;
   final List<String> paragraphs;
-  final bool canBeSaved;
 }
+
+const defaultReaderSampleId = 'first-door';
 
 const readerSampleCatalog = <ReaderSample>[
   ReaderSample(
-    id: 'first-door',
+    id: defaultReaderSampleId,
     title: 'The First Door',
     subtitle: 'Local reading sample',
     description: 'Open and save the built-in local sample.',
     sectionTitle: 'InfinityWorld sample',
-    canBeSaved: true,
     paragraphs: [
       'InfinityWorld sample: the first door opened quietly, not with a flash, but with the small certainty that a useful place had finally found its shape.',
       'Inside was a calm room of notes, stories, and saved ideas. Nothing asked to be synced, imported, ranked, or organized yet. It only needed to be readable.',

@@ -34,8 +34,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     final sample = readerSampleById(widget.sampleId);
     final brightness = Theme.of(context).brightness;
     final secondaryText = IwColors.textSecondary(brightness);
-    final savedSample =
-        sample.canBeSaved ? ref.watch(readerSavedSampleProvider) : null;
+    final savedSampleIds = ref.watch(readerSavedSampleProvider);
     final bodyStyle = Theme.of(
       context,
     ).textTheme.bodyLarge?.copyWith(fontSize: _textSize.fontSize, height: 1.55);
@@ -75,43 +74,35 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
               },
             ),
             const SizedBox(height: IwSpacing.space16),
-            if (sample.canBeSaved)
-              savedSample!.when(
-                data:
-                    (isSaved) => _ReaderSavedSampleAction(
-                      isSaved: isSaved,
-                      onPressed: () async {
-                        final controller = ref.read(
-                          readerSavedSampleProvider.notifier,
-                        );
-                        if (isSaved) {
-                          await controller.removeSample();
-                        } else {
-                          await controller.saveSample();
-                        }
-                      },
-                    ),
-                error:
-                    (_, __) => Text(
-                      'Saved state unavailable',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: secondaryText),
-                    ),
-                loading:
-                    () => OutlinedButton.icon(
-                      onPressed: null,
-                      icon: const Icon(Icons.bookmark_outline_rounded),
-                      label: const Text('Loading saved state'),
-                    ),
-              )
-            else
-              Text(
-                'Local sample',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(color: secondaryText),
-              ),
+            savedSampleIds.when(
+              data:
+                  (savedIds) => _ReaderSavedSampleAction(
+                    isSaved: savedIds.contains(sample.id),
+                    onPressed: () async {
+                      final controller = ref.read(
+                        readerSavedSampleProvider.notifier,
+                      );
+                      if (savedIds.contains(sample.id)) {
+                        await controller.removeSample(sample.id);
+                      } else {
+                        await controller.saveSample(sample.id);
+                      }
+                    },
+                  ),
+              error:
+                  (_, __) => Text(
+                    'Saved state unavailable',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: secondaryText),
+                  ),
+              loading:
+                  () => OutlinedButton.icon(
+                    onPressed: null,
+                    icon: const Icon(Icons.bookmark_outline_rounded),
+                    label: const Text('Loading saved state'),
+                  ),
+            ),
             const SizedBox(height: IwSpacing.space16),
             IwCard(
               child: Column(

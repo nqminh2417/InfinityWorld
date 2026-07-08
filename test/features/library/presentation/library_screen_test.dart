@@ -64,13 +64,31 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('The First Door'), findsOneWidget);
-    expect(
-      find.text('Saved locally. Continue the built-in sample.'),
-      findsOneWidget,
-    );
+    expect(find.text('Saved locally. Continue this sample.'), findsOneWidget);
     expect(find.text('1 saved sample'), findsOneWidget);
     expect(find.text('The First Door is saved locally.'), findsOneWidget);
     expect(find.text('No saved content yet'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Library screen reflects multiple saved local samples', (
+    tester,
+  ) async {
+    final repository = ReaderSavedSampleRepository();
+    await repository.saveSample('focus-reset');
+    await repository.saveSample('night-market-notes');
+
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: LibraryScreen())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('2 saved samples'), findsOneWidget);
+    expect(
+      find.text('Saved local samples are ready to continue.'),
+      findsOneWidget,
+    );
+    expect(find.text('Saved locally. Continue this sample.'), findsNWidgets(2));
     expect(tester.takeException(), isNull);
   });
 

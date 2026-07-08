@@ -68,7 +68,7 @@ Current architecture status:
 - T89 confirmed Library still has only the empty-state tab body and no Reader/bookmark/saved-content route or module; the next smallest useful Library slice is a local Reader text screen MVP.
 - Reader now lives under `lib/features/reader/presentation/`, has a direct `/reader` route, and opens from Library as a built-in local text sample.
 - T91 confirmed the next smallest Library persistence slice should save only the built-in Reader sample state with the existing `shared_preferences` pattern before any Drift/schema/bookmark model work.
-- Reader saved-sample state now lives under `lib/features/reader/application/`, uses `shared_preferences`, and is consumed by Reader and Library.
+- Reader saved-sample state now lives under `lib/features/reader/application/`, uses `shared_preferences`, stores saved built-in sample IDs, preserves the legacy The First Door boolean fallback, and is consumed by Reader and Library.
 - T93 checkpoint confirmed Phase 10 should continue with a small Explore content refresh before screenshots or deeper Reader persistence because Explore remains the thinnest main tab surface after the Tools, Home/Dashboard, and Library updates.
 - Explore now has richer static Fox / Summertime Saga module cards while keeping live network work inside the destination screens.
 - T95 confirmed the next smallest Reader slice should add local text comfort controls inside the existing Reader screen before bookmarks, reading-progress persistence, imports, or Drift/schema work.
@@ -76,7 +76,7 @@ Current architecture status:
 - T97 expanded the Phase 10 backlog direction: active Phase 10 recommendations should focus on feature/content implementation, not screenshot, portfolio, release, or employer-showcase readiness.
 - Unit Converter now lives under `lib/features/unit_converter/`, has a direct `/unit-converter` route, and is linked from Tools beside BMI, Clock, and Random Picker.
 - Decision Wheel now lives under `lib/features/decision_wheel/`, has a direct `/decision-wheel` route, is linked from Tools beside the other local utilities, and has a large animated `CustomPainter` wheel with center spin, shuffle/sort entries, compact mobile layout, x1/x2/x3 multiplier mode, a modal selected-result dialog, roomier/readability-tuned screen-capped in-memory session history bottom sheet with per-item copy, remove-selected-result actions, semicolon-aware entry parsing, clearer pointer layering, and adjacent-safe repeating segment colors.
-- Reader/Library now has a three-item built-in local sample catalog; Library opens selected Reader samples through a narrow route query key while existing saved state remains limited to The First Door.
+- Reader/Library now has a three-item built-in local sample catalog; Library opens selected Reader samples through a narrow route query key, and any built-in local sample can be saved or removed.
 
 Current tests:
 
@@ -115,9 +115,9 @@ Current tests:
 - Reader presentation widget coverage exists for scroll-safe local sample rendering.
 - Library presentation widget coverage exists for opening a selected Reader sample route.
 - Reader route smoke coverage exists, including selected local sample query behavior.
-- Reader saved-sample provider coverage exists for default, save, and remove behavior.
-- Reader presentation widget coverage exists for saving and removing the built-in sample.
-- Library presentation widget coverage exists for saved and unsaved Reader sample states.
+- Reader saved-sample provider coverage exists for default, selected-ID save/remove, and legacy boolean fallback behavior.
+- Reader presentation widget coverage exists for saving and removing the built-in sample and a selected local sample.
+- Library presentation widget coverage exists for saved, unsaved, and multiple-saved Reader sample states.
 - No new app tests were added for T93 because it was an audit/docs-only checkpoint.
 - Explore presentation widget coverage now verifies the refreshed static content, small-screen scrolling, and existing Fox / Summertime Saga route taps.
 - No new app tests were added for T95 because it was an audit/docs-only checkpoint.
@@ -273,22 +273,21 @@ Task sizing note:
 
 ### Primary
 
-T113 - Reader save selected local samples MVP
+T114 - Reader/Library next-step audit
 
 Reason:
 
-- Makes the new Reader/Library local sample catalog more useful by allowing any built-in sample to be saved or removed.
-- Stays local and small by extending the existing `shared_preferences` Reader saved-sample path instead of adding Drift, bookmarks, saved articles, imports, or reading-progress persistence.
-- Keeps Phase 10 focused on app usefulness/content depth instead of screenshots, portfolio, release, or broad redesign work.
+- T113 changed the Reader saved-state shape from one boolean to saved local sample IDs, so the next Reader/Library step should be selected deliberately.
+- Keeps Phase 10 moving on useful content depth without prematurely adding Drift, generic bookmarks, imports, saved articles, or reading-progress persistence.
+- Lets the next implementation slice stay small, local, and tied to the current Reader/Library surface.
 
 Scope:
 
-- Replace the current single saved-sample boolean behavior with a small saved local sample ID set or list.
-- Preserve backward compatibility for the existing saved The First Door state if practical.
-- Let Reader save/remove the currently selected built-in local sample.
-- Reflect saved local samples from Library with a clear saved count and saved-card states.
-- Keep the current Reader sample catalog, text comfort controls, selected-sample route behavior, and Library structure.
-- Add focused tests for saving/removing selected local samples, Library saved-state rendering, and any migration/fallback behavior.
+- Audit current Reader catalog, selected-sample route behavior, saved sample IDs, Library saved count/card states, and focused coverage.
+- Recommend exactly one next Reader/Library implementation slice.
+- Prefer a small local content-depth slice such as a saved-samples shelf, continue-reading card, or minimal progress marker only if it fits the existing `shared_preferences` direction.
+- Keep portfolio screenshots and release/showcase work deferred.
+- Do not implement a feature in this audit task.
 
 Out of scope:
 
@@ -296,22 +295,22 @@ Out of scope:
 
 Verification:
 
-- Dart/UI gate from `docs/qa/git-workflow.md`: `dart format` for changed Dart files, `flutter analyze`, `flutter test`, and `git diff --check`.
-- Run `flutter build apk --debug` only if the implementation adds or changes app routing/startup/build-impacting code.
+- Docs/audit gate from `docs/qa/git-workflow.md`: at minimum `git diff --check`.
+- Run lightweight Flutter checks only if the audit changes Dart code or needs fresh app evidence.
 
 ### Alternatives
 
-Reader/Library next-step audit
+Reader saved samples shelf MVP
 
-Choose this if the user wants to plan the Reader storage model before changing saved-sample persistence.
+Choose this if the user wants saved local samples grouped more explicitly in Library before adding progress/bookmark behavior.
+
+Reader continue-reading card MVP
+
+Choose this if the user wants one small Library/Reader handoff for the last opened or recently saved local sample.
 
 Explore/RSS foundation audit
 
-Choose this if the user wants to evaluate public content/API expansion after the current local-utility run.
-
-Dashboard quick actions/content cards refresh
-
-Choose this if the user wants Home to surface more current modules or content cards before more Reader/Library work.
+Choose this if the user wants to evaluate public content/API expansion after the current local content-depth run.
 
 ### Portfolio / screenshot / showcase deferral policy
 
@@ -347,7 +346,7 @@ Current phase:
 
 Decision:
 
-- T112 added a three-item built-in Reader sample catalog, Library sample cards, and selected-sample Reader route behavior while keeping saved state limited to The First Door. The next recommended task is T113 - Reader save selected local samples MVP.
+- T113 replaced the single Reader saved-sample boolean with saved built-in sample IDs, lets Reader save/remove the selected local sample, reflects saved counts/card states in Library, and preserves the legacy The First Door boolean fallback. The next recommended task is T114 - Reader/Library next-step audit.
 
 Do not enter yet:
 
@@ -387,7 +386,8 @@ Reason:
 - The T110 Decision Wheel compact mobile layout removes extra vertical chrome, keeps the wheel as the hero element, and bounds the entries editor without adding x2/duplicate mode, persistence, packages, or new wheel logic.
 - The T111 Decision Wheel multiplier mode adds x1/x2/x3 segment generation with distributed duplicates while leaving the raw entries text unchanged and removing selected items from the raw entry list.
 - The T112 Reader/Library content-depth slice adds more built-in local reading content without committing to Drift, imports, generic bookmarks, or reading-progress persistence.
-- T113 Reader save selected local samples is the next smallest useful content-depth slice because it can make the new sample catalog saveable with the existing `shared_preferences` direction before any generic bookmark, saved-article, Drift, import, or progress model work.
+- The T113 Reader save selected local samples slice makes the new sample catalog saveable with the existing `shared_preferences` direction before any generic bookmark, saved-article, Drift, import, or progress model work.
+- T114 Reader/Library next-step audit is the next smallest useful step because the Reader/Library surface now has a local catalog plus saved ID state, and the next implementation should be chosen before adding progress, bookmark, import, or broader storage behavior.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -442,7 +442,8 @@ Exit criteria:
 - Done: Implemented the T110 Decision Wheel compact mobile layout refinement.
 - Done: Implemented the T111 Decision Wheel multiplier mode.
 - Done: Implemented the T112 Reader/Library content-depth slice.
-- Remaining: Implement T113 Reader save selected local samples MVP, or follow a user-assigned concrete alternative.
+- Done: Implemented the T113 Reader save selected local samples MVP.
+- Remaining: Complete T114 Reader/Library next-step audit, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 
