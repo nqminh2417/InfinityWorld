@@ -39,6 +39,7 @@ void main() {
     expect(find.byType(ListView), findsOneWidget);
     expect(find.byType(IwCard), findsWidgets);
     expect(find.text('Saved content'), findsOneWidget);
+    expect(find.text('Saved samples'), findsNothing);
     expect(find.text('Local samples'), findsOneWidget);
     expect(find.text('The First Door'), findsOneWidget);
     expect(find.text('Focus Reset'), findsOneWidget);
@@ -63,8 +64,9 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('The First Door'), findsOneWidget);
-    expect(find.text('Saved locally. Continue this sample.'), findsOneWidget);
+    expect(find.text('Saved samples'), findsOneWidget);
+    expect(find.text('The First Door'), findsNWidgets(2));
+    expect(find.text('Saved locally. Continue this sample.'), findsNWidgets(2));
     expect(find.text('1 saved sample'), findsOneWidget);
     expect(find.text('The First Door is saved locally.'), findsOneWidget);
     expect(find.text('No saved content yet'), findsNothing);
@@ -88,7 +90,32 @@ void main() {
       find.text('Saved local samples are ready to continue.'),
       findsOneWidget,
     );
+    expect(find.text('Saved samples'), findsOneWidget);
     expect(find.text('Saved locally. Continue this sample.'), findsNWidgets(2));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Library saved sample shelf opens the selected Reader route', (
+    tester,
+  ) async {
+    await ReaderSavedSampleRepository().saveSample('focus-reset');
+
+    await tester.pumpWidget(
+      ProviderScope(child: MainApp(initialRoute: AppRoutes.main)),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.local_library_rounded));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Saved samples'), findsOneWidget);
+
+    await tester.tap(find.text('Focus Reset').first);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ReaderScreen), findsOneWidget);
+    expect(find.text('Focus Reset'), findsOneWidget);
+    expect(find.textContaining('Close the noisy loops'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

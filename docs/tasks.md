@@ -78,6 +78,7 @@ Current architecture status:
 - Decision Wheel now lives under `lib/features/decision_wheel/`, has a direct `/decision-wheel` route, is linked from Tools beside the other local utilities, and has a large animated `CustomPainter` wheel with center spin, shuffle/sort entries, compact mobile layout, x1/x2/x3 multiplier mode, a modal selected-result dialog, roomier/readability-tuned screen-capped in-memory session history bottom sheet with per-item copy, remove-selected-result actions, semicolon-aware entry parsing, clearer pointer layering, and adjacent-safe repeating segment colors.
 - Reader/Library now has a three-item built-in local sample catalog; Library opens selected Reader samples through a narrow route query key, and any built-in local sample can be saved or removed.
 - T114 audited the current Reader/Library surface and selected a Library saved-samples shelf as the next smallest useful content-depth slice because it reuses existing saved IDs and Reader routes without new storage, progress tracking, imports, or broad redesign.
+- Library now shows a compact Saved samples shelf when local Reader samples are saved, while keeping the saved count summary and full Local samples catalog.
 
 Current tests:
 
@@ -118,7 +119,7 @@ Current tests:
 - Reader route smoke coverage exists, including selected local sample query behavior.
 - Reader saved-sample provider coverage exists for default, selected-ID save/remove, and legacy boolean fallback behavior.
 - Reader presentation widget coverage exists for saving and removing the built-in sample and a selected local sample.
-- Library presentation widget coverage exists for saved, unsaved, and multiple-saved Reader sample states.
+- Library presentation widget coverage exists for saved, unsaved, multiple-saved Reader sample states, the Saved samples shelf, and saved shelf route navigation.
 - No new app tests were added for T93 because it was an audit/docs-only checkpoint.
 - Explore presentation widget coverage now verifies the refreshed static content, small-screen scrolling, and existing Fox / Summertime Saga route taps.
 - No new app tests were added for T95 because it was an audit/docs-only checkpoint.
@@ -274,26 +275,26 @@ Task sizing note:
 
 ### Primary
 
-T115 - Library saved samples shelf MVP
+T116 - Reader continue-reading card MVP
 
 Reason:
 
-- Current Library only summarizes saved local samples in one status card; saved items are not grouped as their own actionable surface yet.
-- Reuses the existing `readerSampleCatalog`, saved sample IDs, and selected Reader route query, so it is a small Phase 10 content-depth implementation slice.
-- Keeps Reader progress, bookmarks, imports, Drift, generic saved articles, and broader Library redesign deferred until there is a clear persistence/model need.
+- Library now has saved sample grouping, but there is still no quick handoff back to the last local sample the user opened.
+- A single Continue reading card can reuse the built-in sample catalog, Reader route query, and existing `shared_preferences` direction without creating reading-progress offsets.
+- Keeps bookmarks, imports, generic saved articles, Drift, and broader Reader storage models deferred until they have a concrete model need.
 
 Scope:
 
-- Add a compact Saved samples section/shelf to Library when one or more local samples are saved.
-- Show saved local sample cards that open the selected Reader sample route.
-- Keep the existing Local samples catalog below the saved shelf.
-- Preserve the existing saved count summary and saved/unsaved local sample card states unless a tiny wording cleanup is needed.
-- Reuse existing app theme, typography, spacing, `IwCard`, saved-sample provider, and route style.
-- Add/update focused Library widget tests for empty saved state, saved shelf rendering, and selected sample navigation where practical.
+- Track the last opened built-in Reader sample ID locally.
+- Show a compact Continue reading card in Library when a last opened local sample exists.
+- Tapping the card should open the selected Reader sample route.
+- Preserve the Saved samples shelf, saved count summary, Local samples catalog, Reader save/remove behavior, and selected-sample route behavior.
+- Use existing app theme, typography, spacing, `IwCard`, Riverpod/shared_preferences patterns, and route style.
+- Add/update focused Reader/Library widget or provider tests for no last-opened state, last-opened display, and Continue reading navigation where practical.
 
 Out of scope:
 
-- No public API, new packages, SQLite/Drift, import/parser work, generic bookmarks, saved-article models, reading-progress offsets, persisted reader settings, broad Library redesign, dashboard redesign, screenshots, portfolio/showcase prep, release work, Android build/toolchain changes, shell route migration, or Riverpod/go_router/Dio migration.
+- No public API, new packages, SQLite/Drift, import/parser work, generic bookmarks, saved-article models, reading-progress offsets, reading percentage, reading history list, persisted reader settings, broad Library redesign, dashboard redesign, screenshots, portfolio/showcase prep, release work, Android build/toolchain changes, shell route migration, or Riverpod/go_router/Dio migration.
 
 Verification:
 
@@ -301,13 +302,13 @@ Verification:
 
 ### Alternatives
 
-Reader continue-reading card MVP
-
-Choose this if the user wants one small Library/Reader handoff for the last opened or recently saved local sample.
-
 Reader minimal progress marker audit
 
 Choose this if the user wants to evaluate whether progress should stay `shared_preferences`-simple or wait for a real Reader storage model.
+
+Reader bookmark model audit
+
+Choose this if the user wants to plan bookmarks before adding more Reader storage behavior.
 
 Explore/RSS foundation audit
 
@@ -347,7 +348,7 @@ Current phase:
 
 Decision:
 
-- T114 audited the post-T113 Reader/Library surface: three built-in local samples, selected Reader query routing, saved sample IDs, Library saved count/card states, and focused Reader/Library/router coverage. The next recommended task is T115 - Library saved samples shelf MVP.
+- T115 implemented a compact Library Saved samples shelf using the existing Reader sample catalog, saved sample IDs, and selected Reader route behavior. The next recommended task is T116 - Reader continue-reading card MVP.
 
 Do not enter yet:
 
@@ -389,6 +390,7 @@ Reason:
 - The T112 Reader/Library content-depth slice adds more built-in local reading content without committing to Drift, imports, generic bookmarks, or reading-progress persistence.
 - The T113 Reader save selected local samples slice makes the new sample catalog saveable with the existing `shared_preferences` direction before any generic bookmark, saved-article, Drift, import, or progress model work.
 - The T114 Reader/Library next-step audit found Library currently exposes saved sample state only through a count/summary and saved labels inside the full local catalog. A Library saved-samples shelf is the smallest useful next slice because it makes saved local content directly actionable while reusing existing saved IDs and Reader route behavior.
+- The T115 Library saved samples shelf makes saved local samples directly actionable without adding storage models, imports, or progress offsets. A small Continue reading card is the next useful Reader/Library handoff before any full progress, bookmark, or database design.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -445,7 +447,8 @@ Exit criteria:
 - Done: Implemented the T112 Reader/Library content-depth slice.
 - Done: Implemented the T113 Reader save selected local samples MVP.
 - Done: Completed the T114 Reader/Library next-step audit and selected T115 as the next implementation slice.
-- Remaining: Implement T115 Library saved samples shelf MVP, or follow a user-assigned concrete alternative.
+- Done: Implemented the T115 Library saved samples shelf MVP.
+- Remaining: Implement T116 Reader continue-reading card MVP, or follow a user-assigned concrete alternative.
 
 ## Verification Gates
 

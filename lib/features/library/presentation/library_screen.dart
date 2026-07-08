@@ -21,7 +21,11 @@ class LibraryScreen extends ConsumerWidget {
           error: (_, __) => <String>{},
           loading: () => <String>{},
         );
-    final savedCount = savedSampleIds.length;
+    final savedSamples = [
+      for (final sample in readerSampleCatalog)
+        if (savedSampleIds.contains(sample.id)) sample,
+    ];
+    final savedCount = savedSamples.length;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Library')),
@@ -63,7 +67,7 @@ class LibraryScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: IwSpacing.space4),
                         Text(
-                          _savedContentSummary(savedSampleIds),
+                          _savedContentSummary(savedSamples),
                           style: Theme.of(
                             context,
                           ).textTheme.bodyMedium?.copyWith(
@@ -76,6 +80,18 @@ class LibraryScreen extends ConsumerWidget {
                 ],
               ),
             ),
+            if (savedSamples.isNotEmpty) ...[
+              const SizedBox(height: IwSpacing.space20),
+              Text(
+                'Saved samples',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: IwSpacing.space12),
+              for (final sample in savedSamples) ...[
+                _ReaderSampleCard(sample: sample, isSaved: true),
+                const SizedBox(height: IwSpacing.space12),
+              ],
+            ],
             const SizedBox(height: IwSpacing.space20),
             Text(
               'Local samples',
@@ -147,12 +163,12 @@ class _ReaderSampleCard extends StatelessWidget {
   }
 }
 
-String _savedContentSummary(Set<String> savedSampleIds) {
-  if (savedSampleIds.isEmpty) {
+String _savedContentSummary(List<ReaderSample> savedSamples) {
+  if (savedSamples.isEmpty) {
     return 'Saved reads and progress will appear here.';
   }
-  if (savedSampleIds.length == 1) {
-    return '${readerSampleById(savedSampleIds.first).title} is saved locally.';
+  if (savedSamples.length == 1) {
+    return '${savedSamples.first.title} is saved locally.';
   }
 
   return 'Saved local samples are ready to continue.';
