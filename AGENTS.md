@@ -35,7 +35,19 @@ If one of these files does not exist yet, do not invent conflicting decisions. F
 
 Read only the documents relevant to the assigned task. `docs/harness/DOCUMENTATION_GOVERNANCE_PLAN.md` defines the minimum reading set by task type and supplements this required-reading list.
 
-Global skills, plugins, MCP tools, and hooks are optional helpers. They do not override explicit user scope, repository rules, or native Flutter/Git verification gates.
+Global skills, plugins, MCP tools, and hooks are optional helpers. They do not override explicit user scope, repository rules, current code/configuration, or native Flutter/Git verification gates.
+
+## 2.1 Repo-local Tool Usage
+
+Use global capabilities only when they reduce a concrete uncertainty or task risk. Repository files and current code are the factual source; native Flutter, Dart, Git, and platform commands are the verification authority. A configured helper is neither required nor proven reliable until it has run successfully for the task.
+
+- **Skills:** Select the smallest applicable skill set. Use planning for multi-step architecture/restructure work, systematic debugging for failures, test-driven development when practical for behavior changes, and verification-before-completion before a completion claim. Apply relevant Flutter UI/layout, feedback, accessibility, or performance skills only to matching work. Small local changes use the minimal implementation discipline; security skills are for security-relevant or explicitly requested review.
+- **MCP helpers:** Use Context7 for version-sensitive Flutter/Dart/package/platform guidance; Semble for semantic discovery when filenames are insufficient; and CodeGraph for dependency, impact, or call-path exploration when available. Use Chrome DevTools only for browser/DOM/web tasks, not Flutter native UI or device validation. Flutter/Dart CLI remains the execution path; no Flutter MCP server is required.
+- **Plugins:** Use a plugin only when its capability matches the task (for example, Superpowers for planning/debugging/TDD/verification, security tools for security work, and document/browser tools for their artifact or interaction type). Do not activate a plugin merely because it is installed.
+- **Hooks:** Infinity World does not rely on hooks for verification, formatting, staging, commits, pushes, logging, or documentation updates. Configured-but-unobserved hooks are not guaranteed. Future hooks require separate approval and must not format the whole repository, modify source, stage unrelated files, commit, push, or rewrite planning docs automatically.
+- **Fallback and failure:** Retry an optional helper once only when a transient retry is safe; otherwise use the native fallback recorded in `docs/harness/DOCUMENTATION_GOVERNANCE_PLAN.md`. Helper failure does not block work when that fallback is sufficient. Report degraded confidence or stop only when no safe fallback can prove the required scope.
+
+Do not copy, install, edit, or reconfigure global skills, plugins, MCP servers, or hooks from an Infinity World task. Repository constraints always take precedence over generic tool guidance.
 
 ## 3. Current Product Decisions
 

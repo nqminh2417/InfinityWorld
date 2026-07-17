@@ -12,8 +12,8 @@ Current branch workflow:
 
 Current track status:
 
-- Product track is paused after `T120` while the user-directed Harness Phase 1 work is active.
-- `T121` remains deferred; Harness `H...` tasks are tracked separately under `docs/harness/` and do not replace product backlog IDs.
+- Product track is paused after `T120`; `T121` remains deferred.
+- Harness Phase 1 Foundation is complete. Harness `H...` tasks are tracked separately under `docs/harness/`, do not replace product backlog IDs, and continue with H11 — Scoped Restructure Pilot Selection.
 
 Current architecture status:
 
@@ -369,7 +369,7 @@ Current phase:
 
 Decision:
 
-- T120 implemented one persisted paragraph bookmark per built-in Reader sample. `T121` is deferred while Harness Phase 1 is active; it is not an active product recommendation.
+- T120 implemented one persisted paragraph bookmark per built-in Reader sample. `T121` is deferred while Harness Phase 1 Foundation is complete; it is not an active product recommendation.
 
 Do not enter yet:
 

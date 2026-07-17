@@ -148,3 +148,32 @@ H7 should commit and push one docs-only change only after all listed merges/dele
 - Run `git diff --check`, review the complete scoped diff, confirm no application/test/platform/configuration file changed, and confirm historical content was preserved in its destination or retained source.
 - Confirm `git status --short` contains only the approved H7 documentation paths, then stage only those paths.
 - If a merge/reference error is found before commit, fix or revert the scoped documentation change. If found after the single H7 commit, create one focused corrective docs commit; do not rewrite history.
+
+## H10 Repo-local Tool Usage Policy
+
+`AGENTS.md` owns the concise repository routing and authority rules. Global installation/configuration remains outside this repository. Native Flutter, Dart, Git, and platform commands remain completion authority; helpers may inform investigation but never override code, tests, analyzer output, diffs, or explicit user scope.
+
+| Need | Preferred helper | Native fallback | Completion authority | Failure behavior |
+| --- | --- | --- | --- | --- |
+| Semantic discovery | Semble | `rg`, file listing, import search, direct inspection | Repository evidence and applicable tests | Retry once only if safe; otherwise use fallback. |
+| Dependency/impact exploration | CodeGraph when available | Import/reference search, analyzer, tests, direct inspection | Repository evidence and verification gates | Transport failure does not block work or prove dependencies complete. |
+| Version-sensitive documentation | Context7 | Official documentation plus package/source inspection | Repository configuration and native verification | Report uncertainty only if fallback cannot confirm the needed version behavior. |
+| Flutter build, analysis, or tests | No helper required | Native `flutter`/`dart` CLI | `docs/qa/git-workflow.md` matrix | Do not substitute MCP/plugin output. |
+| Git status, diff, or history | No helper required | Native `git` commands | Native Git output | Stop only when Git evidence cannot safely establish scope. |
+| Flutter UI/device validation | Native emulator/device and QA checklists | Report as unverified when unavailable | Observed runtime evidence | Browser tools do not replace native validation. |
+| Browser/DOM inspection | Chrome DevTools only for web/browser tasks | Browser inspection or direct web evidence | Task-appropriate native/browser result | Do not apply to Flutter native UI by default. |
+| Security review | Security plugin/skill only when security-relevant or assigned | Repository inspection and applicable native checks | Explicit security evidence and verification | Do not claim a security review merely because a helper ran. |
+
+Global Skills are reusable capabilities, not repository files: choose the smallest relevant set and do not let generic guidance expand scope. Plugins are used only for matching capabilities. Hooks are not relied on for repository verification, staging, commit, push, logging, or documentation updates; configured-but-unobserved execution is not guaranteed. Optional helper failure uses the listed fallback and is reported only when it materially lowers confidence. Stop only when no safe fallback can establish a required fact.
+
+## Phase 1 Completion
+
+- **Completed:** H5 — Harness Gap Analysis.
+- **Completed:** H6 — Documentation Source of Truth Plan.
+- **Completed:** H7 — Documentation Restructure.
+- **Completed:** H8 — Verification Gates.
+- **Completed:** H9 — Task Lifecycle and Git Policy.
+- **Completed:** H10 — Repo-local Tool Usage Policy.
+- **Phase status:** Phase 1 — Harness Foundation completed. Global Skills, Plugins, MCP configuration, and Hooks remain unchanged.
+- **Product status:** `T121` remains deferred.
+- **Next Harness task:** H11 — Scoped Restructure Pilot Selection.

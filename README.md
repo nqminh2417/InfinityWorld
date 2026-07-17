@@ -2,7 +2,7 @@
 
 InfinityWorld is an Android-first, iOS-ready personal super-app and portfolio Flutter project. It is being built as a polished local-first hub for small tools, trackers, saved content, settings, and future device or AI modules.
 
-The project favors small, verified slices over broad rewrites. Product work is paused after Phase 10 task T120 while the user-directed Harness Phase 1 track is active; `T121` remains deferred.
+The project favors small, verified slices over broad rewrites. Product work is paused after Phase 10 task T120; Harness Phase 1 Foundation is complete, `T121` remains deferred, and the next Harness task is H11 — Scoped Restructure Pilot Selection.
 
 ## Current App State
 

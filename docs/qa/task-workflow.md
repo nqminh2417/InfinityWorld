@@ -65,7 +65,7 @@ Do not create a redundant per-task log. Update the appropriate owner only when a
 - `T...` IDs identify product/application tasks in `docs/tasks.md`.
 - `H...` IDs identify Harness Engineering work in `docs/harness/`.
 - Do not renumber completed or deferred work, and do not let Harness work replace product backlog entries without an explicit planning decision.
-- The current state is: product work is paused after `T120`; `T121` remains deferred; Harness Phase 1 is active.
+- The current state is: product work is paused after `T120`; `T121` remains deferred; Harness Phase 1 Foundation is complete and H11 is the next Harness task.
 - A recommended next task must identify its track and is advisory only.
 
 ## Roadmap Update Policy
@@ -219,3 +219,5 @@ Use the verification gate for the actual change type from:
 - `docs/qa/git-workflow.md`
 
 Report each required command and outcome, focused Git diff/status review, and any manual evidence. For manual UI/runtime checks, name the device/emulator or viewport, route/flow, theme when relevant, and observed result. A skipped required gate or unavailable runtime check must remain in `Risks / deferred`; only a proven unchanged, unrelated baseline failure may be labelled pre-existing. A task is not `Completed` when a required gate was skipped or failed.
+
+Mention a Skill, plugin, MCP helper, or hook only when it materially affected the work or its confidence (for example, `CodeGraph unavailable; verified imports with repository search and tests`). Do not include internal traces, configuration dumps, or helper output as completion proof.
