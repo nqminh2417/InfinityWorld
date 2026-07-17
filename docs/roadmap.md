@@ -718,6 +718,6 @@ For every scoped task:
 - Confirm branch and working tree state.
 - Read relevant planning docs.
 - Keep the change small.
-- Verify with the gate matching the change type.
+- Verify with the risk-based matrix in `docs/qa/git-workflow.md`; do not duplicate gate details here.
 - Update `docs/tasks.md`, `docs/decisions.md`, or this roadmap when scope, phase, or direction changes.
 - Commit and push only according to `docs/qa/git-workflow.md`.

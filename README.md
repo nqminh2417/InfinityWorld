@@ -84,6 +84,8 @@ Docs-only tasks normally require:
 git diff --check
 ```
 
+See `docs/qa/git-workflow.md` for the authoritative risk-based verification matrix and required manual/runtime evidence.
+
 Do not claim a command passed unless it was actually run.
 
 ## Project Structure

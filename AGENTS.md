@@ -433,11 +433,14 @@ Do not mix unrelated icon styles across the app.
 
 ## 16. Testing and Verification
 
-When editing code, run the most relevant checks possible.
+Use the risk-based verification matrix in `docs/qa/git-workflow.md`. It is the authoritative source for required gates, pre-existing failures, build/device checks, and final evidence.
 
-Preferred commands:
+Normal tasks format only the changed Dart scope. Repository-wide non-mutating formatting is for baseline audits or explicitly assigned cleanup. Native Flutter, Dart, and Git commands are the completion authority; MCP/plugin output is investigative only.
+
+Common commands:
 
 ```powershell
+dart format --output=none --set-exit-if-changed <changed Dart scope>
 flutter pub get
 flutter analyze
 flutter test

@@ -190,8 +190,4 @@ Use the verification gate for the actual change type from:
 
 - `docs/qa/git-workflow.md`
 
-Docs-only workflow updates require:
-
-```powershell
-git diff --check
-```
+Report each required command and outcome, focused Git diff/status review, and any manual evidence. For manual UI/runtime checks, name the device/emulator or viewport, route/flow, theme when relevant, and observed result. A skipped required gate or unavailable runtime check must remain in `Unverified`; only a proven unchanged, unrelated baseline failure may be labelled pre-existing.

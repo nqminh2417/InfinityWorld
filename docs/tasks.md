@@ -476,12 +476,7 @@ Exit criteria:
 
 Use `docs/qa/git-workflow.md` as the source of truth.
 
-Quick reference:
-
-- Docs-only: `git diff --check`
-- Dart logic/test: `dart format`, `flutter analyze`, `flutter test`, `git diff --check`
-- Screen move/routing/startup: `dart format`, `flutter analyze`, `flutter test`, `flutter build apk --debug`, `git diff --check`
-- Android toolchain/build-system: separate branch unless explicitly approved
+Select gates by change risk from that matrix; do not duplicate command requirements here. Task results must report required command outcomes, focused diff/status review, and manual/runtime evidence or unverified areas.
 
 ## Asking for the Next Task
 
