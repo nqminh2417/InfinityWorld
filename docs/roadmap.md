@@ -9,7 +9,7 @@ This roadmap is the living development plan for Infinity World. It follows a Med
 Related planning docs:
 
 - `docs/architecture.md` describes the target direction.
-- `docs/tasks.md` tracks the active backlog and next tasks.
+- `docs/tasks.md` tracks the product backlog and product next tasks; `docs/harness/` tracks the separate Harness sequence.
 - `docs/decisions.md` records durable project decisions.
 - `docs/qa/git-workflow.md` defines commit, push, and verification rules.
 
@@ -683,7 +683,7 @@ Completion checkpoint:
 
 ## Phase 10: App Content and Surface Depth
 
-Status: current / active product work.
+Status: product work paused after `T120`; Harness Phase 1 is active separately.
 
 Goal:
 
@@ -692,7 +692,7 @@ Goal:
 Current scope:
 
 - The Phase 10 kickoff audit is complete. Tools, Home/Dashboard, Explore, and Reader/Library now have small content-depth slices.
-- `docs/tasks.md` owns the active task, detailed completed work, alternatives, and phase guard.
+- `docs/tasks.md` owns product task status, detailed completed work, alternatives, and the phase guard. `T121` is deferred until the user resumes product work; `docs/harness/` owns the separate active Harness track.
 - Do not mix active content work with release/showcase preparation, Android toolchain changes, broad routing work, or unapproved persistence-model expansion.
 
 ## Separate Branch Work

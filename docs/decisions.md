@@ -1,6 +1,6 @@
 # Infinity World Decisions
 
-Last updated: 2026-07-01
+Last updated: 2026-07-18
 
 This file records durable product, architecture, workflow, and safety decisions for Infinity World. Keep entries concise and update them when a decision changes.
 
@@ -10,9 +10,9 @@ This file records durable product, architecture, workflow, and safety decisions 
 
 Codex should continue scoped repository work directly on branch `home/devbyMinh-current`.
 
-### 2026-06-23: Auto commit and push after passing gates
+### 2026-07-18: Commit and push require task-specific authority
 
-Codex may automatically create a local commit and push after each scoped task when the required verification gates pass and the task only stages related files.
+Codex may commit and push only when the user or task prompt explicitly authorizes it, or when an approved multi-task plan reaches its stated coherent boundary. Required gates must pass, only scoped files may be staged, and the allowed branch/upstream must be confirmed. Passing gates alone do not authorize a commit or push.
 
 Source of truth:
 
@@ -278,7 +278,7 @@ Source of truth:
 
 ### 2026-06-23: Task results use a standard concise report
 
-After every completed or blocked task, Codex should return the standard `Task Result` report with status, summary, changed files, verification, commit/push details, planning-doc status, unverified areas, and one advisory recommended next task.
+After every completed, partially completed, or blocked task, Codex should return the standard `Task Result` report with task/status, changed files, verification, docs updated, commit/push details, risks/deferred items, and one advisory recommended next task.
 
 Source of truth:
 

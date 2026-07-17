@@ -2,13 +2,9 @@
 
 ## Scope
 
-This workflow applies only to the Infinity World repository.
+This workflow applies only to the Infinity World repository. It owns Git safety, verification gates, and commit/push authority. `docs/qa/task-workflow.md` owns task lifecycle and the user-facing result format.
 
-Codex is allowed to automatically create a local commit and push it after each scoped task only when all rules below are satisfied.
-
-## Allowed Branch
-
-Auto commit and auto push are allowed only on:
+## Preflight and Allowed Branch
 
 ```text
 home/devbyMinh-current
@@ -23,19 +19,34 @@ git status --short
 
 Continue only if the current branch is `home/devbyMinh-current`, unless the user explicitly approves another branch.
 
-Do not work on top of unrelated dirty changes. If unrelated changes are present, stop and report them before editing.
+Never use destructive Git commands, change global tools/configuration, or broaden a repository task without explicit authorization. Preserve unrelated user work.
 
-## Commit and Push Rules
+## Dirty Working Tree Policy
 
-- Stage only files related to the current scoped task.
-- Use concise Conventional Commit messages.
-- After completing the task, run the required verification gates for the change type.
-- If the gates pass, create a local commit and push the current branch.
-- Report the commit hash, commit message, pushed branch, verification commands, and unverified areas.
+| Working-tree state | Required handling |
+| --- | --- |
+| Clean | Proceed with the scoped task. |
+| Only scoped Codex changes | Proceed; stage only the approved task files after review. |
+| Unrelated unstaged or untracked changes | Inspect enough to avoid overlap. Continue only when scoped files can be isolated precisely; do not stage, format, or overwrite the unrelated work. Otherwise stop the write/commit portion and report the blocker. |
+| Unrelated staged changes | Do not unstage or include them. Because a commit cannot safely exclude staged user work, stop the commit portion and report the blocker. |
+| Conflicting edits in the same file | Stop before overwriting or staging that file and request direction. |
+
+## Commit and Push Authority
+
+Commit and push are allowed only when all of the following are true:
+
+- The user explicitly requests it, the task prompt explicitly authorizes it, or an approved multi-task plan reaches its stated coherent commit boundary.
+- Required gates pass, the scope is complete, and focused diff/status review confirms only scoped files will be staged.
+- The current branch is allowed and its configured upstream is confirmed before push; do not invent a remote or branch mapping when no upstream exists.
+
+Commit and push are not allowed when the task is analysis/planning-only, a required gate has a new failure, the scope is incomplete, unrelated changes cannot be isolated safely, branch/upstream policy is unclear, or an intermediate commit would misrepresent completion. Passing gates alone does not authorize a commit or push.
+
+- Stage only files related to the current scoped task and use concise Conventional Commit messages.
+- A coherent task may commit alone; explicitly planned, tightly coupled tasks may share one documented commit boundary.
+- Report the commit hash, commit message, push result, verification commands, and unverified areas.
 - Never push `main`, `master`, `dev`, `release/*`, or production branches unless explicitly requested.
-- Never force-push unless explicitly requested.
-- Never merge branches unless explicitly requested.
-- If the user is not satisfied after a pushed commit, make a follow-up fix commit and push it. Do not rewrite history unless explicitly requested.
+- Never amend, rebase, reset, force-push, merge, or switch branches unless explicitly requested.
+- If a commit succeeds but push fails, keep the commit and report the failure. If a pushed commit needs adjustment, use a follow-up fix commit by default.
 - Android toolchain or build-system changes should use a separate branch unless explicitly approved.
 
 ## Authoritative Verification Matrix

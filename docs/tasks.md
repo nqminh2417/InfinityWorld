@@ -7,8 +7,13 @@ Last updated: 2026-07-18
 Current branch workflow:
 
 - Active branch: `home/devbyMinh-current`
-- Codex may auto commit and push scoped tasks after gates pass.
+- Commit/push require task-specific authority, passing required gates, scoped staging, and an allowed branch/upstream; passing gates alone is insufficient.
 - Git workflow source: `docs/qa/git-workflow.md`
+
+Current track status:
+
+- Product track is paused after `T120` while the user-directed Harness Phase 1 work is active.
+- `T121` remains deferred; Harness `H...` tasks are tracked separately under `docs/harness/` and do not replace product backlog IDs.
 
 Current architecture status:
 
@@ -286,7 +291,11 @@ Task sizing note:
 - Simple screens should usually be handled in one task.
 - API/live-network screens may justify extra hardening tasks.
 
-### Primary
+### Product track status
+
+Product implementation is paused after `T120`. Do not begin `T121` or another product task unless the user assigns it or explicitly resumes the product track.
+
+### Deferred product task
 
 T121 - Library bookmark shelf next-step audit
 
@@ -360,7 +369,7 @@ Current phase:
 
 Decision:
 
-- T120 implemented one persisted paragraph bookmark per built-in Reader sample. The next recommended task is T121 - Library bookmark shelf next-step audit.
+- T120 implemented one persisted paragraph bookmark per built-in Reader sample. `T121` is deferred while Harness Phase 1 is active; it is not an active product recommendation.
 
 Do not enter yet:
 
@@ -470,7 +479,7 @@ Exit criteria:
 - Done: Implemented the T118 Reader finished sample marker MVP.
 - Done: Completed the T119 Reader bookmark model audit and selected T120 as the next implementation slice.
 - Done: Implemented the T120 Reader single paragraph bookmark MVP.
-- Remaining: Complete T121 Library bookmark shelf next-step audit, or follow a user-assigned concrete alternative.
+- Remaining: Resume `T121` Library bookmark shelf next-step audit only after the user resumes product work, or follow another explicitly assigned product task.
 
 ## Verification Gates
 
@@ -480,6 +489,6 @@ Select gates by change risk from that matrix; do not duplicate command requireme
 
 ## Asking for the Next Task
 
-If the user asks "what is the next task?", use `Recommended Next Work` above. Recommend the single Primary task unless the user explicitly chooses an alternative.
+If the user asks "what is the next product task?", report that product work is paused and `T121` is deferred unless the user explicitly resumes it. For Harness work, use the active approved sequence in `docs/harness/`.
 
 If the user assigns a different task, follow the user task and update planning docs only when it changes priority, phase, backlog, or durable decisions.

@@ -590,7 +590,7 @@ Follow the repo-specific workflow in:
 
 - `docs/qa/git-workflow.md`
 
-Codex may auto commit and auto push completed scoped tasks only on branch `home/devbyMinh-current` after the required verification gates pass.
+Commit and push require task-specific authority, successful required gates, scoped staging, and the allowed-branch/upstream checks in `docs/qa/git-workflow.md`. Passing gates alone does not authorize a commit or push.
 
 Before starting each task, run:
 
@@ -599,7 +599,7 @@ git branch --show-current
 git status --short
 ```
 
-Do not continue on another branch, work on unrelated dirty changes, push protected branches, force-push, merge branches, or make Android toolchain/build-system changes on this branch unless explicitly approved.
+Do not continue on another branch, stage or overwrite unrelated dirty changes, push protected branches, force-push, merge branches, or make Android toolchain/build-system changes on this branch unless explicitly approved.
 
 ## 23. Living Planning Docs
 
@@ -612,7 +612,7 @@ Keep the planning docs aligned when scope, phase, architecture direction, workfl
 
 Treat `docs/architecture.md` as the target direction, not a claim that the current `lib/` structure is already migrated. Use `docs/tasks.md` as the active backlog when deciding the next small task.
 
-`docs/tasks.md` is guidance, not a hard lock. If the user assigns a different task, follow the user's task and apply `docs/qa/task-workflow.md`: update planning docs only when the task changes priority, phase, backlog, or durable decisions, and report whether planning docs were updated.
+`docs/tasks.md` owns the active product `T` backlog; `docs/harness/` owns the separate Harness `H` track. Neither track silently replaces the other. A user-assigned task takes priority over an advisory backlog recommendation. Apply `docs/qa/task-workflow.md`: update planning docs only when the task changes priority, phase, backlog, or durable decisions, and report whether planning docs were updated.
 
 ## 24. Standard Task Result Reporting
 
@@ -620,4 +620,4 @@ After every completed or blocked task, return the compact `Task Result` format d
 
 - `docs/qa/task-workflow.md`
 
-Always include the current phase. Keep detailed planning state in `docs/tasks.md`, not in final chat output. Final output should include one primary next task, the phase that next task belongs to, and a pointer to `docs/tasks.md` for alternatives, deferred work, and the phase guard.
+Always include the current phase and one advisory primary next task (or clearly state that no implementation task is approved). Keep detailed product planning state in `docs/tasks.md` and Harness planning in `docs/harness/`, not in final chat output. Do not expose internal tool markers or scratch notes in the user-facing summary.
