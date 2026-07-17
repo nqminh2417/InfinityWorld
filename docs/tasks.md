@@ -1,6 +1,6 @@
 # Infinity World Active Tasks
 
-Last updated: 2026-07-08
+Last updated: 2026-07-18
 
 ## Current Status
 
@@ -54,8 +54,8 @@ Current architecture status:
 - Explore now has a first tab body at `lib/features/explore/presentation/explore_screen.dart`.
 - Library now has a first empty-state tab body at `lib/features/library/presentation/library_screen.dart`.
 - Phase 9 QA/device readiness is complete; portfolio, screenshot, release presentation, and employer-showcase work are deferred until explicitly requested.
-- Reader exists as a local sample screen with a small built-in sample catalog; there is still no bookmark, saved-article, reading-progress, or local database module yet.
-- T91 confirmed existing persistence is limited to small `shared_preferences` repositories for local session/profile and theme mode; no Drift/local database dependency is active.
+- Reader has a built-in local sample catalog with saved, finished, last-opened, and one paragraph-bookmark state through the existing `shared_preferences`/Riverpod pattern; generic saved articles, scroll offsets, multiple bookmarks, and a local database remain out of scope.
+- Existing persistence remains small `shared_preferences` repositories for local session/profile, theme mode, and Reader state; no Drift/local database dependency is active.
 - `features/home` root does not exist yet; Dashboard still owns direct module/dev links plus logout/session clearing.
 - Phase 10 kickoff audit confirmed Tools is the smallest low-risk content-depth surface for the next slice because it can add a useful local Clock tool without public APIs, persistence, screenshots, release work, broad redesign, or app architecture migration.
 - Clock now lives under `lib/features/clock/`, has a direct `/clock` route, and is linked from Tools beside BMI.

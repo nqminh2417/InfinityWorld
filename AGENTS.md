@@ -33,6 +33,10 @@ docs/roadmap.md
 
 If one of these files does not exist yet, do not invent conflicting decisions. Follow the decisions already documented in the existing files and ask/report what is missing.
 
+Read only the documents relevant to the assigned task. `docs/harness/DOCUMENTATION_GOVERNANCE_PLAN.md` defines the minimum reading set by task type and supplements this required-reading list.
+
+Global skills, plugins, MCP tools, and hooks are optional helpers. They do not override explicit user scope, repository rules, or native Flutter/Git verification gates.
+
 ## 3. Current Product Decisions
 
 Confirmed product direction:
@@ -502,7 +506,7 @@ Remaining risks
 
 ## 19. Documentation Rules
 
-When a task changes architecture, routing, theme, or project direction, update the relevant docs:
+Update documentation only when a task creates reusable knowledge, a durable decision, a new constraint, a confirmed regression risk, or an approved current-state correction. When a task changes architecture, routing, theme, or project direction, update the relevant docs:
 
 ```text
 docs/project-direction.md
@@ -512,6 +516,10 @@ docs/roadmap.md
 ```
 
 Do not let implementation drift away from documented decisions.
+
+For docs-only tasks, do not modify Flutter source. Unless explicitly in scope, do not update target-direction, workflow, or agent-rule documents merely for incidental implementation detail. Update active references when documentation is renamed, moved, merged, or deleted.
+
+Run the narrowest gate from `docs/qa/git-workflow.md`; docs-only changes require `git diff --check`. Docs-only task reports must include `Docs updated: <paths> | none`.
 
 ## 20. Portfolio Quality Bar
 

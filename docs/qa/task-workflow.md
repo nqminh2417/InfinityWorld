@@ -129,6 +129,8 @@ Files changed:
 - `<repo-relative-path>`
 - `<repo-relative-path>`
 
+Docs updated: `<paths>` | `none` (required for docs-only tasks)
+
 Verification:
 - Git branch/status gates: passed
 - `<command>`: passed | failed | skipped | not run

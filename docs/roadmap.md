@@ -1,6 +1,6 @@
 # Infinity World Roadmap
 
-Last updated: 2026-07-01
+Last updated: 2026-07-18
 
 ## Purpose
 
@@ -683,18 +683,17 @@ Completion checkpoint:
 
 ## Phase 10: App Content and Surface Depth
 
-Status: current / kickoff audit next.
+Status: current / active product work.
 
 Goal:
 
 - Increase useful, content-rich app surfaces before public screenshots, release packaging, or broader portfolio polish.
 
-First slice:
+Current scope:
 
-- Start with a Phase 10 app content depth kickoff audit.
-- Audit Home/Dashboard, Explore, Tools, Library, and existing direct module routes for the smallest useful content-depth opportunity.
-- Recommend one next implementation slice, such as richer Dashboard/Home content, an additional safe local tool, Library/Reader foundation, Explore/RSS foundation, or module-flow cleanup.
-- Do not implement the feature, capture screenshots, add packages, change Android build/toolchain files, start release signing, or begin portfolio copywriting in the kickoff audit.
+- The Phase 10 kickoff audit is complete. Tools, Home/Dashboard, Explore, and Reader/Library now have small content-depth slices.
+- `docs/tasks.md` owns the active task, detailed completed work, alternatives, and phase guard.
+- Do not mix active content work with release/showcase preparation, Android toolchain changes, broad routing work, or unapproved persistence-model expansion.
 
 ## Separate Branch Work
 
