@@ -13,7 +13,7 @@ Current branch workflow:
 Current track status:
 
 - Product track is paused after `T120`; `T121` remains deferred.
-- Harness Phase 1 Foundation and Phase 2 validation are complete. Restructure Phase 3 is active; R2 is complete and the next approved task is R3 — Align Summertime Saga Dio Injection. Harness `H...` tasks remain separate from product backlog IDs.
+- Harness Phase 1 Foundation and Phase 2 validation are complete. Restructure Phase 3 is active; R3 is complete and the next approved task is R4 — Compatibility and Return-to-Product Audit. Harness `H...` tasks remain separate from product backlog IDs.
 
 ## Harness Phase 2 — Validation and Pilot
 
@@ -75,7 +75,7 @@ The pilot validates scope resolution, reference synchronization, native fallback
 
 ## Restructure Phase 3 — Scoped Codebase Restructuring
 
-Status: active. R1 and R2 are complete; `T121` remains deferred until the Restructure Phase 3 exit criteria are met.
+Status: active. R1, R2, and R3 are complete; `T121` remains deferred until the Restructure Phase 3 exit criteria are met.
 
 ### Bounded Scope and Candidate Reassessment
 
@@ -83,7 +83,7 @@ Status: active. R1 and R2 are complete; `T121` remains deferred until the Restru
 | --- | --- | --- | --- | --- |
 | Root compatibility-named folders | Audit only | `lib/blocs`, `helpers`, `models`, `providers`, `services`, and `utils` are empty and untracked; `screens/main` and `widgets/text_field` are empty. Removing them produces no durable Git change and static absence cannot prove external tooling does not expect them. Leave them out of implementation; recheck in R4 only. | No planned source files. Depends on a tracked-file and exact-reference search. | Low risk; no standalone commit. Do not present local empty-directory removal as a restructure result. |
 | `AppRoutes` ownership | Included — R2 completed | The active go_router/startup path contract now lives in `lib/app/router/app_routes.dart`; all 16 production/test importers were updated. Its class API and every route-path string were preserved. | The old file was removed; no dependency/package change. Current-state planning references use the new location, while frozen/dated history retains its evidence. | Medium risk mitigated by exhaustive path/symbol search, route/startup tests, full gates, APK build, and Android route smoke. |
-| Fox and Summertime Saga service injection | Include in Restructure Phase 3 — R3 | Fox already injects `dioProvider`; `smtsServiceProvider` constructs `SmtsService()` despite the shared provider. Align only the Summertime Saga provider to inject the existing Dio client. Do not add a repository framework, interceptor layer, or change screen fallbacks. | `lib/features/summertime_saga/application/smts_providers.dart` and a focused provider test if needed. Depends on the existing `dioProvider` and deterministic service tests. | Low-Medium risk. R3 commits independently after network/service gates and focused provider/service/route tests; device validation is deferred to R4 because route/UI behavior is unchanged. |
+| Fox and Summertime Saga service injection | Included — R3 completed | `smtsServiceProvider` now watches `dioProvider` and constructs the feature-owned service with that shared client. The active router continues to inject `fetchProgress`; `SmtsHomeScreen` now requires the injected loader, so no static/direct production fallback remains. | Feature provider, service, screen, and one deterministic provider test. No repository framework, interceptor layer, or behavior change. | Low-Medium risk mitigated by fake-Dio provider/service tests, screen-state/retry tests, route-seam tests, full gates, APK build, and Android runtime error/retry/re-entry validation. |
 | Reader/Library ownership and SharedPreferences contracts | Defer | Library’s explicit Reader imports support the current local-sample aggregation. Reader keys (`iw_reader_*`) have migration/validation tests, including the legacy saved boolean. Moving repositories from the application file or replacing storage risks data loss without a second consumer or approved product model. | No planned files. Preserve keys, `SharedPreferencesAsync`, provider names, and Library/Reader route behavior. | High persistence/product-direction risk; no Phase 3 commit. Recheck key compatibility and full Reader/Library tests in R4 only. |
 | Current architecture documentation after the pilot | Include in Restructure Phase 3 — R1 and R4 | `docs/roadmap.md` still said shared legacy UI remained in `lib/widgets/`, but H12 moved its only tracked widget into Test. R1 corrects this factual current-state claim; R4 synchronizes the final route/provider locations after implementation. `docs/architecture.md` already states the target `app/router` direction and needs no rewrite. | `docs/tasks.md`, `docs/roadmap.md`, and `README.md` current-status text only. | Low risk; documentation belongs with R1/R4 coherent commits. Historical Discovery, decisions, archive, and completed feature plans retain dated path evidence. |
 | Resolved Phase 0 widget-placement finding | Reject | H12 already moved `FloatingLabelTextField` with a 100% content-preserving rename, focused/full tests, APK build, and Android keyboard/scroll validation. | No planned files. | No duplicate move or cleanup task; preserve the H12 record. |
@@ -102,14 +102,15 @@ Status: active. R1 and R2 are complete; `T121` remains deferred until the Restru
 - **Dependencies:** R1; before editing, search the old/new paths, `AppRoutes`, package imports, route tests, Markdown references, and direct string route uses. Preserve historical/frozen records; update active current-state references in the same commit.
 - **Verification class:** large file move affecting routing — changed-scope format, `flutter analyze`, focused startup/router tests then full `flutter test`, `flutter build apk --debug`, `git diff --check`, and before/after old-path/symbol searches.
 - **Runtime / docs / commit:** Android emulator/device launch plus Login/Main and one direct-route smoke; record theme, route, viewport, and result. Update only warranted current docs. One scoped commit/push is allowed after all gates pass.
-- **R2 result:** completed the ownership-only relocation; the new file has the same content hash as the former contract, and all 16 Dart imports now target `lib/app/router/app_routes.dart`. R3 is next; `T121` remains deferred.
+- **R2 result:** completed the ownership-only relocation; the new file has the same content hash as the former contract, and all 16 Dart imports now target `lib/app/router/app_routes.dart`. `T121` remains deferred.
 
 #### R3 — Align Summertime Saga Provider Injection
 
-- **Objective / exact boundary:** make `smtsServiceProvider` read the existing `dioProvider` when creating `SmtsService`; add or adjust only the smallest focused provider test needed to prove the seam. Keep `SmtsService` parsing/error behavior, its static screen fallback, router shape, endpoint, timeout, and UI unchanged.
-- **Dependencies:** R1 and the existing shared Dio provider; search `SmtsService()`, `SmtsService.getProgress`, `smtsServiceProvider`, route injection, and deterministic service tests before editing.
-- **Verification class:** network/service — changed-scope format, focused provider/service and route tests, `flutter analyze`, full `flutter test`, `git diff --check`, and focused reference/diff review. No standalone APK/device gate is required because no route, platform, or UI contract changes; R4 supplies the Phase-level APK/device check.
+- **Objective / exact boundary:** make `smtsServiceProvider` read the existing `dioProvider` when creating `SmtsService`; keep the router's explicit loader injection and remove the unused screen fallback only after every construction path is explicit. Preserve parsing/error behavior, router shape, endpoint, timeout, and UI.
+- **Dependencies:** R1 and the existing shared Dio provider; audit `SmtsService`, `smtsServiceProvider`, route injection, deterministic service tests, and direct Dio construction before editing.
+- **Verification class:** network/service — changed-scope format, focused provider/service and route tests, `flutter analyze`, full `flutter test`, `git diff --check`, and focused reference/diff review. This task also required and passed APK/device validation because it changes the production route's service wiring.
 - **Docs / commit:** update planning only if scope/status changes. One scoped commit/push is allowed after required gates pass.
+- **R3 result:** completed the single production path `dioProvider → smtsServiceProvider → router injection → SmtsHomeScreen`; the static fallback was removed and test loaders remain explicit. R4 is next; `T121` remains deferred.
 
 #### R4 — Phase 3 Closeout and Product-Track Reassessment
 

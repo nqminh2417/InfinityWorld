@@ -18,16 +18,16 @@ Related planning docs:
 - **Status:** completed; H11 — Scoped Restructure Pilot Selection, H12 — Execute Scoped Restructure Pilot, and H13 — Pilot Review and Harness Adjustment are complete.
 - **Pilot conclusion:** Harness pilot passed with minor adjustment. The single-consumer `FloatingLabelTextField` now belongs to `features/test`; its API, behavior, and Test route were preserved.
 - **Harness adjustment:** `docs/qa/task-workflow.md` no longer duplicates a transient next-Harness-task ID, preventing planning-status drift.
-- **Next task:** R3 — Align Summertime Saga Dio Injection.
+- **Next task:** R4 — Compatibility and Return-to-Product Audit.
 - **Product status:** `T121` remains deferred.
 
 ## Restructure Phase 3 — Scoped Codebase Restructuring
 
-- **Status:** active. R1 — Codebase Restructure Scope and Sequence and R2 — Relocate AppRoutes into the App Router are complete; `T121` remains deferred until the Restructure Phase 3 exit criteria are met.
-- **Included implementation:** R2 relocated the active `AppRoutes` contract into `lib/app/router/` without changing path strings or route behavior. R3 aligns only Summertime Saga's existing Riverpod provider with the shared Dio provider.
+- **Status:** active. R1 — Codebase Restructure Scope and Sequence, R2 — Relocate AppRoutes into the App Router, and R3 — Align Summertime Saga Dio Injection are complete; `T121` remains deferred until the Restructure Phase 3 exit criteria are met.
+- **Included implementation:** R2 relocated the active `AppRoutes` contract into `lib/app/router/` without changing path strings or route behavior. R3 made `dioProvider → smtsServiceProvider → router injection → SmtsHomeScreen` the sole production path while preserving screen and service behavior.
 - **Closeout:** R4 revalidates route imports, Reader `SharedPreferences` compatibility, full Flutter/APK/device gates, current documentation, clean Git state, and the T121 decision.
 - **Excluded:** empty-directory cleanup, Reader storage migration, ShellRoute, generic networking, broad routing, platform/tooling, and product-feature work.
-- **Next task:** R3 — Align Summertime Saga Dio Injection.
+- **Next task:** R4 — Compatibility and Return-to-Product Audit.
 
 ## Current Reality
 
