@@ -13,7 +13,7 @@ Current branch workflow:
 Current track status:
 
 - Product track is paused after `T120`; `T121` remains deferred.
-- Harness Phase 1 Foundation and Phase 2 validation are complete. Harness `H...` tasks are tracked separately under `docs/harness/` and do not replace product backlog IDs; the next approved restructuring-planning task is R1 — Codebase Restructure Scope and Sequence.
+- Harness Phase 1 Foundation and Phase 2 validation are complete. Restructure Phase 3 is active; the next approved task is R2 — Relocate AppRoutes into the App Router. Harness `H...` tasks remain separate from product backlog IDs.
 
 ## Harness Phase 2 — Validation and Pilot
 
@@ -72,6 +72,60 @@ The pilot validates scope resolution, reference synchronization, native fallback
 
 - **Completed:** reviewed H11–H12 against the Phase 1 Harness and made the single evidence-based lifecycle-policy adjustment.
 - **Next task:** R1 — Codebase Restructure Scope and Sequence.
+
+## Restructure Phase 3 — Scoped Codebase Restructuring
+
+Status: active. R1 is complete; `T121` remains deferred until the Restructure Phase 3 exit criteria are met.
+
+### Bounded Scope and Candidate Reassessment
+
+| Candidate | Classification | Current evidence, impact, and direction | Expected files / dependencies | Verification, risk, and commit boundary |
+| --- | --- | --- | --- | --- |
+| Root compatibility-named folders | Audit only | `lib/blocs`, `helpers`, `models`, `providers`, `services`, and `utils` are empty and untracked; `screens/main` and `widgets/text_field` are empty. Removing them produces no durable Git change and static absence cannot prove external tooling does not expect them. Leave them out of implementation; recheck in R4 only. | No planned source files. Depends on a tracked-file and exact-reference search. | Low risk; no standalone commit. Do not present local empty-directory removal as a restructure result. |
+| `AppRoutes` ownership | Include in Restructure Phase 3 — R2 | `lib/routes/app_routes.dart` is the active go_router/startup path contract with 16 Dart importers. Its legacy location is a confirmed ownership inconsistency, while path strings and class API are behavioral contracts. Move only the contract into `lib/app/router/`; preserve every route string and `AppRoutes` API. | `lib/routes/app_routes.dart` → `lib/app/router/app_routes.dart`, all production/test importers, and active current-state docs that name the path. No dependency/package change. | Medium risk. R2 is one commit after exhaustive path/symbol search, route/startup tests, full gates, APK build, and Android route smoke. |
+| Fox and Summertime Saga service injection | Include in Restructure Phase 3 — R3 | Fox already injects `dioProvider`; `smtsServiceProvider` constructs `SmtsService()` despite the shared provider. Align only the Summertime Saga provider to inject the existing Dio client. Do not add a repository framework, interceptor layer, or change screen fallbacks. | `lib/features/summertime_saga/application/smts_providers.dart` and a focused provider test if needed. Depends on the existing `dioProvider` and deterministic service tests. | Low-Medium risk. R3 commits independently after network/service gates and focused provider/service/route tests; device validation is deferred to R4 because route/UI behavior is unchanged. |
+| Reader/Library ownership and SharedPreferences contracts | Defer | Library’s explicit Reader imports support the current local-sample aggregation. Reader keys (`iw_reader_*`) have migration/validation tests, including the legacy saved boolean. Moving repositories from the application file or replacing storage risks data loss without a second consumer or approved product model. | No planned files. Preserve keys, `SharedPreferencesAsync`, provider names, and Library/Reader route behavior. | High persistence/product-direction risk; no Phase 3 commit. Recheck key compatibility and full Reader/Library tests in R4 only. |
+| Current architecture documentation after the pilot | Include in Restructure Phase 3 — R1 and R4 | `docs/roadmap.md` still said shared legacy UI remained in `lib/widgets/`, but H12 moved its only tracked widget into Test. R1 corrects this factual current-state claim; R4 synchronizes the final route/provider locations after implementation. `docs/architecture.md` already states the target `app/router` direction and needs no rewrite. | `docs/tasks.md`, `docs/roadmap.md`, and `README.md` current-status text only. | Low risk; documentation belongs with R1/R4 coherent commits. Historical Discovery, decisions, archive, and completed feature plans retain dated path evidence. |
+| Resolved Phase 0 widget-placement finding | Reject | H12 already moved `FloatingLabelTextField` with a 100% content-preserving rename, focused/full tests, APK build, and Android keyboard/scroll validation. | No planned files. | No duplicate move or cleanup task; preserve the H12 record. |
+
+### Approved Task Sequence
+
+#### R1 — Codebase Restructure Scope and Sequence
+
+- **Type / boundary:** planning only; define this finite sequence and correct current planning status without changing source, tests, dependencies, or frozen Discovery.
+- **Dependencies / verification:** H11–H13 evidence, current repository searches, focused documentation review, and `git diff --check`.
+- **Runtime / docs / commit:** no runtime check; update only current planning/status documents. Commit and push are authorized by this task prompt when the scoped planning diff is complete.
+
+#### R2 — Relocate AppRoutes into the App Router
+
+- **Objective / exact boundary:** move only `AppRoutes` to `lib/app/router/app_routes.dart`; update every production/test import. Preserve the `AppRoutes` class name, all path strings, `createAppRouter`, startup/session flow, and direct-route behavior.
+- **Dependencies:** R1; before editing, search the old/new paths, `AppRoutes`, package imports, route tests, Markdown references, and direct string route uses. Preserve historical/frozen records; update active current-state references in the same commit.
+- **Verification class:** large file move affecting routing — changed-scope format, `flutter analyze`, focused startup/router tests then full `flutter test`, `flutter build apk --debug`, `git diff --check`, and before/after old-path/symbol searches.
+- **Runtime / docs / commit:** Android emulator/device launch plus Login/Main and one direct-route smoke; record theme, route, viewport, and result. Update only warranted current docs. One scoped commit/push is allowed after all gates pass.
+
+#### R3 — Align Summertime Saga Provider Injection
+
+- **Objective / exact boundary:** make `smtsServiceProvider` read the existing `dioProvider` when creating `SmtsService`; add or adjust only the smallest focused provider test needed to prove the seam. Keep `SmtsService` parsing/error behavior, its static screen fallback, router shape, endpoint, timeout, and UI unchanged.
+- **Dependencies:** R1 and the existing shared Dio provider; search `SmtsService()`, `SmtsService.getProgress`, `smtsServiceProvider`, route injection, and deterministic service tests before editing.
+- **Verification class:** network/service — changed-scope format, focused provider/service and route tests, `flutter analyze`, full `flutter test`, `git diff --check`, and focused reference/diff review. No standalone APK/device gate is required because no route, platform, or UI contract changes; R4 supplies the Phase-level APK/device check.
+- **Docs / commit:** update planning only if scope/status changes. One scoped commit/push is allowed after required gates pass.
+
+#### R4 — Phase 3 Closeout and Product-Track Reassessment
+
+- **Objective / exact boundary:** audit the completed R2/R3 state, synchronize current planning/architecture status only where code proves it, verify deferred Reader compatibility, and decide whether `T121` becomes the next approved product task or is truthfully reclassified. Do not add source cleanup under this closeout task.
+- **Dependencies:** R2 and R3 complete. Recheck root compatibility folders without treating empty-directory removal as a Git deliverable; recheck Reader `iw_reader_*` keys, legacy-key migration behavior, Library/Reader routes, and old AppRoutes imports/paths.
+- **Verification class:** Phase exit — repository-wide non-mutating formatting, `flutter analyze`, full `flutter test`, `flutter build apk --debug`, `git diff --check`, full reference search, and focused status/diff review.
+- **Runtime / docs / commit:** Android emulator/device validates startup, Login/Main, moved route contract, and `/smts_home` loading/error/retry state without claiming live-network success unless observed. Update `docs/tasks.md`, `docs/roadmap.md`, and `docs/architecture.md` only when the final code requires it. Commit/push only when all exit criteria pass; otherwise record the blocker without claiming Phase 3 completion.
+
+### Reference Synchronization and Phase 3 Exit
+
+- R2 must search `lib/routes/app_routes.dart`, `app_routes.dart`, package imports, `AppRoutes`, route strings, tests, Markdown references, and documentation headings before and after the move. Active references update in the same commit; frozen Discovery and dated historical records remain historical evidence.
+- R3 must search the service/provider symbols and retain deterministic fake-Dio test seams. Static-search absence never authorizes removal of fallback behavior or persistence code.
+- Return to product work only when R2–R4 are complete; no stale active imports/path references remain; formatting, analysis, full tests, required APK/device checks, and clean Git status pass; Reader preference keys remain compatible; current planning/architecture docs are synchronized; and R4 has reassessed `T121` as the next approved product task or truthfully reclassified it.
+
+### Explicit Restructure Phase 3 Exclusions
+
+- No universal feature-layer template, Riverpod conversion of local widget state, ShellRoute conversion, generic network/repository framework, database migration, broad route redesign, Android/toolchain work, CI/hooks/tools changes, Chat implementation, product features, or repository-wide cleanup.
 
 Current architecture status:
 

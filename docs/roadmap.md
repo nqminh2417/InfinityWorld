@@ -18,8 +18,16 @@ Related planning docs:
 - **Status:** completed; H11 — Scoped Restructure Pilot Selection, H12 — Execute Scoped Restructure Pilot, and H13 — Pilot Review and Harness Adjustment are complete.
 - **Pilot conclusion:** Harness pilot passed with minor adjustment. The single-consumer `FloatingLabelTextField` now belongs to `features/test`; its API, behavior, and Test route were preserved.
 - **Harness adjustment:** `docs/qa/task-workflow.md` no longer duplicates a transient next-Harness-task ID, preventing planning-status drift.
-- **Next task:** R1 — Codebase Restructure Scope and Sequence (scoped restructuring planning only).
+- **Next task:** R2 — Relocate AppRoutes into the App Router.
 - **Product status:** `T121` remains deferred.
+
+## Restructure Phase 3 — Scoped Codebase Restructuring
+
+- **Status:** active. R1 — Codebase Restructure Scope and Sequence is complete; `T121` remains deferred until the Restructure Phase 3 exit criteria are met.
+- **Included implementation:** R2 relocates only the active `AppRoutes` contract into `lib/app/router/` while preserving all path strings and route behavior. R3 aligns only Summertime Saga's existing Riverpod provider with the shared Dio provider.
+- **Closeout:** R4 revalidates route imports, Reader `SharedPreferences` compatibility, full Flutter/APK/device gates, current documentation, clean Git state, and the T121 decision.
+- **Excluded:** empty-directory cleanup, Reader storage migration, ShellRoute, generic networking, broad routing, platform/tooling, and product-feature work.
+- **Next task:** R2 — Relocate AppRoutes into the App Router.
 
 ## Current Reality
 
@@ -36,7 +44,7 @@ Current structure:
 - `lib/design_system/` now contains the first tokens and `IwCard` component slice.
 - Selected feature screens have been moved under `lib/features/`.
 - `lib/app/shell/main_screen.dart` now contains the local five-tab bottom shell skeleton.
-- Shared legacy UI remains under `lib/widgets/`.
+- No tracked shared legacy UI remains under `lib/widgets/`; the former Test-only field now lives at `lib/features/test/presentation/widgets/floating_label_text_field.dart`.
 - `lib/core/config/constants.dart` contains early runtime constants.
 - `lib/features/auth/data/local_session_repository.dart` stores the first local session flag and display name with `shared_preferences`.
 - `lib/features/auth/application/session_providers.dart` exposes the local session repository and current display-name providers.
@@ -700,7 +708,7 @@ Goal:
 Current scope:
 
 - The Phase 10 kickoff audit is complete. Tools, Home/Dashboard, Explore, and Reader/Library now have small content-depth slices.
-- `docs/tasks.md` owns product task status, detailed completed work, alternatives, and the phase guard. `T121` is deferred until the user resumes product work; the next approved restructuring-planning task is R1 — Codebase Restructure Scope and Sequence.
+- `docs/tasks.md` owns product task status, detailed completed work, alternatives, and the phase guard. `T121` remains deferred during Restructure Phase 3; the next approved task is R2 — Relocate AppRoutes into the App Router.
 - Do not mix active content work with release/showcase preparation, Android toolchain changes, broad routing work, or unapproved persistence-model expansion.
 
 ## Separate Branch Work
