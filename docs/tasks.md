@@ -13,11 +13,11 @@ Current branch workflow:
 Current track status:
 
 - Product track is paused after `T120`; `T121` remains deferred.
-- Harness Phase 1 Foundation is complete. Harness `H...` tasks are tracked separately under `docs/harness/`, do not replace product backlog IDs, and continue with H13 — Pilot Review and Harness Adjustment.
+- Harness Phase 1 Foundation and Phase 2 validation are complete. Harness `H...` tasks are tracked separately under `docs/harness/` and do not replace product backlog IDs; the next approved restructuring-planning task is R1 — Codebase Restructure Scope and Sequence.
 
 ## Harness Phase 2 — Validation and Pilot
 
-Status: active. H11 and H12 are complete; product work remains paused after `T120` and `T121` remains deferred.
+Status: completed. H11, H12, and H13 are complete; product work remains paused after `T120` and `T121` remains deferred.
 
 ### H11 Candidate Assessment
 
@@ -47,6 +47,31 @@ The pilot validates scope resolution, reference synchronization, native fallback
 - **Completed:** moved `FloatingLabelTextField` into the Test feature and updated its sole production import without changing the widget API or behavior.
 - **Validation:** formatter, analyzer, full test suite, debug APK build, old-path search, and Pixel 6 Android runtime check passed.
 - **Next Harness task:** H13 — Pilot Review and Harness Adjustment.
+
+### H13 Pilot Review
+
+| Review area | Classification | Evidence |
+| --- | --- | --- |
+| Scope resolution | Worked as intended | H11 defined the allowed widget/import/planning files and excluded routing, persistence, and unrelated cleanup. |
+| Reference discipline | Worked as intended | H12 searched the symbol and old/new paths before and after the move; no active old Dart import remained. |
+| Scope containment | Worked as intended | Commit `27ee60f` contains the 100% rename, its sole import update, and warranted planning updates only. |
+| API and behavior preservation | Worked as intended | Git recorded a 100% content-preserving rename; existing Test-screen/route tests and Android runtime exercise passed. |
+| Verification-gate selection | Worked as intended | H12 applied the file-move/UI gates: changed-scope and repository-wide formatting, analyzer, 147 tests, debug APK build, diff check, and reference/diff review. |
+| Runtime/device evidence | Worked as intended | Pixel_6_API_33 opened `/testscreen` in light portrait and landscape; typing, keyboard insets, and scrolling behaved correctly. |
+| Optional tools | Worked as intended | Native search, Flutter, Dart, Git, and emulator evidence were sufficient; no optional helper was required for completion. |
+| Planning-doc updates | Worked as intended | H12 updated only `docs/tasks.md` and `docs/roadmap.md` because phase/status and next-task ownership changed. |
+| Git lifecycle | Worked as intended | Scoped staging, one coherent commit, allowed upstream push, and a concise final report all completed. |
+| Final Summary | Worked as intended | H12 returned the requested short summary with move, references, gates, runtime, planning, commit, push, risk, and next-task evidence. |
+| Frozen Discovery handling | Worked as intended | The old widget path remains only in frozen `docs/discovery/CODEBASE_DISCOVERY.md`, as governance permits historical evidence to remain. |
+| Review and rollback size | Worked as intended | The single coherent commit is small and can be reverted with a follow-up commit without history rewrite. |
+| Lifecycle-policy freshness | Needs adjustment | `docs/qa/task-workflow.md` still named H11 as next after H12 moved planning to H13; the policy now points to active planning documents instead. |
+
+**Conclusion:** Harness pilot passed with minor adjustment. Infinity World is ready for scoped codebase restructuring planning, not unrestricted repository-wide restructuring.
+
+### H13 Result
+
+- **Completed:** reviewed H11–H12 against the Phase 1 Harness and made the single evidence-based lifecycle-policy adjustment.
+- **Next task:** R1 — Codebase Restructure Scope and Sequence.
 
 Current architecture status:
 

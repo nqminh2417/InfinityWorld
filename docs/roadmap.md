@@ -15,9 +15,10 @@ Related planning docs:
 
 ## Harness Phase 2 — Validation and Pilot
 
-- **Status:** active; H11 — Scoped Restructure Pilot Selection and H12 — Execute Scoped Restructure Pilot are complete.
-- **Pilot result:** the single-consumer `FloatingLabelTextField` now belongs to `features/test`; behavior and the Test route were preserved.
-- **Next Harness task:** H13 — Pilot Review and Harness Adjustment.
+- **Status:** completed; H11 — Scoped Restructure Pilot Selection, H12 — Execute Scoped Restructure Pilot, and H13 — Pilot Review and Harness Adjustment are complete.
+- **Pilot conclusion:** Harness pilot passed with minor adjustment. The single-consumer `FloatingLabelTextField` now belongs to `features/test`; its API, behavior, and Test route were preserved.
+- **Harness adjustment:** `docs/qa/task-workflow.md` no longer duplicates a transient next-Harness-task ID, preventing planning-status drift.
+- **Next task:** R1 — Codebase Restructure Scope and Sequence (scoped restructuring planning only).
 - **Product status:** `T121` remains deferred.
 
 ## Current Reality
@@ -699,7 +700,7 @@ Goal:
 Current scope:
 
 - The Phase 10 kickoff audit is complete. Tools, Home/Dashboard, Explore, and Reader/Library now have small content-depth slices.
-- `docs/tasks.md` owns product task status, detailed completed work, alternatives, and the phase guard. `T121` is deferred until the user resumes product work; `docs/harness/` owns the separate Harness sequence, whose next task is H13 — Pilot Review and Harness Adjustment.
+- `docs/tasks.md` owns product task status, detailed completed work, alternatives, and the phase guard. `T121` is deferred until the user resumes product work; the next approved restructuring-planning task is R1 — Codebase Restructure Scope and Sequence.
 - Do not mix active content work with release/showcase preparation, Android toolchain changes, broad routing work, or unapproved persistence-model expansion.
 
 ## Separate Branch Work

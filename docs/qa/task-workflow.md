@@ -65,7 +65,7 @@ Do not create a redundant per-task log. Update the appropriate owner only when a
 - `T...` IDs identify product/application tasks in `docs/tasks.md`.
 - `H...` IDs identify Harness Engineering work in `docs/harness/`.
 - Do not renumber completed or deferred work, and do not let Harness work replace product backlog entries without an explicit planning decision.
-- The current state is: product work is paused after `T120`; `T121` remains deferred; Harness Phase 1 Foundation is complete and H11 is the next Harness task.
+- The current state is: product work is paused after `T120` and `T121` remains deferred. Refer to the active planning documents for transient Harness phase/task status rather than duplicating it in this lifecycle policy.
 - A recommended next task must identify its track and is advisory only.
 
 ## Roadmap Update Policy
