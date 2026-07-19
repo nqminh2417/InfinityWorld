@@ -18,16 +18,16 @@ Related planning docs:
 - **Status:** completed; H11 — Scoped Restructure Pilot Selection, H12 — Execute Scoped Restructure Pilot, and H13 — Pilot Review and Harness Adjustment are complete.
 - **Pilot conclusion:** Harness pilot passed with minor adjustment. The single-consumer `FloatingLabelTextField` now belongs to `features/test`; its API, behavior, and Test route were preserved.
 - **Harness adjustment:** `docs/qa/task-workflow.md` no longer duplicates a transient next-Harness-task ID, preventing planning-status drift.
-- **Next task:** R2 — Relocate AppRoutes into the App Router.
+- **Next task:** R3 — Align Summertime Saga Dio Injection.
 - **Product status:** `T121` remains deferred.
 
 ## Restructure Phase 3 — Scoped Codebase Restructuring
 
-- **Status:** active. R1 — Codebase Restructure Scope and Sequence is complete; `T121` remains deferred until the Restructure Phase 3 exit criteria are met.
-- **Included implementation:** R2 relocates only the active `AppRoutes` contract into `lib/app/router/` while preserving all path strings and route behavior. R3 aligns only Summertime Saga's existing Riverpod provider with the shared Dio provider.
+- **Status:** active. R1 — Codebase Restructure Scope and Sequence and R2 — Relocate AppRoutes into the App Router are complete; `T121` remains deferred until the Restructure Phase 3 exit criteria are met.
+- **Included implementation:** R2 relocated the active `AppRoutes` contract into `lib/app/router/` without changing path strings or route behavior. R3 aligns only Summertime Saga's existing Riverpod provider with the shared Dio provider.
 - **Closeout:** R4 revalidates route imports, Reader `SharedPreferences` compatibility, full Flutter/APK/device gates, current documentation, clean Git state, and the T121 decision.
 - **Excluded:** empty-directory cleanup, Reader storage migration, ShellRoute, generic networking, broad routing, platform/tooling, and product-feature work.
-- **Next task:** R2 — Relocate AppRoutes into the App Router.
+- **Next task:** R3 — Align Summertime Saga Dio Injection.
 
 ## Current Reality
 
@@ -38,7 +38,7 @@ Current structure:
 - `lib/main.dart` still owns root app composition, now uses `MaterialApp.router`, and consumes the Riverpod app theme-mode provider.
 - `lib/app/bootstrap/startup_route_resolver.dart` now resolves the startup route from the local session flag before `runApp`.
 - `lib/app/router/app_router.dart` maps the current route table with go_router.
-- `lib/routes/app_routes.dart` still defines shared path constants.
+- `lib/app/router/app_routes.dart` defines shared path constants.
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
 - `lib/app/theme/app_theme_mode_provider.dart` exposes the persisted app-level theme mode provider/controller with a fallback default of `ThemeMode.system`.
 - `lib/design_system/` now contains the first tokens and `IwCard` component slice.
@@ -83,7 +83,7 @@ go_router is active for the root route table. Riverpod foundation is complete fo
 
 - Login build-time `setState()` risk has been fixed; emulator/device visual review remains a later QA activity.
 - go_router is the active root router and Phase 5 is closed.
-- `lib/routes/app_routes.dart` remains the shared path contract for go_router.
+- `lib/app/router/app_routes.dart` remains the shared path contract for go_router.
 - Broader networking policy for retry/cache/offline behavior remains deferred until a concrete feature need exists.
 - Feature placement does not mean rich tab content has migrated; `MainScreen` now lives in `lib/app/shell/` with a local five-tab shell skeleton and placeholder tab bodies where roots are not implemented yet.
 - Theme/design-system implementation now has a first token/card slice; broader components and visual adoption remain incomplete.
@@ -708,7 +708,7 @@ Goal:
 Current scope:
 
 - The Phase 10 kickoff audit is complete. Tools, Home/Dashboard, Explore, and Reader/Library now have small content-depth slices.
-- `docs/tasks.md` owns product task status, detailed completed work, alternatives, and the phase guard. `T121` remains deferred during Restructure Phase 3; the next approved task is R2 — Relocate AppRoutes into the App Router.
+- `docs/tasks.md` owns product task status, detailed completed work, alternatives, and the phase guard. `T121` remains deferred during Restructure Phase 3; the next approved task is R3 — Align Summertime Saga Dio Injection.
 - Do not mix active content work with release/showcase preparation, Android toolchain changes, broad routing work, or unapproved persistence-model expansion.
 
 ## Separate Branch Work

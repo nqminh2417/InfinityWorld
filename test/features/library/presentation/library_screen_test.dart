@@ -7,7 +7,7 @@ import 'package:infinity_world/features/library/presentation/library_screen.dart
 import 'package:infinity_world/features/reader/application/reader_saved_sample_provider.dart';
 import 'package:infinity_world/features/reader/presentation/reader_screen.dart';
 import 'package:infinity_world/main.dart';
-import 'package:infinity_world/routes/app_routes.dart';
+import 'package:infinity_world/app/router/app_routes.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 

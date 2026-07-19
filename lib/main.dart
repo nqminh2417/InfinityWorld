@@ -6,7 +6,7 @@ import 'package:infinity_world/app/router/app_router.dart';
 import 'package:infinity_world/app/theme/app_theme.dart';
 import 'package:infinity_world/app/theme/app_theme_mode_provider.dart';
 import 'package:infinity_world/core/config/constants.dart';
-import 'package:infinity_world/routes/app_routes.dart';
+import 'package:infinity_world/app/router/app_routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

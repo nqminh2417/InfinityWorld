@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/design_system/tokens/iw_colors.dart';
 import 'package:infinity_world/design_system/tokens/iw_spacing.dart';
-import 'package:infinity_world/routes/app_routes.dart';
+import 'package:infinity_world/app/router/app_routes.dart';
 
 class ToolsScreen extends StatelessWidget {
   const ToolsScreen({super.key});

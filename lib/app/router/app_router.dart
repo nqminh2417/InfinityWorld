@@ -18,7 +18,7 @@ import 'package:infinity_world/features/summertime_saga/application/smts_provide
 import 'package:infinity_world/features/summertime_saga/presentation/smts_home_screen.dart';
 import 'package:infinity_world/features/test/presentation/test_screen.dart';
 import 'package:infinity_world/features/unit_converter/presentation/unit_converter_screen.dart';
-import 'package:infinity_world/routes/app_routes.dart';
+import 'package:infinity_world/app/router/app_routes.dart';
 
 GoRouter createAppRouter({
   String initialLocation = AppRoutes.login,

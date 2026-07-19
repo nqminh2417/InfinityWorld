@@ -6,7 +6,7 @@ import 'package:infinity_world/design_system/tokens/iw_colors.dart';
 import 'package:infinity_world/design_system/tokens/iw_spacing.dart';
 import 'package:infinity_world/features/reader/application/reader_saved_sample_provider.dart';
 import 'package:infinity_world/features/reader/domain/reader_sample.dart';
-import 'package:infinity_world/routes/app_routes.dart';
+import 'package:infinity_world/app/router/app_routes.dart';
 
 class LibraryScreen extends ConsumerWidget {
   const LibraryScreen({super.key});

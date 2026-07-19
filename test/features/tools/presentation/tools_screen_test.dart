@@ -9,7 +9,7 @@ import 'package:infinity_world/features/random_picker/presentation/random_picker
 import 'package:infinity_world/features/tools/presentation/tools_screen.dart';
 import 'package:infinity_world/features/unit_converter/presentation/unit_converter_screen.dart';
 import 'package:infinity_world/main.dart';
-import 'package:infinity_world/routes/app_routes.dart';
+import 'package:infinity_world/app/router/app_routes.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
