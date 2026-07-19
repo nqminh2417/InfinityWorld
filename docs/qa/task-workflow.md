@@ -56,16 +56,20 @@ Keep detailed planning state in `docs/tasks.md`. Do not expand final chat output
 - `docs/harness/` owns Harness task evidence and planning; it does not silently alter product backlog entries.
 - `docs/roadmap.md` records phase-level history/status and major direction changes.
 - `docs/decisions.md` records durable decisions, not routine task events.
-- Git commits provide implementation history; `docs/ai/task-log.md` is reserved for exceptional reusable handoff notes only.
+- Git commits provide complete implementation history; `docs/ai/task-log.md` provides recent cross-session handoff context for repository-changing work.
 
-Do not create a redundant per-task log. Update the appropriate owner only when a task changes architecture/durable behavior, workflow/verification, product direction, roadmap/backlog/task status, a reusable decision/constraint, or migration state.
+Do not let the handoff log replace its owners. Update the appropriate planning document only when a task changes architecture/durable behavior, workflow/verification, product direction, roadmap/backlog/task status, a reusable decision/constraint, or migration state.
+
+### Rolling Handoff Log
+
+For a repository-changing task that leaves useful context for a later session, append a concise `docs/ai/task-log.md` entry even when it has no formal task ID. Omit trivial changes with no handoff value. Keep the entry in the same scoped task and authorized commit when one exists; the required final task result remains separate. See the log for its format and retention policy.
 
 ## Task Numbering
 
 - `T...` IDs identify product/application tasks in `docs/tasks.md`.
 - `H...` IDs identify Harness Engineering work in `docs/harness/`.
 - Do not renumber completed or deferred work, and do not let Harness work replace product backlog entries without an explicit planning decision.
-- The current state is: product work is paused after `T120` and `T121` remains deferred. Refer to the active planning documents for transient Harness phase/task status rather than duplicating it in this lifecycle policy.
+- The current state is: product work is active at `T121`. Refer to the active planning documents for transient Harness phase/task status rather than duplicating it in this lifecycle policy.
 - A recommended next task must identify its track and is advisory only.
 
 ## Roadmap Update Policy

@@ -34,7 +34,7 @@
 | `docs/qa/ui-review-checklist.md` | Visual/layout review evidence checklist. | Current and narrowly scoped. | `docs/README.md`; supplements AGENTS UI rules. | Retain unchanged. |
 | `docs/ai/agent-rules.md` | Documentation update/scope/verification rules. | Duplicate of repository AGENTS and QA workflow. | Active Markdown link in `docs/README.md`; historical plaintext mentions in Phase 0/H5. | Merge unique `Docs updated` rule into `AGENTS.md`, then delete in H7. |
 | `docs/ai/codex-output-format.md` | Pointer to task workflow plus docs-only output line. | Duplicate of task workflow. | Active Markdown link in `docs/README.md`; historical plaintext mentions in Phase 0/H5. | Merge its unique docs-only line into task workflow, then delete in H7. |
-| `docs/ai/task-log.md` | Exceptional reusable handoff notes not suited to backlog/decisions. | Current, empty, unique role. | `docs/README.md`. | Retain unchanged; do not create another log. |
+| `docs/ai/task-log.md` | Rolling recent-work handoff context not suited to backlog/roadmap/decisions. | Current, unique role; activated by HM1 with an initial entry. | `docs/README.md`; `AGENTS.md`; `docs/qa/task-workflow.md`. | Retain and update under its ownership; do not create another log. |
 | `docs/ai/review-template.md` | Optional focused-review template. | Current, unique and small. | `docs/README.md`. | Retain unchanged. |
 | `docs/features/*-hardening-plan.md` | Completed feature hardening/placement history with historical route notes. | Historical but valuable; not active feature requirements. | `docs/README.md`; each path also named in `docs/tasks.md`. | Retain in place; relabel as historical in the index only. |
 | `docs/archive/phase2-migration-map.md` | Completed Phase 2 migration history. | Historical and already archived. | `docs/README.md`; `docs/tasks.md`. | Retain unchanged. |
@@ -175,5 +175,5 @@ Global Skills are reusable capabilities, not repository files: choose the smalle
 - **Completed:** H9 — Task Lifecycle and Git Policy.
 - **Completed:** H10 — Repo-local Tool Usage Policy.
 - **Phase status:** Phase 1 — Harness Foundation completed. Global Skills, Plugins, MCP configuration, and Hooks remain unchanged.
-- **Product status:** `T121` remains deferred.
+- **Product status at Phase 1 completion:** `T121` remained deferred.
 - **Next Harness task:** H11 — Scoped Restructure Pilot Selection.

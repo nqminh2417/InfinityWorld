@@ -29,6 +29,11 @@ Related planning docs:
 - **Deferred scope:** `docs/tasks.md` owns the detailed, intentionally deferred structural items; no cosmetic or speculative restructuring is implied by Phase 3 completion.
 - **Next task:** T121 — Library bookmark shelf next-step audit.
 
+## Harness Maintenance — Post-Harness Handoff
+
+- **Status:** completed. HM1 refreshed the controlled post-Harness discovery snapshot and activated the rolling handoff log.
+- **Product status:** the Harness Engineering initiative is closed; the product track is active at `T121` — Library bookmark shelf next-step audit.
+
 ## Current Reality
 
 The current app is transitional. The target architecture in `docs/architecture.md` is not fully implemented yet.

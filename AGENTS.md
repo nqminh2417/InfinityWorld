@@ -536,6 +536,8 @@ For docs-only tasks, do not modify Flutter source. Unless explicitly in scope, d
 
 Run the narrowest gate from `docs/qa/git-workflow.md`; docs-only changes require `git diff --check`. Docs-only task reports must include `Docs updated: <paths> | none`.
 
+For repository-changing work that leaves useful cross-session context, add a concise entry to `docs/ai/task-log.md` under the task-workflow policy. Omit trivial changes with no handoff value; keep the log update in the same scoped task/commit when authorized. The required final task report remains separate.
+
 ## 20. Portfolio Quality Bar
 
 InfinityWorld should demonstrate:
@@ -625,6 +627,8 @@ Keep the planning docs aligned when scope, phase, architecture direction, workfl
 Treat `docs/architecture.md` as the target direction, not a claim that the current `lib/` structure is already migrated. Use `docs/tasks.md` as the active backlog when deciding the next small task.
 
 `docs/tasks.md` owns the active product `T` backlog; `docs/harness/` owns the separate Harness `H` track. Neither track silently replaces the other. A user-assigned task takes priority over an advisory backlog recommendation. Apply `docs/qa/task-workflow.md`: update planning docs only when the task changes priority, phase, backlog, or durable decisions, and report whether planning docs were updated.
+
+`docs/ai/task-log.md` is the rolling cross-session handoff context for recent repository-changing work; it does not replace the backlog, roadmap, architecture, decisions, Git history, or the final task result.
 
 ## 24. Standard Task Result Reporting
 

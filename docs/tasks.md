@@ -13,7 +13,7 @@ Current branch workflow:
 Current track status:
 
 - Restructure Phase 3 is complete with its scoped deferred items documented. Product work resumes at `T121` — Library bookmark shelf next-step audit.
-- Harness Phase 1 Foundation, Phase 2 validation, and Phase 3 scoped restructuring are complete. Harness `H...` tasks remain separate from product backlog IDs.
+- Harness Phase 1 Foundation, Phase 2 validation, Phase 3 scoped restructuring, and HM1 post-Harness maintenance are complete. Harness `H...` tasks remain separate from product backlog IDs.
 
 ## Harness Phase 2 — Validation and Pilot
 
