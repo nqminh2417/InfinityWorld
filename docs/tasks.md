@@ -12,12 +12,12 @@ Current branch workflow:
 
 Current track status:
 
-- Product track is paused after `T120`; `T121` remains deferred.
-- Harness Phase 1 Foundation and Phase 2 validation are complete. Restructure Phase 3 is active; R3 is complete and the next approved task is R4 — Compatibility and Return-to-Product Audit. Harness `H...` tasks remain separate from product backlog IDs.
+- Restructure Phase 3 is complete with its scoped deferred items documented. Product work resumes at `T121` — Library bookmark shelf next-step audit.
+- Harness Phase 1 Foundation, Phase 2 validation, and Phase 3 scoped restructuring are complete. Harness `H...` tasks remain separate from product backlog IDs.
 
 ## Harness Phase 2 — Validation and Pilot
 
-Status: completed. H11, H12, and H13 are complete; product work remains paused after `T120` and `T121` remains deferred.
+Status: completed. H11, H12, and H13 are complete; Phase 2 preserved the then-paused product track while Phase 3 was planned.
 
 ### H11 Candidate Assessment
 
@@ -75,7 +75,7 @@ The pilot validates scope resolution, reference synchronization, native fallback
 
 ## Restructure Phase 3 — Scoped Codebase Restructuring
 
-Status: active. R1, R2, and R3 are complete; `T121` remains deferred until the Restructure Phase 3 exit criteria are met.
+Status: completed. R1–R4 are complete; `T121` is the next approved product task.
 
 ### Bounded Scope and Candidate Reassessment
 
@@ -102,7 +102,7 @@ Status: active. R1, R2, and R3 are complete; `T121` remains deferred until the R
 - **Dependencies:** R1; before editing, search the old/new paths, `AppRoutes`, package imports, route tests, Markdown references, and direct string route uses. Preserve historical/frozen records; update active current-state references in the same commit.
 - **Verification class:** large file move affecting routing — changed-scope format, `flutter analyze`, focused startup/router tests then full `flutter test`, `flutter build apk --debug`, `git diff --check`, and before/after old-path/symbol searches.
 - **Runtime / docs / commit:** Android emulator/device launch plus Login/Main and one direct-route smoke; record theme, route, viewport, and result. Update only warranted current docs. One scoped commit/push is allowed after all gates pass.
-- **R2 result:** completed the ownership-only relocation; the new file has the same content hash as the former contract, and all 16 Dart imports now target `lib/app/router/app_routes.dart`. `T121` remains deferred.
+- **R2 result:** completed the ownership-only relocation; the new file has the same content hash as the former contract, and all 16 Dart imports now target `lib/app/router/app_routes.dart`.
 
 #### R3 — Align Summertime Saga Provider Injection
 
@@ -110,7 +110,7 @@ Status: active. R1, R2, and R3 are complete; `T121` remains deferred until the R
 - **Dependencies:** R1 and the existing shared Dio provider; audit `SmtsService`, `smtsServiceProvider`, route injection, deterministic service tests, and direct Dio construction before editing.
 - **Verification class:** network/service — changed-scope format, focused provider/service and route tests, `flutter analyze`, full `flutter test`, `git diff --check`, and focused reference/diff review. This task also required and passed APK/device validation because it changes the production route's service wiring.
 - **Docs / commit:** update planning only if scope/status changes. One scoped commit/push is allowed after required gates pass.
-- **R3 result:** completed the single production path `dioProvider → smtsServiceProvider → router injection → SmtsHomeScreen`; the static fallback was removed and test loaders remain explicit. R4 is next; `T121` remains deferred.
+- **R3 result:** completed the single production path `dioProvider → smtsServiceProvider → router injection → SmtsHomeScreen`; the static fallback was removed and test loaders remain explicit. R4 subsequently completed the Phase 3 closeout.
 
 #### R4 — Phase 3 Closeout and Product-Track Reassessment
 
@@ -118,12 +118,13 @@ Status: active. R1, R2, and R3 are complete; `T121` remains deferred until the R
 - **Dependencies:** R2 and R3 complete. Recheck root compatibility folders without treating empty-directory removal as a Git deliverable; recheck Reader `iw_reader_*` keys, legacy-key migration behavior, Library/Reader routes, and old AppRoutes imports/paths.
 - **Verification class:** Phase exit — repository-wide non-mutating formatting, `flutter analyze`, full `flutter test`, `flutter build apk --debug`, `git diff --check`, full reference search, and focused status/diff review.
 - **Runtime / docs / commit:** Android emulator/device validates startup, Login/Main, moved route contract, and `/smts_home` loading/error/retry state without claiming live-network success unless observed. Update `docs/tasks.md`, `docs/roadmap.md`, and `docs/architecture.md` only when the final code requires it. Commit/push only when all exit criteria pass; otherwise record the blocker without claiming Phase 3 completion.
+- **R4 result:** no R2/R3 regression was found. The route contract remains byte-for-byte equivalent at its app-router location; the single Summertime Saga production path is provider-backed; Reader keys and source are unchanged, and R2's sole Library diff was the required `AppRoutes` import relocation; required formatter, analyzer, test, APK, reference, and Android smoke gates passed. Phase 3 is complete with the listed structural items deferred, and `T121` is the next approved product task.
 
 ### Reference Synchronization and Phase 3 Exit
 
 - R2 must search `lib/routes/app_routes.dart`, `app_routes.dart`, package imports, `AppRoutes`, route strings, tests, Markdown references, and documentation headings before and after the move. Active references update in the same commit; frozen Discovery and dated historical records remain historical evidence.
 - R3 must search the service/provider symbols and retain deterministic fake-Dio test seams. Static-search absence never authorizes removal of fallback behavior or persistence code.
-- Return to product work only when R2–R4 are complete; no stale active imports/path references remain; formatting, analysis, full tests, required APK/device checks, and clean Git status pass; Reader preference keys remain compatible; current planning/architecture docs are synchronized; and R4 has reassessed `T121` as the next approved product task or truthfully reclassified it.
+- **Completed in R4:** R2–R4 are complete; no stale active route imports/path references remain; formatter, analysis, full tests, APK, and Android smoke checks passed; Reader preference keys and source remain compatible; current planning/architecture docs are synchronized; and `T121` is the next approved product task.
 
 ### Explicit Restructure Phase 3 Exclusions
 
@@ -407,15 +408,16 @@ Task sizing note:
 
 ### Product track status
 
-Product implementation is paused after `T120`. Do not begin `T121` or another product task unless the user assigns it or explicitly resumes the product track.
+Product implementation resumes at `T121`. Do not begin it until the user assigns it; a user-assigned task still overrides this advisory backlog order.
 
-### Deferred product task
+### Next approved product task
 
 T121 - Library bookmark shelf next-step audit
 
 Reason:
 
-- Reader now has saved samples, Continue reading, finished state, and one paragraph bookmark per built-in sample.
+- Phase 3 completed without changing Reader/Library source or `SharedPreferences` contracts.
+- Reader already has saved samples, Continue reading, finished state, and one paragraph bookmark per built-in sample.
 - Library currently reflects bookmarks inside existing cards, but a dedicated bookmark shelf could duplicate Saved samples or make the tab too long.
 - A short audit should decide whether the next implementation slice should be a compact Library bookmarked-samples shelf, Reader scroll-position persistence, or another local content-depth slice.
 
@@ -483,7 +485,7 @@ Current phase:
 
 Decision:
 
-- T120 implemented one persisted paragraph bookmark per built-in Reader sample. `T121` is deferred while Harness Phase 1 Foundation is complete; it is not an active product recommendation.
+- T120 implemented one persisted paragraph bookmark per built-in Reader sample. Phase 3 is complete, and `T121` is now the next approved product recommendation.
 
 Do not enter yet:
 
@@ -593,7 +595,7 @@ Exit criteria:
 - Done: Implemented the T118 Reader finished sample marker MVP.
 - Done: Completed the T119 Reader bookmark model audit and selected T120 as the next implementation slice.
 - Done: Implemented the T120 Reader single paragraph bookmark MVP.
-- Remaining: Resume `T121` Library bookmark shelf next-step audit only after the user resumes product work, or follow another explicitly assigned product task.
+- Remaining: `T121` — Library bookmark shelf next-step audit — is the next approved product task, unless the user assigns another task.
 
 ## Verification Gates
 
@@ -603,6 +605,6 @@ Select gates by change risk from that matrix; do not duplicate command requireme
 
 ## Asking for the Next Task
 
-If the user asks "what is the next product task?", report that product work is paused and `T121` is deferred unless the user explicitly resumes it. For Harness work, use the active approved sequence in `docs/harness/`.
+If the user asks "what is the next product task?", report `T121` — Library bookmark shelf next-step audit — unless the user assigns a higher-priority task. For future Harness work, use the active approved sequence in `docs/harness/`.
 
 If the user assigns a different task, follow the user task and update planning docs only when it changes priority, phase, backlog, or durable decisions.

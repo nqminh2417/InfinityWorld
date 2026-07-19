@@ -18,16 +18,16 @@ Related planning docs:
 - **Status:** completed; H11 — Scoped Restructure Pilot Selection, H12 — Execute Scoped Restructure Pilot, and H13 — Pilot Review and Harness Adjustment are complete.
 - **Pilot conclusion:** Harness pilot passed with minor adjustment. The single-consumer `FloatingLabelTextField` now belongs to `features/test`; its API, behavior, and Test route were preserved.
 - **Harness adjustment:** `docs/qa/task-workflow.md` no longer duplicates a transient next-Harness-task ID, preventing planning-status drift.
-- **Next task:** R4 — Compatibility and Return-to-Product Audit.
-- **Product status:** `T121` remains deferred.
+- **Phase transition:** H13 transitioned the completed Harness pilot into the Phase 3 restructure roadmap.
+- **Product status:** Phase 3 completion now returns the product track to `T121`.
 
 ## Restructure Phase 3 — Scoped Codebase Restructuring
 
-- **Status:** active. R1 — Codebase Restructure Scope and Sequence, R2 — Relocate AppRoutes into the App Router, and R3 — Align Summertime Saga Dio Injection are complete; `T121` remains deferred until the Restructure Phase 3 exit criteria are met.
+- **Status:** completed. R1 — Codebase Restructure Scope and Sequence, R2 — Relocate AppRoutes into the App Router, R3 — Align Summertime Saga Dio Injection, and R4 — Compatibility and Return-to-Product Audit are complete. `T121` is the next approved product task.
 - **Included implementation:** R2 relocated the active `AppRoutes` contract into `lib/app/router/` without changing path strings or route behavior. R3 made `dioProvider → smtsServiceProvider → router injection → SmtsHomeScreen` the sole production path while preserving screen and service behavior.
-- **Closeout:** R4 revalidates route imports, Reader `SharedPreferences` compatibility, full Flutter/APK/device gates, current documentation, clean Git state, and the T121 decision.
-- **Excluded:** empty-directory cleanup, Reader storage migration, ShellRoute, generic networking, broad routing, platform/tooling, and product-feature work.
-- **Next task:** R4 — Compatibility and Return-to-Product Audit.
+- **Closeout:** R4 found no R2/R3 regression: active route imports are current, the provider-backed Summertime Saga path is intact, Reader persistence is unchanged, full Flutter/APK gates and Android smoke validation passed, and the active architecture/planning docs are synchronized.
+- **Deferred scope:** `docs/tasks.md` owns the detailed, intentionally deferred structural items; no cosmetic or speculative restructuring is implied by Phase 3 completion.
+- **Next task:** T121 — Library bookmark shelf next-step audit.
 
 ## Current Reality
 
@@ -708,7 +708,7 @@ Goal:
 Current scope:
 
 - The Phase 10 kickoff audit is complete. Tools, Home/Dashboard, Explore, and Reader/Library now have small content-depth slices.
-- `docs/tasks.md` owns product task status, detailed completed work, alternatives, and the phase guard. `T121` remains deferred during Restructure Phase 3; the next approved task is R3 — Align Summertime Saga Dio Injection.
+- `docs/tasks.md` owns product task status, detailed completed work, alternatives, and the phase guard. Restructure Phase 3 is complete, and `T121` — Library bookmark shelf next-step audit — is the next approved task.
 - Do not mix active content work with release/showcase preparation, Android toolchain changes, broad routing work, or unapproved persistence-model expansion.
 
 ## Separate Branch Work

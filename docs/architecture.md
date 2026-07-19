@@ -47,6 +47,14 @@ News screen → News controller → News repository → Dio/RSS parser
 
 The project should avoid placing networking, persistence, permission handling, or business logic directly inside UI widgets.
 
+## Current Scoped Structure
+
+The current implementation remains transitional; the target structure below is not a claim that every feature has migrated.
+
+* The active go_router path contract is `lib/app/router/app_routes.dart` (`AppRoutes`); startup, router, feature, and test imports use that app-router ownership.
+* Summertime Saga's production dependency path is `dioProvider` → `smtsServiceProvider` → router-injected `SmtsHomeScreen` loader. The feature-owned `SmtsService` retains its parsing and exception behavior without a static screen fallback.
+* Reader/Library boundary changes, `SharedPreferences` migration, ShellRoute conversion, generic networking, Fox restructuring, empty-directory cleanup, and platform/tooling work remain intentionally deferred. `docs/tasks.md` owns the detailed active scope and deferral record.
+
 ## 3. Preferred Folder Structure
 
 Target structure:
