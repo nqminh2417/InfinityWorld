@@ -1,6 +1,6 @@
 # Infinity World Active Tasks
 
-Last updated: 2026-07-18
+Last updated: 2026-07-20
 
 ## Current Status
 
@@ -13,7 +13,40 @@ Current branch workflow:
 Current track status:
 
 - Product track is paused after `T120`; `T121` remains deferred.
-- Harness Phase 1 Foundation is complete. Harness `H...` tasks are tracked separately under `docs/harness/`, do not replace product backlog IDs, and continue with H11 — Scoped Restructure Pilot Selection.
+- Harness Phase 1 Foundation is complete. Harness `H...` tasks are tracked separately under `docs/harness/`, do not replace product backlog IDs, and continue with H13 — Pilot Review and Harness Adjustment.
+
+## Harness Phase 2 — Validation and Pilot
+
+Status: active. H11 and H12 are complete; product work remains paused after `T120` and `T121` remains deferred.
+
+### H11 Candidate Assessment
+
+| Candidate | Current evidence and proposed change | H12 scope, verification, and documentation impact | Risk and decision |
+| --- | --- | --- | --- |
+| `FloatingLabelTextField` | H12 moved the former shared-location widget into `lib/features/test/presentation/widgets/floating_label_text_field.dart`; `TestScreen` remains its sole production importer. | The move/rename and import update reuse `test/features/test/presentation/test_screen_test.dart` and `test/routes/app_router_test.dart`. H12 searched the former path/name before and after and updated only this file and `docs/roadmap.md`. | Low-Medium. **Selected and completed:** it is a real feature-boundary move with one source importer and existing route/screen coverage. |
+| Empty compatibility-named folders | `lib/blocs`, `helpers`, `models`, `providers`, `services`, `utils`, and `screens/main` are empty, have no tracked files, and have no literal repository references. | Removing empty directories would not create a tracked source change or validate import/reference synchronization; external IDE/tooling expectations remain unproven. | Medium-High. **Rejected:** no reviewable Git change and insufficient tooling proof. |
+| `AppRoutes` ownership | `lib/routes/app_routes.dart` is the active route contract. It has 16 Dart importers across bootstrap, router, features, and tests. A move into `lib/app/router/` would alter all of those imports. | Would require startup/route coverage, exhaustive import search, build, and affected-route checks; historical documentation also names the current path. | High. **Rejected:** too broad for the first Harness pilot. |
+| `ProgressBar` feature boundary | `lib/features/summertime_saga/presentation/widgets/progress_bar.dart` already has correct feature-local ownership and one presentation consumer. | No move is warranted; changing it would add churn without testing a boundary correction. | Low. **Rejected:** no restructuring value. |
+
+### Selected Pilot — H12
+
+- **Scope:** move `FloatingLabelTextField` into the Test feature and update its sole production import; retain the class API and all screen behavior.
+- **Allowed files:** the moved feature widget, `lib/features/test/presentation/test_screen.dart`, `docs/tasks.md`, and `docs/roadmap.md`.
+- **Excluded:** `AppRoutes`, router/bootstrap/shell code, all other features, Reader/Library, persistence, empty-folder deletion, dependencies, platform files, and global tools/configuration.
+- **Behavior to preserve:** `/testscreen`, the three text fields including `Username`, controller disposal, and keyboard-inset/scroll-safe behavior.
+- **References:** search the old path, new path, `FloatingLabelTextField`, and the Test route before/after the move. Preserve frozen `docs/discovery/CODEBASE_DISCOVERY.md` path evidence as historical.
+- **Tests and gates:** no new test is planned; run the existing Test-screen and route tests, then H8 file-move gates: changed-scope formatter check, `flutter analyze`, `flutter test`, `flutter build apk --debug`, `git diff --check`, and focused diff/status/reference review.
+- **Runtime check:** use an Android emulator/device to open `/testscreen`, confirm the fields remain visible, and confirm keyboard inset scrolling remains usable; record it as unverified only if unavailable.
+- **Documentation and rollback:** update only this plan record and the Phase 2 roadmap status after H12. Keep one coherent H12 commit; if rollback is needed after push, use one revert/follow-up commit rather than history rewrite.
+- **Commit/push authority:** H12 may commit and push only when its prompt authorizes it and `docs/qa/git-workflow.md` conditions are met: required gates pass, only scoped files are staged, and branch/upstream checks succeed.
+
+The pilot validates scope resolution, reference synchronization, native fallbacks, risk-based gates, minimal documentation updates, scoped staging, authorized commit/push, and concise final reporting.
+
+### H12 Result
+
+- **Completed:** moved `FloatingLabelTextField` into the Test feature and updated its sole production import without changing the widget API or behavior.
+- **Validation:** formatter, analyzer, full test suite, debug APK build, old-path search, and Pixel 6 Android runtime check passed.
+- **Next Harness task:** H13 — Pilot Review and Harness Adjustment.
 
 Current architecture status:
 

@@ -1,6 +1,6 @@
 # Infinity World Roadmap
 
-Last updated: 2026-07-18
+Last updated: 2026-07-20
 
 ## Purpose
 
@@ -12,6 +12,13 @@ Related planning docs:
 - `docs/tasks.md` tracks the product backlog and product next tasks; `docs/harness/` tracks the separate Harness sequence.
 - `docs/decisions.md` records durable project decisions.
 - `docs/qa/git-workflow.md` defines commit, push, and verification rules.
+
+## Harness Phase 2 — Validation and Pilot
+
+- **Status:** active; H11 — Scoped Restructure Pilot Selection and H12 — Execute Scoped Restructure Pilot are complete.
+- **Pilot result:** the single-consumer `FloatingLabelTextField` now belongs to `features/test`; behavior and the Test route were preserved.
+- **Next Harness task:** H13 — Pilot Review and Harness Adjustment.
+- **Product status:** `T121` remains deferred.
 
 ## Current Reality
 
@@ -692,7 +699,7 @@ Goal:
 Current scope:
 
 - The Phase 10 kickoff audit is complete. Tools, Home/Dashboard, Explore, and Reader/Library now have small content-depth slices.
-- `docs/tasks.md` owns product task status, detailed completed work, alternatives, and the phase guard. `T121` is deferred until the user resumes product work; `docs/harness/` owns the separate Harness sequence, whose next task is H11 — Scoped Restructure Pilot Selection.
+- `docs/tasks.md` owns product task status, detailed completed work, alternatives, and the phase guard. `T121` is deferred until the user resumes product work; `docs/harness/` owns the separate Harness sequence, whose next task is H13 — Pilot Review and Harness Adjustment.
 - Do not mix active content work with release/showcase preparation, Android toolchain changes, broad routing work, or unapproved persistence-model expansion.
 
 ## Separate Branch Work
