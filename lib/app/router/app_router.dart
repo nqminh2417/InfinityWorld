@@ -8,6 +8,7 @@ import 'package:infinity_world/features/chat/presentation/chat_screen.dart';
 import 'package:infinity_world/features/clock/presentation/clock_screen.dart';
 import 'package:infinity_world/features/decision_wheel/presentation/decision_wheel_screen.dart';
 import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:infinity_world/features/device_info/presentation/device_info_screen.dart';
 import 'package:infinity_world/features/fox/application/fox_providers.dart';
 import 'package:infinity_world/features/fox/presentation/fox_random_screen.dart';
 import 'package:infinity_world/features/profile/presentation/profile_screen.dart';
@@ -126,6 +127,12 @@ GoRouter createAppRouter({
         path: AppRoutes.unitConverter,
         builder: (BuildContext context, GoRouterState state) {
           return const UnitConverterScreen();
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.deviceInfo,
+        builder: (BuildContext context, GoRouterState state) {
+          return const DeviceInfoScreen();
         },
       ),
       GoRoute(

@@ -41,6 +41,36 @@ void main() {
     expect(find.text('InfinityWorld sample'), findsOneWidget);
     expect(find.textContaining('first door opened quietly'), findsOneWidget);
     expect(find.text('Save sample'), findsOneWidget);
+    expect(find.byTooltip('Jump to bookmarked paragraph'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Reader jumps to the bookmarked paragraph from the app bar', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(360, 640));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await ReaderParagraphBookmarkRepository().bookmarkParagraph(
+      'focus-reset',
+      2,
+    );
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(home: ReaderScreen(sampleId: 'focus-reset')),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byTooltip('Jump to bookmarked paragraph'), findsOneWidget);
+    final scrollable = tester.state<ScrollableState>(find.byType(Scrollable));
+    expect(scrollable.position.pixels, 0);
+
+    await tester.tap(find.byTooltip('Jump to bookmarked paragraph'));
+    await tester.pumpAndSettle();
+
+    expect(scrollable.position.pixels, greaterThan(0));
+    expect(find.text('Bookmarked paragraph 3'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

@@ -30,6 +30,7 @@ class ReaderScreen extends ConsumerStatefulWidget {
 
 class _ReaderScreenState extends ConsumerState<ReaderScreen> {
   _ReaderTextSize _textSize = _ReaderTextSize.comfort;
+  final _bookmarkedParagraphKey = GlobalKey();
 
   @override
   void initState() {
@@ -52,6 +53,22 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     );
   }
 
+  void _jumpToBookmarkedParagraph() {
+    final targetContext = _bookmarkedParagraphKey.currentContext;
+    if (targetContext == null) {
+      return;
+    }
+
+    unawaited(
+      Scrollable.ensureVisible(
+        targetContext,
+        alignment: 0.12,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final sample = readerSampleById(widget.sampleId);
@@ -60,12 +77,27 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     final savedSampleIds = ref.watch(readerSavedSampleProvider);
     final finishedSampleIds = ref.watch(readerFinishedSampleProvider);
     final paragraphBookmarks = ref.watch(readerParagraphBookmarkProvider);
+    final bookmarkedParagraphIndex = paragraphBookmarks.when(
+      data: (bookmarks) => bookmarks[sample.id],
+      error: (_, __) => null,
+      loading: () => null,
+    );
     final bodyStyle = Theme.of(
       context,
     ).textTheme.bodyLarge?.copyWith(fontSize: _textSize.fontSize, height: 1.55);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Reader')),
+      appBar: AppBar(
+        title: const Text('Reader'),
+        actions: [
+          if (bookmarkedParagraphIndex != null)
+            IconButton(
+              onPressed: _jumpToBookmarkedParagraph,
+              icon: const Icon(Icons.my_location_rounded),
+              tooltip: 'Jump to bookmarked paragraph',
+            ),
+        ],
+      ),
       body: SafeArea(
         top: false,
         child: ListView(
@@ -165,6 +197,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
                     sample: sample,
                     bodyStyle: bodyStyle,
                     bookmarkedParagraphIndex: bookmarks[sample.id],
+                    bookmarkedParagraphKey: _bookmarkedParagraphKey,
                     onBookmarkPressed: (paragraphIndex) async {
                       final controller = ref.read(
                         readerParagraphBookmarkProvider.notifier,
@@ -204,6 +237,7 @@ class _ReaderContentCard extends StatelessWidget {
     required this.sample,
     required this.bodyStyle,
     this.bookmarkedParagraphIndex,
+    this.bookmarkedParagraphKey,
     this.onBookmarkPressed,
     this.bookmarkStateLabel,
   });
@@ -211,6 +245,7 @@ class _ReaderContentCard extends StatelessWidget {
   final ReaderSample sample;
   final TextStyle? bodyStyle;
   final int? bookmarkedParagraphIndex;
+  final Key? bookmarkedParagraphKey;
   final Future<void> Function(int paragraphIndex)? onBookmarkPressed;
   final String? bookmarkStateLabel;
 
@@ -238,15 +273,27 @@ class _ReaderContentCard extends StatelessWidget {
           ],
           const SizedBox(height: IwSpacing.space12),
           for (final paragraphEntry in sample.paragraphs.asMap().entries) ...[
-            Text(paragraphEntry.value, style: bodyStyle),
-            const SizedBox(height: IwSpacing.space8),
-            _ReaderParagraphBookmarkAction(
-              paragraphNumber: paragraphEntry.key + 1,
-              isBookmarked: bookmarkedParagraphIndex == paragraphEntry.key,
-              onPressed:
-                  onBookmarkPressed == null
-                      ? null
-                      : () => onBookmarkPressed!(paragraphEntry.key),
+            KeyedSubtree(
+              key:
+                  bookmarkedParagraphIndex == paragraphEntry.key
+                      ? bookmarkedParagraphKey
+                      : null,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(paragraphEntry.value, style: bodyStyle),
+                  const SizedBox(height: IwSpacing.space8),
+                  _ReaderParagraphBookmarkAction(
+                    paragraphNumber: paragraphEntry.key + 1,
+                    isBookmarked:
+                        bookmarkedParagraphIndex == paragraphEntry.key,
+                    onPressed:
+                        onBookmarkPressed == null
+                            ? null
+                            : () => onBookmarkPressed!(paragraphEntry.key),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: IwSpacing.space16),
           ],

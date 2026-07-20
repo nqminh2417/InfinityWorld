@@ -12,7 +12,7 @@ Current branch workflow:
 
 Current track status:
 
-- Restructure Phase 3 is complete with its scoped deferred items documented. Product work resumes at `T121` — Library bookmark shelf next-step audit.
+- Restructure Phase 3 is complete with its scoped deferred items documented. Product work has completed through `T128` and resumes at `T129` — Password Generator local tool MVP.
 - Harness Phase 1 Foundation, Phase 2 validation, Phase 3 scoped restructuring, and HM1 post-Harness maintenance are complete. Harness `H...` tasks remain separate from product backlog IDs.
 
 ## Harness Phase 2 — Validation and Pilot
@@ -204,6 +204,14 @@ Current architecture status:
 - Reader now stores finished built-in sample IDs with the existing `shared_preferences`/Riverpod pattern and reflects finished state in Reader actions plus Library sample cards.
 - T119 audited Reader bookmark options and selected a single paragraph bookmark per built-in sample because a sample-level bookmark would duplicate saved samples, while multiple bookmarks, notes, highlights, and scroll offsets are larger storage-model work.
 - Reader now stores one paragraph bookmark per built-in sample with the existing `shared_preferences`/Riverpod pattern, validates persisted sample/paragraph pairs, exposes compact Reader paragraph controls, and reflects bookmark state in Library sample cards.
+- T121 audited the existing Reader bookmark flow and Library shelves, and selected a conditional Bookmarked samples shelf as the next smallest useful slice because it can reuse the existing bookmark map, card, and Reader route without another storage model.
+- T122 adds that conditional `Bookmarked samples` shelf from the existing bookmark map and sample catalog. It reuses the current card and Reader route, remains absent when no bookmarks exist, and does not add storage, filtering, or scroll restoration.
+- T123 confirmed the smallest bookmark follow-up is an explicit Reader quick-jump to the existing one-paragraph bookmark. The current Reader `ListView` can handle that locally without changing the Library route or adding a reading-position model.
+- T124 adds that explicit jump as a conditional Reader app-bar action. It targets the existing bookmarked paragraph with the current scroll surface and keeps opening behavior, routes, and storage unchanged.
+- T125 reviewed the Phase 10 surfaces and found Reader/Library now has a complete local flow, while Home still omits the later Unit Converter and Decision Wheel tools from its direct actions.
+- T126 adds direct Home quick actions for the existing Unit Converter and Decision Wheel routes, keeping the Dashboard action pattern and route ownership unchanged.
+- T127 audited the local Tools surface and selected a small Password Generator because it can use Dart secure randomness and the existing clipboard-feedback pattern without packages, APIs, or persistence.
+- T128 adds Device Info as a local Tools screen with grouped device, display, system, memory/storage, and battery values. It uses `device_info_plus` for Android build, RAM, and storage values plus one guarded Android method channel for detailed system and battery readings.
 
 Current tests:
 
@@ -251,7 +259,15 @@ Current tests:
 - Reader paragraph bookmark provider coverage exists for default state, one-slot replacement/removal, persistence, and invalid persisted entry filtering.
 - Reader presentation widget coverage verifies bookmarking, replacing, and removing a selected sample paragraph bookmark.
 - Library presentation widget coverage verifies paragraph bookmark labels in Saved samples, Local samples, and Continue reading cards.
+- Library presentation widget coverage verifies the conditional Bookmarked samples shelf, its absence without bookmarks, constrained-screen content growth, and bookmarked-sample Reader route behavior.
 - No new app tests were added for T119 because it is a docs-only bookmark model audit.
+- No new app tests were added for T121 because it is a docs-only Library bookmark shelf audit.
+- No new app tests were added for T123 because it is a docs-only Reader bookmark quick-jump audit.
+- Reader presentation widget coverage verifies the bookmarked-paragraph jump action is absent without a bookmark and scrolls to the stored paragraph on a constrained screen.
+- No new app tests were added for T125 because it is a docs-only Reader/Library checkpoint audit.
+- Dashboard widget coverage verifies the Unit Converter and Decision Wheel labels on a constrained screen plus both existing route taps.
+- No new app tests were added for T127 because it is a docs-only Tools local utility audit.
+- Device Info widget coverage verifies grouped sections, safe unavailable values, and Tools route navigation with deterministic platform-channel data.
 - No new app tests were added for T93 because it was an audit/docs-only checkpoint.
 - Explore presentation widget coverage now verifies the refreshed static content, small-screen scrolling, and existing Fox / Summertime Saga route taps.
 - No new app tests were added for T95 because it was an audit/docs-only checkpoint.
@@ -408,48 +424,46 @@ Task sizing note:
 
 ### Product track status
 
-Product implementation resumes at `T121`. Do not begin it until the user assigns it; a user-assigned task still overrides this advisory backlog order.
+Product implementation resumes at `T129`. Do not begin it until the user assigns it; a user-assigned task still overrides this advisory backlog order.
 
 ### Next approved product task
 
-T121 - Library bookmark shelf next-step audit
+T129 - Password Generator local tool MVP
 
 Reason:
 
-- Phase 3 completed without changing Reader/Library source or `SharedPreferences` contracts.
-- Reader already has saved samples, Continue reading, finished state, and one paragraph bookmark per built-in sample.
-- Library currently reflects bookmarks inside existing cards, but a dedicated bookmark shelf could duplicate Saved samples or make the tab too long.
-- A short audit should decide whether the next implementation slice should be a compact Library bookmarked-samples shelf, Reader scroll-position persistence, or another local content-depth slice.
+- The existing Tools catalog covers health, time, conversion, and decisions but has no compact privacy-oriented utility.
+- Dart provides secure local randomness, and the app already has a tested clipboard feedback pattern, so a Password Generator needs no package, network, persistence, or backend.
+- It is a useful standalone tool with a bounded input/output surface and lower scope than saved passwords, password management, or a broader security module.
 
 Scope:
 
-- Review the current Reader bookmark persistence, Reader paragraph controls, Library Saved samples shelf, Continue reading card, Local samples catalog, and small-screen Library scroll impact.
-- Identify the smallest useful next Phase 10 Reader/Library content-depth implementation slice.
-- Recommend exactly one primary next implementation task.
-- Prefer local Reader/Library usefulness over public APIs, screenshots, release work, or broad redesign.
-- Do not implement a feature in this audit.
+- Add a Password Generator screen and Tools card using the existing feature, route, theme, spacing, and card patterns.
+- Generate a secure local password with `Random.secure()` from selected lowercase, uppercase, digit, and symbol character sets.
+- Provide compact length control, selected character-set controls, generate, and copy actions with existing-app feedback. Require at least one selected character set.
+- Add focused domain/widget coverage for length, allowed characters, validation, copy behavior where practical, route navigation, and small-screen scroll safety.
 
 Out of scope:
 
-- No public API, new packages, SQLite/Drift, import/parser work, saved-article models, multiple bookmarks per sample, bookmark shelf/list implementation, scroll-position persistence implementation, reading-progress offsets, reading percentage, reading history list, notes, highlights, persisted reader settings, broad Library redesign, dashboard redesign, screenshots, portfolio/showcase prep, release work, Android build/toolchain changes, shell route migration, or Riverpod/go_router/Dio migration.
+- No password storage, saved/generated history, password strength scoring, breach checks, account/authentication work, public API, new packages, persistence/storage, automatic bookmark opening, new route/query parameters, SQLite/Drift, import/parser work, broad Library redesign, dashboard redesign, screenshots, portfolio/showcase prep, release work, Android build/toolchain changes, shell route migration, or Riverpod/go_router/Dio migration.
 
 Verification:
 
-- Docs/audit gate from `docs/qa/git-workflow.md`: `git diff --check`.
+- Widget/UI gate from `docs/qa/git-workflow.md`: changed-scope `dart format --output=none --set-exit-if-changed`, `flutter analyze`, `flutter test`, and `git diff --check`.
 
 ### Alternatives
 
-Library bookmarked samples shelf MVP
+Reader automatic bookmark opening audit
 
-Choose this if the user wants to skip the audit and directly add a compact bookmarked-samples section using the existing one-bookmark-per-sample state.
+Choose this only if the user wants opening a bookmarked sample to scroll automatically instead of retaining the explicit jump action.
 
-Reader scroll-position persistence audit
+Text case converter local tool MVP
 
-Choose this if the user wants automatic position restore, percentage, or offset tracking before more bookmark-facing UI.
+Choose this if the user wants a smaller text transformation utility instead of secure password generation.
 
 Explore/RSS foundation audit
 
-Choose this if the user wants to evaluate public content/API expansion after the current local Reader/Library content-depth run.
+Choose this if the user wants to evaluate public content/API expansion after the current local content-depth run.
 
 ### Portfolio / screenshot / showcase deferral policy
 
@@ -485,7 +499,7 @@ Current phase:
 
 Decision:
 
-- T120 implemented one persisted paragraph bookmark per built-in Reader sample. Phase 3 is complete, and `T121` is now the next approved product recommendation.
+- The user assigned Device Info in place of the advisory Password Generator slice. T128 now adds the local Device Info tool; product work remains in Phase 10, and the still-independent Password Generator becomes `T129`.
 
 Do not enter yet:
 
@@ -533,6 +547,14 @@ Reason:
 - The T118 finished marker adds that per-sample progress signal with `shared_preferences`/Riverpod and Library card reflection, so bookmark semantics should be audited before adding a new Reader storage behavior.
 - The T119 bookmark model audit found sample-level bookmarks would duplicate saved samples, and selected one paragraph bookmark per built-in sample as the smallest useful bookmark behavior before multiple bookmarks, notes, highlights, scroll offsets, or Drift.
 - The T120 paragraph bookmark MVP adds one validated `shared_preferences`/Riverpod bookmark slot per built-in sample, Reader paragraph controls, and Library card reflection. A short Library bookmark shelf audit should decide the next Reader/Library UI slice before adding another section, scroll offsets, multiple bookmarks, notes, highlights, or Drift.
+- The T121 audit confirmed a conditional Bookmarked samples shelf is the smallest useful next Reader/Library slice: it makes existing bookmark state directly discoverable while reusing current cards and routes, without adding a second bookmark model, filters, scroll restoration, or a broad Library redesign.
+- The T122 shelf makes the existing bookmark state directly actionable from Library while preserving the current Reader entry route. A focused quick-jump audit should now decide whether the single stored paragraph should affect Reader opening behavior before expanding bookmark or progress semantics.
+- The T123 audit confirmed that the existing `ListView` and one-paragraph bookmark index support a small, explicit Reader jump without a route parameter, extra storage, or automatic resume behavior.
+- The T124 action makes that bookmark reachable from Reader without changing the current Library route or persistence. A checkpoint should choose the next independent content-depth slice before adding more Reader resume semantics.
+- The T125 checkpoint found that Home's direct actions lag the existing local Tools catalog. Adding only Unit Converter and Decision Wheel quick actions improves discovery without broadening the dashboard or creating new feature behavior.
+- The T126 quick actions now align Home with the current local Tools catalog. A focused utility audit should select the next independent tool slice before another surface expands by default.
+- The T127 audit found Password Generator is the smallest useful new local tool: Dart secure randomness and the existing clipboard feedback pattern cover the required behavior without a dependency, network, or storage contract.
+- The user-directed T128 Device Info MVP adds a compact, local Android-first device utility with grouped fallback-safe information. It keeps the existing Tools and route patterns, uses one compatible device-info plugin, and scopes native Android code to system/battery values not exposed by that plugin.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -595,7 +617,15 @@ Exit criteria:
 - Done: Implemented the T118 Reader finished sample marker MVP.
 - Done: Completed the T119 Reader bookmark model audit and selected T120 as the next implementation slice.
 - Done: Implemented the T120 Reader single paragraph bookmark MVP.
-- Remaining: `T121` — Library bookmark shelf next-step audit — is the next approved product task, unless the user assigns another task.
+- Done: Completed the T121 Library bookmark shelf next-step audit and selected T122 as the next implementation slice.
+- Done: Implemented the T122 Library bookmarked samples shelf MVP.
+- Done: Completed the T123 Reader bookmark quick-jump audit and selected T124 as the next implementation slice.
+- Done: Implemented the T124 Reader bookmarked paragraph jump MVP.
+- Done: Completed the T125 Reader/Library checkpoint audit and selected T126 as the next implementation slice.
+- Done: Implemented the T126 Home dashboard new-tool quick actions MVP.
+- Done: Completed the T127 Tools local utility audit and selected T128 as the next implementation slice.
+- Done: Implemented the user-directed T128 Device Info MVP.
+- Remaining: `T129` — Password Generator local tool MVP — is the next approved product task, unless the user assigns another task.
 
 ## Verification Gates
 
@@ -605,6 +635,6 @@ Select gates by change risk from that matrix; do not duplicate command requireme
 
 ## Asking for the Next Task
 
-If the user asks "what is the next product task?", report `T121` — Library bookmark shelf next-step audit — unless the user assigns a higher-priority task. For future Harness work, use the active approved sequence in `docs/harness/`.
+If the user asks "what is the next product task?", report `T129` — Password Generator local tool MVP — unless the user assigns a higher-priority task. For future Harness work, use the active approved sequence in `docs/harness/`.
 
 If the user assigns a different task, follow the user task and update planning docs only when it changes priority, phase, backlog, or durable decisions.

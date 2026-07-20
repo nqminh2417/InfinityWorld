@@ -13,5 +13,6 @@ class AppRoutes {
   static const String randomPicker = '/random-picker';
   static const String decisionWheel = '/decision-wheel';
   static const String unitConverter = '/unit-converter';
+  static const String deviceInfo = '/device-info';
   static const String reader = '/reader';
 }

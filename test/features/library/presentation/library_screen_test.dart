@@ -40,6 +40,7 @@ void main() {
     expect(find.byType(IwCard), findsWidgets);
     expect(find.text('Saved content'), findsOneWidget);
     expect(find.text('Continue reading'), findsNothing);
+    expect(find.text('Bookmarked samples'), findsNothing);
     expect(find.text('Saved samples'), findsNothing);
     expect(find.text('Local samples'), findsOneWidget);
     expect(find.text('The First Door'), findsOneWidget);
@@ -129,6 +130,37 @@ void main() {
       find.text('Saved locally. Continue this sample. Bookmarked paragraph 2.'),
       findsNWidgets(2),
     );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Library shows bookmarked samples on a constrained screen', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(360, 640));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    final repository = ReaderParagraphBookmarkRepository();
+    await repository.bookmarkParagraph('first-door', 0);
+    await repository.bookmarkParagraph('focus-reset', 1);
+    await repository.bookmarkParagraph('night-market-notes', 2);
+
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: LibraryScreen())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Bookmarked samples'), findsOneWidget);
+    expect(find.text('The First Door'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Focus Reset'),
+      IwSpacing.space64,
+    );
+    expect(find.text('Focus Reset'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Night Market Notes'),
+      IwSpacing.space64,
+    );
+    expect(find.text('Night Market Notes'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -266,6 +298,34 @@ void main() {
     expect(find.textContaining('The night market opened'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets(
+    'Library bookmarked samples shelf opens the selected Reader route',
+    (tester) async {
+      await ReaderParagraphBookmarkRepository().bookmarkParagraph(
+        'focus-reset',
+        1,
+      );
+
+      await tester.pumpWidget(
+        ProviderScope(child: MainApp(initialRoute: AppRoutes.main)),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.local_library_rounded));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Bookmarked samples'), findsOneWidget);
+
+      await tester.tap(find.text('Focus Reset').first);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ReaderScreen), findsOneWidget);
+      expect(find.text('Focus Reset'), findsOneWidget);
+      expect(find.textContaining('Close the noisy loops'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('Library sample card opens the selected Reader route', (
     tester,

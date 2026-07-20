@@ -4,7 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/features/auth/data/local_session_repository.dart';
 import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:infinity_world/features/decision_wheel/presentation/decision_wheel_screen.dart';
 import 'package:infinity_world/features/random_picker/presentation/random_picker_screen.dart';
+import 'package:infinity_world/features/unit_converter/presentation/unit_converter_screen.dart';
 import 'package:infinity_world/main.dart';
 import 'package:infinity_world/app/router/app_routes.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
@@ -43,6 +45,10 @@ void main() {
 
     await tester.scrollUntilVisible(find.text('Random Picker'), 120);
     expect(find.text('Random Picker'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Decision Wheel'), 120);
+    expect(find.text('Decision Wheel'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Unit Converter'), 120);
+    expect(find.text('Unit Converter'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Random Fox'), 120);
     expect(find.text('Random Fox'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Summertime Saga'), 120);
@@ -69,4 +75,52 @@ void main() {
     expect(find.byType(RandomPickerScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets(
+    'Dashboard Decision Wheel quick action opens the existing route',
+    (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(child: MainApp(initialRoute: AppRoutes.main)),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.scrollUntilVisible(
+        find.text('Decision Wheel'),
+        240,
+        scrollable: find.descendant(
+          of: find.byType(DashboardScreen),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      await tester.tap(find.text('Decision Wheel'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(DecisionWheelScreen), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'Dashboard Unit Converter quick action opens the existing route',
+    (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(child: MainApp(initialRoute: AppRoutes.main)),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.scrollUntilVisible(
+        find.text('Unit Converter'),
+        240,
+        scrollable: find.descendant(
+          of: find.byType(DashboardScreen),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      await tester.tap(find.text('Unit Converter'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(UnitConverterScreen), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

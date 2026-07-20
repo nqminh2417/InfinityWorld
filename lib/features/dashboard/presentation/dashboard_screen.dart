@@ -108,6 +108,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ),
             const SizedBox(height: IwSpacing.space12),
             _DashboardActionCard(
+              icon: Icons.casino_rounded,
+              title: 'Decision Wheel',
+              subtitle: 'Spin a simple wheel to choose from local options.',
+              onTap: () => context.push(AppRoutes.decisionWheel),
+            ),
+            const SizedBox(height: IwSpacing.space12),
+            _DashboardActionCard(
+              icon: Icons.straighten_rounded,
+              title: 'Unit Converter',
+              subtitle: 'Convert common length and weight units locally.',
+              onTap: () => context.push(AppRoutes.unitConverter),
+            ),
+            const SizedBox(height: IwSpacing.space12),
+            _DashboardActionCard(
               icon: Icons.pets_rounded,
               title: 'Random Fox',
               subtitle: 'Random image module.',

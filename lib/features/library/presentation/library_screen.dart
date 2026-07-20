@@ -39,6 +39,10 @@ class LibraryScreen extends ConsumerWidget {
       for (final sample in readerSampleCatalog)
         if (savedSampleIds.contains(sample.id)) sample,
     ];
+    final bookmarkedSamples = [
+      for (final sample in readerSampleCatalog)
+        if (paragraphBookmarks.containsKey(sample.id)) sample,
+    ];
     final savedCount = savedSamples.length;
     final lastOpenedSample = ref
         .watch(readerLastOpenedSampleProvider)
@@ -118,6 +122,23 @@ class LibraryScreen extends ConsumerWidget {
                     paragraphBookmarks[lastOpenedSample.id],
                 description: 'Last opened local sample.',
               ),
+            ],
+            if (bookmarkedSamples.isNotEmpty) ...[
+              const SizedBox(height: IwSpacing.space20),
+              Text(
+                'Bookmarked samples',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: IwSpacing.space12),
+              for (final sample in bookmarkedSamples) ...[
+                _ReaderSampleCard(
+                  sample: sample,
+                  isSaved: savedSampleIds.contains(sample.id),
+                  isFinished: finishedSampleIds.contains(sample.id),
+                  bookmarkedParagraphIndex: paragraphBookmarks[sample.id],
+                ),
+                const SizedBox(height: IwSpacing.space12),
+              ],
             ],
             if (savedSamples.isNotEmpty) ...[
               const SizedBox(height: IwSpacing.space20),
