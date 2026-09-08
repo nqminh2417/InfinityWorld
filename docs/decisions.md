@@ -243,6 +243,18 @@ Flutter UI work must apply the global `flutter-ui-layout-safety` skill and the r
 - `docs/design/layout-safety.md`
 - `docs/design/system-ui-policy.md`
 
+### 2026-09-08: Finalize Flutter harness ownership
+
+The custom Flutter policy skills are project-local under `.agents/skills/`:
+
+- `flutter-app-size`
+- `flutter-performance`
+- `flutter-testing`
+- `flutter-runtime-safety`
+- `flutter-ui-safety`
+
+The legacy global Flutter custom skills were consolidated and retired. Generic Dart/Flutter implementation mechanics and `dart-mcp-server` remain owned by the official `dart-flutter` Codex plugin. CodeGraph remains global. Repomix remains a global CLI with repository-local `.repomixignore` and `repomix.config.json` configuration.
+
 ### 2026-06-23: Fullscreen and immersive mode are restricted
 
 Normal screens must keep system bars usable and content visible. Fullscreen or immersive mode is limited to reader, media preview, image/video viewer, camera/scanner, game-like screens, or explicitly approved screens.

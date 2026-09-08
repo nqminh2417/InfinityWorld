@@ -1,0 +1,17 @@
+# Add patterns to ignore here, one per line
+# Example:
+# *.log
+# tmp/
+
+# Repository and tool-generated noise not useful in AI context.
+.git/
+.dart_tool/
+build/
+.codegraph/
+.idea/
+*.log
+*.tmp
+coverage/
+.flutter-plugins
+.flutter-plugins-dependencies
+repomix-infinity-world.xml

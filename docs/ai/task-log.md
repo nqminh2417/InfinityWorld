@@ -36,6 +36,17 @@ Keep approximately the latest 20 detailed entries. When pruning older entries, r
 
 ## Entries
 
+## 2026-09-08 — Flutter harness and Repomix finalization
+
+- Type: Harness maintenance
+- Status: Completed
+- Changed: Confirmed the official `dart-flutter` plugin and its `dart-mcp-server`; moved five custom Flutter policy skills project-local and retired obsolete global Flutter custom skills. CodeGraph remains global. Repomix 1.18.0 is globally available with repository-local `.repomixignore` and `repomix.config.json`; generated XML is ignored.
+- Files: `.agents/skills/`, `.repomixignore`, `repomix.config.json`, `.gitignore`, `AGENTS.md`, `docs/design/layout-safety.md`, `docs/decisions.md`
+- Verification: `flutter analyze --no-pub` and `flutter test` passed; 155 tests passed.
+- Commit: `chore: finalize Flutter harness and Repomix setup`
+- Impact: Workflow
+- Next: T129 — Password Generator local tool MVP
+
 ## 2026-07-20 — T128 Device Info MVP
 
 - Type: Product task

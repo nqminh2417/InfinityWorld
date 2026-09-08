@@ -41,13 +41,15 @@ Global skills, plugins, MCP tools, and hooks are optional helpers. They do not o
 
 Use global capabilities only when they reduce a concrete uncertainty or task risk. Repository files and current code are the factual source; native Flutter, Dart, Git, and platform commands are the verification authority. A configured helper is neither required nor proven reliable until it has run successfully for the task.
 
-- **Skills:** Select the smallest applicable skill set. Use planning for multi-step architecture/restructure work, systematic debugging for failures, test-driven development when practical for behavior changes, and verification-before-completion before a completion claim. Apply relevant Flutter UI/layout, feedback, accessibility, or performance skills only to matching work. Small local changes use the minimal implementation discipline; security skills are for security-relevant or explicitly requested review.
-- **MCP helpers:** Use Context7 for version-sensitive Flutter/Dart/package/platform guidance; Semble for semantic discovery when filenames are insufficient; and CodeGraph for dependency, impact, or call-path exploration when available. Use Chrome DevTools only for browser/DOM/web tasks, not Flutter native UI or device validation. Flutter/Dart CLI remains the execution path; no Flutter MCP server is required.
+- **Skills:** Select the smallest applicable capability. The official `dart-flutter` plugin owns generic Dart/Flutter mechanics; the five project-local `.agents/skills/` files add InfinityWorld policy guardrails and are implicitly applicable by task type. Do not require explicit skill invocation or duplicate generic tutorials here.
+- **MCP helpers:** Use CodeGraph when dependency or call-path exploration materially reduces uncertainty; use direct inspection, `rg`, analyzer output, and tests as appropriate. CodeGraph is supporting evidence, not verification authority. Flutter/Dart CLI remains the execution path; no project-local MCP configuration is required.
 - **Plugins:** Use a plugin only when its capability matches the task (for example, Superpowers for planning/debugging/TDD/verification, security tools for security work, and document/browser tools for their artifact or interaction type). Do not activate a plugin merely because it is installed.
 - **Hooks:** Infinity World does not rely on hooks for verification, formatting, staging, commits, pushes, logging, or documentation updates. Configured-but-unobserved hooks are not guaranteed. Future hooks require separate approval and must not format the whole repository, modify source, stage unrelated files, commit, push, or rewrite planning docs automatically.
 - **Fallback and failure:** Retry an optional helper once only when a transient retry is safe; otherwise use the native fallback recorded in `docs/harness/DOCUMENTATION_GOVERNANCE_PLAN.md`. Helper failure does not block work when that fallback is sufficient. Report degraded confidence or stop only when no safe fallback can prove the required scope.
 
 Do not copy, install, edit, or reconfigure global skills, plugins, MCP servers, or hooks from an Infinity World task. Repository constraints always take precedence over generic tool guidance.
+
+Repomix is optional supporting context for repository-wide analysis, architecture review, and large refactors. Run `repomix` from the repository root when a broad repository snapshot is useful; do not regenerate it for every small task. Treat Repomix output as supporting context, not verification authority. Direct source inspection, analyzer results, tests, builds, runtime checks, Git state, and CodeGraph remain authoritative. CodeGraph is preferred for dependency and call-path queries; Repomix complements it rather than replacing it.
 
 ## 3. Current Product Decisions
 
@@ -153,7 +155,9 @@ features/news/
 
 ## 5. State Management
 
-Use Riverpod for new state management and dependency injection code.
+Use Riverpod for new shared/application state and service wiring.
+
+Keep ephemeral screen state local when it does not need to be shared or persisted.
 
 Rules:
 
@@ -324,7 +328,7 @@ Do not call APIs directly from widget `build()` methods.
 
 ## 11. Local Storage
 
-Use shared_preferences for simple settings/session values.
+Use `SharedPreferencesAsync` for simple settings, session, and other persisted values.
 
 Use Drift when persistent relational/local feature data is needed.
 
@@ -561,7 +565,7 @@ Quality and consistency are more important than feature count.
 
 ## 21. Flutter UI Layout Safety
 
-Flutter UI tasks in InfinityWorld must apply the global `flutter-ui-layout-safety` skill and follow:
+Flutter UI tasks in InfinityWorld must follow the project-local `flutter-ui-safety` policy and:
 
 - `docs/design/layout-safety.md`
 - `docs/design/system-ui-policy.md`
@@ -581,7 +585,7 @@ Project rules:
 
 ## 21.1 Error Handling and UI Feedback
 
-Flutter error handling and feedback UI tasks in InfinityWorld must apply `flutter-error-handling`, `flutter-ui-feedback`, and the layout-safety rules above when relevant.
+Flutter runtime, error-handling, and feedback tasks in InfinityWorld must follow the project-local `flutter-runtime-safety` and `flutter-ui-safety` policies, plus the layout-safety rules above when relevant.
 
 Project rules:
 
@@ -596,7 +600,7 @@ Project rules:
 - SnackBars are for short action feedback.
 - Dialogs are only for destructive confirmation, required user decisions, permission/settings flows, or blocking account/session issues.
 - Do not trigger SnackBars, dialogs, bottom sheets, or navigation side effects directly from `build()`.
-- Feedback UI must also follow `flutter-ui-layout-safety`.
+- Feedback UI must also follow `flutter-ui-safety`.
 
 ## 22. Git Workflow
 
