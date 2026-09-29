@@ -76,3 +76,75 @@
 | **H10 — Repo-local Tool Usage Policy** | Reduce tool routing to repository-local use/fallback/authority rules; make native commands primary and global capabilities optional. | `AGENTS.md` and, only if needed, a reference in `docs/harness/DOCUMENTATION_SOURCE_OF_TRUTH.md`. No global configuration and no new repo-local tool file. | **Commit and push** after repo-local rules and references are synchronized. | H6; H9 for precedence wording |
 
 Do not force a commit merely because a task number ends. H6 remains uncommitted by design; later tasks commit only when their documented state is coherent and complete.
+
+## H14 — Project-local Harness Hardening Audit
+
+- **Scope/evidence:** Audited repository-local files and references only; no global Codex path or configuration was inspected or changed. Current Harness position is post-HM1 maintenance; product work is in Phase 10 at T129. Only this gap analysis is changed by H14.
+
+### Current project-local Harness inventory
+
+| Path | Current state | Disposition |
+| --- | --- | --- |
+| `AGENTS.md` | At the H14 baseline, tracked with 24 numbered sections; repository instruction entry point and links to active workflow/design guidance. | Keep; simplify duplicated detail in H15. |
+| `.agents/skills/` | Five tracked project policy skills: app size, performance, runtime safety, testing, and UI safety. | Keep all five; selectively simplify overlaps in H15. |
+| `.codex/` | Directory exists but contains no files; no project `config.toml` or other local Codex settings. | Keep empty; no project config is currently needed. |
+| `.gitignore`, platform `.gitignore` files, `.repomixignore`, `repomix.config.json` | Root and Android/iOS/Linux/macOS/Windows ignore rules are tracked. Repomix config is repository-local; generated XML and CodeGraph cache paths are ignored. | Keep; no missing generated-artifact rule was found. |
+| `docs/harness/HARNESS_GAP_ANALYSIS.md`, `DOCUMENTATION_GOVERNANCE_PLAN.md` | H5 evidence and H6 governance plan, both indexed by `docs/README.md`. | Keep as history/planning evidence; H14 appends the current audit here. |
+
+### Custom skills findings
+
+Each skill has a focused `description` trigger. The current routing reference is the `Project-local skills` section in `AGENTS.md`; `docs/decisions.md` and `docs/ai/task-log.md` record the five-skill inventory and ownership. The section numbers in the following recommendations describe the pre-H15 AGENTS layout. No skill is unreferenced or empty.
+
+| Skill | Purpose / trigger | Project-specific and overlap | Recommendation | Inbound references / risk / follow-up |
+| --- | --- | --- | --- | --- |
+| `.agents/skills/flutter-app-size/SKILL.md` | Measured Flutter artifact, dependency, asset, font, and packaging size work. | Project-specific size tradeoffs; generic build mechanics are explicitly delegated. Some overlap with the former AGENTS app-size rules, but the skill adds measurement and diagnosis. | **Keep.** | `AGENTS.md` `Project-local skills` section and `docs/decisions.md`; low risk. No separate task. |
+| `.agents/skills/flutter-performance/SKILL.md` | Measured startup, rendering, rebuild, scrolling, memory, async, or animation performance work. | Project-specific measurement and lifecycle guardrails; overlapped former AGENTS §13 performance rules. | **Keep but simplify** repeated general UI/performance rules while preserving measurement and profiling guidance. | `AGENTS.md` `Project-local skills` section and `docs/decisions.md`; low risk if its focused measurement trigger stays explicit. H15. |
+| `.agents/skills/flutter-runtime-safety/SKILL.md` | Async lifecycle, errors, networking/configuration, retries, cancellation, or concurrency changes. | Strong project safety policy; overlapped former AGENTS §§10, 21.1 and the UI skill. Its boundary/failure detail remains useful. | **Keep but simplify** only repeated generic guidance; preserve async ownership, failure distinctions, and recovery constraints. | `AGENTS.md` `Project-local skills` section and `docs/decisions.md`; medium risk if failure behavior is lost. H15. |
+| `.agents/skills/flutter-testing/SKILL.md` | Adding, fixing, reviewing, or running Flutter/Dart tests and selecting regression coverage. | Project-specific deterministic-test and existing-convention rules; overlaps QA gate and task workflow for command selection/reporting. | **Keep but simplify** verification wording already owned by `docs/qa/git-workflow.md`; retain test-quality policy. | `AGENTS.md` `Project-local skills` section and `docs/decisions.md`; low risk. H15. |
+| `.agents/skills/flutter-ui-safety/SKILL.md` | UI feedback, forms, screens, navigation, responsive layout, accessibility, insets, overflow, and visible failures. | Project-specific layout/feedback constraints; substantial overlap with former AGENTS §§21–21.1 and `docs/design/layout-safety.md` / `system-ui-policy.md`. Skill adds useful accessibility and runtime review prompts. | **Keep but simplify** by making the design documents the detailed policy owners and retaining the skill trigger plus concise review checklist. | `AGENTS.md` `Project-local skills` section; `docs/design/layout-safety.md`; `docs/decisions.md`; medium risk if accessibility/layout checks are removed. H15. |
+
+No skill should be removed or merged: each has a distinct task trigger, and the local policy value is more specific than a generic Flutter mechanics tutorial. No content change is made to any skill in H14.
+
+### `.codex/` findings
+
+`.codex/` is empty and has no tracked files. No repository behavior, task, or documented requirement calls for project-specific Codex settings. Keep install choices, global skills/plugins/MCP/hooks, and machine/user preferences outside the repository; do not create `.codex/config.toml` speculatively. The empty directory needs no ignore rule. No `.codex` file is proposed for removal, so no reference synchronization is needed.
+
+### `AGENTS.md` findings
+
+`AGENTS.md` is not concise: its detailed product, architecture, design, performance, app-size, verification, UI-safety, error-feedback, documentation, and reporting rules repeat fuller owners in `docs/project-direction.md`, `docs/architecture.md`, `docs/design-system.md`, `docs/qa/git-workflow.md`, `docs/qa/task-workflow.md`, the design safety docs, and the five local skills. Its routing is useful and its referenced active files exist. Scope limits, native verification/fallback, branch and commit authority, planning ownership, and documentation routing are clear; no broken active path or completed Harness instruction was found.
+
+| Path | Action | Reason | Inbound references | Risk | Suggested task |
+| --- | --- | --- | --- | --- | --- |
+| `AGENTS.md` | **Edit** | Retain concise project constraints and routing; replace repeated detailed policy with links to its canonical owner. Preserve explicit task scope, verification/Git authority, fallback, and documentation ownership. | `README.md`, `docs/roadmap.md`, `docs/decisions.md`, `docs/ai/task-log.md`, `docs/discovery/CODEBASE_DISCOVERY.md`, and both Harness docs contain path or policy references. Search exact path and heading before changing sections; keep those references valid. | Medium: over-compression could make project-specific boundaries hard to discover. | H15 |
+
+### Ignore-file findings
+
+Audited `.gitignore`, `.repomixignore`, and `android/.gitignore`, `ios/.gitignore`, `linux/.gitignore`, `macos/.gitignore`, `windows/.gitignore`. Root rules cover observed Flutter/Dart outputs, logs, local IDE files, CodeGraph cache, and Repomix XML; no ignored tracked file or unignored generated artifact appeared in Git status. `.agents/skills/` is intentionally tracked; `.codex/` has no files and should not be broadly ignored. `.repomixignore` repeats some `.gitignore` patterns, but serves Repomix input filtering and is not a stale Git ignore; the configured output path is intentionally excluded in both. Keep all ignore files unchanged; no follow-up task is justified.
+
+### Repository hygiene findings
+
+- No empty or unreferenced tracked Harness/Codex file was found. The empty `.codex/` directory is untracked filesystem state and has no cleanup value.
+- `.agents/skills/` contains five non-empty, tracked skills. No duplicate/superseded instruction file or local Codex cache was found among tracked paths.
+- `repomix-infinity-world.xml`, Flutter logs/build outputs, and `.codegraph/` are generated/local artifacts with ignore coverage. Repomix’s output path is referenced by `repomix.config.json` and both relevant ignore files; retain that coordinated setup.
+- `docs/discovery/CODEBASE_DISCOVERY.md` records the earlier H1 state that `.agents/` and `.codex/` were empty. This is dated discovery evidence superseded by later skill migration, not a current inventory; retain it as history and do not edit it under H14’s exclusion.
+- `docs/harness/DOCUMENTATION_GOVERNANCE_PLAN.md` ends its Phase 1 snapshot with “Next Harness task: H11”. Later roadmap/task evidence records H11–H13 complete. Keep that dated Phase 1 record as history; do not treat its old next-task line as current guidance or rewrite it just for this audit.
+
+### Reference and dependency risks
+
+- Before any future AGENTS section removal or rename, search `AGENTS.md`, headings, and referenced policy paths across the repository; its active entry-point role is also named in `README.md` and `docs/roadmap.md`.
+- Skill names are referenced in `AGENTS.md`, `docs/decisions.md`, and design safety documentation. H15 should retain current names and triggers; any rename/removal would need those references and the dated task-log inventory synchronized. H14 recommends no rename or deletion.
+- `.codex/` has no file references to migrate. `.repomixignore`, `repomix.config.json`, and `.gitignore` jointly refer to the Repomix output; do not remove or rename one piece without checking the other two.
+- Historical discovery/Harness records contain old path and state descriptions by design. Keep them when current tracked configuration and active guidance already establish the live state.
+
+### Minimal recommended implementation sequence
+
+| Task | Objective | Files likely affected | Source code excluded | Commit/push after successful validation |
+| --- | --- | --- | --- | --- |
+| **H15 — Project-local Instruction Compaction** | Reduce duplication in `AGENTS.md` and simplify only the four skills identified above, preserving concise local triggers/policies and linking to canonical workflow/design documents. Do not add `.codex/config.toml`, change ignore rules, rename/remove skills, or rewrite historical discovery. Run full-repository reference searches, `git diff --check`, and focused Git review. | `AGENTS.md`; `.agents/skills/flutter-performance/SKILL.md`; `.agents/skills/flutter-runtime-safety/SKILL.md`; `.agents/skills/flutter-testing/SKILL.md`; `.agents/skills/flutter-ui-safety/SKILL.md`; update this file only if findings change. | Yes | **Allowed** only if the H15 assignment authorizes it, all scoped references and docs checks pass, and repository branch/upstream rules in `docs/qa/git-workflow.md` are satisfied. |
+
+### H14/H15 Closeout
+
+- **H14:** Completed — project-local Harness audit recorded above.
+- **H15:** Completed — repository instructions and four overlapping skills were compacted; all five skill names and triggers remain unchanged.
+- **Harness maintenance:** Closed. No H16+ task is justified by current evidence.
+- **Product track:** Remains in Phase 10 at `T129`; no product task numbering changed.
