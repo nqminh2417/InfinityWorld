@@ -43,7 +43,7 @@ For UI changes also follow `docs/design/layout-safety.md` and `docs/design/syste
 
 Repository files and native Git/Flutter/Dart results are authoritative. Skills, plugins, MCP tools, hooks, and Repomix are optional aids; they do not override scope, source, tests, or required gates. Do not copy, install, edit, or reconfigure global Codex capabilities from this repository task.
 
-- Use CodeGraph for dependency/call-path questions when the repository index is available; otherwise use `rg`, direct inspection, analyzer output, and tests.
+- For feature-boundary changes, cross-feature dependencies, route/startup ownership, shared/core extraction, or structural moves, use the global CodeGraph guidance when graph impact materially matters. CodeGraph is optional; native repository evidence and project-defined verification remain authoritative.
 - Use version-sensitive documentation helpers only when needed; otherwise consult official docs and the checked-in project version.
 - Use plugins only when their capability matches the task. Retry an optional helper once only for a safe transient failure; otherwise use repository inspection and native commands. Report uncertainty only when the fallback cannot establish the needed fact.
 - Repomix may provide broad repository context, but its output is supporting evidence; do not regenerate it for a small task.
