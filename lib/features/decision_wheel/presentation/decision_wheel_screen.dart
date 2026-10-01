@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:infinity_world/design_system/components/iw_card.dart';
+import 'package:flutter/services.dart';
 import 'package:infinity_world/design_system/tokens/iw_colors.dart';
 import 'package:infinity_world/design_system/tokens/iw_radius.dart';
 import 'package:infinity_world/design_system/tokens/iw_spacing.dart';
@@ -12,6 +12,32 @@ typedef DecisionWheelShuffleOptions =
 
 const _spinDuration = Duration(milliseconds: 1600);
 const _segmentStartAngle = -math.pi / 2;
+const _historySheetMaxScreenFraction = 0.61;
+// ponytail: reserve current header/actions/padding height; measure it if this sheet gains more chrome.
+const _historySheetFixedContentHeight = 148.0;
+const _historyItemHeight = 50.0;
+const _decisionWheelPalette = [
+  Color(0xFF2F6FEF),
+  Color(0xFFE71D36),
+  Color(0xFFF7C62F),
+  Color(0xFF16A34A),
+  Color(0xFF6B5BFF),
+  Color(0xFF4CC2FF),
+];
+
+enum _DecisionResultAction { cancel, remove }
+
+class _DecisionWheelHistoryEntry {
+  final int order;
+  final String option;
+  final Color color;
+
+  const _DecisionWheelHistoryEntry({
+    required this.order,
+    required this.option,
+    required this.color,
+  });
+}
 
 int _systemPickIndex(int optionCount) => math.Random().nextInt(optionCount);
 
@@ -41,9 +67,11 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
 
   Animation<double>? _spinAnimation;
   double _rotationTurns = 0;
-  String? _selectedOption;
   int? _selectedIndex;
+  int _entryMultiplier = 1;
+  int _nextHistoryOrder = 1;
   String? _errorText;
+  final List<_DecisionWheelHistoryEntry> _history = [];
 
   bool get _isSpinning => _spinController.isAnimating;
 
@@ -75,20 +103,20 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
       return;
     }
 
-    final options = _parseOptions(_optionsController.text);
+    final rawOptions = _parseOptions(_optionsController.text);
+    final wheelOptions = _wheelOptionsFor(rawOptions);
 
-    if (options.length < 2) {
+    if (rawOptions.length < 2) {
       setState(() {
-        _selectedOption = null;
         _selectedIndex = null;
         _errorText = 'Add at least two options.';
       });
       return;
     }
 
-    final rawIndex = widget.pickIndex(options.length);
-    final selectedIndex = rawIndex.clamp(0, options.length - 1).toInt();
-    final targetTurns = _targetTurnsFor(options.length, selectedIndex);
+    final rawIndex = widget.pickIndex(wheelOptions.length);
+    final selectedIndex = rawIndex.clamp(0, wheelOptions.length - 1).toInt();
+    final targetTurns = _targetTurnsFor(wheelOptions.length, selectedIndex);
 
     _spinAnimation = Tween<double>(
       begin: _rotationTurns,
@@ -98,7 +126,6 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
     );
 
     setState(() {
-      _selectedOption = null;
       _selectedIndex = null;
       _errorText = null;
     });
@@ -110,10 +137,56 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
 
       setState(() {
         _rotationTurns = targetTurns;
-        _selectedOption = options[selectedIndex];
         _selectedIndex = selectedIndex;
+        _history.add(
+          _DecisionWheelHistoryEntry(
+            order: _nextHistoryOrder,
+            option: wheelOptions[selectedIndex],
+            color: decisionWheelSegmentColor(
+              selectedIndex,
+              wheelOptions.length,
+            ),
+          ),
+        );
+        _nextHistoryOrder += 1;
       });
+      _showSelectedOptionDialog(wheelOptions, selectedIndex);
     });
+  }
+
+  Future<void> _showSelectedOptionDialog(
+    List<String> options,
+    int selectedIndex,
+  ) async {
+    final option = options[selectedIndex];
+    final color = decisionWheelSegmentColor(selectedIndex, options.length);
+    final action = await showDialog<_DecisionResultAction>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return _DecisionResultDialog(
+          option: option,
+          color: color,
+          onCancel: () {
+            Navigator.of(dialogContext).pop(_DecisionResultAction.cancel);
+          },
+          onRemove: () {
+            Navigator.of(dialogContext).pop(_DecisionResultAction.remove);
+          },
+        );
+      },
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    if (action == _DecisionResultAction.remove) {
+      _removeSelectedOption();
+      return;
+    }
+
+    _cancelResult();
   }
 
   void _cancelResult() {
@@ -122,7 +195,6 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
     }
 
     setState(() {
-      _selectedOption = null;
       _selectedIndex = null;
     });
   }
@@ -133,16 +205,16 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
     }
 
     final options = _parseOptions(_optionsController.text);
-    if (_selectedIndex! >= options.length) {
+    if (options.isEmpty) {
       _cancelResult();
       return;
     }
 
-    final updatedOptions = List<String>.of(options)..removeAt(_selectedIndex!);
+    final rawIndex = _selectedIndex! % options.length;
+    final updatedOptions = List<String>.of(options)..removeAt(rawIndex);
     _setOptionsText(updatedOptions);
 
     setState(() {
-      _selectedOption = null;
       _selectedIndex = null;
       _errorText =
           updatedOptions.length < 2 ? 'Add at least two options.' : null;
@@ -178,9 +250,233 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
     _clearWheelState();
   }
 
+  void _clearHistory() {
+    setState(() {
+      _history.clear();
+      _nextHistoryOrder = 1;
+    });
+  }
+
+  void _setEntryMultiplier(int multiplier) {
+    if (_isSpinning || _entryMultiplier == multiplier) {
+      return;
+    }
+
+    setState(() {
+      _entryMultiplier = multiplier;
+      _selectedIndex = null;
+      _errorText = null;
+    });
+  }
+
+  void _showHistorySheet() {
+    if (_isSpinning) {
+      return;
+    }
+
+    final screenHeight = MediaQuery.sizeOf(context).height;
+
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            final brightness = Theme.of(context).brightness;
+            final history = _history.reversed.toList(growable: false);
+            final maxSheetHeight =
+                screenHeight * _historySheetMaxScreenFraction;
+            final maxListHeight = math.max(
+              0.0,
+              maxSheetHeight - _historySheetFixedContentHeight,
+            );
+            final historyListHeight = math.min(
+              history.length * _historyItemHeight +
+                  math.max(0, history.length - 1),
+              maxListHeight,
+            );
+
+            return SafeArea(
+              child: ConstrainedBox(
+                key: const ValueKey('decision-wheel-history-sheet'),
+                constraints: BoxConstraints(maxHeight: maxSheetHeight),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    IwSpacing.cardPadding,
+                    0,
+                    IwSpacing.cardPadding,
+                    IwSpacing.space4,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.history_rounded,
+                            color: IwColors.secondary(brightness),
+                          ),
+                          const SizedBox(width: IwSpacing.space8),
+                          Text(
+                            'History',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: IwSpacing.space12),
+                      if (history.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: IwSpacing.space12,
+                          ),
+                          child: _DecisionHistoryEmptyState(
+                            brightness: brightness,
+                          ),
+                        )
+                      else
+                        SizedBox(
+                          height: historyListHeight,
+                          child: ListView.separated(
+                            itemCount: history.length,
+                            separatorBuilder:
+                                (_, _) => Divider(
+                                  height: 1,
+                                  thickness: 0.6,
+                                  color: IwColors.border(
+                                    brightness,
+                                  ).withValues(alpha: 0.6),
+                                ),
+                            itemBuilder: (context, index) {
+                              final entry = history[index];
+                              return SizedBox(
+                                height: _historyItemHeight,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 12,
+                                      height: 32,
+                                      decoration: BoxDecoration(
+                                        color: entry.color,
+                                        borderRadius: BorderRadius.circular(
+                                          IwRadius.radiusFull,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: IwSpacing.space12),
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            entry.option,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.titleSmall?.copyWith(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w700,
+                                              height: 1.1,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            'Spin #${entry.order}',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.labelSmall?.copyWith(
+                                              height: 1.15,
+                                              color: IwColors.textSecondary(
+                                                brightness,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      tooltip: 'Copy result',
+                                      constraints: const BoxConstraints(
+                                        minWidth: 40,
+                                        minHeight: 40,
+                                      ),
+                                      padding: EdgeInsets.zero,
+                                      iconSize: 20,
+                                      onPressed: () {
+                                        _copyHistoryOption(
+                                          context,
+                                          entry.option,
+                                        );
+                                      },
+                                      icon: const Icon(
+                                        Icons.content_copy_rounded,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      const SizedBox(height: IwSpacing.space4),
+                      Wrap(
+                        alignment: WrapAlignment.end,
+                        spacing: IwSpacing.space8,
+                        runSpacing: IwSpacing.space8,
+                        children: [
+                          TextButton.icon(
+                            onPressed:
+                                history.isEmpty
+                                    ? null
+                                    : () {
+                                      _clearHistory();
+                                      setSheetState(() {});
+                                    },
+                            icon: const Icon(Icons.delete_sweep_rounded),
+                            label: const Text('Clear history'),
+                          ),
+                          FilledButton(
+                            onPressed: () {
+                              Navigator.of(sheetContext).pop();
+                            },
+                            child: const Text('Close'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _copyHistoryOption(BuildContext context, String option) async {
+    await Clipboard.setData(ClipboardData(text: option));
+    if (!context.mounted) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(
+          content: Text('Copied to clipboard'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+  }
+
   void _clearWheelState() {
     setState(() {
-      _selectedOption = null;
       _selectedIndex = null;
       _errorText = null;
     });
@@ -214,10 +510,16 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
 
   List<String> _parseOptions(String input) {
     return input
-        .split('\n')
+        .split(RegExp(r'[;\n]'))
         .map((option) => option.trim())
         .where((option) => option.isNotEmpty)
         .toList(growable: false);
+  }
+
+  List<String> _wheelOptionsFor(List<String> options) {
+    return [
+      for (var round = 0; round < _entryMultiplier; round += 1) ...options,
+    ];
   }
 
   void _setOptionsText(List<String> options) {
@@ -231,14 +533,19 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final options = _parseOptions(_optionsController.text);
-    final activeIndex = _activeSegmentIndex(options.length);
+    final isShortPhone = MediaQuery.sizeOf(context).height < 760;
+    // ponytail: local breakpoint for this dense tool screen; promote to a token only if more screens need it.
+    final wheelMaxWidth = isShortPhone ? 290.0 : 430.0;
+    final rawOptions = _parseOptions(_optionsController.text);
+    final wheelOptions = _wheelOptionsFor(rawOptions);
+    final activeIndex = _activeSegmentIndex(wheelOptions.length);
     final selectedIndex =
-        _selectedIndex != null && _selectedIndex! < options.length
+        _selectedIndex != null && _selectedIndex! < wheelOptions.length
             ? _selectedIndex
             : null;
-    final pointerColor = _segmentColor(
+    final pointerColor = decisionWheelSegmentColor(
       _isSpinning ? activeIndex ?? 0 : selectedIndex ?? activeIndex ?? 0,
+      wheelOptions.length,
     );
 
     return Scaffold(
@@ -247,7 +554,12 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
         top: false,
         child: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          padding: const EdgeInsets.all(IwSpacing.screenPadding),
+          padding: const EdgeInsets.fromLTRB(
+            IwSpacing.screenPadding,
+            IwSpacing.space12,
+            IwSpacing.screenPadding,
+            IwSpacing.space12,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -256,20 +568,13 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: IwSpacing.space8),
-              Text(
-                'Add one option per line, then spin the wheel locally.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: IwColors.textSecondary(brightness),
-                ),
-              ),
-              const SizedBox(height: IwSpacing.space16),
               Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 430),
+                  constraints: BoxConstraints(maxWidth: wheelMaxWidth),
                   child: AspectRatio(
                     aspectRatio: 1,
                     child: DecisionWheelFace(
-                      options: options,
+                      options: wheelOptions,
                       rotationTurns: _rotationTurns,
                       pointerColor: pointerColor,
                       activeIndex: activeIndex,
@@ -280,75 +585,101 @@ class _DecisionWheelScreenState extends State<DecisionWheelScreen>
                   ),
                 ),
               ),
-              if (_selectedOption != null && selectedIndex != null) ...[
-                const SizedBox(height: IwSpacing.space16),
-                _DecisionResultCard(
-                  option: _selectedOption!,
-                  color: _segmentColor(selectedIndex),
-                  onCancel: _cancelResult,
-                  onRemove: _removeSelectedOption,
-                ),
-              ],
-              const SizedBox(height: IwSpacing.space16),
-              IwCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      'Entries',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: IwSpacing.space8),
-                    Wrap(
-                      spacing: IwSpacing.space8,
-                      runSpacing: IwSpacing.space8,
-                      children: [
-                        OutlinedButton.icon(
-                          onPressed: _isSpinning ? null : _shuffleEntries,
-                          icon: const Icon(Icons.shuffle_rounded),
-                          label: const Text('Shuffle'),
+              const SizedBox(height: IwSpacing.space8),
+              Column(
+                key: const ValueKey('decision-wheel-entries-section'),
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Entries',
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        OutlinedButton.icon(
-                          onPressed: _isSpinning ? null : _sortEntries,
-                          icon: const Icon(Icons.sort_by_alpha_rounded),
-                          label: const Text('Sort'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: IwSpacing.space12),
-                    TextField(
-                      controller: _optionsController,
-                      enabled: !_isSpinning,
-                      minLines: 5,
-                      maxLines: 8,
-                      keyboardType: TextInputType.multiline,
-                      textInputAction: TextInputAction.newline,
-                      decoration: InputDecoration(
-                        alignLabelWithHint: true,
-                        border: const OutlineInputBorder(),
-                        errorText: _errorText,
-                        hintText: 'Movie\nPizza\nStudy',
-                        labelText: 'One entry per line',
                       ),
-                      onChanged: (_) {
-                        setState(() {
-                          _selectedOption = null;
-                          _selectedIndex = null;
-                          _errorText = null;
-                        });
-                      },
+                      SizedBox(
+                        width: 132,
+                        child: ToggleButtons(
+                          key: const ValueKey(
+                            'decision-wheel-multiplier-toggle',
+                          ),
+                          isSelected: [
+                            _entryMultiplier == 1,
+                            _entryMultiplier == 2,
+                            _entryMultiplier == 3,
+                          ],
+                          onPressed:
+                              _isSpinning
+                                  ? null
+                                  : (index) {
+                                    _setEntryMultiplier(index + 1);
+                                  },
+                          borderRadius: BorderRadius.circular(
+                            IwRadius.radiusFull,
+                          ),
+                          constraints: const BoxConstraints.tightFor(
+                            width: 42,
+                            height: 32,
+                          ),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          color: IwColors.textSecondary(brightness),
+                          selectedColor: Colors.white,
+                          fillColor: IwColors.primary,
+                          children: const [Text('x1'), Text('x2'), Text('x3')],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: IwSpacing.space6),
+                  Wrap(
+                    spacing: IwSpacing.space8,
+                    runSpacing: IwSpacing.space6,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: _isSpinning ? null : _shuffleEntries,
+                        icon: const Icon(Icons.shuffle_rounded),
+                        label: const Text('Shuffle'),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: _isSpinning ? null : _sortEntries,
+                        icon: const Icon(Icons.sort_by_alpha_rounded),
+                        label: const Text('Sort'),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: _isSpinning ? null : _showHistorySheet,
+                        icon: const Icon(Icons.history_rounded),
+                        label: const Text('History'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: IwSpacing.space8),
+                  TextField(
+                    controller: _optionsController,
+                    enabled: !_isSpinning,
+                    minLines: 3,
+                    maxLines: 4,
+                    scrollPadding: const EdgeInsets.only(
+                      bottom: IwSpacing.space32,
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: IwSpacing.space16),
-              SizedBox(
-                height: 52,
-                child: ElevatedButton.icon(
-                  onPressed: _isSpinning ? null : _spin,
-                  icon: const Icon(Icons.casino_rounded),
-                  label: Text(_isSpinning ? 'Spinning...' : 'Spin'),
-                ),
+                    scrollPhysics: const ClampingScrollPhysics(),
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
+                    decoration: InputDecoration(
+                      alignLabelWithHint: true,
+                      border: const OutlineInputBorder(),
+                      errorText: _errorText,
+                      hintText: 'Movie\nPizza\nStudy or Movie; Pizza; Study',
+                      labelText: 'One entry per line or semicolon',
+                    ),
+                    onChanged: (_) {
+                      setState(() {
+                        _selectedIndex = null;
+                        _errorText = null;
+                      });
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -380,23 +711,42 @@ class DecisionWheelFace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: 'Spin decision wheel',
-      child: GestureDetector(
-        onTap: enabled ? onSpin : null,
-        child: CustomPaint(
-          painter: DecisionWheelPainter(
-            options: options,
-            rotationTurns: rotationTurns,
-            pointerColor: pointerColor,
-            activeIndex: activeIndex,
-            selectedIndex: selectedIndex,
-            brightness: Theme.of(context).brightness,
-            textStyle: Theme.of(context).textTheme.labelLarge,
-          ),
-        ),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final side = math.min(constraints.maxWidth, constraints.maxHeight);
+        final centerTargetSize =
+            math.max(72.0, side * 0.24).clamp(72.0, 116.0).toDouble();
+
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            CustomPaint(
+              painter: DecisionWheelPainter(
+                options: options,
+                rotationTurns: rotationTurns,
+                pointerColor: pointerColor,
+                activeIndex: activeIndex,
+                selectedIndex: selectedIndex,
+                brightness: Theme.of(context).brightness,
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+            ),
+            Center(
+              child: Semantics(
+                button: true,
+                label: 'Spin decision wheel',
+                enabled: enabled,
+                child: GestureDetector(
+                  key: const ValueKey('decision-wheel-center-spin-button'),
+                  behavior: HitTestBehavior.opaque,
+                  onTap: enabled ? onSpin : null,
+                  child: SizedBox.square(dimension: centerTargetSize),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -459,8 +809,9 @@ class DecisionWheelPainter extends CustomPainter {
     for (var index = 0; index < options.length; index += 1) {
       final isSelected = selectedIndex == index;
       final isActive = activeIndex == index;
-      fillPaint.color = _segmentColor(
+      fillPaint.color = decisionWheelSegmentColor(
         index,
+        options.length,
       ).withValues(alpha: selectedIndex != null && !isSelected ? 0.38 : 0.96);
       canvas.drawArc(
         rect,
@@ -502,8 +853,8 @@ class DecisionWheelPainter extends CustomPainter {
 
     canvas.drawCircle(center, radius, borderPaint);
     _paintSegmentLabels(canvas, center, radius, segmentAngle, rotationRadians);
-    _paintPointer(canvas, center, radius);
     _paintCenter(canvas, center, radius);
+    _paintPointer(canvas, center, radius);
   }
 
   void _paintSegmentLabels(
@@ -521,7 +872,9 @@ class DecisionWheelPainter extends CustomPainter {
       final angle =
           _segmentStartAngle + rotationRadians + segmentAngle * (index + 0.5);
       final textColor =
-          ThemeData.estimateBrightnessForColor(_segmentColor(index)) ==
+          ThemeData.estimateBrightnessForColor(
+                    decisionWheelSegmentColor(index, options.length),
+                  ) ==
                   Brightness.dark
               ? Colors.white
               : const Color(0xFF101827);
@@ -554,15 +907,21 @@ class DecisionWheelPainter extends CustomPainter {
         Paint()
           ..color = pointerColor
           ..style = PaintingStyle.fill;
+    final outlinePaint =
+        Paint()
+          ..color = Colors.white.withValues(alpha: 0.88)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.5;
     final pointerPath =
         Path()
-          ..moveTo(center.dx + radius - 10, center.dy)
-          ..lineTo(center.dx + radius + 18, center.dy - 16)
-          ..lineTo(center.dx + radius + 18, center.dy + 16)
+          ..moveTo(center.dx + radius - 3, center.dy)
+          ..lineTo(center.dx + radius + 26, center.dy - 17)
+          ..lineTo(center.dx + radius + 26, center.dy + 17)
           ..close();
 
-    canvas.drawShadow(pointerPath, Colors.black, 3, true);
+    canvas.drawShadow(pointerPath, Colors.black, 5, true);
     canvas.drawPath(pointerPath, pointerPaint);
+    canvas.drawPath(pointerPath, outlinePaint);
   }
 
   void _paintCenter(Canvas canvas, Offset center, double radius) {
@@ -630,13 +989,44 @@ class DecisionWheelPainter extends CustomPainter {
   }
 }
 
-class _DecisionResultCard extends StatelessWidget {
+class _DecisionHistoryEmptyState extends StatelessWidget {
+  final Brightness brightness;
+
+  const _DecisionHistoryEmptyState({required this.brightness});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.history_toggle_off_rounded,
+            color: IwColors.textSecondary(brightness),
+          ),
+          const SizedBox(height: IwSpacing.space8),
+          Text('No spins yet', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: IwSpacing.space4),
+          Text(
+            'Completed spins will appear here.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: IwColors.textSecondary(brightness),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DecisionResultDialog extends StatelessWidget {
   final String option;
   final Color color;
   final VoidCallback onCancel;
   final VoidCallback onRemove;
 
-  const _DecisionResultCard({
+  const _DecisionResultDialog({
     required this.option,
     required this.color,
     required this.onCancel,
@@ -651,83 +1041,74 @@ class _DecisionResultCard extends StatelessWidget {
             ? Colors.white
             : IwColors.lightTextPrimary;
 
-    return Material(
-      color: color.withValues(
-        alpha: brightness == Brightness.dark ? 0.2 : 0.12,
-      ),
+    return AlertDialog(
+      key: const ValueKey('decision-wheel-result-dialog'),
+      clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: IwRadius.cardBorderRadius,
         side: BorderSide(color: color.withValues(alpha: 0.9), width: 1.4),
       ),
-      child: Padding(
+      titlePadding: EdgeInsets.zero,
+      title: Container(
+        color: color.withValues(
+          alpha: brightness == Brightness.dark ? 0.3 : 0.16,
+        ),
         padding: const EdgeInsets.all(IwSpacing.cardPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Row(
-              children: [
-                Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: IwSpacing.space8),
-                Text(
-                  'Selected option',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: color,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
+            Container(
+              width: 10,
+              height: 10,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             ),
-            const SizedBox(height: IwSpacing.space8),
-            Text(
-              option,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: IwColors.textPrimary(brightness),
+            const SizedBox(width: IwSpacing.space8),
+            Expanded(
+              child: Text(
+                'Selected option',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-            ),
-            const SizedBox(height: IwSpacing.space12),
-            Wrap(
-              spacing: IwSpacing.space8,
-              runSpacing: IwSpacing.space8,
-              children: [
-                OutlinedButton.icon(
-                  onPressed: onCancel,
-                  icon: const Icon(Icons.close_rounded),
-                  label: const Text('Cancel'),
-                ),
-                FilledButton.icon(
-                  onPressed: onRemove,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: color,
-                    foregroundColor: foregroundColor,
-                  ),
-                  icon: const Icon(Icons.delete_outline_rounded),
-                  label: const Text('Remove'),
-                ),
-              ],
             ),
           ],
         ),
       ),
+      content: Text(
+        option,
+        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+          color: IwColors.textPrimary(brightness),
+        ),
+      ),
+      actions: [
+        OutlinedButton.icon(
+          onPressed: onCancel,
+          icon: const Icon(Icons.close_rounded),
+          label: const Text('Cancel'),
+        ),
+        FilledButton.icon(
+          onPressed: onRemove,
+          style: FilledButton.styleFrom(
+            backgroundColor: color,
+            foregroundColor: foregroundColor,
+          ),
+          icon: const Icon(Icons.delete_outline_rounded),
+          label: const Text('Remove'),
+        ),
+      ],
     );
   }
 }
 
-Color _segmentColor(int index) {
-  const referencePalette = [
-    Color(0xFF2F6FEF),
-    Color(0xFFE71D36),
-    Color(0xFFF7C62F),
-    Color(0xFF16A34A),
-    Color(0xFF6B5BFF),
-    Color(0xFF4CC2FF),
-  ];
+Color decisionWheelSegmentColor(int index, int optionCount) {
+  if (optionCount <= 0) {
+    return _decisionWheelPalette.first;
+  }
 
-  return referencePalette[index % referencePalette.length];
+  final paletteIndex = index % _decisionWheelPalette.length;
+  if (optionCount > 1 && index == optionCount - 1 && paletteIndex == 0) {
+    return _decisionWheelPalette[1];
+  }
+
+  return _decisionWheelPalette[paletteIndex];
 }

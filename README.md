@@ -2,7 +2,7 @@
 
 InfinityWorld is an Android-first, iOS-ready personal super-app and portfolio Flutter project. It is being built as a polished local-first hub for small tools, trackers, saved content, settings, and future device or AI modules.
 
-The project favors small, verified slices over broad rewrites. Current work is in Phase 9: QA, device review, and portfolio readiness.
+The project favors small, verified slices over broad rewrites. Restructure Phase 3 is complete with its scoped deferred items documented, and product work resumes at `T121` — Library bookmark shelf next-step audit.
 
 ## Current App State
 
@@ -13,8 +13,8 @@ The app currently supports:
 - Five-tab main shell: Home, Explore, Tools, Library, Settings.
 - Home/Dashboard with local greeting and direct module links.
 - Explore catalog entries for Random Fox and Summertime Saga.
-- Tools catalog entry for BMI Calculator.
-- Library empty state for future saved content and reader work.
+- Tools catalog entries for BMI Calculator, Clock, Random Picker, Unit Converter, and Decision Wheel.
+- Library Reader with a built-in local sample catalog, saved/finished states, continue reading, and one paragraph bookmark per sample.
 - Settings profile summary and persisted theme mode controls: System, Light, Dark.
 - Direct go_router routes for current legacy and feature screens.
 
@@ -83,6 +83,8 @@ Docs-only tasks normally require:
 ```powershell
 git diff --check
 ```
+
+See `docs/qa/git-workflow.md` for the authoritative risk-based verification matrix and required manual/runtime evidence.
 
 Do not claim a command passed unless it was actually run.
 
@@ -195,7 +197,7 @@ These are separate follow-up tasks:
 - Release signing hardening.
 - Built-in Kotlin migration.
 - Android build/toolchain changes.
-- Device Hub, Bluetooth, audio, AI Lab, RSS, Reader, bookmarks, and saved-content persistence.
+- Device Hub, Bluetooth, audio, AI Lab, RSS/news, Reader import/sync, generic saved articles, reading-progress offsets, and persisted reader settings.
 - Full multi-style theme switching such as Neon Community or Vice Heat.
 - Broad shell-route migration.
 
@@ -203,16 +205,16 @@ The debug APK currently builds, but Flutter still reports the known future Built
 
 ## Documentation
 
-Project source-of-truth docs:
+See [docs/README.md](docs/README.md) for the documentation map and role labels. Core sources are:
 
 - `AGENTS.md`
-- `docs/PROJECT_DIRECTION.md`
-- `docs/ARCHITECTURE.md`
-- `docs/DESIGN_SYSTEM.md`
-- `docs/ROADMAP.md`
-- `docs/TASKS.md`
-- `docs/DECISIONS.md`
-- `docs/qa/IW_GIT_WORKFLOW.md`
-- `docs/qa/IW_TASK_WORKFLOW.md`
+- `docs/project-direction.md`
+- `docs/architecture.md`
+- `docs/design-system.md`
+- `docs/roadmap.md`
+- `docs/tasks.md`
+- `docs/decisions.md`
+- `docs/qa/git-workflow.md`
+- `docs/qa/task-workflow.md`
 
 Before changing architecture, routing, theme, feature structure, or task priority, read the relevant docs and keep them aligned.

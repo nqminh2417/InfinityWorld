@@ -23,9 +23,20 @@ import 'package:infinity_world/features/summertime_saga/presentation/smts_home_s
 import 'package:infinity_world/features/test/presentation/test_screen.dart';
 import 'package:infinity_world/features/unit_converter/presentation/unit_converter_screen.dart';
 import 'package:infinity_world/main.dart';
-import 'package:infinity_world/routes/app_routes.dart';
+import 'package:infinity_world/app/router/app_routes.dart';
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
 void main() {
+  setUp(() {
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
+  });
+
+  tearDown(() {
+    SharedPreferencesAsyncPlatform.instance = null;
+  });
+
   testWidgets('settings route opens the existing settings screen', (
     tester,
   ) async {
@@ -119,6 +130,15 @@ void main() {
     await tester.pumpWidget(_app(AppRoutes.reader));
 
     expect(find.byType(ReaderScreen), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Reader route opens a selected local sample', (tester) async {
+    await tester.pumpWidget(_app('${AppRoutes.reader}?sample=focus-reset'));
+
+    expect(find.byType(ReaderScreen), findsOneWidget);
+    expect(find.text('Focus Reset'), findsOneWidget);
+    expect(find.textContaining('Close the noisy loops'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

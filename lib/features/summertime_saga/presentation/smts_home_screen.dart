@@ -9,9 +9,8 @@ import 'package:infinity_world/features/summertime_saga/presentation/widgets/pro
 typedef SmtsProgressLoader = Future<SmtsProgressModel> Function();
 
 class SmtsHomeScreen extends StatefulWidget {
-  SmtsHomeScreen({super.key, SmtsProgressLoader? loadProgress, String? logoUrl})
-    : loadProgress = loadProgress ?? SmtsService.getProgress,
-      logoUrl = logoUrl ?? Cfg.smtsLogoUrl;
+  SmtsHomeScreen({super.key, required this.loadProgress, String? logoUrl})
+    : logoUrl = logoUrl ?? Cfg.smtsLogoUrl;
 
   final SmtsProgressLoader loadProgress;
   final String logoUrl;

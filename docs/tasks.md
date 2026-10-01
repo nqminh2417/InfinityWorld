@@ -1,21 +1,141 @@
 # Infinity World Active Tasks
 
-Last updated: 2026-07-04
+Last updated: 2026-07-20
 
 ## Current Status
 
 Current branch workflow:
 
 - Active branch: `home/devbyMinh-current`
-- Codex may auto commit and push scoped tasks after gates pass.
-- Git workflow source: `docs/qa/IW_GIT_WORKFLOW.md`
+- Commit/push require task-specific authority, passing required gates, scoped staging, and an allowed branch/upstream; passing gates alone is insufficient.
+- Git workflow source: `docs/qa/git-workflow.md`
+
+Current track status:
+
+- Restructure Phase 3 is complete with its scoped deferred items documented. Product work has completed through `T128` and resumes at `T129` — Password Generator local tool MVP.
+- Harness Phase 1 Foundation, Phase 2 validation, Phase 3 scoped restructuring, and HM1 post-Harness maintenance are complete. Harness `H...` tasks remain separate from product backlog IDs.
+
+## Harness Phase 2 — Validation and Pilot
+
+Status: completed. H11, H12, and H13 are complete; Phase 2 preserved the then-paused product track while Phase 3 was planned.
+
+### H11 Candidate Assessment
+
+| Candidate | Current evidence and proposed change | H12 scope, verification, and documentation impact | Risk and decision |
+| --- | --- | --- | --- |
+| `FloatingLabelTextField` | H12 moved the former shared-location widget into `lib/features/test/presentation/widgets/floating_label_text_field.dart`; `TestScreen` remains its sole production importer. | The move/rename and import update reuse `test/features/test/presentation/test_screen_test.dart` and `test/routes/app_router_test.dart`. H12 searched the former path/name before and after and updated only this file and `docs/roadmap.md`. | Low-Medium. **Selected and completed:** it is a real feature-boundary move with one source importer and existing route/screen coverage. |
+| Empty compatibility-named folders | `lib/blocs`, `helpers`, `models`, `providers`, `services`, `utils`, and `screens/main` are empty, have no tracked files, and have no literal repository references. | Removing empty directories would not create a tracked source change or validate import/reference synchronization; external IDE/tooling expectations remain unproven. | Medium-High. **Rejected:** no reviewable Git change and insufficient tooling proof. |
+| `AppRoutes` ownership | `lib/routes/app_routes.dart` is the active route contract. It has 16 Dart importers across bootstrap, router, features, and tests. A move into `lib/app/router/` would alter all of those imports. | Would require startup/route coverage, exhaustive import search, build, and affected-route checks; historical documentation also names the current path. | High. **Rejected:** too broad for the first Harness pilot. |
+| `ProgressBar` feature boundary | `lib/features/summertime_saga/presentation/widgets/progress_bar.dart` already has correct feature-local ownership and one presentation consumer. | No move is warranted; changing it would add churn without testing a boundary correction. | Low. **Rejected:** no restructuring value. |
+
+### Selected Pilot — H12
+
+- **Scope:** move `FloatingLabelTextField` into the Test feature and update its sole production import; retain the class API and all screen behavior.
+- **Allowed files:** the moved feature widget, `lib/features/test/presentation/test_screen.dart`, `docs/tasks.md`, and `docs/roadmap.md`.
+- **Excluded:** `AppRoutes`, router/bootstrap/shell code, all other features, Reader/Library, persistence, empty-folder deletion, dependencies, platform files, and global tools/configuration.
+- **Behavior to preserve:** `/testscreen`, the three text fields including `Username`, controller disposal, and keyboard-inset/scroll-safe behavior.
+- **References:** search the old path, new path, `FloatingLabelTextField`, and the Test route before/after the move. Preserve frozen `docs/discovery/CODEBASE_DISCOVERY.md` path evidence as historical.
+- **Tests and gates:** no new test is planned; run the existing Test-screen and route tests, then H8 file-move gates: changed-scope formatter check, `flutter analyze`, `flutter test`, `flutter build apk --debug`, `git diff --check`, and focused diff/status/reference review.
+- **Runtime check:** use an Android emulator/device to open `/testscreen`, confirm the fields remain visible, and confirm keyboard inset scrolling remains usable; record it as unverified only if unavailable.
+- **Documentation and rollback:** update only this plan record and the Phase 2 roadmap status after H12. Keep one coherent H12 commit; if rollback is needed after push, use one revert/follow-up commit rather than history rewrite.
+- **Commit/push authority:** H12 may commit and push only when its prompt authorizes it and `docs/qa/git-workflow.md` conditions are met: required gates pass, only scoped files are staged, and branch/upstream checks succeed.
+
+The pilot validates scope resolution, reference synchronization, native fallbacks, risk-based gates, minimal documentation updates, scoped staging, authorized commit/push, and concise final reporting.
+
+### H12 Result
+
+- **Completed:** moved `FloatingLabelTextField` into the Test feature and updated its sole production import without changing the widget API or behavior.
+- **Validation:** formatter, analyzer, full test suite, debug APK build, old-path search, and Pixel 6 Android runtime check passed.
+- **Next Harness task:** H13 — Pilot Review and Harness Adjustment.
+
+### H13 Pilot Review
+
+| Review area | Classification | Evidence |
+| --- | --- | --- |
+| Scope resolution | Worked as intended | H11 defined the allowed widget/import/planning files and excluded routing, persistence, and unrelated cleanup. |
+| Reference discipline | Worked as intended | H12 searched the symbol and old/new paths before and after the move; no active old Dart import remained. |
+| Scope containment | Worked as intended | Commit `27ee60f` contains the 100% rename, its sole import update, and warranted planning updates only. |
+| API and behavior preservation | Worked as intended | Git recorded a 100% content-preserving rename; existing Test-screen/route tests and Android runtime exercise passed. |
+| Verification-gate selection | Worked as intended | H12 applied the file-move/UI gates: changed-scope and repository-wide formatting, analyzer, 147 tests, debug APK build, diff check, and reference/diff review. |
+| Runtime/device evidence | Worked as intended | Pixel_6_API_33 opened `/testscreen` in light portrait and landscape; typing, keyboard insets, and scrolling behaved correctly. |
+| Optional tools | Worked as intended | Native search, Flutter, Dart, Git, and emulator evidence were sufficient; no optional helper was required for completion. |
+| Planning-doc updates | Worked as intended | H12 updated only `docs/tasks.md` and `docs/roadmap.md` because phase/status and next-task ownership changed. |
+| Git lifecycle | Worked as intended | Scoped staging, one coherent commit, allowed upstream push, and a concise final report all completed. |
+| Final Summary | Worked as intended | H12 returned the requested short summary with move, references, gates, runtime, planning, commit, push, risk, and next-task evidence. |
+| Frozen Discovery handling | Worked as intended | The old widget path remains only in frozen `docs/discovery/CODEBASE_DISCOVERY.md`, as governance permits historical evidence to remain. |
+| Review and rollback size | Worked as intended | The single coherent commit is small and can be reverted with a follow-up commit without history rewrite. |
+| Lifecycle-policy freshness | Needs adjustment | `docs/qa/task-workflow.md` still named H11 as next after H12 moved planning to H13; the policy now points to active planning documents instead. |
+
+**Conclusion:** Harness pilot passed with minor adjustment. Infinity World is ready for scoped codebase restructuring planning, not unrestricted repository-wide restructuring.
+
+### H13 Result
+
+- **Completed:** reviewed H11–H12 against the Phase 1 Harness and made the single evidence-based lifecycle-policy adjustment.
+- **Next task:** R1 — Codebase Restructure Scope and Sequence.
+
+## Restructure Phase 3 — Scoped Codebase Restructuring
+
+Status: completed. R1–R4 are complete; `T121` is the next approved product task.
+
+### Bounded Scope and Candidate Reassessment
+
+| Candidate | Classification | Current evidence, impact, and direction | Expected files / dependencies | Verification, risk, and commit boundary |
+| --- | --- | --- | --- | --- |
+| Root compatibility-named folders | Audit only | `lib/blocs`, `helpers`, `models`, `providers`, `services`, and `utils` are empty and untracked; `screens/main` and `widgets/text_field` are empty. Removing them produces no durable Git change and static absence cannot prove external tooling does not expect them. Leave them out of implementation; recheck in R4 only. | No planned source files. Depends on a tracked-file and exact-reference search. | Low risk; no standalone commit. Do not present local empty-directory removal as a restructure result. |
+| `AppRoutes` ownership | Included — R2 completed | The active go_router/startup path contract now lives in `lib/app/router/app_routes.dart`; all 16 production/test importers were updated. Its class API and every route-path string were preserved. | The old file was removed; no dependency/package change. Current-state planning references use the new location, while frozen/dated history retains its evidence. | Medium risk mitigated by exhaustive path/symbol search, route/startup tests, full gates, APK build, and Android route smoke. |
+| Fox and Summertime Saga service injection | Included — R3 completed | `smtsServiceProvider` now watches `dioProvider` and constructs the feature-owned service with that shared client. The active router continues to inject `fetchProgress`; `SmtsHomeScreen` now requires the injected loader, so no static/direct production fallback remains. | Feature provider, service, screen, and one deterministic provider test. No repository framework, interceptor layer, or behavior change. | Low-Medium risk mitigated by fake-Dio provider/service tests, screen-state/retry tests, route-seam tests, full gates, APK build, and Android runtime error/retry/re-entry validation. |
+| Reader/Library ownership and SharedPreferences contracts | Defer | Library’s explicit Reader imports support the current local-sample aggregation. Reader keys (`iw_reader_*`) have migration/validation tests, including the legacy saved boolean. Moving repositories from the application file or replacing storage risks data loss without a second consumer or approved product model. | No planned files. Preserve keys, `SharedPreferencesAsync`, provider names, and Library/Reader route behavior. | High persistence/product-direction risk; no Phase 3 commit. Recheck key compatibility and full Reader/Library tests in R4 only. |
+| Current architecture documentation after the pilot | Include in Restructure Phase 3 — R1 and R4 | `docs/roadmap.md` still said shared legacy UI remained in `lib/widgets/`, but H12 moved its only tracked widget into Test. R1 corrects this factual current-state claim; R4 synchronizes the final route/provider locations after implementation. `docs/architecture.md` already states the target `app/router` direction and needs no rewrite. | `docs/tasks.md`, `docs/roadmap.md`, and `README.md` current-status text only. | Low risk; documentation belongs with R1/R4 coherent commits. Historical Discovery, decisions, archive, and completed feature plans retain dated path evidence. |
+| Resolved Phase 0 widget-placement finding | Reject | H12 already moved `FloatingLabelTextField` with a 100% content-preserving rename, focused/full tests, APK build, and Android keyboard/scroll validation. | No planned files. | No duplicate move or cleanup task; preserve the H12 record. |
+
+### Approved Task Sequence
+
+#### R1 — Codebase Restructure Scope and Sequence
+
+- **Type / boundary:** planning only; define this finite sequence and correct current planning status without changing source, tests, dependencies, or frozen Discovery.
+- **Dependencies / verification:** H11–H13 evidence, current repository searches, focused documentation review, and `git diff --check`.
+- **Runtime / docs / commit:** no runtime check; update only current planning/status documents. Commit and push are authorized by this task prompt when the scoped planning diff is complete.
+
+#### R2 — Relocate AppRoutes into the App Router
+
+- **Objective / exact boundary:** move only `AppRoutes` to `lib/app/router/app_routes.dart`; update every production/test import. Preserve the `AppRoutes` class name, all path strings, `createAppRouter`, startup/session flow, and direct-route behavior.
+- **Dependencies:** R1; before editing, search the old/new paths, `AppRoutes`, package imports, route tests, Markdown references, and direct string route uses. Preserve historical/frozen records; update active current-state references in the same commit.
+- **Verification class:** large file move affecting routing — changed-scope format, `flutter analyze`, focused startup/router tests then full `flutter test`, `flutter build apk --debug`, `git diff --check`, and before/after old-path/symbol searches.
+- **Runtime / docs / commit:** Android emulator/device launch plus Login/Main and one direct-route smoke; record theme, route, viewport, and result. Update only warranted current docs. One scoped commit/push is allowed after all gates pass.
+- **R2 result:** completed the ownership-only relocation; the new file has the same content hash as the former contract, and all 16 Dart imports now target `lib/app/router/app_routes.dart`.
+
+#### R3 — Align Summertime Saga Provider Injection
+
+- **Objective / exact boundary:** make `smtsServiceProvider` read the existing `dioProvider` when creating `SmtsService`; keep the router's explicit loader injection and remove the unused screen fallback only after every construction path is explicit. Preserve parsing/error behavior, router shape, endpoint, timeout, and UI.
+- **Dependencies:** R1 and the existing shared Dio provider; audit `SmtsService`, `smtsServiceProvider`, route injection, deterministic service tests, and direct Dio construction before editing.
+- **Verification class:** network/service — changed-scope format, focused provider/service and route tests, `flutter analyze`, full `flutter test`, `git diff --check`, and focused reference/diff review. This task also required and passed APK/device validation because it changes the production route's service wiring.
+- **Docs / commit:** update planning only if scope/status changes. One scoped commit/push is allowed after required gates pass.
+- **R3 result:** completed the single production path `dioProvider → smtsServiceProvider → router injection → SmtsHomeScreen`; the static fallback was removed and test loaders remain explicit. R4 subsequently completed the Phase 3 closeout.
+
+#### R4 — Phase 3 Closeout and Product-Track Reassessment
+
+- **Objective / exact boundary:** audit the completed R2/R3 state, synchronize current planning/architecture status only where code proves it, verify deferred Reader compatibility, and decide whether `T121` becomes the next approved product task or is truthfully reclassified. Do not add source cleanup under this closeout task.
+- **Dependencies:** R2 and R3 complete. Recheck root compatibility folders without treating empty-directory removal as a Git deliverable; recheck Reader `iw_reader_*` keys, legacy-key migration behavior, Library/Reader routes, and old AppRoutes imports/paths.
+- **Verification class:** Phase exit — repository-wide non-mutating formatting, `flutter analyze`, full `flutter test`, `flutter build apk --debug`, `git diff --check`, full reference search, and focused status/diff review.
+- **Runtime / docs / commit:** Android emulator/device validates startup, Login/Main, moved route contract, and `/smts_home` loading/error/retry state without claiming live-network success unless observed. Update `docs/tasks.md`, `docs/roadmap.md`, and `docs/architecture.md` only when the final code requires it. Commit/push only when all exit criteria pass; otherwise record the blocker without claiming Phase 3 completion.
+- **R4 result:** no R2/R3 regression was found. The route contract remains byte-for-byte equivalent at its app-router location; the single Summertime Saga production path is provider-backed; Reader keys and source are unchanged, and R2's sole Library diff was the required `AppRoutes` import relocation; required formatter, analyzer, test, APK, reference, and Android smoke gates passed. Phase 3 is complete with the listed structural items deferred, and `T121` is the next approved product task.
+
+### Reference Synchronization and Phase 3 Exit
+
+- R2 must search `lib/routes/app_routes.dart`, `app_routes.dart`, package imports, `AppRoutes`, route strings, tests, Markdown references, and documentation headings before and after the move. Active references update in the same commit; frozen Discovery and dated historical records remain historical evidence.
+- R3 must search the service/provider symbols and retain deterministic fake-Dio test seams. Static-search absence never authorizes removal of fallback behavior or persistence code.
+- **Completed in R4:** R2–R4 are complete; no stale active route imports/path references remain; formatter, analysis, full tests, APK, and Android smoke checks passed; Reader preference keys and source remain compatible; current planning/architecture docs are synchronized; and `T121` is the next approved product task.
+
+### Explicit Restructure Phase 3 Exclusions
+
+- No universal feature-layer template, Riverpod conversion of local widget state, ShellRoute conversion, generic network/repository framework, database migration, broad route redesign, Android/toolchain work, CI/hooks/tools changes, Chat implementation, product features, or repository-wide cleanup.
 
 Current architecture status:
 
 - Transitional architecture.
 - `lib/main.dart` still owns app composition, now uses `MaterialApp.router`, and consumes the Riverpod app theme-mode provider.
 - `lib/app/router/app_router.dart` owns the active go_router route table.
-- `lib/routes/app_routes.dart` remains the shared path contract.
+- `lib/app/router/app_routes.dart` is the shared path contract.
 - Inactive legacy `lib/routes/app_pages.dart` has been removed.
 - The current main shell lives under `lib/app/shell/main_screen.dart` and exposes a local Home / Explore / Tools / Library / Settings skeleton.
 - `lib/app/bootstrap/startup_route_resolver.dart` now chooses Login or Main from the local session flag before `runApp`.
@@ -37,9 +157,9 @@ Current architecture status:
 - Settings presentation now lives under `lib/features/settings/presentation/`.
 - Summertime Saga now lives under `lib/features/summertime_saga/`.
 - Test presentation now lives under `lib/features/test/presentation/`.
-- Fox hardening plan exists at `docs/features/FOX_HARDENING_PLAN.md`.
-- Summertime Saga hardening plan exists at `docs/features/SUMMERTIME_SAGA_HARDENING_PLAN.md`.
-- Phase 2 migration map exists at `docs/PHASE2_MIGRATION_MAP.md`.
+- Fox hardening plan exists at `docs/features/fox-hardening-plan.md`.
+- Summertime Saga hardening plan exists at `docs/features/summer-time-saga-hardening-plan.md`.
+- Phase 2 migration map exists at `docs/archive/phase2-migration-map.md`.
 - `shared_preferences` is active for the first local session flag and display name.
 - go_router is active for root routing.
 - Riverpod foundation is complete for current local session/profile/theme preferences.
@@ -54,8 +174,8 @@ Current architecture status:
 - Explore now has a first tab body at `lib/features/explore/presentation/explore_screen.dart`.
 - Library now has a first empty-state tab body at `lib/features/library/presentation/library_screen.dart`.
 - Phase 9 QA/device readiness is complete; portfolio, screenshot, release presentation, and employer-showcase work are deferred until explicitly requested.
-- Reader exists as a local sample screen; there is still no bookmark, saved-article, reading-progress, or local database module yet.
-- T91 confirmed existing persistence is limited to small `shared_preferences` repositories for local session/profile and theme mode; no Drift/local database dependency is active.
+- Reader has a built-in local sample catalog with saved, finished, last-opened, and one paragraph-bookmark state through the existing `shared_preferences`/Riverpod pattern; generic saved articles, scroll offsets, multiple bookmarks, and a local database remain out of scope.
+- Existing persistence remains small `shared_preferences` repositories for local session/profile, theme mode, and Reader state; no Drift/local database dependency is active.
 - `features/home` root does not exist yet; Dashboard still owns direct module/dev links plus logout/session clearing.
 - Phase 10 kickoff audit confirmed Tools is the smallest low-risk content-depth surface for the next slice because it can add a useful local Clock tool without public APIs, persistence, screenshots, release work, broad redesign, or app architecture migration.
 - Clock now lives under `lib/features/clock/`, has a direct `/clock` route, and is linked from Tools beside BMI.
@@ -68,14 +188,30 @@ Current architecture status:
 - T89 confirmed Library still has only the empty-state tab body and no Reader/bookmark/saved-content route or module; the next smallest useful Library slice is a local Reader text screen MVP.
 - Reader now lives under `lib/features/reader/presentation/`, has a direct `/reader` route, and opens from Library as a built-in local text sample.
 - T91 confirmed the next smallest Library persistence slice should save only the built-in Reader sample state with the existing `shared_preferences` pattern before any Drift/schema/bookmark model work.
-- Reader saved-sample state now lives under `lib/features/reader/application/`, uses `shared_preferences`, and is consumed by Reader and Library.
+- Reader saved-sample state now lives under `lib/features/reader/application/`, uses `shared_preferences`, stores saved built-in sample IDs, preserves the legacy The First Door boolean fallback, and is consumed by Reader and Library.
 - T93 checkpoint confirmed Phase 10 should continue with a small Explore content refresh before screenshots or deeper Reader persistence because Explore remains the thinnest main tab surface after the Tools, Home/Dashboard, and Library updates.
 - Explore now has richer static Fox / Summertime Saga module cards while keeping live network work inside the destination screens.
 - T95 confirmed the next smallest Reader slice should add local text comfort controls inside the existing Reader screen before bookmarks, reading-progress persistence, imports, or Drift/schema work.
-- Reader now has screen-local text comfort controls for the built-in sample, without persistence, routes, packages, Drift, bookmarks, imports, or a settings model.
+- Reader now has screen-local text comfort controls for local samples, without persisted reader settings, packages, Drift, bookmarks, imports, or a settings model.
 - T97 expanded the Phase 10 backlog direction: active Phase 10 recommendations should focus on feature/content implementation, not screenshot, portfolio, release, or employer-showcase readiness.
 - Unit Converter now lives under `lib/features/unit_converter/`, has a direct `/unit-converter` route, and is linked from Tools beside BMI, Clock, and Random Picker.
-- Decision Wheel now lives under `lib/features/decision_wheel/`, has a direct `/decision-wheel` route, is linked from Tools beside the other local utilities, and has a larger animated `CustomPainter` wheel with shuffle/sort entries and remove-selected-result actions.
+- Decision Wheel now lives under `lib/features/decision_wheel/`, has a direct `/decision-wheel` route, is linked from Tools beside the other local utilities, and has a large animated `CustomPainter` wheel with center spin, shuffle/sort entries, compact mobile layout, x1/x2/x3 multiplier mode, a modal selected-result dialog, roomier/readability-tuned screen-capped in-memory session history bottom sheet with per-item copy, remove-selected-result actions, semicolon-aware entry parsing, clearer pointer layering, and adjacent-safe repeating segment colors.
+- Reader/Library now has a three-item built-in local sample catalog; Library opens selected Reader samples through a narrow route query key, and any built-in local sample can be saved or removed.
+- T114 audited the current Reader/Library surface and selected a Library saved-samples shelf as the next smallest useful content-depth slice because it reuses existing saved IDs and Reader routes without new storage, progress tracking, imports, or broad redesign.
+- Library now shows a compact Saved samples shelf when local Reader samples are saved, while keeping the saved count summary and full Local samples catalog.
+- Reader now records the last opened built-in local sample ID and Library shows a compact Continue reading card for that sample, without reading-progress offsets or a history list.
+- T117 audited Reader/Library progress and bookmark options and selected a finished-sample marker as the next smallest useful Reader progress slice before scroll offsets, bookmarks, history, or Drift.
+- Reader now stores finished built-in sample IDs with the existing `shared_preferences`/Riverpod pattern and reflects finished state in Reader actions plus Library sample cards.
+- T119 audited Reader bookmark options and selected a single paragraph bookmark per built-in sample because a sample-level bookmark would duplicate saved samples, while multiple bookmarks, notes, highlights, and scroll offsets are larger storage-model work.
+- Reader now stores one paragraph bookmark per built-in sample with the existing `shared_preferences`/Riverpod pattern, validates persisted sample/paragraph pairs, exposes compact Reader paragraph controls, and reflects bookmark state in Library sample cards.
+- T121 audited the existing Reader bookmark flow and Library shelves, and selected a conditional Bookmarked samples shelf as the next smallest useful slice because it can reuse the existing bookmark map, card, and Reader route without another storage model.
+- T122 adds that conditional `Bookmarked samples` shelf from the existing bookmark map and sample catalog. It reuses the current card and Reader route, remains absent when no bookmarks exist, and does not add storage, filtering, or scroll restoration.
+- T123 confirmed the smallest bookmark follow-up is an explicit Reader quick-jump to the existing one-paragraph bookmark. The current Reader `ListView` can handle that locally without changing the Library route or adding a reading-position model.
+- T124 adds that explicit jump as a conditional Reader app-bar action. It targets the existing bookmarked paragraph with the current scroll surface and keeps opening behavior, routes, and storage unchanged.
+- T125 reviewed the Phase 10 surfaces and found Reader/Library now has a complete local flow, while Home still omits the later Unit Converter and Decision Wheel tools from its direct actions.
+- T126 adds direct Home quick actions for the existing Unit Converter and Decision Wheel routes, keeping the Dashboard action pattern and route ownership unchanged.
+- T127 audited the local Tools surface and selected a small Password Generator because it can use Dart secure randomness and the existing clipboard-feedback pattern without packages, APIs, or persistence.
+- T128 adds Device Info as a local Tools screen with grouped device, display, system, memory/storage, and battery values. It uses `device_info_plus` for Android build, RAM, and storage values plus one guarded Android method channel for detailed system and battery readings.
 
 Current tests:
 
@@ -107,21 +243,38 @@ Current tests:
 - Unit Converter domain coverage exists for length and weight conversions plus result formatting.
 - Unit Converter presentation widget coverage exists for scroll-safe rendering, validation, and length conversion behavior.
 - Tools presentation widget coverage exists for Unit Converter route navigation.
-- Decision Wheel presentation widget coverage exists for scroll-safe rendering, validation, animated deterministic picking, remove-selected behavior, shuffle/sort actions, and the local wheel surface.
+- Decision Wheel presentation widget coverage exists for scroll-safe rendering, compact phone-size closed-keyboard layout, x1/x2/x3 multiplier behavior, center spin, modal result dialog behavior, background interaction blocking, Cancel/Remove behavior, in-memory session history display/clear/copy behavior, content-wrapping history sheet growth with screen-based 60-62% max-height scrolling and readability-tuned roomier rows, semicolon-aware parsing, validation, animated deterministic picking, shuffle/sort actions, adjacent-safe segment colors, and the local wheel surface.
 - Tools presentation widget coverage exists for Decision Wheel route navigation.
 - Explore presentation widget coverage exists for small-screen scroll safety and fake-route navigation to Fox and Summertime Saga.
-- Library presentation widget coverage exists for small-screen scroll safety and empty-state rendering.
+- Library presentation widget coverage exists for small-screen scroll safety and local sample catalog rendering.
 - Reader presentation widget coverage exists for scroll-safe local sample rendering.
-- Library presentation widget coverage exists for opening the Reader route.
-- Reader route smoke coverage exists.
-- Reader saved-sample provider coverage exists for default, save, and remove behavior.
-- Reader presentation widget coverage exists for saving and removing the built-in sample.
-- Library presentation widget coverage exists for saved and unsaved Reader sample states.
+- Library presentation widget coverage exists for opening a selected Reader sample route.
+- Reader route smoke coverage exists, including selected local sample query behavior.
+- Reader saved-sample provider coverage exists for default, selected-ID save/remove, legacy boolean fallback behavior, last-opened default, last-opened persistence, and unknown last-opened ID handling.
+- Reader presentation widget coverage exists for saving/removing the built-in sample, saving/removing a selected local sample, and recording the selected local sample as last opened.
+- Library presentation widget coverage exists for saved, unsaved, multiple-saved Reader sample states, the Saved samples shelf, saved shelf route navigation, Continue reading card display, and Continue reading route navigation.
+- Reader finished-sample provider coverage exists for default, selected-ID mark/unmark, and unknown persisted ID filtering.
+- Reader presentation widget coverage verifies marking/unmarking a selected local sample as finished.
+- Library presentation widget coverage verifies finished local samples in the Local samples catalog, Saved samples shelf, and Continue reading card.
+- Reader paragraph bookmark provider coverage exists for default state, one-slot replacement/removal, persistence, and invalid persisted entry filtering.
+- Reader presentation widget coverage verifies bookmarking, replacing, and removing a selected sample paragraph bookmark.
+- Library presentation widget coverage verifies paragraph bookmark labels in Saved samples, Local samples, and Continue reading cards.
+- Library presentation widget coverage verifies the conditional Bookmarked samples shelf, its absence without bookmarks, constrained-screen content growth, and bookmarked-sample Reader route behavior.
+- No new app tests were added for T119 because it is a docs-only bookmark model audit.
+- No new app tests were added for T121 because it is a docs-only Library bookmark shelf audit.
+- No new app tests were added for T123 because it is a docs-only Reader bookmark quick-jump audit.
+- Reader presentation widget coverage verifies the bookmarked-paragraph jump action is absent without a bookmark and scrolls to the stored paragraph on a constrained screen.
+- No new app tests were added for T125 because it is a docs-only Reader/Library checkpoint audit.
+- Dashboard widget coverage verifies the Unit Converter and Decision Wheel labels on a constrained screen plus both existing route taps.
+- No new app tests were added for T127 because it is a docs-only Tools local utility audit.
+- Device Info widget coverage verifies grouped sections, safe unavailable values, and Tools route navigation with deterministic platform-channel data.
 - No new app tests were added for T93 because it was an audit/docs-only checkpoint.
 - Explore presentation widget coverage now verifies the refreshed static content, small-screen scrolling, and existing Fox / Summertime Saga route taps.
 - No new app tests were added for T95 because it was an audit/docs-only checkpoint.
 - Reader presentation widget coverage now verifies the screen-local text-size controls while preserving the existing sample and saved-sample behavior.
+- Library and route coverage now verify selected local Reader sample rendering from the built-in catalog.
 - No new app tests were added for T97 because it is a docs-only backlog expansion.
+- No new app tests were added for T117 because it is a docs-only Reader progress/bookmark audit.
 - No Home feature-root tests exist yet because the Home tab still uses the existing Dashboard screen.
 - Profile route smoke test exists.
 - Settings route smoke test exists.
@@ -269,47 +422,48 @@ Task sizing note:
 - Simple screens should usually be handled in one task.
 - API/live-network screens may justify extra hardening tasks.
 
-### Primary
+### Product track status
 
-T101 - Reader/Library content-depth slice
+Product implementation resumes at `T129`. Do not begin it until the user assigns it; a user-assigned task still overrides this advisory backlog order.
+
+### Next approved product task
+
+T129 - Password Generator local tool MVP
 
 Reason:
 
-- Deepens the Library/Reader surface after the recent Tools utility run.
-- Keeps the next slice local and content-focused, without public APIs, imports, Drift, bookmarks, reading-progress persistence, screenshots, or release work.
-- Builds on the existing Reader sample, saved-sample signal, and text comfort controls without turning it into a full content model yet.
+- The existing Tools catalog covers health, time, conversion, and decisions but has no compact privacy-oriented utility.
+- Dart provides secure local randomness, and the app already has a tested clipboard feedback pattern, so a Password Generator needs no package, network, persistence, or backend.
+- It is a useful standalone tool with a bounded input/output surface and lower scope than saved passwords, password management, or a broader security module.
 
 Scope:
 
-- Add a small built-in Reader sample catalog or shelf using existing Reader/Library feature structure.
-- Surface 2-3 local reading samples or content cards from Library.
-- Let the user open a selected local sample in the Reader using a small route key or similarly narrow local mechanism.
-- Preserve the existing saved-sample behavior unless the task explicitly scopes a generic saved-content model.
-- Use existing app theme, typography, spacing, and route style; keep the UI simple, clean, and scroll-safe.
-- Add focused tests for Library content rendering, selected Reader sample rendering, and route behavior.
+- Add a Password Generator screen and Tools card using the existing feature, route, theme, spacing, and card patterns.
+- Generate a secure local password with `Random.secure()` from selected lowercase, uppercase, digit, and symbol character sets.
+- Provide compact length control, selected character-set controls, generate, and copy actions with existing-app feedback. Require at least one selected character set.
+- Add focused domain/widget coverage for length, allowed characters, validation, copy behavior where practical, route navigation, and small-screen scroll safety.
 
 Out of scope:
 
-- No public API, new packages, SQLite/Drift, import/parser work, generic bookmarks, saved-article models, reading-progress offsets, persisted reader settings, broad Library redesign, dashboard redesign, screenshots, portfolio/showcase prep, release work, Android build/toolchain changes, shell route migration, or Riverpod/go_router/Dio migration.
+- No password storage, saved/generated history, password strength scoring, breach checks, account/authentication work, public API, new packages, persistence/storage, automatic bookmark opening, new route/query parameters, SQLite/Drift, import/parser work, broad Library redesign, dashboard redesign, screenshots, portfolio/showcase prep, release work, Android build/toolchain changes, shell route migration, or Riverpod/go_router/Dio migration.
 
 Verification:
 
-- Dart/UI gate from `docs/qa/IW_GIT_WORKFLOW.md`: `dart format` for changed Dart files, `flutter analyze`, `flutter test`, and `git diff --check`.
-- Run `flutter build apk --debug` if the implementation adds or changes app routing/startup/build-impacting code.
+- Widget/UI gate from `docs/qa/git-workflow.md`: changed-scope `dart format --output=none --set-exit-if-changed`, `flutter analyze`, `flutter test`, and `git diff --check`.
 
 ### Alternatives
 
-Dashboard quick actions/content cards refresh
+Reader automatic bookmark opening audit
 
-Choose this if the user wants Home to surface more current modules or content cards before adding another standalone tool.
+Choose this only if the user wants opening a bookmarked sample to scroll automatically instead of retaining the explicit jump action.
+
+Text case converter local tool MVP
+
+Choose this if the user wants a smaller text transformation utility instead of secure password generation.
 
 Explore/RSS foundation audit
 
-Choose this if the user wants to evaluate public content/API expansion after the current local-utility run.
-
-Another local utility/content-depth audit
-
-Choose this if the user wants to continue Tools utility growth after Decision Wheel before returning to Reader/Library.
+Choose this if the user wants to evaluate public content/API expansion after the current local content-depth run.
 
 ### Portfolio / screenshot / showcase deferral policy
 
@@ -330,7 +484,7 @@ Resume this work only when the user explicitly asks for release, CH Play, portfo
 - More design-system components unless explicitly assigned.
 - Full UI redesign unless explicitly approved.
 - Saved picker lists, weighted choices, picker history, or advanced wheel animation/physics before a dedicated follow-up task is assigned.
-- Drift/SQLite reader storage, generic bookmarks, saved-article models, reading-progress offsets, persisted reader settings, or import/parser work before a dedicated Reader persistence/model task is assigned.
+- Drift/SQLite reader storage, generic bookmarks, saved-article models, multiple bookmarks per sample, reading-progress offsets, persisted reader settings, or import/parser work before a dedicated Reader persistence/model task is assigned.
 - RSS/news foundation, public API expansion, or Explore live-network loading before a dedicated Explore/RSS task is assigned.
 - Additional Fox follow-up tasks unless a concrete risk, failed verification, blocker, or user-approved remaining scope exists.
 - Test screen deletion or route removal unless explicitly approved.
@@ -345,7 +499,7 @@ Current phase:
 
 Decision:
 
-- T100 refined the Decision Wheel UI/UX with a larger animated wheel. The next recommended task is T101 - Reader/Library content-depth slice.
+- The user assigned Device Info in place of the advisory Password Generator slice. T128 now adds the local Device Info tool; product work remains in Phase 10, and the still-independent Password Generator becomes `T129`.
 
 Do not enter yet:
 
@@ -373,7 +527,34 @@ Reason:
 - Decision Wheel is the next smallest useful Phase 10 implementation slice because it adds a more visual local utility while staying package-free and smaller than Reader storage, RSS/API expansion, or broad dashboard work.
 - The T99 Decision Wheel MVP adds a local visual picker with focused tests and no packages, persistence, screenshots, portfolio work, or broad Tools redesign.
 - The T100 Decision Wheel refinement makes that local utility feel more polished with a larger animated wheel, reference-inspired segment colors, entry shuffle/sort actions, and remove-selected behavior without adding packages or persistence.
-- Reader/Library is the next smallest useful content-depth slice because it can add more built-in local reading content without committing to Drift, imports, generic bookmarks, or reading-progress persistence.
+- The T101 Decision Wheel layout/result overlay refinement removes the redundant bottom Spin button, keeps center spin as the primary action, floats the selected-result card above the content, improves pointer layering, and prevents adjacent duplicate segment colors while preserving the existing route and feature structure.
+- The T102 Decision Wheel result/input refinement replaces the floating result overlay with a blocking modal dialog, keeps Cancel/Remove behavior scoped to the selected entry, and supports mixed line/semicolon entry parsing without changing routes, persistence, packages, or the wheel painter style.
+- The T103 Decision Wheel history slice keeps prior spin results in screen-local memory only, exposes them through a History bottom sheet, and supports clearing that session list without adding persistence or a permanent main-screen section.
+- The T104 Decision Wheel history-sheet refinement keeps the modal history design but makes empty/short history wrap compactly and long history scroll within a capped sheet.
+- The T105 Decision Wheel history sizing refinement keeps the current design but makes the sheet lighter: empty/short history wraps content, up to five items are visible, and longer history scrolls inside the sheet while actions stay fixed.
+- The T106 Decision Wheel history row refinement restores two-line item readability and adds a per-item copy action with lightweight SnackBar feedback, without persistence, export, or sheet redesign.
+- The T107 Decision Wheel history max-height refinement removes the five-item rule and lets the sheet grow naturally until the screen-based max height while keeping the header and actions fixed.
+- The T108 Decision Wheel history height/spacing tune keeps screen-based max-height behavior while increasing the cap to about 61%, improving header spacing, and making rows less cramped with subtle dividers.
+- The T109 Decision Wheel history row readability tune improves the two-line row spacing and selected-item prominence without changing the max-height behavior, copy action, persistence, or broader sheet design.
+- The T110 Decision Wheel compact mobile layout removes extra vertical chrome, keeps the wheel as the hero element, and bounds the entries editor without adding x2/duplicate mode, persistence, packages, or new wheel logic.
+- The T111 Decision Wheel multiplier mode adds x1/x2/x3 segment generation with distributed duplicates while leaving the raw entries text unchanged and removing selected items from the raw entry list.
+- The T112 Reader/Library content-depth slice adds more built-in local reading content without committing to Drift, imports, generic bookmarks, or reading-progress persistence.
+- The T113 Reader save selected local samples slice makes the new sample catalog saveable with the existing `shared_preferences` direction before any generic bookmark, saved-article, Drift, import, or progress model work.
+- The T114 Reader/Library next-step audit found Library currently exposes saved sample state only through a count/summary and saved labels inside the full local catalog. A Library saved-samples shelf is the smallest useful next slice because it makes saved local content directly actionable while reusing existing saved IDs and Reader route behavior.
+- The T115 Library saved samples shelf makes saved local samples directly actionable without adding storage models, imports, or progress offsets. A small Continue reading card is the next useful Reader/Library handoff before any full progress, bookmark, or database design.
+- The T116 Reader continue-reading card adds one local handoff without creating progress offsets, bookmark models, reading history, or Drift storage. The next Reader step should be audited before adding more persistence semantics.
+- The T117 Reader progress/bookmark audit found a finished-sample marker is the smallest useful progress step because it adds a real per-sample progress signal without scroll offsets, percentages, bookmarks, history, imports, or a database schema.
+- The T118 finished marker adds that per-sample progress signal with `shared_preferences`/Riverpod and Library card reflection, so bookmark semantics should be audited before adding a new Reader storage behavior.
+- The T119 bookmark model audit found sample-level bookmarks would duplicate saved samples, and selected one paragraph bookmark per built-in sample as the smallest useful bookmark behavior before multiple bookmarks, notes, highlights, scroll offsets, or Drift.
+- The T120 paragraph bookmark MVP adds one validated `shared_preferences`/Riverpod bookmark slot per built-in sample, Reader paragraph controls, and Library card reflection. A short Library bookmark shelf audit should decide the next Reader/Library UI slice before adding another section, scroll offsets, multiple bookmarks, notes, highlights, or Drift.
+- The T121 audit confirmed a conditional Bookmarked samples shelf is the smallest useful next Reader/Library slice: it makes existing bookmark state directly discoverable while reusing current cards and routes, without adding a second bookmark model, filters, scroll restoration, or a broad Library redesign.
+- The T122 shelf makes the existing bookmark state directly actionable from Library while preserving the current Reader entry route. A focused quick-jump audit should now decide whether the single stored paragraph should affect Reader opening behavior before expanding bookmark or progress semantics.
+- The T123 audit confirmed that the existing `ListView` and one-paragraph bookmark index support a small, explicit Reader jump without a route parameter, extra storage, or automatic resume behavior.
+- The T124 action makes that bookmark reachable from Reader without changing the current Library route or persistence. A checkpoint should choose the next independent content-depth slice before adding more Reader resume semantics.
+- The T125 checkpoint found that Home's direct actions lag the existing local Tools catalog. Adding only Unit Converter and Decision Wheel quick actions improves discovery without broadening the dashboard or creating new feature behavior.
+- The T126 quick actions now align Home with the current local Tools catalog. A focused utility audit should select the next independent tool slice before another surface expands by default.
+- The T127 audit found Password Generator is the smallest useful new local tool: Dart secure randomness and the existing clipboard feedback pattern cover the required behavior without a dependency, network, or storage contract.
+- The user-directed T128 Device Info MVP adds a compact, local Android-first device utility with grouped fallback-safe information. It keeps the existing Tools and route patterns, uses one compatible device-info plugin, and scopes native Android code to system/battery values not exposed by that plugin.
 - `/main`, startup/session, local profile behavior, Riverpod theme/profile state, Dio-backed services, and the five-tab shell must remain stable during Phase 10 content work.
 - App content depth should not be mixed with real backend authentication, shell-route work, retry/cache/offline policy, Android toolchain changes, screenshots, or release packaging.
 
@@ -416,21 +597,44 @@ Exit criteria:
 - Done: Implemented the T98 Unit Converter local tool MVP.
 - Done: Implemented the T99 Decision Wheel local tool MVP.
 - Done: Implemented the T100 Decision Wheel UI/UX refinement.
-- Remaining: Implement T101 Reader/Library content-depth slice, or follow a user-assigned concrete alternative.
+- Done: Implemented the T101 Decision Wheel layout/result overlay refinement.
+- Done: Implemented the T102 Decision Wheel result modal and entries input refinement.
+- Done: Implemented the T103 Decision Wheel in-memory session history slice.
+- Done: Implemented the T104 Decision Wheel history bottom sheet height refinement.
+- Done: Implemented the T105 Decision Wheel history sheet sizing refinement.
+- Done: Implemented the T106 Decision Wheel history item layout and copy action refinement.
+- Done: Implemented the T107 Decision Wheel history sheet max-height refinement.
+- Done: Implemented the T108 Decision Wheel history sheet height and item spacing refinement.
+- Done: Implemented the T109 Decision Wheel history item readability refinement.
+- Done: Implemented the T110 Decision Wheel compact mobile layout refinement.
+- Done: Implemented the T111 Decision Wheel multiplier mode.
+- Done: Implemented the T112 Reader/Library content-depth slice.
+- Done: Implemented the T113 Reader save selected local samples MVP.
+- Done: Completed the T114 Reader/Library next-step audit and selected T115 as the next implementation slice.
+- Done: Implemented the T115 Library saved samples shelf MVP.
+- Done: Implemented the T116 Reader continue-reading card MVP.
+- Done: Completed the T117 Reader progress/bookmark next-step audit and selected T118 as the next implementation slice.
+- Done: Implemented the T118 Reader finished sample marker MVP.
+- Done: Completed the T119 Reader bookmark model audit and selected T120 as the next implementation slice.
+- Done: Implemented the T120 Reader single paragraph bookmark MVP.
+- Done: Completed the T121 Library bookmark shelf next-step audit and selected T122 as the next implementation slice.
+- Done: Implemented the T122 Library bookmarked samples shelf MVP.
+- Done: Completed the T123 Reader bookmark quick-jump audit and selected T124 as the next implementation slice.
+- Done: Implemented the T124 Reader bookmarked paragraph jump MVP.
+- Done: Completed the T125 Reader/Library checkpoint audit and selected T126 as the next implementation slice.
+- Done: Implemented the T126 Home dashboard new-tool quick actions MVP.
+- Done: Completed the T127 Tools local utility audit and selected T128 as the next implementation slice.
+- Done: Implemented the user-directed T128 Device Info MVP.
+- Remaining: `T129` — Password Generator local tool MVP — is the next approved product task, unless the user assigns another task.
 
 ## Verification Gates
 
-Use `docs/qa/IW_GIT_WORKFLOW.md` as the source of truth.
+Use `docs/qa/git-workflow.md` as the source of truth.
 
-Quick reference:
-
-- Docs-only: `git diff --check`
-- Dart logic/test: `dart format`, `flutter analyze`, `flutter test`, `git diff --check`
-- Screen move/routing/startup: `dart format`, `flutter analyze`, `flutter test`, `flutter build apk --debug`, `git diff --check`
-- Android toolchain/build-system: separate branch unless explicitly approved
+Select gates by change risk from that matrix; do not duplicate command requirements here. Task results must report required command outcomes, focused diff/status review, and manual/runtime evidence or unverified areas.
 
 ## Asking for the Next Task
 
-If the user asks "what is the next task?", use `Recommended Next Work` above. Recommend the single Primary task unless the user explicitly chooses an alternative.
+If the user asks "what is the next product task?", report `T129` — Password Generator local tool MVP — unless the user assigns a higher-priority task. For future Harness work, use the active approved sequence in `docs/harness/`.
 
 If the user assigns a different task, follow the user task and update planning docs only when it changes priority, phase, backlog, or durable decisions.

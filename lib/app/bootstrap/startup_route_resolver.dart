@@ -1,5 +1,5 @@
 import 'package:infinity_world/features/auth/data/local_session_repository.dart';
-import 'package:infinity_world/routes/app_routes.dart';
+import 'package:infinity_world/app/router/app_routes.dart';
 
 Future<String> resolveStartupRoute({
   LocalSessionRepository? sessionRepository,

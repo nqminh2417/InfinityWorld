@@ -4,7 +4,7 @@
 
 InfinityWorld screens must remain readable, reachable, and stable across supported mobile layouts. Layout work must account for system insets, edge-to-edge rendering, small screens, keyboard visibility, content growth, and bottom navigation.
 
-Apply the global `flutter-ui-layout-safety` skill to Flutter UI tasks. Keep fixes scoped to the current source structure; this policy does not require or authorize an architecture migration.
+Apply the project-local `flutter-ui-safety` policy to Flutter UI tasks. Keep fixes scoped to the current source structure; this policy does not require or authorize an architecture migration.
 
 ## SafeArea-aware Layout
 

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/features/explore/presentation/explore_screen.dart';
-import 'package:infinity_world/routes/app_routes.dart';
+import 'package:infinity_world/app/router/app_routes.dart';
 
 void main() {
   testWidgets('Explore screen is scroll-safe on small screens', (tester) async {

@@ -5,7 +5,7 @@ import 'package:infinity_world/design_system/components/iw_card.dart';
 import 'package:infinity_world/design_system/tokens/iw_colors.dart';
 import 'package:infinity_world/design_system/tokens/iw_spacing.dart';
 import 'package:infinity_world/features/auth/application/session_providers.dart';
-import 'package:infinity_world/routes/app_routes.dart';
+import 'package:infinity_world/app/router/app_routes.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -105,6 +105,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               title: 'Random Picker',
               subtitle: 'One-choice decision helper.',
               onTap: () => context.push(AppRoutes.randomPicker),
+            ),
+            const SizedBox(height: IwSpacing.space12),
+            _DashboardActionCard(
+              icon: Icons.casino_rounded,
+              title: 'Decision Wheel',
+              subtitle: 'Spin a simple wheel to choose from local options.',
+              onTap: () => context.push(AppRoutes.decisionWheel),
+            ),
+            const SizedBox(height: IwSpacing.space12),
+            _DashboardActionCard(
+              icon: Icons.straighten_rounded,
+              title: 'Unit Converter',
+              subtitle: 'Convert common length and weight units locally.',
+              onTap: () => context.push(AppRoutes.unitConverter),
             ),
             const SizedBox(height: IwSpacing.space12),
             _DashboardActionCard(

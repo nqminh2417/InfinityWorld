@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:infinity_world/widgets/text_field/floating_label.dart';
+import 'package:infinity_world/features/test/presentation/widgets/floating_label_text_field.dart';
 
 class TestScreen extends StatefulWidget {
   const TestScreen({super.key});

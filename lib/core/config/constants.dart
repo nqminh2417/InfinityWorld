@@ -7,13 +7,22 @@ class Cfg {
   static const isProd = bool.fromEnvironment('PROD', defaultValue: false);
 
   // ===== App info =====
-  static const appName = String.fromEnvironment('APP_NAME', defaultValue: 'Infinity World (Dev)');
+  static const appName = String.fromEnvironment(
+    'APP_NAME',
+    defaultValue: 'Infinity World (Dev)',
+  );
 
   // ===== API chính =====
-  static const apiUrl = String.fromEnvironment('API_URL', defaultValue: 'https://dev.api.example.com');
+  static const apiUrl = String.fromEnvironment(
+    'API_URL',
+    defaultValue: 'https://dev.api.example.com',
+  );
 
   // ===== SMTS =====
-  static const smtsBaseUrl = String.fromEnvironment('SMTS_BASE_URL', defaultValue: 'https://summertimesaga.com');
+  static const smtsBaseUrl = String.fromEnvironment(
+    'SMTS_BASE_URL',
+    defaultValue: 'https://summertimesaga.com',
+  );
 
   static const smtsLogoUrl = String.fromEnvironment(
     'SMTS_LOGO_URL',

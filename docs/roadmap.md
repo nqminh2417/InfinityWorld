@@ -1,6 +1,6 @@
 # Infinity World Roadmap
 
-Last updated: 2026-07-01
+Last updated: 2026-07-20
 
 ## Purpose
 
@@ -8,27 +8,48 @@ This roadmap is the living development plan for Infinity World. It follows a Med
 
 Related planning docs:
 
-- `docs/ARCHITECTURE.md` describes the target direction.
-- `docs/TASKS.md` tracks the active backlog and next tasks.
-- `docs/DECISIONS.md` records durable project decisions.
-- `docs/qa/IW_GIT_WORKFLOW.md` defines commit, push, and verification rules.
+- `docs/architecture.md` describes the target direction.
+- `docs/tasks.md` tracks the product backlog and product next tasks; `docs/harness/` tracks the separate Harness sequence.
+- `docs/decisions.md` records durable project decisions.
+- `docs/qa/git-workflow.md` defines commit, push, and verification rules.
+
+## Harness Phase 2 — Validation and Pilot
+
+- **Status:** completed; H11 — Scoped Restructure Pilot Selection, H12 — Execute Scoped Restructure Pilot, and H13 — Pilot Review and Harness Adjustment are complete.
+- **Pilot conclusion:** Harness pilot passed with minor adjustment. The single-consumer `FloatingLabelTextField` now belongs to `features/test`; its API, behavior, and Test route were preserved.
+- **Harness adjustment:** `docs/qa/task-workflow.md` no longer duplicates a transient next-Harness-task ID, preventing planning-status drift.
+- **Phase transition:** H13 transitioned the completed Harness pilot into the Phase 3 restructure roadmap.
+- **Product status:** Phase 3 completion now returns the product track to `T121`.
+
+## Restructure Phase 3 — Scoped Codebase Restructuring
+
+- **Status:** completed. R1 — Codebase Restructure Scope and Sequence, R2 — Relocate AppRoutes into the App Router, R3 — Align Summertime Saga Dio Injection, and R4 — Compatibility and Return-to-Product Audit are complete. `T121` is the next approved product task.
+- **Included implementation:** R2 relocated the active `AppRoutes` contract into `lib/app/router/` without changing path strings or route behavior. R3 made `dioProvider → smtsServiceProvider → router injection → SmtsHomeScreen` the sole production path while preserving screen and service behavior.
+- **Closeout:** R4 found no R2/R3 regression: active route imports are current, the provider-backed Summertime Saga path is intact, Reader persistence is unchanged, full Flutter/APK gates and Android smoke validation passed, and the active architecture/planning docs are synchronized.
+- **Deferred scope:** `docs/tasks.md` owns the detailed, intentionally deferred structural items; no cosmetic or speculative restructuring is implied by Phase 3 completion.
+- **Next task:** T121 — Library bookmark shelf next-step audit.
+
+## Harness Maintenance — Post-Harness Handoff
+
+- **Status:** completed. HM1 refreshed the controlled post-Harness discovery snapshot and activated the rolling handoff log.
+- **Product status:** the Harness Engineering initiative is closed; the product track is active at `T121` — Library bookmark shelf next-step audit.
 
 ## Current Reality
 
-The current app is transitional. The target architecture in `docs/ARCHITECTURE.md` is not fully implemented yet.
+The current app is transitional. The target architecture in `docs/architecture.md` is not fully implemented yet.
 
 Current structure:
 
 - `lib/main.dart` still owns root app composition, now uses `MaterialApp.router`, and consumes the Riverpod app theme-mode provider.
 - `lib/app/bootstrap/startup_route_resolver.dart` now resolves the startup route from the local session flag before `runApp`.
 - `lib/app/router/app_router.dart` maps the current route table with go_router.
-- `lib/routes/app_routes.dart` still defines shared path constants.
+- `lib/app/router/app_routes.dart` defines shared path constants.
 - `lib/app/theme/app_theme.dart` now provides the first Midnight Violet light/dark app theme.
 - `lib/app/theme/app_theme_mode_provider.dart` exposes the persisted app-level theme mode provider/controller with a fallback default of `ThemeMode.system`.
 - `lib/design_system/` now contains the first tokens and `IwCard` component slice.
 - Selected feature screens have been moved under `lib/features/`.
 - `lib/app/shell/main_screen.dart` now contains the local five-tab bottom shell skeleton.
-- Shared legacy UI remains under `lib/widgets/`.
+- No tracked shared legacy UI remains under `lib/widgets/`; the former Test-only field now lives at `lib/features/test/presentation/widgets/floating_label_text_field.dart`.
 - `lib/core/config/constants.dart` contains early runtime constants.
 - `lib/features/auth/data/local_session_repository.dart` stores the first local session flag and display name with `shared_preferences`.
 - `lib/features/auth/application/session_providers.dart` exposes the local session repository and current display-name providers.
@@ -67,7 +88,7 @@ go_router is active for the root route table. Riverpod foundation is complete fo
 
 - Login build-time `setState()` risk has been fixed; emulator/device visual review remains a later QA activity.
 - go_router is the active root router and Phase 5 is closed.
-- `lib/routes/app_routes.dart` remains the shared path contract for go_router.
+- `lib/app/router/app_routes.dart` remains the shared path contract for go_router.
 - Broader networking policy for retry/cache/offline behavior remains deferred until a concrete feature need exists.
 - Feature placement does not mean rich tab content has migrated; `MainScreen` now lives in `lib/app/shell/` with a local five-tab shell skeleton and placeholder tab bodies where roots are not implemented yet.
 - Theme/design-system implementation now has a first token/card slice; broader components and visual adoption remain incomplete.
@@ -76,7 +97,7 @@ go_router is active for the root route table. Riverpod foundation is complete fo
 
 ## Target Direction
 
-Use `docs/ARCHITECTURE.md` as the target direction:
+Use `docs/architecture.md` as the target direction:
 
 - Feature-first structure under `lib/features/<feature>/`.
 - App composition under `lib/app/`.
@@ -112,14 +133,14 @@ Goal:
 Primary docs:
 
 - `AGENTS.md`
-- `docs/ROADMAP.md`
-- `docs/TASKS.md`
-- `docs/DECISIONS.md`
-- `docs/ARCHITECTURE.md`
-- `docs/DESIGN_SYSTEM.md`
-- `docs/design/IW_LAYOUT_SAFETY.md`
-- `docs/design/IW_SYSTEM_UI_POLICY.md`
-- `docs/qa/IW_GIT_WORKFLOW.md`
+- `docs/roadmap.md`
+- `docs/tasks.md`
+- `docs/decisions.md`
+- `docs/architecture.md`
+- `docs/design-system.md`
+- `docs/design/layout-safety.md`
+- `docs/design/system-ui-policy.md`
+- `docs/qa/git-workflow.md`
 
 Task boundary:
 
@@ -174,7 +195,7 @@ Not part of Phase 2:
 
 Verification:
 
-- Screen move/routing/startup gates from `docs/qa/IW_GIT_WORKFLOW.md`.
+- Screen move/routing/startup gates from `docs/qa/git-workflow.md`.
 
 ## Phase 3: Design System Foundation
 
@@ -649,7 +670,7 @@ Notes:
 
 - Start with a QA/device readiness audit before running screenshots, release checks, or broad device review.
 - Emulator/device UI review is important for UI polish, but it is not required for every current small task.
-- UI tasks must still follow `docs/design/IW_LAYOUT_SAFETY.md` and `docs/design/IW_SYSTEM_UI_POLICY.md`.
+- UI tasks must still follow `docs/design/layout-safety.md` and `docs/design/system-ui-policy.md`.
 
 Kickoff audit findings:
 
@@ -683,18 +704,17 @@ Completion checkpoint:
 
 ## Phase 10: App Content and Surface Depth
 
-Status: current / kickoff audit next.
+Status: product work paused after `T120`; Harness Phase 1 Foundation is complete separately.
 
 Goal:
 
 - Increase useful, content-rich app surfaces before public screenshots, release packaging, or broader portfolio polish.
 
-First slice:
+Current scope:
 
-- Start with a Phase 10 app content depth kickoff audit.
-- Audit Home/Dashboard, Explore, Tools, Library, and existing direct module routes for the smallest useful content-depth opportunity.
-- Recommend one next implementation slice, such as richer Dashboard/Home content, an additional safe local tool, Library/Reader foundation, Explore/RSS foundation, or module-flow cleanup.
-- Do not implement the feature, capture screenshots, add packages, change Android build/toolchain files, start release signing, or begin portfolio copywriting in the kickoff audit.
+- The Phase 10 kickoff audit is complete. Tools, Home/Dashboard, Explore, and Reader/Library now have small content-depth slices.
+- `docs/tasks.md` owns product task status, detailed completed work, alternatives, and the phase guard. Restructure Phase 3 is complete, and `T121` — Library bookmark shelf next-step audit — is the next approved task.
+- Do not mix active content work with release/showcase preparation, Android toolchain changes, broad routing work, or unapproved persistence-model expansion.
 
 ## Separate Branch Work
 
@@ -719,6 +739,6 @@ For every scoped task:
 - Confirm branch and working tree state.
 - Read relevant planning docs.
 - Keep the change small.
-- Verify with the gate matching the change type.
-- Update `docs/TASKS.md`, `docs/DECISIONS.md`, or this roadmap when scope, phase, or direction changes.
-- Commit and push only according to `docs/qa/IW_GIT_WORKFLOW.md`.
+- Verify with the risk-based matrix in `docs/qa/git-workflow.md`; do not duplicate gate details here.
+- Update `docs/tasks.md`, `docs/decisions.md`, or this roadmap when scope, phase, or direction changes.
+- Commit and push only according to `docs/qa/git-workflow.md`.

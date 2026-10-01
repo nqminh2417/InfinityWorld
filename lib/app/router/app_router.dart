@@ -8,6 +8,7 @@ import 'package:infinity_world/features/chat/presentation/chat_screen.dart';
 import 'package:infinity_world/features/clock/presentation/clock_screen.dart';
 import 'package:infinity_world/features/decision_wheel/presentation/decision_wheel_screen.dart';
 import 'package:infinity_world/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:infinity_world/features/device_info/presentation/device_info_screen.dart';
 import 'package:infinity_world/features/fox/application/fox_providers.dart';
 import 'package:infinity_world/features/fox/presentation/fox_random_screen.dart';
 import 'package:infinity_world/features/profile/presentation/profile_screen.dart';
@@ -18,7 +19,7 @@ import 'package:infinity_world/features/summertime_saga/application/smts_provide
 import 'package:infinity_world/features/summertime_saga/presentation/smts_home_screen.dart';
 import 'package:infinity_world/features/test/presentation/test_screen.dart';
 import 'package:infinity_world/features/unit_converter/presentation/unit_converter_screen.dart';
-import 'package:infinity_world/routes/app_routes.dart';
+import 'package:infinity_world/app/router/app_routes.dart';
 
 GoRouter createAppRouter({
   String initialLocation = AppRoutes.login,
@@ -129,9 +130,15 @@ GoRouter createAppRouter({
         },
       ),
       GoRoute(
+        path: AppRoutes.deviceInfo,
+        builder: (BuildContext context, GoRouterState state) {
+          return const DeviceInfoScreen();
+        },
+      ),
+      GoRoute(
         path: AppRoutes.reader,
         builder: (BuildContext context, GoRouterState state) {
-          return const ReaderScreen();
+          return ReaderScreen(sampleId: state.uri.queryParameters['sample']);
         },
       ),
     ],

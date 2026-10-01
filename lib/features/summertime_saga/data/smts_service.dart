@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:infinity_world/core/config/constants.dart';
-import 'package:infinity_world/core/network/dio_provider.dart';
 import 'package:infinity_world/features/summertime_saga/domain/smts_progress_model.dart';
 
 class SmtsServiceException implements Exception {
@@ -15,18 +14,14 @@ class SmtsServiceException implements Exception {
 }
 
 class SmtsService {
-  SmtsService({Dio? dio, Duration timeout = _defaultTimeout})
-    : _dio = dio ?? createDioClient(timeout: timeout),
+  SmtsService({required Dio dio, Duration timeout = _defaultTimeout})
+    : _dio = dio,
       _timeout = timeout;
 
   static const Duration _defaultTimeout = Duration(seconds: 15);
 
   final Dio _dio;
   final Duration _timeout;
-
-  static Future<SmtsProgressModel> getProgress() {
-    return SmtsService().fetchProgress();
-  }
 
   Future<SmtsProgressModel> fetchProgress() async {
     final Response<String> response;
